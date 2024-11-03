@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class InputReader : Singleton<InputReader> {
+public class InputReader : Singleton<InputReader>, IStartExecution {
   public PlayerInputActions InputActions { get; private set; }
   
   public static event Action<InputMap> OnBeforeInputMapChange;
@@ -17,7 +17,7 @@ public class InputReader : Singleton<InputReader> {
     InputActions.Enable();
   }
 
-  private void Start() => SwitchInputMap(DEFAULT_MAP);
+  public void InitializeStart() => SwitchInputMap(DEFAULT_MAP);
 
   private void SwitchInputMap(InputMap newInputMap) {
     if (newInputMap == CurrentMap) {

@@ -1,11 +1,9 @@
 using UnityEngine;
 
-public class GameHandler : MonoBehaviour
+public class GameHandler : MonoBehaviour, IOnEnableExecution
 {
-  private void Awake() {
-    Systems.OnEnableEvent += () => {
-      Cursor.lockState = CursorLockMode.Locked;
-      Cursor.visible = false;
-    };
+  public void InitializeOnEnable() {
+    Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
   }
 }

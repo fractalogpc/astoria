@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerControllerTemplate : InputHandlerBase
+public class PlayerControllerTemplate : InputHandlerBase, IStartExecution
 {
   #region Variables
 
@@ -15,7 +18,7 @@ public class PlayerControllerTemplate : InputHandlerBase
   [SerializeField] private float _groundCheckRadius = 0.3f;
   [SerializeField] private string _groundTag = "Ground";
   [SerializeField] private Transform _groundCheckPoint;
-
+  [SerializeField] private float _groundDrag = 5f;
 
   #endregion
 
@@ -29,53 +32,31 @@ public class PlayerControllerTemplate : InputHandlerBase
   private bool _isGrounded;
   private float _xRotation;
 
-
-  protected override void SubscribeInputActions() {
-    _inputActions.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
-    _inputActions.Player.Move.canceled += _ => _moveInput = Vector2.zero;
-
-    _inputActions.Player.Look.performed += ctx => _lookInput = ctx.ReadValue<Vector2>();
-    _inputActions.Player.Look.canceled += _ => _lookInput = Vector2.zero;
-
-    _inputActions.Player.Sprint.performed += _ => _isSprinting = true;
-    _inputActions.Player.Sprint.canceled += _ => _isSprinting = false;
-
-    _inputActions.Player.Jump.performed += _ => Jump();
-
-    _inputActions.Player.Attack.performed += _ => Attack();
-
-    _inputActions.Player.Interact.performed += _ => Interact();
-  }
-
-  protected override void UnsubscribeInputActions() {
-    _inputActions.Player.Move.performed -= ctx => _moveInput = ctx.ReadValue<Vector2>();
-    _inputActions.Player.Move.canceled -= _ => _moveInput = Vector2.zero;
-
-    _inputActions.Player.Look.performed -= ctx => _lookInput = ctx.ReadValue<Vector2>();
-    _inputActions.Player.Look.canceled -= _ => _lookInput = Vector2.zero;
-
-    _inputActions.Player.Sprint.performed -= _ => _isSprinting = true;
-    _inputActions.Player.Sprint.canceled -= _ => _isSprinting = false;
-
-    _inputActions.Player.Jump.performed -= _ => Jump();
-
-    _inputActions.Player.Attack.performed -= _ => Attack();
-
-    _inputActions.Player.Interact.performed -= _ => Interact();
-  }
-
-  protected override void Awake() {
-    base.Awake();
+  private void Awake() {
     _rb = GetComponent<Rigidbody>();
+    _rb.interpolation = RigidbodyInterpolation.Interpolate; // Smoother movement
+    _rb.freezeRotation = true; // Prevents physics from affecting rotation
   }
 
-  private void Start() {
+  public void InitializeStart() {
     _camera = ResourceHolder.Instance.MainCamera;
     _currentSpeed = _walkSpeed;
   }
 
+  protected override void InitializeActionMap() {
+    _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
+
+    RegisterAction(_inputActions.Player.Move, ctx => _moveInput = ctx.ReadValue<Vector2>(), () => _moveInput = Vector2.zero);
+    RegisterAction(_inputActions.Player.Look, ctx => _lookInput = ctx.ReadValue<Vector2>(), () => _lookInput = Vector2.zero);
+    RegisterAction(_inputActions.Player.Sprint, ctx => _isSprinting = true, () => _isSprinting = false);
+    RegisterAction(_inputActions.Player.Jump, ctx => Jump());
+    RegisterAction(_inputActions.Player.Attack, ctx => Attack());
+    RegisterAction(_inputActions.Player.Interact, ctx => Interact());
+  }
+
   private void Update() {
     CheckGrounded();
+    HandleDrag();
   }
 
   private void LateUpdate() {
@@ -86,6 +67,11 @@ public class PlayerControllerTemplate : InputHandlerBase
     Move();
   }
 
+  private void HandleDrag() {
+    // Apply ground drag to reduce sliding when grounded
+    _rb.linearDamping = _isGrounded ? _groundDrag : 0f;
+  }
+
   private void Look() {
     float mouseX = _lookInput.x * _xSensitivity * Time.deltaTime;
     float mouseY = _lookInput.y * _ySensitivity * Time.deltaTime;
@@ -93,7 +79,6 @@ public class PlayerControllerTemplate : InputHandlerBase
     _xRotation -= mouseY;
     _xRotation = Mathf.Clamp(_xRotation, -_maxLookAngle, _maxLookAngle);
 
-    // Rotate player and camera
     transform.Rotate(Vector3.up * mouseX);
     _camera.transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
   }
@@ -101,16 +86,15 @@ public class PlayerControllerTemplate : InputHandlerBase
   private void Move() {
     _currentSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
 
-    // Calculate movement direction based on input
     Vector3 moveDirection = new Vector3(_moveInput.x, 0, _moveInput.y);
     moveDirection = transform.TransformDirection(moveDirection).normalized;
 
-    // Apply force for movement, while preventing sliding by using velocity control
-    Vector3 force = moveDirection * _currentSpeed;
-    Vector3 velocity = _rb.linearVelocity;
-    
-    // Only apply forces to X and Z axes to prevent affecting the Y (gravity)
-    _rb.linearVelocity = new Vector3(force.x, velocity.y, force.z);
+    // Calculate target velocity
+    Vector3 targetVelocity = moveDirection * _currentSpeed;
+
+    // Calculate velocity change and apply it as a force
+    Vector3 velocityChange = targetVelocity - new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+    _rb.AddForce(velocityChange, ForceMode.VelocityChange);
   }
 
   private void Jump() {
@@ -120,31 +104,26 @@ public class PlayerControllerTemplate : InputHandlerBase
   }
 
   private void CheckGrounded() {
-  Collider[] colliders = Physics.OverlapSphere(_groundCheckPoint.position, _groundCheckRadius);
-  
-  _isGrounded = false;
-  
-  foreach (var collider in colliders) {
-    if (collider.CompareTag(_groundTag)) {
-      _isGrounded = true;
-      break;
+    Collider[] colliders = Physics.OverlapSphere(_groundCheckPoint.position, _groundCheckRadius);
+    _isGrounded = false;
+
+    foreach (var collider in colliders) {
+      if (collider.CompareTag(_groundTag)) {
+        _isGrounded = true;
+        break;
+      }
     }
   }
-}
+
   private void Attack() {
     Debug.Log("Attack");
   }
 
   private void Interact() {
     Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
-    RaycastHit hit;
-
-    if (Physics.Raycast(ray, out hit, _interactDistance)) {
+    if (Physics.Raycast(ray, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponent<Interactable>();
-
-      if (interactable != null) {
-        interactable.Interact();
-      }
+      interactable?.Interact();
     }
   }
 }
