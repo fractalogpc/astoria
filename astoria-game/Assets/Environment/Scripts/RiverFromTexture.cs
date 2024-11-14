@@ -8,6 +8,7 @@ public class RiverFromTexture : EditorWindow
 
     private Texture2D inputTexture;
     private Texture2D heightmapTexture;
+    private Texture2D depthTexture;
     private float heightmapScale = 1.0f;
     private float xSize = 10.0f;
     private float ySize = 10.0f;
@@ -24,6 +25,7 @@ public class RiverFromTexture : EditorWindow
 
         inputTexture = (Texture2D)EditorGUILayout.ObjectField("Input Texture", inputTexture, typeof(Texture2D), false);
         heightmapTexture = (Texture2D)EditorGUILayout.ObjectField("Heightmap Texture", heightmapTexture, typeof(Texture2D), false);
+        depthTexture = (Texture2D)EditorGUILayout.ObjectField("Depth Texture", depthTexture, typeof(Texture2D), false);
         heightmapScale = EditorGUILayout.FloatField("Heightmap Scale", heightmapScale);
         xSize = EditorGUILayout.FloatField("X Size", xSize);
         ySize = EditorGUILayout.FloatField("Y Size", ySize);
@@ -78,8 +80,8 @@ public class RiverFromTexture : EditorWindow
                     continue;
                 }
 
-                for (int dy = -2; dy <= 2; dy++) {
-                    for (int dx = -2; dx <= 2; dx++) {
+                for (int dy = -searchDistance; dy <= searchDistance; dy++) {
+                    for (int dx = -searchDistance; dx <= searchDistance; dx++) {
                         if (dx == 0 && dy == 0) {
                             continue;
                         }
@@ -100,7 +102,7 @@ public class RiverFromTexture : EditorWindow
             }
         }
 
-        float maxDistance = 8;
+        float maxDistance = 4;
         
         Texture2D distanceFieldTexture = new Texture2D(width, height);
 
@@ -129,6 +131,36 @@ public class RiverFromTexture : EditorWindow
                 Color pixel = distanceFieldTexture.GetPixelBilinear(u, v);
                 water[y * (width + 1) + x] = pixel.r < 1;
                 float heightOffset = pixel.r * riverDownturn;
+
+                float depthValue = depthTexture.GetPixelBilinear(u, v).r;
+                if (depthValue <= 0) {
+                    // Find nearest pixel with depth value and use that
+                    int nearestX = x;
+                    int nearestY = y;
+                    float nearestDistance = float.MaxValue;
+                    for (int dy = -searchDistance; dy <= searchDistance; dy++) {
+                        for (int dx = -searchDistance; dx <= searchDistance; dx++) {
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
+                                continue;
+                            }
+
+                            float d = depthTexture.GetPixelBilinear((float)nx / width, (float)ny / height).r;
+                            if (d > 0) {
+                                float distance = Mathf.Sqrt(dx * dx + dy * dy);
+                                if (distance < nearestDistance) {
+                                    nearestX = nx;
+                                    nearestY = ny;
+                                    nearestDistance = distance;
+                                }
+                            }
+                        }
+                    }
+
+                    depthValue = depthTexture.GetPixelBilinear((float)nearestX / width, (float)nearestY / height).r;
+                }
+                heightValue += depthValue;
 
                 vertices[y * (width + 1) + x] = new Vector3(x * xStep, heightValue * heightmapScale - heightOffset, y * yStep);
             }
