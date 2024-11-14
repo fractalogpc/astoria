@@ -347,7 +347,6 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
       tempJointIndex = stashedTempJointIndex;
     } else {
       closestTempWallJoint = _tempObject.GetComponent<ConstructionWall>().GetClosestJointWorldSpace(closestOtherWallJoint, out tempJointIndex);
-      Debug.Log(closestTempWallJoint);
       stashedTempJointIndex = tempJointIndex;
     }
 
