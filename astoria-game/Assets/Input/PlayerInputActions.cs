@@ -179,6 +179,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyFive"",
+                    ""type"": ""Button"",
+                    ""id"": ""59ea8a06-39dc-4bde-89a9-3fe0cfe0253e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeySix"",
+                    ""type"": ""Button"",
+                    ""id"": ""4935949b-f812-4de3-9054-06abb0675139"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -591,6 +609,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""2e2cc125-8fc0-4699-ac92-df3369bb9c5c"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""4f0f733a-67a7-417d-9064-835fcdbc847d"",
                     ""path"": ""<Keyboard>/v"",
                     ""interactions"": """",
@@ -652,6 +681,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""KeyFour"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd425a1c-3381-4bcd-b705-3973c7b5f0e4"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeyFive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ba2a62b-84d2-4e77-a67c-e550cfb16ebc"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeySix"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1256,6 +1307,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_KeyTwo = m_Player.FindAction("KeyTwo", throwIfNotFound: true);
         m_Player_KeyThree = m_Player.FindAction("KeyThree", throwIfNotFound: true);
         m_Player_KeyFour = m_Player.FindAction("KeyFour", throwIfNotFound: true);
+        m_Player_KeyFive = m_Player.FindAction("KeyFive", throwIfNotFound: true);
+        m_Player_KeySix = m_Player.FindAction("KeySix", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1352,6 +1405,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_KeyTwo;
     private readonly InputAction m_Player_KeyThree;
     private readonly InputAction m_Player_KeyFour;
+    private readonly InputAction m_Player_KeyFive;
+    private readonly InputAction m_Player_KeySix;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1373,6 +1428,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @KeyTwo => m_Wrapper.m_Player_KeyTwo;
         public InputAction @KeyThree => m_Wrapper.m_Player_KeyThree;
         public InputAction @KeyFour => m_Wrapper.m_Player_KeyFour;
+        public InputAction @KeyFive => m_Wrapper.m_Player_KeyFive;
+        public InputAction @KeySix => m_Wrapper.m_Player_KeySix;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1433,6 +1490,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeyFour.started += instance.OnKeyFour;
             @KeyFour.performed += instance.OnKeyFour;
             @KeyFour.canceled += instance.OnKeyFour;
+            @KeyFive.started += instance.OnKeyFive;
+            @KeyFive.performed += instance.OnKeyFive;
+            @KeyFive.canceled += instance.OnKeyFive;
+            @KeySix.started += instance.OnKeySix;
+            @KeySix.performed += instance.OnKeySix;
+            @KeySix.canceled += instance.OnKeySix;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1488,6 +1551,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeyFour.started -= instance.OnKeyFour;
             @KeyFour.performed -= instance.OnKeyFour;
             @KeyFour.canceled -= instance.OnKeyFour;
+            @KeyFive.started -= instance.OnKeyFive;
+            @KeyFive.performed -= instance.OnKeyFive;
+            @KeyFive.canceled -= instance.OnKeyFive;
+            @KeySix.started -= instance.OnKeySix;
+            @KeySix.performed -= instance.OnKeySix;
+            @KeySix.canceled -= instance.OnKeySix;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1687,6 +1756,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnKeyTwo(InputAction.CallbackContext context);
         void OnKeyThree(InputAction.CallbackContext context);
         void OnKeyFour(InputAction.CallbackContext context);
+        void OnKeyFive(InputAction.CallbackContext context);
+        void OnKeySix(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

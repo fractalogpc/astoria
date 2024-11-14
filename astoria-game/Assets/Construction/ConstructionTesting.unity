@@ -1111,12 +1111,12 @@ GameObject:
   - component: {fileID: 1438716448}
   - component: {fileID: 1438716447}
   - component: {fileID: 1438716446}
-  - component: {fileID: 1438716450}
   - component: {fileID: 1438716451}
   - component: {fileID: 1438716452}
   - component: {fileID: 1438716453}
   - component: {fileID: 1438716454}
   - component: {fileID: 1438716455}
+  - component: {fileID: 1438716456}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1217,33 +1217,6 @@ Transform:
   - {fileID: 182336255}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1438716450
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1438716445}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 2
 --- !u!114 &1438716451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,6 +1376,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactDistance: 4
+--- !u!114 &1438716456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438716445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043dd2f1b246c4f49bd18141863f5680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnableBuilding: 0
+  EnableRotateOnRightClick: 0
+  ConstructableObjects:
+  - {fileID: 11400000, guid: beb7ff24859f6804e85c9f737d4e011b, type: 2}
+  - {fileID: 11400000, guid: 294795282748d584fbb45fecf3ef6428, type: 2}
+  - {fileID: 11400000, guid: d1f157cb5300808479e04898d449f22c, type: 2}
+  - {fileID: 11400000, guid: 44385c227f38f17429ec3aa9ed0699e4, type: 2}
+  - {fileID: 11400000, guid: 08efd39c0c1253947b9bccc0ffee903e, type: 2}
+  - {fileID: 11400000, guid: 8cbbd0ed7a3b26c44b3629448c8e5bf4, type: 2}
+  DefaultObjectIndex: 0
+  _minBuildDistance: 1
+  _maxBuildDistance: 5
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _constructionLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _validMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
+  _invalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
+  _destroyMaterial: {fileID: 2100000, guid: 17e955a77bece2844b089c7e36a19f8d, type: 2}
+  _wallSnapDistance: 3
+  _wallAngleTolarence: 35
+  _ConstructionObjectWallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _isRotating: 0
+  _isDeleting: 0
 --- !u!1 &1823688464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,8 +1505,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823688464}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.59, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5899999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1647,7 +1663,7 @@ GameObject:
   - component: {fileID: 1832038339}
   - component: {fileID: 1832038338}
   - component: {fileID: 1832038337}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
