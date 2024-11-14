@@ -2,13 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Interfaces for classes that require ordered execution of OnEnable and Start.
+/// Interfaces for classes that require ordered execution of OnEnable.
 /// </summary>
 public interface IOnEnableExecution
 {
   void InitializeOnEnable();
 }
 
+/// <summary>
+/// Interfaces for classes that require ordered execution of Start.
+/// </summary>
 public interface IStartExecution
 {
   void InitializeStart();

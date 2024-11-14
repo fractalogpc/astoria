@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TEMPORARYPlayerLookNoMultiplayer : InputHandlerBase
+public class TEMPORARYPlayerLookNoMultiplayer : InputHandlerBase, IStartExecution
 {
   public bool canLook = true;
 	[SerializeField] private Camera _camera;
@@ -13,7 +13,7 @@ public class TEMPORARYPlayerLookNoMultiplayer : InputHandlerBase
 
   private Vector2 _mouseInput;
 
-	private void Start() {
+	public void InitializeStart() {
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 	}

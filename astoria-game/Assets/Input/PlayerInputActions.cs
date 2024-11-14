@@ -107,6 +107,78 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Build"",
+                    ""type"": ""Button"",
+                    ""id"": ""feb2e2be-03bd-4a6f-ab6e-a1fcd9b0a01f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Button"",
+                    ""id"": ""a31fe758-d234-48ee-af5f-67c770477394"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Delete"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c9d17fb-2c7d-45c7-ace3-2e3683c7ef51"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""bce7c7df-91c6-4f7a-b83c-8b3f3c31a0b1"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""KeyOne"",
+                    ""type"": ""Button"",
+                    ""id"": ""076c410b-740e-446d-9baa-ec274710e342"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyTwo"",
+                    ""type"": ""Button"",
+                    ""id"": ""2cf71286-a0f9-4bb4-ac48-5ac703cc398e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyThree"",
+                    ""type"": ""Button"",
+                    ""id"": ""e462b9f1-30fa-4187-8d5c-420592a1142d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyFour"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b835421-84b4-4865-9c5a-f04f76724b4c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -492,6 +564,94 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""896ed238-a7b2-4ddb-90f4-56e35a4b5759"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d89974ef-f807-4fbb-8ece-02a4f44957f5"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f0f733a-67a7-417d-9064-835fcdbc847d"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Delete"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fc64522-2d97-487e-9b3b-cd9faef3732b"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b254f2e-1a7b-402a-98fa-1f78c08d5490"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""KeyOne"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4c66dcb-0120-4232-abc2-8cb1609c5327"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""KeyTwo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cac3b81b-91fe-45ed-82b5-ea4b72da5dfc"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""KeyThree"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""abffe56c-b357-4ec3-8d2f-be51f9bdc20a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""KeyFour"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1088,6 +1248,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_Build = m_Player.FindAction("Build", throwIfNotFound: true);
+        m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
+        m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
+        m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
+        m_Player_KeyOne = m_Player.FindAction("KeyOne", throwIfNotFound: true);
+        m_Player_KeyTwo = m_Player.FindAction("KeyTwo", throwIfNotFound: true);
+        m_Player_KeyThree = m_Player.FindAction("KeyThree", throwIfNotFound: true);
+        m_Player_KeyFour = m_Player.FindAction("KeyFour", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1176,6 +1344,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_Build;
+    private readonly InputAction m_Player_Rotate;
+    private readonly InputAction m_Player_Delete;
+    private readonly InputAction m_Player_Scroll;
+    private readonly InputAction m_Player_KeyOne;
+    private readonly InputAction m_Player_KeyTwo;
+    private readonly InputAction m_Player_KeyThree;
+    private readonly InputAction m_Player_KeyFour;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1189,6 +1365,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Previous => m_Wrapper.m_Player_Previous;
         public InputAction @Next => m_Wrapper.m_Player_Next;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        public InputAction @Build => m_Wrapper.m_Player_Build;
+        public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
+        public InputAction @Delete => m_Wrapper.m_Player_Delete;
+        public InputAction @Scroll => m_Wrapper.m_Player_Scroll;
+        public InputAction @KeyOne => m_Wrapper.m_Player_KeyOne;
+        public InputAction @KeyTwo => m_Wrapper.m_Player_KeyTwo;
+        public InputAction @KeyThree => m_Wrapper.m_Player_KeyThree;
+        public InputAction @KeyFour => m_Wrapper.m_Player_KeyFour;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1225,6 +1409,30 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @Build.started += instance.OnBuild;
+            @Build.performed += instance.OnBuild;
+            @Build.canceled += instance.OnBuild;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
+            @Delete.started += instance.OnDelete;
+            @Delete.performed += instance.OnDelete;
+            @Delete.canceled += instance.OnDelete;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
+            @KeyOne.started += instance.OnKeyOne;
+            @KeyOne.performed += instance.OnKeyOne;
+            @KeyOne.canceled += instance.OnKeyOne;
+            @KeyTwo.started += instance.OnKeyTwo;
+            @KeyTwo.performed += instance.OnKeyTwo;
+            @KeyTwo.canceled += instance.OnKeyTwo;
+            @KeyThree.started += instance.OnKeyThree;
+            @KeyThree.performed += instance.OnKeyThree;
+            @KeyThree.canceled += instance.OnKeyThree;
+            @KeyFour.started += instance.OnKeyFour;
+            @KeyFour.performed += instance.OnKeyFour;
+            @KeyFour.canceled += instance.OnKeyFour;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1256,6 +1464,30 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @Build.started -= instance.OnBuild;
+            @Build.performed -= instance.OnBuild;
+            @Build.canceled -= instance.OnBuild;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
+            @Delete.started -= instance.OnDelete;
+            @Delete.performed -= instance.OnDelete;
+            @Delete.canceled -= instance.OnDelete;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
+            @KeyOne.started -= instance.OnKeyOne;
+            @KeyOne.performed -= instance.OnKeyOne;
+            @KeyOne.canceled -= instance.OnKeyOne;
+            @KeyTwo.started -= instance.OnKeyTwo;
+            @KeyTwo.performed -= instance.OnKeyTwo;
+            @KeyTwo.canceled -= instance.OnKeyTwo;
+            @KeyThree.started -= instance.OnKeyThree;
+            @KeyThree.performed -= instance.OnKeyThree;
+            @KeyThree.canceled -= instance.OnKeyThree;
+            @KeyFour.started -= instance.OnKeyFour;
+            @KeyFour.performed -= instance.OnKeyFour;
+            @KeyFour.canceled -= instance.OnKeyFour;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1447,6 +1679,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnPrevious(InputAction.CallbackContext context);
         void OnNext(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnBuild(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
+        void OnDelete(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
+        void OnKeyOne(InputAction.CallbackContext context);
+        void OnKeyTwo(InputAction.CallbackContext context);
+        void OnKeyThree(InputAction.CallbackContext context);
+        void OnKeyFour(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -13,7 +13,7 @@ public abstract class InputHandlerBase : MonoBehaviour, IOnEnableExecution
   // Dictionary to store input actions and their callbacks
   protected Dictionary<InputAction, Action<InputAction.CallbackContext>> _actionMap;
 
-  public  void InitializeOnEnable() {
+  public void InitializeOnEnable() {
     _inputActions = InputReader.Instance.InputActions;
     InitializeActionMap();
 
