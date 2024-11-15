@@ -4,6 +4,9 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ConstructionTempObject : MonoBehaviour
 {
+
+  public ConstructableObjectData data;
+
   [System.Serializable]
   public class BoxData
   {

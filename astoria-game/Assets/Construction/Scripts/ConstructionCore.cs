@@ -31,6 +31,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private int _currentStructureIndex;
   private ConstructableObjectData _currentStructureData;
   private GameObject _tempObject;
+  private GameObject _heldObject;
   private GameObject _highlightedObject;
   private Material _highlightedObjectMaterial;
   private Camera _stashedCamera;
@@ -109,10 +110,13 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     if (_isDeleting)
     {
       TryDestroyTemporaryObject();
+      TryDestroyHeldObject();
       TryHighlightObject();
     } else {
       TryUnhighlightObject();
+
       PlaceTemporaryObject();
+      CreateHeldObject();
     }
   }
 
@@ -252,15 +256,29 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     return false;
   }
 
+  private void CreateHeldObject() {
+    if (_heldObject == null) {
+      _heldObject = Instantiate(_currentStructureData.TemporaryPrefab);
+
+      // Remove the box collider from the held object
+      Collider[] colliders = _heldObject.GetComponentsInChildren<Collider>();
+      foreach (Collider c in colliders) {
+        Destroy(c);
+      }
+
+      _heldObject.transform.parent = _stashedCamera.transform;
+      _heldObject.transform.localPosition = _currentStructureData.HeldOffsetPosition;
+      _heldObject.transform.localRotation = Quaternion.Euler(_currentStructureData.HeldOffsetRotation);
+    }
+  }
+
   private void OnClick()
   {
     if (!EnableBuilding) return;
 
-    if (_canPlace)
-    {
+    if (_canPlace) {
       PlacePermanentObject();
-    } else if (_isDeleting)
-    {
+    } else if (_isDeleting) {
       TryDestroyObject();
     }
   }
@@ -300,6 +318,13 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     if (_tempObject != null) {
       Destroy(_tempObject);
       _tempObject = null;
+    }
+  }
+
+  private void TryDestroyHeldObject() {
+    if (_heldObject != null) {
+      Destroy(_heldObject);
+      _heldObject = null;
     }
   }
 
@@ -411,10 +436,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
     _currentStructureIndex = index;
     _currentStructureData = ConstructableObjects[_currentStructureIndex];
-    if (_tempObject != null)
-    {
-      Destroy(_tempObject);
-      _tempObject = null;
-    }
+    
+    TryDestroyTempObject();
+    TryDestroyHeldObject();
   }
 }

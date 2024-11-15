@@ -19,4 +19,6 @@ public class ConstructableObjectData : ScriptableObject
   public float HeightOffset = 0;
   public Vector3 RotationOffset = Vector3.zero;
   public Vector3 PositionOffset = Vector3.zero;
+  public Vector3 HeldOffsetPosition = Vector3.zero;
+  public Vector3 HeldOffsetRotation = Vector3.zero;
 }

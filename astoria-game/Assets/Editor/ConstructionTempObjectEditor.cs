@@ -23,6 +23,21 @@ public class ConstructionTempObjectEditor : Editor
     EditorGUILayout.LabelField("Height Offset", EditorStyles.boldLabel);
     targetObject.heightOffset = EditorGUILayout.Slider("Offset", targetObject.heightOffset, 0f, 10f); // Adjust range as needed
 
+    // Button to sync HeightOffset to ScriptableObject
+    if (GUILayout.Button("Sync HeightOffset to ScriptableObject") && targetObject.data != null)
+    {
+      SyncHeightOffset();
+    }
+
+    // Button to sync Position and Rotation to ScriptableObject
+    if (Application.isPlaying) {
+      if (GUILayout.Button("Sync Position and Rotation to ScriptableObject") && targetObject.data != null)
+      {
+        SyncPositionAndRotation();
+      }
+    }
+
+
     // Button to add a new box
     if (GUILayout.Button("Add Box"))
     {
@@ -75,96 +90,31 @@ public class ConstructionTempObjectEditor : Editor
     }
   }
 
-
-  private void OnSceneGUI()
+  private void SyncHeightOffset()
   {
-    HandleKeyboardInput();
-    HandleMouseSelection();
-
-    // Iterate through boxes to display handles
-    for (int i = 0; i < targetObject.boxes.Count; i++)
+    if (targetObject.data != null)
     {
-      ConstructionTempObject.BoxData box = targetObject.boxes[i];
+      targetObject.data.HeightOffset = targetObject.heightOffset;
+      EditorUtility.SetDirty(targetObject.data); // Mark the ScriptableObject as dirty to save changes
+      Debug.Log("HeightOffset synced to ScriptableObject.");
+    }
+    else
+    {
+      Debug.LogWarning("No ScriptableObject linked to sync with.");
+    }
+  }
 
-      // Calculate world position and rotation based on target's transform
-      Vector3 worldPosition = targetTransform.TransformPoint(box.position);
-      Quaternion worldRotation = targetTransform.rotation * box.rotation;
-
-      // Only show handles for the selected box
-      if (i == selectedBoxIndex)
-      {
-        // Position handle for the selected box
-        EditorGUI.BeginChangeCheck();
-        Vector3 newPosition = Handles.PositionHandle(worldPosition, worldRotation);
-        if (EditorGUI.EndChangeCheck())
-        {
-          Undo.RecordObject(targetObject, "Move Box");
-          // Update the local position based on the new world position
-          box.position = targetTransform.InverseTransformPoint(newPosition);
-          EditorUtility.SetDirty(targetObject);
-        }
-
-        // Rotation handle for the selected box
-        EditorGUI.BeginChangeCheck();
-        Quaternion newRotation = worldRotation;
-        newRotation = Handles.RotationHandle(newRotation, worldPosition);
-        if (EditorGUI.EndChangeCheck())
-        {
-          Undo.RecordObject(targetObject, "Rotate Box");
-          box.rotation = Quaternion.Inverse(targetTransform.rotation) * newRotation;
-          EditorUtility.SetDirty(targetObject);
-        }
-
-        // Scaling handles, only show for the selected box
-        EditorGUI.BeginChangeCheck();
-        Vector3 newSize = box.size;
-        Vector3 halfSize = box.size / 2;
-
-        for (int j = 0; j < 3; j++)
-        {
-          Vector3 direction = Vector3.zero;
-          direction[j] = 1;
-
-          // Handle positions for both sides
-          Vector3 handlePositionPositive = worldPosition + worldRotation * Vector3.Scale(direction, halfSize);
-          Vector3 handlePositionNegative = worldPosition - worldRotation * Vector3.Scale(direction, halfSize);
-
-          // Adjust the handle size used in Handles.Slider
-          float effectiveHandleSize = handleSize * HandleUtility.GetHandleSize(handlePositionPositive);
-
-          // Draw handles for both positive and negative directions
-          Vector3 newHandlePositionPositive = Handles.Slider(handlePositionPositive, worldRotation * direction, effectiveHandleSize, Handles.CubeHandleCap, 0f);
-          Vector3 newHandlePositionNegative = Handles.Slider(handlePositionNegative, worldRotation * -direction, effectiveHandleSize, Handles.CubeHandleCap, 0f);
-
-          // Calculate scale adjustments from both sides
-          float scaleChangePositive = (newHandlePositionPositive - handlePositionPositive).magnitude * Mathf.Sign(Vector3.Dot(newHandlePositionPositive - handlePositionPositive, direction));
-          float scaleChangeNegative = (newHandlePositionNegative - handlePositionNegative).magnitude * Mathf.Sign(Vector3.Dot(newHandlePositionNegative - handlePositionNegative, -direction));
-
-          // Update size symmetrically for both positive and negative directions
-          newSize[j] += scaleChangePositive + scaleChangeNegative;
-
-          // Prevent negative scaling
-          if (newSize[j] < 0)
-          {
-            newSize[j] = 0; // Prevent it from going negative
-          }
-        }
-
-        if (EditorGUI.EndChangeCheck())
-        {
-          Undo.RecordObject(targetObject, "Scale Box");
-          box.size = newSize;
-          EditorUtility.SetDirty(targetObject);
-        }
-
-        // Draw box outline in Scene view
-        Handles.color = Color.cyan;
-        Matrix4x4 handleMatrix = Matrix4x4.TRS(worldPosition, worldRotation, Vector3.one);
-        using (new Handles.DrawingScope(handleMatrix))
-        {
-          Handles.DrawWireCube(Vector3.zero, box.size);
-        }
-      }
+  private void SyncPositionAndRotation() {
+    if (targetObject.data != null)
+    {
+      targetObject.data.HeldOffsetPosition = targetObject.transform.localPosition;
+      targetObject.data.HeldOffsetRotation = targetObject.transform.localRotation.eulerAngles;
+      EditorUtility.SetDirty(targetObject.data); // Mark the ScriptableObject as dirty to save changes
+      Debug.Log("Position and Rotation offset synced to ScriptableObject.");
+    }
+    else
+    {
+      Debug.LogWarning("No ScriptableObject linked to sync with.");
     }
   }
 
