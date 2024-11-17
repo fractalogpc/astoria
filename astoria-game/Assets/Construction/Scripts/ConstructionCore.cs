@@ -5,21 +5,23 @@ using UnityEngine.InputSystem;
 
 public class ConstructionCore : InputHandlerBase, IStartExecution
 {
+  public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
+
+  public bool EnableDebugging;
+
   #region Variables
 
-  public bool EnableBuilding;
+  public bool HasObject; // If the playerr is currently holding an object
   public bool EnableRotateOnRightClick;
 
   [Header("Construction Data")]
   [SerializeField] private ConstructableObjectData[] ConstructableObjects;
-  [SerializeField] private int DefaultObjectIndex;
 
   [Header("General settings")]
   [SerializeField] private float _minBuildDistance = 1f;
   [SerializeField] private float _maxBuildDistance = 5f;
   [SerializeField] private LayerMask _groundLayer;
   [SerializeField] private LayerMask _constructionLayer;
-  [SerializeField] private LayerMask _playerLayer;
   [SerializeField] private Material _validMaterial;
   [SerializeField] private Material _invalidMaterial;
   [SerializeField] private Material _destroyMaterial;
@@ -29,7 +31,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   [SerializeField] private float _wallAngleTolarence = 35f;
 
   private int _currentStructureIndex;
-  private ConstructableObjectData _currentStructureData;
+  public ConstructableObjectData _currentStructureData;
   private GameObject _tempObject;
   private GameObject _heldObject;
   private GameObject _highlightedObject;
@@ -38,7 +40,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private TEMPORARYPlayerLookNoMultiplayer _playerLook;
 
-  private bool _canPlace;
+  private bool _canPlace; // If the currrently held object can be placed
   [SerializeField] private bool _isRotating;
   [SerializeField] private bool _isDeleting;
 
@@ -48,14 +50,16 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   {
     _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
 
-    RegisterAction(_inputActions.Player.Build, _ => ToggleBuilding());
+    RegisterAction(_inputActions.Player.Attack, _ => OnClick());
+
     RegisterAction(_inputActions.Player.Rotate, _ => ToggleRotating(true), () => ToggleRotating(false));
     RegisterAction(_inputActions.Player.Delete, _ => ToggleDeleting());
 
-    RegisterAction(_inputActions.Player.Attack, _ => OnClick());
+    // Debugging
+    if (!EnableDebugging) return;
+    
+    RegisterAction(_inputActions.Player.Build, _ => ToggleBuilding());
 
-    // TODO: Implement this
-    // RegisterAction(_inputActions.Player.Scroll, ctx => ChangeActiveObject((int)ctx.ReadValue<float>()));
     RegisterAction(_inputActions.Player.KeyOne, _ => ChangeActiveObject(0));
     RegisterAction(_inputActions.Player.KeyTwo, _ => ChangeActiveObject(1));
     RegisterAction(_inputActions.Player.KeyThree, _ => ChangeActiveObject(2));
@@ -66,20 +70,22 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void ToggleBuilding()
   {
-    EnableBuilding = !EnableBuilding;
+    HasObject = !HasObject;
 
-    if (!EnableBuilding)
+    if (!HasObject)
     {
       _isRotating = false;
       _isDeleting = false;
       TryDestroyTempObject();
-      // Enable player looking
+      TryDestroyHeldObject();
+      _currentStructureData = null;
+      _playerLook.canLook = true;
     }
   }
 
   private void ToggleRotating(bool enable)
   {
-    if (!EnableBuilding) return;
+    if (!HasObject) return;
 
     _isRotating = enable;
     _isDeleting = false;
@@ -89,34 +95,31 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void ToggleDeleting()
   {
-    if (!EnableBuilding) return;
-    if (_isRotating) return;
+    if (HasObject) return;
 
     _isDeleting = !_isDeleting;
+
+    if (!_isDeleting)
+    {
+      TryUnhighlightObject();
+    }
   }
 
   public void InitializeStart()
   {
     _stashedCamera = ResourceHolder.Instance.MainCamera;
-    ChangeActiveObject(DefaultObjectIndex);
 
     _playerLook = GetComponent<TEMPORARYPlayerLookNoMultiplayer>();
   }
 
   private void Update()
   {
-    if (!EnableBuilding) return;
-
-    if (_isDeleting)
-    {
-      TryDestroyTemporaryObject();
-      TryDestroyHeldObject();
-      TryHighlightObject();
-    } else {
-      TryUnhighlightObject();
-
+    if (HasObject) {
       PlaceTemporaryObject();
-      CreateHeldObject();
+    }
+
+    if (_isDeleting) {
+      TryHighlightObject();
     }
   }
 
@@ -274,11 +277,19 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void OnClick()
   {
-    if (!EnableBuilding) return;
+    if (HasObject) {
+      if (_canPlace) {
+        PlacePermanentObject();
 
-    if (_canPlace) {
-      PlacePermanentObject();
-    } else if (_isDeleting) {
+        // Reset player build state
+        TryDestroyHeldObject();
+        _currentStructureData = null;
+        HasObject = false;
+        _playerLook.canLook = true;
+      }
+    }
+
+    if (_isDeleting) {
       TryDestroyObject();
     }
   }
@@ -330,8 +341,12 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void TryDestroyObject() {
     if (_highlightedObject != null) {
+      ConstructableObjectData objectType = _highlightedObject.transform.root.GetComponent<ConstructionPermObject>().data; // REALLY bad practice but it works for now, this will likely cauose issues later
       Destroy(_highlightedObject);
       _highlightedObject = null;
+
+      _isDeleting = false;
+      TryGiveObject(objectType);
     }
   }
 
@@ -434,10 +449,26 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
       return;
     }
 
+    _currentStructureData = null;
+    TryDestroyHeldObject();
+    TryDestroyTempObject();
+
     _currentStructureIndex = index;
     _currentStructureData = ConstructableObjects[_currentStructureIndex];
     
-    TryDestroyTempObject();
-    TryDestroyHeldObject();
+    CreateHeldObject();
+  }
+
+  public void TryGiveObject(ConstructableObjectData data)
+  {
+    if (_currentStructureData != null) return;
+
+    _isDeleting = false;
+    TryUnhighlightObject();
+
+    _currentStructureData = data;
+    HasObject = true;
+
+    CreateHeldObject();
   }
 }

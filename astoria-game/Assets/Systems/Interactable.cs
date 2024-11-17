@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
+  public UnityEngine.Events.UnityEvent OnInteract;
   public virtual void Interact() {
-    Debug.Log("Interacting with " + gameObject.name);
+    OnInteract?.Invoke();
   }
 }

@@ -7,7 +7,6 @@ public class ConstructionTempObjectEditor : Editor
   private ConstructionTempObject targetObject;
   private Transform targetTransform;
   private int selectedBoxIndex = -1; // Track the selected box index
-  private float handleSize = 0.2f; // Set a smaller handle size
 
   private void OnEnable()
   {
