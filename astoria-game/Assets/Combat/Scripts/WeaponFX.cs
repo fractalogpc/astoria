@@ -33,7 +33,7 @@ public class WeaponFX : MonoBehaviour
   [SerializeField] private ParticleSystem _muzzleSmoke;
 
   private void Update() {
-    if (Input.GetKeyDown(KeyCode.Space)) {
+    if (Input.GetMouseButtonDown(0)) {
       PlayFireFX();
     }
   }
