@@ -19,7 +19,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution {
 
   public void InitializeStart() => SwitchInputMap(DEFAULT_MAP);
 
-  private void SwitchInputMap(InputMap newInputMap) {
+  public void SwitchInputMap(InputMap newInputMap) {
     if (newInputMap == CurrentMap) {
       Debug.LogWarning($"Trying to change to the same input map: {newInputMap}");
       return;

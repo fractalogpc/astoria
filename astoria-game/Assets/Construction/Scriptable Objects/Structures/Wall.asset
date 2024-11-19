@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072dc87815123274e80187832f8473a1, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  Name: Wall
+  ItemName: Wooden wall
+  ItemDescription: A sturdy wooden wall
+  ItemIcon: {fileID: 0}
+  ItemBGColor: {r: 0, g: 0, b: 0, a: 0}
+  ItemSize: {x: 1, y: 1}
+  Cost:
+  - Item: {fileID: 11400000, guid: 34cab2a8fbcfd654ebec15048dac0667, type: 2}
+    Amount: 2
   Type: 1
   TemporaryPrefab: {fileID: 6887075782289690670, guid: d1d4cc936983c9a4a92a0697281e3aef, type: 3}
   FinalPrefab: {fileID: 4149885942643869310, guid: 823e0a86369559342971025b8d74d528, type: 3}
+  FallingPrefab: {fileID: 0}
   HeightOffset: 0.78
   RotationOffset: {x: 0, y: 90, z: 0}
   PositionOffset: {x: 0, y: 2, z: 0}
