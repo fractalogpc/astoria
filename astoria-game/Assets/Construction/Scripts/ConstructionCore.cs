@@ -509,4 +509,35 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
     CreateHeldObject();
   }
+
+  public bool CanGiveObject(ConstructableObjectData data, out string errorText)
+  {
+    errorText = "";
+
+    if (HasObject)
+    {
+      errorText = "You are already holding an object";
+      return false;
+    }
+
+    if (data == null)
+    {
+      errorText = "No object selected";
+      return false;
+    }
+
+    if (data.Cost.Count > 0)
+    {
+      foreach (ConstructionObjectCost cost in data.Cost)
+      {
+        if (false) //!Inventory.Instance.HasItem(cost.Item, cost.Amount))
+        {
+          errorText = "You do not have the required resources";
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 }
