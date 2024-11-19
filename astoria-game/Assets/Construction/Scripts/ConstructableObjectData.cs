@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ConstructableObject", menuName = "Construction/ConstructableObject")]
+[CreateAssetMenu(fileName = "ConstructableData", menuName = "Scriptable Objects/ConstructableData")]
 public class ConstructableObjectData : ItemData
 {
   public enum ConstructableType
