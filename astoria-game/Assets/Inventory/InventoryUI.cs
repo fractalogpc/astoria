@@ -72,17 +72,32 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		_colliderImage.raycastTarget = true;
 	}
 	
-	// Get Item Count
+	/// <summary>
+	/// Gets a list of all item instances that match the persistent ItemData.
+	/// </summary>
+	/// <param name="itemData">The ItemData to match against.</param>
+	/// <returns>A list of InventoryItem that match the ItemData.</returns>
 	public List<InventoryItem> GetItemsOfType(ItemData itemData) {
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
-	public bool GetItemCount(ItemData itemData, int count = 1) {
+	/// <summary>
+	/// Finds whether there are exactly count instances of the item in the inventory.
+	/// </summary>
+	/// <param name="itemData">The ItemData to match against.</param>
+	/// <param name="count">The count of instances.</param>
+	/// <returns>True if there are count InventoryItems matching itemData.</returns>
+	public bool ItemCountInInventory(ItemData itemData, int count = 1) {
 		List<InventoryItem> matchingItemInstances = InventoryData.Items.FindAll(item => item.ItemData == itemData);
 		if (matchingItemInstances.Count != count) return false;
 		return true;
 	}
-	// Add Item
-	public bool TryAddItemByData(ItemData itemData) {
+	/// <summary>
+	/// Attempts to add count items to the inventory. This does not pack items very well. It is recommended to have the player pick up items one by one.
+	/// </summary>
+	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
+	/// <param name="count">The count of InventoryItems to instantiate.</param>
+	/// <returns>Whether or not adding all the items was successful.</returns>
+	public bool TryAddItemByData(ItemData itemData, int count = 1) {
 		InventoryItem item = new InventoryItem(itemData);
 		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
 			return false;
@@ -90,7 +105,12 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		CreateItemPrefab(item, slotIndexBL);
 		return true;
 	}
-	// Remove Item
+	/// <summary>
+	/// Tries to remove count items from the inventory that match the ItemData.
+	/// </summary>
+	/// <param name="itemData">The ItemData to check against.</param>
+	/// <param name="count">The count of items to remove.</param>
+	/// <returns>Whether or not the count of matching items could be removed.</returns>
 	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
 		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
@@ -100,6 +120,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 				itemInstancesToRemove.Add(itemUIInstance);
 			}
 		}
+		if (itemInstancesToRemove.Count != count) return false;
 		for (int i = itemInstancesToRemove.Count; i == 0; i--) {
 			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
 			itemUIScript.RemoveSelfFromInventory();
