@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// Attach this script to RectTransforms to create Inventory UIs.
 /// </summary>
+[RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
 public class InventoryUI : MonoBehaviour, IStartExecution
