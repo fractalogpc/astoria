@@ -81,14 +81,14 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
 	/// <summary>
-	/// Finds whether there are exactly count instances of the item in the inventory.
+	/// Finds whether there are enough count instances of the item in the inventory.
 	/// </summary>
 	/// <param name="itemData">The ItemData to match against.</param>
 	/// <param name="count">The count of instances.</param>
 	/// <returns>True if there are count InventoryItems matching itemData.</returns>
-	public bool ItemCountInInventory(ItemData itemData, int count = 1) {
+	public bool ItemCountOrMoreInInventory(ItemData itemData, int count = 1) {
 		List<InventoryItem> matchingItemInstances = InventoryData.Items.FindAll(item => item.ItemData == itemData);
-		if (matchingItemInstances.Count != count) return false;
+		if (matchingItemInstances.Count < count) return false;
 		return true;
 	}
 	/// <summary>
@@ -123,6 +123,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		if (itemInstancesToRemove.Count != count) return false;
 		for (int i = itemInstancesToRemove.Count; i == 0; i--) {
 			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
+      _inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
 		return true;
