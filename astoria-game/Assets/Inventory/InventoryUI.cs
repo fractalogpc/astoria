@@ -16,16 +16,17 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 {
 	[Header("Refs, Should be assigned by default.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
+	private List<GameObject> _inventoryItemPrefabInstances;
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
 	[Header("Ensure Slot Prefab is Square, and has InventoryContainerUI component.")]
 	[SerializeField] private GameObject _slotPrefab;
+	private GameObject[,] _slotPrefabInstances;
 	[Header("Settings")]
 	[SerializeField] private Vector2Int InventorySize;
 	[Header("Ensure that this object is placed on an Overlay Canvas that has a Graphic Raycaster, and is a direct child of it.")]
 	public Inventory InventoryData;
 	private List<InventoryItem> _itemsAssignedInEditor;
-	private GameObject[,] _slotPrefabInstances;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
 
 	
@@ -66,6 +67,39 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
+	
+	// Get Item Count
+	public List<InventoryItem> GetItemsOfType(ItemData itemData) {
+		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
+	}
+	public bool GetItemCount(ItemData itemData, int count = 1) {
+		List<InventoryItem> matchingItemInstances = InventoryData.Items.FindAll(item => item.ItemData == itemData);
+		if (matchingItemInstances.Count != count) return false;
+		return true;
+	}
+	// Add Item
+	public bool TryAddItemByData(ItemData itemData) {
+		InventoryItem item = new InventoryItem(itemData);
+		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
+			return false;
+		}
+		CreateItemPrefab(item, slotIndexBL);
+		return true;
+	}
+	// Remove Item
+	public bool TryRemoveItemByData(ItemData itemData) {
+		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
+			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
+			if (itemUIScript.Item.ItemData == itemData) {
+				InventoryData.RemoveItem(itemUIScript.Item);
+				Destroy(itemUIInstance);
+				return true;
+			}
+		}
+		return true;
+	}
+	
+	
 	private int InstanceEditorItemsIntoInventory() {
 		int itemsPlaced = 0;
 		if (_itemsAssignedInEditor.Count == 0) return 0;
@@ -89,6 +123,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, item.Size.x * SlotSizeUnits);
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, item.Size.y * SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
+		_inventoryItemPrefabInstances.Add(itemPrefab);
 		return itemPrefab;
 	}
 	private void DeleteChildrenOf(Transform parent) {
