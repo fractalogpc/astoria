@@ -17,14 +17,17 @@ public class CrafterController : MonoBehaviour, IStartExecution
 
   [SerializeField] private ConstructableObjectData[] datas;
 
-  [SerializeField] private TMPro.TextMeshProUGUI text;
+  [SerializeField] private TMPro.TextMeshProUGUI _text;
+  [SerializeField] private TMPro.TextMeshProUGUI _errorText;
+
+  private bool _canCraft;
 
   public ConstructionCore ConstructionCore;
 
   public void IterateIndex(int index) {
     Index += index;
 
-    text.text = datas[Index].name;
+    _text.text = datas[Index].name;
   }
 
   public void InitializeStart() {
@@ -33,10 +36,28 @@ public class CrafterController : MonoBehaviour, IStartExecution
       Destroy(this);
       return;
     }
-    text.text = datas[Index].name;
+    _text.text = datas[Index].name;
   }
 
   public void CreateObject() {
+    if (!_canCraft) return;
     ConstructionCore.TryGiveObject(datas[Index]);
+
+    foreach (var item in datas[Index].Cost) {
+      for (int i = 0; i < item.Amount; i++) {
+        ResourceHolder.Instance.InventoryUI.TryRemoveItemByData(item.Item);
+      }
+    }
+  }
+
+  private void Update()
+  {
+    string errorText = "";
+    _canCraft = ConstructionCore.CanGiveObject(datas[Index], out errorText);
+    if (_canCraft) {
+      _errorText.text = "";
+    } else {
+      _errorText.text = errorText;
+    }
   }
 }

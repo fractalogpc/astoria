@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -508,5 +509,36 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     HasObject = true;
 
     CreateHeldObject();
+  }
+
+  public bool CanGiveObject(ConstructableObjectData data, out string errorText)
+  {
+    errorText = "";
+
+    if (HasObject)
+    {
+      errorText = "You are already holding an object";
+      return false;
+    }
+
+    if (data == null)
+    {
+      errorText = "No object selected";
+      return false;
+    }
+
+    if (data.Cost.Count > 0)
+    {
+      foreach (ConstructionObjectCost cost in data.Cost)
+      {
+        if (!ResourceHolder.Instance.InventoryUI.GetItemCount(cost.Item, cost.Amount))
+        {
+          errorText = "You do not have the required resources";
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
