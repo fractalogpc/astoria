@@ -12,7 +12,11 @@ using UnityEngine;
 [Serializable]
 public class Inventory
 {
-    public List<InventoryItem> Items = new List<InventoryItem>();
+    public List<InventoryItem> Items {
+        get => _items;
+        private set => _items = value;
+    }
+    [SerializeField] private List<InventoryItem> _items = new List<InventoryItem>();
     public InventoryContainer[,] Containers { get; }
 
     public int Width => Containers.GetLength(0);
@@ -69,7 +73,6 @@ public class Inventory
             }
         }
     }
-
     public bool TryAddItem(InventoryItem item, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
         if (Items.Contains(item)) return false;

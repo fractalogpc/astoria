@@ -49,7 +49,11 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		Item = item;
 		_startingInventory = originalInventory;
 		_itemIconImage.sprite = item.ItemData.ItemIcon;
+		_rectTransform.sizeDelta = new Vector2(item.Size.x * originalInventory.SlotSizeUnits, item.Size.y * originalInventory.SlotSizeUnits);
+		_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(item.Size.x * originalInventory.SlotSizeUnits / 2, item.Size.y * originalInventory.SlotSizeUnits / 2);
+		_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(item.Size.x * originalInventory.SlotSizeUnits, item.Size.y * originalInventory.SlotSizeUnits);
 		_followMouse = true;
+		_canvasGroup.alpha = 0;
 	}
 	
 	public bool OnLetGoOfDraggedItem() {
@@ -86,6 +90,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	
 	private Vector2Int GetSlotIndexInInventory(InventoryUI inventory, Vector2 positionWS) {
 		Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
+		positionWS = positionWS + new Vector2(-_rectTransform.rect.width / 4, -_rectTransform.rect.height / 4);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
 		Vector2 localPoint;
 		localPoint = inventoryRect.InverseTransformPoint(positionWS) + new Vector3(inventoryRect.sizeDelta.x / 2, inventoryRect.sizeDelta.y / 2, 0);

@@ -83,7 +83,7 @@ public class InventoryItemUI : MonoBehaviour
 	}
 	public void MoveToInventoryAtPosition(InventoryUI inventory, Vector2Int slotIndexBL) {
 		if (!inventory.TryPlaceItem(Item, slotIndexBL)) {
-			Debug.LogError($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}. Check for unexpected inventory logic.");
+			Debug.LogWarning($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}.");
 		}
 		else {
 			Destroy(gameObject);
