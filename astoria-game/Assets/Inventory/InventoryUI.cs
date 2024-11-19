@@ -24,8 +24,11 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 	private GameObject[,] _slotPrefabInstances;
 	[Header("Settings")]
 	[SerializeField] private Vector2Int InventorySize;
-	[Header("Ensure that this object is placed on an Overlay Canvas that has a Graphic Raycaster, and is a direct child of it.")]
+	/// <summary>
+	/// WARNING: DO NOT USE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
+	/// </summary>
 	public Inventory InventoryData;
+	[Header("Ensure that this object is placed on an Overlay Canvas that has a Graphic Raycaster, and is a direct child of it.")]
 	private List<InventoryItem> _itemsAssignedInEditor;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
 
@@ -39,6 +42,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		_colliderImage.raycastTarget = true;
 	}
 	public void InitializeStart() {
+		Debug.Log("Remind Matthew to add rotating items later.");
 		if (InventoryData != null) {
 			_itemsAssignedInEditor = InventoryData.Items;
 		}
@@ -87,14 +91,18 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		return true;
 	}
 	// Remove Item
-	public bool TryRemoveItemByData(ItemData itemData) {
+	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
+		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
+			if (itemInstancesToRemove.Count == count) break;
 			if (itemUIScript.Item.ItemData == itemData) {
-				InventoryData.RemoveItem(itemUIScript.Item);
-				Destroy(itemUIInstance);
-				return true;
+				itemInstancesToRemove.Add(itemUIInstance);
 			}
+		}
+		for (int i = itemInstancesToRemove.Count; i == 0; i--) {
+			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
+			itemUIScript.RemoveSelfFromInventory();
 		}
 		return true;
 	}

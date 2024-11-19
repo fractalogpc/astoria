@@ -89,7 +89,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 	
 	private Vector2Int GetSlotIndexInInventory(InventoryUI inventory, Vector2 positionWS) {
-		Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
+		// Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
 		positionWS = positionWS + new Vector2(-_rectTransform.rect.width / 4, -_rectTransform.rect.height / 4);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
 		Vector2 localPoint;

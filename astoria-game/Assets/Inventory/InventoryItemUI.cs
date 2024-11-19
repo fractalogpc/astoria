@@ -81,6 +81,11 @@ public class InventoryItemUI : MonoBehaviour
 			Debug.LogError($"Could not put item {Item.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
 		}
 	}
+	public void RemoveSelfFromInventory() {
+		_parentInventory.InventoryData.RemoveItem(Item);
+		Destroy(gameObject);
+	}
+	
 	public void MoveToInventoryAtPosition(InventoryUI inventory, Vector2Int slotIndexBL) {
 		if (!inventory.TryPlaceItem(Item, slotIndexBL)) {
 			Debug.LogWarning($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}.");
