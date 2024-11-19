@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ConstructableObject", menuName = "Construction/ConstructableObject")]
-public class ConstructableObjectData : ScriptableObject
+public class ConstructableObjectData : ItemData
 {
-
   public enum ConstructableType
   {
     Default,
@@ -11,7 +11,9 @@ public class ConstructableObjectData : ScriptableObject
     Prop
   }
 
-  public string Name;
+  [Header("Constructable Settings")]
+  public List<ConstructionObjectCost> Cost = new();
+
   public ConstructableType Type;
   public GameObject TemporaryPrefab;
   public GameObject FinalPrefab;
@@ -22,4 +24,14 @@ public class ConstructableObjectData : ScriptableObject
   public Vector3 PositionOffset = Vector3.zero;
   public Vector3 HeldOffsetPosition = Vector3.zero;
   public Vector3 HeldOffsetRotation = Vector3.zero;
+}
+
+[System.Serializable]
+public class ConstructionObjectCost {
+  public ItemData Item;
+  public int Amount;
+  public ConstructionObjectCost(ItemData item, int amount) {
+    Item = item;
+    Amount = amount;
+  }
 }
