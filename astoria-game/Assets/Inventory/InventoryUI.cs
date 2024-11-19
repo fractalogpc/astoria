@@ -16,6 +16,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 {
 	[Header("Refs, Should be assigned by default.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
+
 	private List<GameObject> _inventoryItemPrefabInstances;
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
@@ -47,6 +48,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 			_itemsAssignedInEditor = InventoryData.Items;
 		}
 		InitializeInventoryContainers();
+		_inventoryItemPrefabInstances = new List<GameObject>();
 		if (InstanceEditorItemsIntoInventory() > 0) {
 			Debug.LogWarning($"Could not place all items in {gameObject.name}. Some items may be too large or the inventory too small.");
 		}
@@ -81,11 +83,11 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
 	/// <summary>
-	/// Finds whether there are enough count instances of the item in the inventory.
+	/// Finds whether there are count instances or more of the item in the inventory.
 	/// </summary>
 	/// <param name="itemData">The ItemData to match against.</param>
 	/// <param name="count">The count of instances.</param>
-	/// <returns>True if there are count InventoryItems matching itemData.</returns>
+	/// <returns>True if there are count or more InventoryItems matching itemData.</returns>
 	public bool ItemCountOrMoreInInventory(ItemData itemData, int count = 1) {
 		List<InventoryItem> matchingItemInstances = InventoryData.Items.FindAll(item => item.ItemData == itemData);
 		if (matchingItemInstances.Count < count) return false;
@@ -112,6 +114,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 	/// <param name="count">The count of items to remove.</param>
 	/// <returns>Whether or not the count of matching items could be removed.</returns>
 	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
+		print($"Trying to remove {count} {itemData.ItemName} from {gameObject.name}.");
 		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
@@ -120,17 +123,20 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 				itemInstancesToRemove.Add(itemUIInstance);
 			}
 		}
+		print($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying for {count}.");
 		if (itemInstancesToRemove.Count != count) return false;
-		for (int i = itemInstancesToRemove.Count; i == 0; i--) {
+		print("Made past count check.");
+		print(itemInstancesToRemove);
+		Debug.LogWarning("This is where the logic bug is. For some reason, this for loop is looping over one more time than it should.");
+		for (int i = count - 1; i <= 0; i--) {
+			print($"Index: {i}");
 			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
-      _inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
+			print($"{i} - removing {itemUIScript.Item.ItemData.ItemName} for {gameObject.name}.");
+			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
 		return true;
 	}
-  
-	
-	
 	private int InstanceEditorItemsIntoInventory() {
 		int itemsPlaced = 0;
 		if (_itemsAssignedInEditor.Count == 0) return 0;
