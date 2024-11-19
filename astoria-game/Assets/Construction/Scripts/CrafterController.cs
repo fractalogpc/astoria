@@ -42,6 +42,12 @@ public class CrafterController : MonoBehaviour, IStartExecution
   public void CreateObject() {
     if (!_canCraft) return;
     ConstructionCore.TryGiveObject(datas[Index]);
+
+    foreach (var item in datas[Index].Cost) {
+      for (int i = 0; i < item.Amount; i++) {
+        ResourceHolder.Instance.InventoryUI.TryRemoveItemByData(item.Item);
+      }
+    }
   }
 
   private void Update()

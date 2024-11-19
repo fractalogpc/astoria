@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -106,6 +106,7 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		}
 		return true;
 	}
+  
 	
 	
 	private int InstanceEditorItemsIntoInventory() {
