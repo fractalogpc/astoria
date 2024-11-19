@@ -2646,6 +2646,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inventoryCanvasGroup: {fileID: 236669662}
+--- !u!114 &286256753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260854787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abcc018fa86e8964d9dc9e3942e8ea45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gravity: 20
+  _friction: 6
+  _walkSpeed: 6
+  _moveAcceleration: 14
+  _moveDeceleration: 10
+  _airAcceleration: 2
+  _airDeceleration: 2
+  _airControl: 0.3
+  _jumpSpeed: 8
+  _holdJumpToBhop: 0
 --- !u!1 &296740484
 GameObject:
   m_ObjectHideFlags: 0
@@ -5796,6 +5818,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1342664424812424045, guid: 819dfcbea00df3a4bb35fb2870450262, type: 3}
       insertIndex: -1
       addedObject: {fileID: 286256744}
+    - targetCorrespondingSourceObject: {fileID: 1342664424812424045, guid: 819dfcbea00df3a4bb35fb2870450262, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 286256753}
   m_SourcePrefab: {fileID: 100100000, guid: 819dfcbea00df3a4bb35fb2870450262, type: 3}
 --- !u!1 &642808672
 GameObject:
