@@ -44,9 +44,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     ConstructionCore.TryGiveObject(datas[Index]);
 
     foreach (var item in datas[Index].Cost) {
-      for (int i = 0; i < item.Amount; i++) {
-        ResourceHolder.Instance.InventoryUI.TryRemoveItemByData(item.Item);
-      }
+      ResourceHolder.Instance.InventoryUI.TryRemoveItemByData(item.Item, item.Amount);
     }
   }
 
