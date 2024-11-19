@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
-public class InventoryUI : MonoBehaviour
+public class InventoryUI : MonoBehaviour, IStartExecution
 {
 	[Header("Refs, Should be assigned by default.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
@@ -36,7 +36,7 @@ public class InventoryUI : MonoBehaviour
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
-	private void Start() {
+	public void InitializeStart() {
 		if (InventoryData != null) {
 			_itemsAssignedInEditor = InventoryData.Items;
 		}

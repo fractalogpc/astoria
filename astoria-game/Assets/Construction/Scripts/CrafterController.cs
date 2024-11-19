@@ -37,8 +37,6 @@ public class CrafterController : MonoBehaviour, IStartExecution
   }
 
   public void CreateObject() {
-    Debug.Log("Give object");
-    // Debug.Log(ConstructionCore.Instance);
     ConstructionCore.TryGiveObject(datas[Index]);
   }
 }

@@ -34,7 +34,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   public ConstructableObjectData _currentStructureData;
   private GameObject _tempObject;
   private GameObject _heldObject;
-  private GameObject _highlightedObject;
+  private GameObject _baseHighlightedObject; // This is the gameObject with the collider and the renderer on it
+  private GameObject _highlightedObject; // This is the head parent of the baseHighlightedObject
   private Material _highlightedObjectMaterial;
   private Camera _stashedCamera;
 
@@ -304,13 +305,14 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     Ray ray = _stashedCamera.ScreenPointToRay(Input.mousePosition);
     RaycastHit hit;
     if (Physics.Raycast(ray, out hit, 100f, _constructionLayer)) {
-      if (_highlightedObject != hit.collider.gameObject) {
-        if (_highlightedObject != null) {
-          _highlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
+      if (_baseHighlightedObject != hit.collider.gameObject) {
+        if (_baseHighlightedObject != null) {
+          _baseHighlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
         }
-        _highlightedObject = hit.collider.gameObject;
-        _highlightedObjectMaterial = _highlightedObject.GetComponent<Renderer>().material;
-        _highlightedObject.GetComponent<Renderer>().material = _destroyMaterial;
+        _baseHighlightedObject = hit.collider.gameObject;
+        _highlightedObject = _baseHighlightedObject.GetComponent<ReferenceParent>().ParentScript.gameObject;
+        _highlightedObjectMaterial = _baseHighlightedObject.GetComponent<Renderer>().material;
+        _baseHighlightedObject.GetComponent<Renderer>().material = _destroyMaterial;
       }
     } else {
       TryUnhighlightObject();
@@ -319,7 +321,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void TryUnhighlightObject() {
     if (_highlightedObject != null) {
-      _highlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
+      _baseHighlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
+      _baseHighlightedObject = null;
       _highlightedObject = null;
       _highlightedObjectMaterial = null;
     }
@@ -341,12 +344,38 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void TryDestroyObject() {
     if (_highlightedObject != null) {
-      ConstructableObjectData objectType = _highlightedObject.transform.root.GetComponent<ConstructionPermObject>().data; // REALLY bad practice but it works for now, this will likely cauose issues later
-      Destroy(_highlightedObject);
+      
+      // If the selected object is falling, ignore click
+      if (_highlightedObject.GetComponent<ConstructionFallingObject>()) {
+        return;
+      }
+
+      ConstructionPermObject script = _highlightedObject.GetComponent<ConstructionPermObject>();
+      ConstructableObjectData objectType = script.Data;
+      
+      script.OnObjectRemoved();
+
+      MakeObjectsFall(script.GetObjects(0));
+
+      Destroy(_highlightedObject.gameObject);
       _highlightedObject = null;
+      _highlightedObjectMaterial = null;
+      _baseHighlightedObject = null;
 
       _isDeleting = false;
       TryGiveObject(objectType);
+    }
+  }
+
+  private void MakeObjectsFall(List<GameObject> objects) {
+
+    foreach (GameObject obj in objects) {
+      ConstructableObjectData data = obj.GetComponent<ConstructionPermObject>().Data;
+      GameObject fallingObject = Instantiate(data.FallingPrefab, obj.transform.position, obj.transform.rotation);
+
+      fallingObject.GetComponent<ConstructionFallingObject>().Data = data;
+
+      Destroy(obj);
     }
   }
 
@@ -424,7 +453,12 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     // Logic for placing an object (setting a parent, etc) goes here
     
     GameObject permanentObject = Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation);
-    
+
+    // If the object is a prop, call the OnPlaced method
+    if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
+      permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
+    }
+
     TryDestroyTempObject();
   }
 
@@ -459,6 +493,10 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     CreateHeldObject();
   }
 
+  /// <summary>
+  /// Tries to give the player an object to place
+  /// </summary>
+  /// <param name="data">The object data to give the player</param>
   public void TryGiveObject(ConstructableObjectData data)
   {
     if (_currentStructureData != null) return;

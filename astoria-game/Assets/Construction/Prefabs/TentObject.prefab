@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 921361d71af424042a0d8a597a00c155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 8cbbd0ed7a3b26c44b3629448c8e5bf4, type: 2}
+  Data: {fileID: 11400000, guid: 8cbbd0ed7a3b26c44b3629448c8e5bf4, type: 2}
+  _objects: []
 --- !u!1 &6196505784145320098
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,6 +59,7 @@ GameObject:
   - component: {fileID: 3363757267147918742}
   - component: {fileID: 7043929245538247093}
   - component: {fileID: 5369074753726676209}
+  - component: {fileID: 3217961325396036109}
   m_Layer: 6
   m_Name: promotional-tent
   m_TagString: Untagged
@@ -155,3 +157,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8415138363781716187, guid: 13817383dcefbbe41b1698d7584d2af4, type: 3}
+--- !u!114 &3217961325396036109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6196505784145320098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c8b11045d35af64e82f9c6e7212f4fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ParentScript: {fileID: 3595538053967644453}

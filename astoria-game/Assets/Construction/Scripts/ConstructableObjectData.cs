@@ -15,6 +15,7 @@ public class ConstructableObjectData : ScriptableObject
   public ConstructableType Type;
   public GameObject TemporaryPrefab;
   public GameObject FinalPrefab;
+  public GameObject FallingPrefab;
 
   public float HeightOffset = 0;
   public Vector3 RotationOffset = Vector3.zero;
