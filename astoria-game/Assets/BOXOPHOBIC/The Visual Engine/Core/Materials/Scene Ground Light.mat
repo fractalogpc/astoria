@@ -13,6 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - TVE_CUTOUT_ELEMENT
+  - TVE_CUTOUT_SHADOW
+  - TVE_DITHER_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
   - TVE_FILTER_DEFAULT
@@ -186,6 +188,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 1
@@ -196,6 +210,8 @@ Material:
     - _AlphaDstBlend: 0
     - _AlphaFeatherValue: 0.5
     - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
     - _Banner: 0
     - _BatchingMessage: 0
     - _BillboardFadeHValue: 0
@@ -221,6 +237,7 @@ Material:
     - _ColorsMaskMinValue: 1
     - _ColorsMaskMode: 0
     - _ColorsPositionMode: 0
+    - _ConservativeDepthOffsetEnable: 1
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
@@ -236,6 +253,8 @@ Material:
     - _CutoutMultiValue: 1
     - _CutoutNoiseTillingValue: 1
     - _CutoutNoiseValue: 1
+    - _CutoutShadowMode: 1
+    - _DepthOffsetEnable: 1
     - _DetailAlphaMode: 1
     - _DetailBlendMaxValue: 0.6
     - _DetailBlendMinValue: 0.4
@@ -277,7 +296,9 @@ Material:
     - _DitherProximityMaxValue: 1
     - _DitherProximityMinValue: 1
     - _DitherProximityValue: 0
+    - _DitherShadowMode: 1
     - _DoubleSidedEnable: 1
+    - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DrynessBakeMode: 0
     - _DrynessCategory: 1
@@ -295,6 +316,7 @@ Material:
     - _DrynessSpace: 1
     - _DrynessSubsurfaceValue: 0.5
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveCat: 1
     - _EmissiveCategory: 1
     - _EmissiveColorMode: 0
@@ -316,6 +338,7 @@ Material:
     - _EmissiveSpace: 1
     - _EmissiveTexMaxValue: 1
     - _EmissiveTexMinValue: 0
+    - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _ExtrasPositionMode: 0
     - _FadeCameraValue: 1
@@ -482,6 +505,7 @@ Material:
     - _OcclusionEnd: 1
     - _OcclusionIntensityValue: 0
     - _OcclusionMeshMode: 1
+    - _OpaqueCullMode: 2
     - _OverlayBakeMode: 0
     - _OverlayBottomValue: 0.5
     - _OverlayCategory: 1
@@ -512,6 +536,7 @@ Material:
     - _OverlaySubsurfaceValue: 0.5
     - _OverlayTextureMode: 0
     - _OverlayVariation: 0
+    - _PerPixelSorting: 0
     - _PerspectiveAngleValue: 1
     - _PerspectiveCat: 0
     - _PerspectiveCategory: 1
@@ -621,6 +646,7 @@ Material:
     - _SubsurfaceScatteringValue: 2
     - _SubsurfaceShadowValue: 1
     - _SubsurfaceSpace: 0
+    - _SubsurfaceThicknessValue: 0
     - _SupportDecals: 1
     - _SurfaceType: 0
     - _ThirdAlbedoValue: 1
@@ -671,6 +697,7 @@ Material:
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 1
     - _UseShadowThreshold: 0
     - _VariationCategory: 1

@@ -13,6 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - TVE_CUTOUT_ELEMENT
+  - TVE_CUTOUT_SHADOW
+  - TVE_DITHER_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_EMISSIVE_ELEMENT
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
@@ -38,6 +40,7 @@ Material:
   - TVE_WETNESS
   - TVE_WETNESS_DROPS
   - TVE_WETNESS_ELEMENT
+  - _DISABLE_DECALS
   m_InvalidKeywords:
   - TVE_CUTOUT_NOISE
   - TVE_CUTOUT_VERT
@@ -54,7 +57,6 @@ Material:
   - TVE_SECOND_VERT
   - TVE_THIRD_MASK
   - TVE_TINTING_VERT
-  - _DISABLE_DECALS
   - _DISABLE_SSR
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -459,11 +461,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AORemapMax: 1
     - _AORemapMin: 1
     - _ATDistance: 1
+    - _AddPrecomputedVelocity: 1
     - _AdvancedCat: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaClipValue: 0.5
@@ -472,7 +487,11 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffValue: 0.5
+    - _AlphaDstBlend: 0
     - _AlphaFeatherValue: 0.5
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
     - _Anisotropy: 0
     - _Asperity: 1
     - _BackfaceSmoothnessScale: 1
@@ -513,6 +532,7 @@ Material:
     - _ColorsMaskMode: 0
     - _ColorsMaskValue: 1
     - _ColorsPositionMode: 0
+    - _ConservativeDepthOffsetEnable: 1
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
@@ -527,6 +547,7 @@ Material:
     - _CutoutMultiValue: 1
     - _CutoutNoiseTillingValue: 1
     - _CutoutNoiseValue: 1
+    - _CutoutShadowMode: 1
     - _DepthOffset: 0
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 0
@@ -594,7 +615,9 @@ Material:
     - _DitherProximityMaxValue: 1
     - _DitherProximityMinValue: 1
     - _DitherProximityValue: 0
+    - _DitherShadowMode: 1
     - _DoubleSidedEnable: 0
+    - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _Drag: 1
     - _DrynessBakeMode: 0
@@ -612,12 +635,14 @@ Material:
     - _DrynessSpace: 1
     - _DrynessSubsurfaceValue: 0.5
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveCat: 1
     - _EmissiveCategory: 0
     - _EmissiveColorMode: 1
     - _EmissiveCoordMode: 0
     - _EmissiveElementMode: 1
     - _EmissiveEnd: 1
+    - _EmissiveExposureValue: 0.5
     - _EmissiveFlagMode: 0
     - _EmissiveIntensityMode: 0
     - _EmissiveIntensityValue: 0
@@ -864,6 +889,7 @@ Material:
     - _OcclusionIntensityValue: 0
     - _OcclusionMeshMode: 1
     - _OcclusionStrength: 1
+    - _OpaqueCullMode: 2
     - _OverlayBakeMode: 0
     - _OverlayBottomValue: 0.5
     - _OverlayCategory: 1
@@ -898,6 +924,7 @@ Material:
     - _PPDMinSamples: 5
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
+    - _PerPixelSorting: 0
     - _PerspectiveAngleValue: 1
     - _PerspectiveCat: 0
     - _PerspectiveCategory: 0
@@ -906,6 +933,8 @@ Material:
     - _PivotsMessage: 0
     - _PreRefractionPass: 0
     - _ReceiveSpace: 0
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 0
     - _RefractionMode: 0
     - _RefractionModel: 0
     - _RefractionSSRayModel: 0
@@ -927,11 +956,13 @@ Material:
     - _RenderNormals: 0
     - _RenderPriority: 0
     - _RenderQueue: 0
+    - _RenderQueueType: 1
     - _RenderSSR: 0
     - _RenderShadow: 1
     - _RenderSpecular: 1
     - _RenderZWrite: 1
     - _RenderingCat: 1
+    - _RequireSplitLighting: 0
     - _SSRefractionProjectionModel: 0
     - _SSSAndTransmissionType: 0
     - _SecondAlbedoValue: 1
@@ -994,8 +1025,14 @@ Material:
     - _SpecularAAThreshold: 0.2
     - _SrcBlend: 1
     - _StencilRef: 0
+    - _StencilRefDepth: 0
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 2
     - _StencilRefMV: 32
     - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 14
     - _StencilWriteMaskMV: 40
     - _Stiffness: 1
     - _SubsurfaceAmbientValue: 0.2
@@ -1023,7 +1060,9 @@ Material:
     - _SubsurfaceScatteringValue: 2
     - _SubsurfaceShadowValue: 1
     - _SubsurfaceSpace: 0
+    - _SubsurfaceThicknessValue: 0
     - _SupportDBuffer: 1
+    - _SupportDecals: 1
     - _SurfaceCategory: 0
     - _SurfaceMessage: 0
     - _SurfaceType: 0
@@ -1077,9 +1116,12 @@ Material:
     - _TransmissionEnable: 1
     - _TransmissionSelfOcclusion: 1
     - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
     - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 1
     - _Tree12Width: 10
     - _TreeAO: 1
     - _TreeAO2: 2.4
@@ -1092,6 +1134,7 @@ Material:
     - _UVBase: 0
     - _UVDetail: 0
     - _UVEmissive: 0
+    - _UseShadowThreshold: 0
     - _UseTreeOcclusion: 0
     - _VariationCategory: 0
     - _VariationEnd: 1
@@ -1157,6 +1200,7 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestMode: 8
     - _ZTestModeDistortion: 8
+    - _ZTestTransparent: 4
     - _ZWrite: 1
     - __dirty: 1
     - _emissive_intensity_value: 1

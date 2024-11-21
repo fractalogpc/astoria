@@ -15,6 +15,8 @@ Material:
   - TVE_ALPHA_CLIP
   - TVE_CUTOUT
   - TVE_CUTOUT_ELEMENT
+  - TVE_CUTOUT_SHADOW
+  - TVE_DITHER_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_EMISSIVE
   - TVE_EMISSIVE_ELEMENT
@@ -46,7 +48,7 @@ Material:
   - TVE_TINTING_ELEMENT
   - TVE_WETNESS
   - TVE_WETNESS_ELEMENT
-  - _SPECULARHIGHLIGHTS_OFF
+  - _DISABLE_DECALS
   m_InvalidKeywords:
   - TVE_CUTOUT_NOISE
   - TVE_CUTOUT_VERT
@@ -63,8 +65,8 @@ Material:
   - TVE_SECOND_VERT
   - TVE_THIRD_MASK
   - TVE_TINTING_VERT
-  - _DISABLE_DECALS
   - _DISABLE_SSR
+  - _SPECULARHIGHLIGHTS_OFF
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 1
@@ -242,6 +244,7 @@ Material:
     - _ColorsMaskMode: 0
     - _ColorsPositionMode: 0
     - _ColorsVariationValue: 0
+    - _ConservativeDepthOffsetEnable: 1
     - _CullMode: 0
     - _CullModeForward: 0
     - _Cutoff: 0.5
@@ -256,6 +259,8 @@ Material:
     - _CutoutMultiValue: 1
     - _CutoutNoiseTillingValue: 1
     - _CutoutNoiseValue: 1
+    - _CutoutShadowMode: 1
+    - _DepthOffsetEnable: 1
     - _DetailAlphaMode: 1
     - _DetailBlendMaxValue: 0.6
     - _DetailBlendMinValue: 0.4
@@ -292,6 +297,7 @@ Material:
     - _DitherProximityMaxValue: 1
     - _DitherProximityMinValue: 1
     - _DitherProximityValue: 0
+    - _DitherShadowMode: 1
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
@@ -310,6 +316,7 @@ Material:
     - _DrynessSpace: 1
     - _DrynessSubsurfaceValue: 0.5
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveAlphaValue: 0
     - _EmissiveCat: 1
     - _EmissiveCategory: 1
@@ -550,6 +557,7 @@ Material:
     - _OverlaySubsurfaceValue: 0.5
     - _OverlayTextureMode: 0
     - _OverlayVariationValue: 0
+    - _PerPixelSorting: 0
     - _PerspectiveAngleValue: 1
     - _PerspectiveCat: 1
     - _PerspectiveCategory: 1
