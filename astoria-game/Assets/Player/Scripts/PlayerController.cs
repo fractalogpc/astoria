@@ -1,58 +1,123 @@
-using UnityEngine;
-using KinematicCharacterController;
-using KinematicCharacterController.Examples;
-using Unity.VisualScripting;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using System;
+using System.Collections.Generic;
+using KinematicCharacterController;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerController : InputHandlerBase, IStartExecution
+namespace Player
 {
-  [SerializeField] private ExampleCharacterController _character;
-  [SerializeField] private CharacterCamera _characterCamera;
 
-  private Vector2 _movementInput;
-  private Vector2 _cameraInput;
-  private bool _jumpInput;
-
-  protected override void InitializeActionMap() {
-    _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
-
-    RegisterAction(_inputActions.Player.Move, ctx => _movementInput = ctx.ReadValue<Vector2>(), () => _movementInput = Vector2.zero);
-    RegisterAction(_inputActions.Player.Look, ctx => _cameraInput = ctx.ReadValue<Vector2>(), () => _cameraInput = Vector2.zero);
-    RegisterAction(_inputActions.Player.Jump, _ => _jumpInput = true, () => _jumpInput = false);
+  public enum PlayerState
+  {
+    Default,
+    Water
   }
 
-  public void InitializeStart() {
-    Cursor.lockState = CursorLockMode.Locked;
-  }
+  public class PlayerController : InputHandlerBase, IStartExecution, ICharacterController
+  {
 
-  private void Update() {
-    HandleCharacterInput();
-  }
+    #region Variables
 
-  private void LateUpdate() {
-    HandleCameraInput();
-  }
+    private KinematicCharacterMotor _motor;
 
-  private void HandleCameraInput() {
-    Vector3 lookInputVector = new Vector3(_cameraInput.x, _cameraInput.y, 0f);
-  
-    if (Cursor.lockState != CursorLockMode.Locked) {
-      lookInputVector = Vector3.zero;
+    [Header("Ground Movement")]
+    [SerializeField] private float _maxGrounMoveSpeed = 10f;
+    [SerializeField] private float _groundMovementSharpness = 15f;
+
+    [Header("Air Movement")]
+    [SerializeField] private float _maxAirMoveSpeed = 15f;
+    [SerializeField] private float _airAccelerationSpeed = 15f;
+    [SerializeField] private float _drag = 0.1f;
+
+    [Header("Jumping")]
+    [SerializeField] private bool _allowJumpingWhenSliding = false;
+    [SerializeField] private float _jumpSpeed = 10f;
+    [SerializeField] private float _jumpScalableForwardSpeed = 10f;
+    [SerializeField] private float _jumpPreGroundingGraceTime = 0f;
+    [SerializeField] private float _jumpPostGroundingGraceTime = 0f;
+
+    [Header("Misc")]
+    public List<Collider> IgnoreColliders = new List<Collider>();
+    [SerializeField] private Transform _meshRoot;
+    [SerializeField] private float _crouchedCapsulHeight = 1f;
+
+    public PlayerState PlayerState { get; private set; }
+
+    private Vector3 _moveVector;
+    private Vector3 _lookVector;
+
+    private Collider[] _probedColliders = new Collider[8];
+    private RaycastHit[] _probedHits = new RaycastHit[8];
+    private Vector3 _moveInputVector;
+    private Vector3 _lookInputVector;
+    private bool _jumpRequested = false;
+    private bool _jumpConsumed = false;
+    private bool _jumpedThisFrame = false;
+    private float _timeSinceJumpRequested = Mathf.Infinity;
+    private float _timeSinceLastAbleToJump = 0f;
+    private Vector3 _internalVelocityAdd = Vector3.zero;
+    private bool _shouldBeCrouching = false;
+    private bool _isCrouching = false;
+
+    private Vector3 _lastInnerNormal = Vector3.zero;
+    private Vector3 _lastOuterNormal = Vector3.zero;
+
+    #endregion
+
+    private void Awake() {
+      TransitionToState(PlayerState.Default);
     }
 
-    _characterCamera.UpdateWithInput(lookInputVector);
-  }
+    public void InitializeStart()
+    {
+      _motor = GetComponent<KinematicCharacterMotor>();
 
-  private void HandleCharacterInput() {
-    PlayerCharacterInputs characterInputs = new();
+      _motor.CharacterController = this;
+    }
 
-    characterInputs.MoveAxisForward = _movementInput.y;
-    characterInputs.MoveAxisRight = _movementInput.x;
-    characterInputs.CameraRotation = _characterCamera.Transform.rotation;
-    characterInputs.JumpDown = _jumpInput;
+    /// <summary>
+    /// Handles state transitions and enter/exit callbacks
+    /// </summary>
+    /// <param name="newState"></param>
+    public void TransitionToState(PlayerState newState)
+    {
+      if (PlayerState == newState) return;
+      PlayerState tempState = PlayerState;
+      OnStateExit(tempState, newState);
+      PlayerState = newState;
+      OnStateEnter(newState, tempState);
+    }
 
-    _character.SetInputs(ref characterInputs);
-  }
+    private void OnStateEnter(PlayerState newState, PlayerState oldState)
+    {
+      switch (newState)
+      {
+        case PlayerState.Default:
+          break;
+        case PlayerState.Water:
+          break;
+      }
+    }
+
+    private void OnStateExit(PlayerState oldState, PlayerState newState)
+    {
+      switch (oldState)
+      {
+        case PlayerState.Default:
+          break;
+        case PlayerState.Water:
+          break;
+      }
+    }
+
+    protected override void InitializeActionMap() {
+      _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
+
+      RegisterAction(_inputActions.Player.Move, ctx => _moveVector = ctx.ReadValue<Vector2>(), () => _moveVector = Vector2.zero);
+      RegisterAction(_inputActions.Player.Look, ctx => _lookVector = ctx.ReadValue<Vector2>(), () => _lookVector = Vector2.zero);
+    }
+
+  //   public void SetInputs()
+
+  // }
 }
