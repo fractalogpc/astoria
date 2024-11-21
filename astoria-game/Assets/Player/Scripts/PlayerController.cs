@@ -13,7 +13,7 @@ namespace Player
     Water
   }
 
-  public class PlayerController : InputHandlerBase, IStartExecution, ICharacterController
+  public class PlayerController : InputHandlerBase, IStartExecution //, ICharacterController
   {
 
     #region Variables
@@ -72,7 +72,7 @@ namespace Player
     {
       _motor = GetComponent<KinematicCharacterMotor>();
 
-      _motor.CharacterController = this;
+      // _motor.CharacterController = this;
     }
 
     /// <summary>
@@ -119,5 +119,5 @@ namespace Player
 
   //   public void SetInputs()
 
-  // }
+  }
 }
