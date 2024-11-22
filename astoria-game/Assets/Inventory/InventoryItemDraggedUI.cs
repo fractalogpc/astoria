@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 public class InventoryItemDraggedUI : MonoBehaviour
 {
@@ -42,18 +43,31 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			_startingInventory.ResetAllContainerHighlights();
 			_currentInventoryAbove.HighlightSlotsUnderItem(Item, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
+		Debug.Log("Convert this input to Elliot's input system later.");
+		if (Input.GetKeyDown(KeyCode.R)) {
+			RotateItem();
+		}
+	}
+	
+	private void RotateItem() {
+		Item.Rotated = !Item.Rotated;
+		SetVisualSize();
 	}
 	
 	public void Initalize(InventoryUI originalInventory, InventoryItem item, InventoryItemUI itemUI) {
 		_itemUI = itemUI;
 		Item = item;
 		_startingInventory = originalInventory;
-		_itemIconImage.sprite = item.ItemData.ItemIcon;
-		_rectTransform.sizeDelta = new Vector2(item.Size.x * originalInventory.SlotSizeUnits, item.Size.y * originalInventory.SlotSizeUnits);
-		_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(item.Size.x * originalInventory.SlotSizeUnits / 2, item.Size.y * originalInventory.SlotSizeUnits / 2);
-		_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(item.Size.x * originalInventory.SlotSizeUnits, item.Size.y * originalInventory.SlotSizeUnits);
+		_itemIconImage.sprite = Item.ItemData.ItemIcon;
+		SetVisualSize();
 		_followMouse = true;
 		_canvasGroup.alpha = 0;
+	}
+
+	private void SetVisualSize() {
+		_rectTransform.sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
+		_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits / 2, Item.Size.y * _startingInventory.SlotSizeUnits / 2);
+		_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
 	}
 	
 	public bool OnLetGoOfDraggedItem() {
@@ -73,6 +87,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		}
 		
 	}
+	
 	
 	private bool GetInventoryUIHoveredOver(out InventoryUI inventory) {
 		List<RaycastResult> raycastHits = new List<RaycastResult>();
