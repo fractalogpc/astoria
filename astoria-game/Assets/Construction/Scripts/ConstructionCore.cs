@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Resources;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class ConstructionCore : InputHandlerBase, IStartExecution
@@ -454,7 +455,9 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     // Logic for placing an object (setting a parent, etc) goes here
     
     GameObject permanentObject = Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation);
-
+    NavMeshObstacle obstacle = permanentObject.AddComponent<NavMeshObstacle>();
+    obstacle.carving = true;
+    obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
     // If the object is a prop, call the OnPlaced method
     if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
       permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();

@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - TVE_ALPHA_CLIP
   - TVE_CUTOUT_ELEMENT
+  - TVE_CUTOUT_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_EMISSIVE
   - TVE_EMISSIVE_ELEMENT
@@ -46,6 +47,7 @@ Material:
   - TVE_TINTING_ELEMENT
   - TVE_WETNESS
   - TVE_WETNESS_ELEMENT
+  - _DISABLE_DECALS
   m_InvalidKeywords:
   - TVE_BLANKET_CONFORM
   - TVE_EMISSIVE_MASK
@@ -92,7 +94,6 @@ Material:
   - TVE_SECOND_MASK
   - TVE_SECOND_SAMPLE_MAIN_UV
   - TVE_SECOND_VERT
-  - _DISABLE_DECALS
   - _DISABLE_SSR
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -629,6 +630,7 @@ Material:
     - _ColorsMaskValue: 1
     - _ColorsPositionMode: 0
     - _ConformOffsetValue: 0
+    - _ConservativeDepthOffsetEnable: 1
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
@@ -637,6 +639,8 @@ Material:
     - _CutoutElementMode: 1
     - _CutoutEnd: 1
     - _CutoutIntensityValue: 0
+    - _CutoutShadowMode: 1
+    - _DepthOffsetEnable: 1
     - _DetailBlendMode: 1
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
@@ -654,6 +658,7 @@ Material:
     - _DrynessSpace: 1
     - _DrynessSubsurfaceValue: 0.5
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveAlbedoMode: 1
     - _EmissiveCategory: 1
     - _EmissiveColorMode: 0
@@ -807,6 +812,7 @@ Material:
     - _OverlaySpace: 1
     - _OverlaySubsurfaceValue: 0.5
     - _OverlayTextureMode: 0
+    - _PerPixelSorting: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 1

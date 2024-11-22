@@ -15,7 +15,7 @@ public class ExtractTreeCollidersFromTerrain : MonoBehaviour
    
     private Terrain Terrain => GetTerrain();
     private Terrain _terrain;
-   
+
     private Terrain GetTerrain()
     {
         if (_terrain != null)
