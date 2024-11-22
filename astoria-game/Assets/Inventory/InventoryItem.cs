@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This class represents an item. Extend this class whenever you extend ItemData to account for the new dev-time variables.
+/// </summary>
 [Serializable]
 public class InventoryItem
 {

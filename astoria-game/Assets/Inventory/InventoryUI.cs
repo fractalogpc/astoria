@@ -114,7 +114,6 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 	/// <param name="count">The count of items to remove.</param>
 	/// <returns>Whether or not the count of matching items could be removed.</returns>
 	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
-		print($"Trying to remove {count} {itemData.ItemName} from {gameObject.name}.");
 		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
@@ -123,15 +122,11 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 				itemInstancesToRemove.Add(itemUIInstance);
 			}
 		}
-		print($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying for {count}.");
+		Debug.Log($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
 		if (itemInstancesToRemove.Count != count) return false;
-		print("Made past count check.");
-		print(itemInstancesToRemove);
-		Debug.LogWarning("This is where the logic bug is. For some reason, this for loop is looping over one more time than it should.");
-		for (int i = count - 1; i <= 0; i--) {
-			print($"Index: {i}");
+		// for future reference, if second term in the for loop == true, keep iterating
+		for (int i = count - 1; i >= 0; i--) {
 			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
-			print($"{i} - removing {itemUIScript.Item.ItemData.ItemName} for {gameObject.name}.");
 			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
@@ -156,12 +151,17 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
 		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
 		newItemUIScript.InitializeWithItem(item, this);
+		newItemUIScript.OnDestroyItem.AddListener(RemoveItemFromInstancesList);
 		itemRect.anchoredPosition = new Vector2(slotIndexBL.x * SlotSizeUnits + SlotSizeUnits * item.Size.x / 2, slotIndexBL.y * SlotSizeUnits + SlotSizeUnits * item.Size.y / 2);
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, item.Size.x * SlotSizeUnits);
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, item.Size.y * SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
 		_inventoryItemPrefabInstances.Add(itemPrefab);
 		return itemPrefab;
+	}
+
+	private void RemoveItemFromInstancesList(GameObject itemPrefabInstance) {
+		_inventoryItemPrefabInstances.Remove(itemPrefabInstance);
 	}
 	private void DeleteChildrenOf(Transform parent) {
 		for (int i = parent.childCount - 1; i >= 0; i--) {

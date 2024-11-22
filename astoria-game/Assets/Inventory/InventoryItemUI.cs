@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -33,6 +34,9 @@ public class InventoryItemUI : MonoBehaviour
 	private PointerEventData _pointerEventData = new(EventSystem.current);
 	private List<RaycastResult> _raycastResults;
 	private Vector2Int _BLContainerIndex;
+
+	[Header("Events")]
+	public UnityEvent<GameObject> OnDestroyItem;
 	
 	private void Start() {
 		// InitializeWithItem(Item); should be called by instantiating object
@@ -83,6 +87,7 @@ public class InventoryItemUI : MonoBehaviour
 	}
 	public void RemoveSelfFromInventory() {
 		_parentInventory.InventoryData.RemoveItem(Item);
+		OnDestroyItem?.Invoke(this.gameObject);
 		Destroy(gameObject);
 	}
 	
@@ -91,6 +96,7 @@ public class InventoryItemUI : MonoBehaviour
 			Debug.LogWarning($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}.");
 		}
 		else {
+			OnDestroyItem?.Invoke(this.gameObject);
 			Destroy(gameObject);
 		}
 	}
