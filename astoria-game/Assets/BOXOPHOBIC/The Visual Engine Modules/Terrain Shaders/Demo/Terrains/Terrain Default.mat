@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - TVE_ALPHA_CLIP
   - TVE_CUTOUT_ELEMENT
+  - TVE_CUTOUT_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_EMISSIVE_ELEMENT
   - TVE_FILTER_DEFAULT
@@ -46,6 +47,7 @@ Material:
   - TVE_TINTING_ELEMENT
   - TVE_WETNESS
   - TVE_WETNESS_ELEMENT
+  - _DISABLE_DECALS
   m_InvalidKeywords:
   - TVE_FEATURE_04_LAYERS
   - TVE_FEATURE_TERRAIN_HOLES
@@ -87,7 +89,6 @@ Material:
   - TVE_SAMPLE_16_PLANAR2D
   - TVE_SAMPLE_16_PLANAR_2D
   - TVE_SECOND_SAMPLE_MAIN_UV
-  - _DISABLE_DECALS
   - _DISABLE_SSR
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -594,6 +595,12 @@ Material:
     m_Floats:
     - _111: -1
     - _AlphaCutoff: 0.5
+    - _AlphaCutoffEnable: 0
+    - _AlphaDstBlend: 0
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
+    - _BlendMode: 0
     - _CategoryDetail: 1
     - _CategoryEmissive: 0
     - _CategoryGlobal: 0
@@ -618,13 +625,21 @@ Material:
     - _ColorsMaskValue: 1
     - _ColorsPositionMode: 0
     - _ConformOffsetValue: 0
+    - _ConservativeDepthOffsetEnable: 1
+    - _CullMode: 2
+    - _CullModeForward: 2
     - _Cutoff: 0.5
     - _CutoutBakeInfo: 0
     - _CutoutCategory: 1
     - _CutoutElementMode: 1
     - _CutoutEnd: 1
     - _CutoutIntensityValue: 0
+    - _CutoutShadowMode: 1
+    - _DepthOffsetEnable: 1
     - _DetailBlendMode: 1
+    - _DoubleSidedEnable: 0
+    - _DoubleSidedGIMode: 0
+    - _DoubleSidedNormalMode: 2
     - _DrynessBakeInfo: 0
     - _DrynessCategory: 1
     - _DrynessElementMode: 1
@@ -637,6 +652,8 @@ Material:
     - _DrynessSmoothnessValue: 0.5
     - _DrynessSpace: 1
     - _DrynessSubsurfaceValue: 0.5
+    - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveAlbedoMode: 0
     - _EmissiveCategory: 1
     - _EmissiveColorMode: 0
@@ -644,6 +661,7 @@ Material:
     - _EmissiveDarkValue1: 0.786
     - _EmissiveElementMode: 1
     - _EmissiveEnd: 1
+    - _EmissiveExposureValue: 0.5
     - _EmissiveFlagMode: 0
     - _EmissiveIntensityMode: 0
     - _EmissiveIntensityValue: 0
@@ -651,6 +669,8 @@ Material:
     - _EmissivePhaseValue: 1
     - _EmissivePowerMode: 0
     - _EmissivePowerValue: 0
+    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableFogOnTransparent: 1
     - _EndTerrain: 1
     - _EnvironmentReflections: 1
     - _ExtrasPositionMode: 0
@@ -767,6 +787,7 @@ Material:
     - _NormalValue7: 2
     - _NormalValue8: 1
     - _NormalValue9: 1
+    - _OpaqueCullMode: 2
     - _OverlayBakeInfo: 0
     - _OverlayCategory: 1
     - _OverlayCoordMode: 1
@@ -786,9 +807,12 @@ Material:
     - _OverlaySpace: 1
     - _OverlaySubsurfaceValue: 0.5
     - _OverlayTextureMode: 1
+    - _PerPixelSorting: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 0
     - _RenderAmbient: 1
     - _RenderCategory: 1
     - _RenderClip: 1
@@ -806,10 +830,12 @@ Material:
     - _RenderPacked: 0
     - _RenderPriority: 0
     - _RenderQueue: 0
+    - _RenderQueueType: 1
     - _RenderSSR: 0
     - _RenderShadow: 1
     - _RenderSpecular: 1
     - _RenderZWrite: 1
+    - _RequireSplitLighting: 0
     - _SmoothnessValue1: 1
     - _SmoothnessValue10: 1
     - _SmoothnessValue11: 1
@@ -835,6 +861,17 @@ Material:
     - _SpaceRenderFade: 0
     - _SpaceSubsurface: 0
     - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _StencilRef: 0
+    - _StencilRefDepth: 0
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 2
+    - _StencilRefMV: 32
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 14
+    - _StencilWriteMaskMV: 40
     - _SubsurfaceAmbientValue: 0.2
     - _SubsurfaceAngleValue: 8
     - _SubsurfaceDiffusion: 0
@@ -844,6 +881,8 @@ Material:
     - _SubsurfaceNormalValue: 0
     - _SubsurfaceScatteringValue: 2
     - _SubsurfaceShadowValue: 1
+    - _SupportDecals: 1
+    - _SurfaceType: 0
     - _TerrainBlendMode: 1
     - _TerrainHeightBlendValue: 0.95
     - _TerrainHolesMode: 0
@@ -881,6 +920,12 @@ Material:
     - _TintingLumaValue: 1
     - _TintingMultiValue: 1
     - _TintingSpace: 1
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 0
+    - _UseShadowThreshold: 0
     - _VertexDynamicMode: 0
     - _VertexOcclusionMaxValue: 1
     - _VertexOcclusionMinValue: 0
@@ -899,6 +944,10 @@ Material:
     - _WetnessSmoothnessValue: 1
     - _WetnessWaterBaseValue: 1
     - _WetnessWaterIntensityValue: 0
+    - _ZTestDepthEqualForOpaque: 4
+    - _ZTestGBuffer: 4
+    - _ZTestTransparent: 4
+    - _ZWrite: 1
     - __dirty: 1
     - _blendfactr: 10.92
     - _blendfall: 0
@@ -926,6 +975,7 @@ Material:
     - _Coords8: {r: 1, g: 1, b: 0, a: 0}
     - _Coords9: {r: 1, g: 1, b: 0, a: 0}
     - _DetailBlendRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _DrynessBlendRemap: {r: 0.1, g: 0.2, b: 0, a: 0}
     - _DrynessColor: {r: 1, g: 0.7083712, b: 0.495283, a: 1}
     - _DrynessLumaRemap: {r: 0, g: 1, b: 0, a: 0}
