@@ -24,6 +24,8 @@ public class ConstructableObjectData : ItemData
   public Vector3 PositionOffset = Vector3.zero;
   public Vector3 HeldOffsetPosition = Vector3.zero;
   public Vector3 HeldOffsetRotation = Vector3.zero;
+
+  public bool CarveNavmesh = true;
 }
 
 [System.Serializable]
