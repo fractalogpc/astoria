@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class UnpackChildren : MonoBehaviour, IStartExecution
 {
+
+  [SerializeField] private bool _destroy = true;
+
   public void Unpack()
   {
     Debug.Log(transform.childCount);
@@ -15,5 +18,10 @@ public class UnpackChildren : MonoBehaviour, IStartExecution
   public void InitializeStart()
   {
     Unpack();
+
+    if (_destroy)
+    {
+      Destroy(gameObject);
+    }
   }
 }
