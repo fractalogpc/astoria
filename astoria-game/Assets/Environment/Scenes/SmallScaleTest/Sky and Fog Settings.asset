@@ -31,7 +31,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8bcdf71d7fafa419fca1ed162f5fc9, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   postExposure:
     m_OverrideState: 0
     m_Value: -1
@@ -47,55 +47,6 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 20
---- !u!114 &-7475396517844448476
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56b145d2b9ee1ac4f846968484e7485a, type: 3}
-  m_Name: ContactShadows
-  m_EditorClassIdentifier: 
-  active: 1
-  quality:
-    m_OverrideState: 1
-    m_Value: 1
-  enable:
-    m_OverrideState: 1
-    m_Value: 1
-  length:
-    m_OverrideState: 1
-    m_Value: 0.15
-  opacity:
-    m_OverrideState: 1
-    m_Value: 0.85
-  distanceScaleFactor:
-    m_OverrideState: 1
-    m_Value: 0.5
-  maxDistance:
-    m_OverrideState: 1
-    m_Value: 50
-  minDistance:
-    m_OverrideState: 1
-    m_Value: 0
-  fadeDistance:
-    m_OverrideState: 1
-    m_Value: 5
-  fadeInDistance:
-    m_OverrideState: 1
-    m_Value: 0
-  rayBias:
-    m_OverrideState: 1
-    m_Value: 0.2
-  thicknessScale:
-    m_OverrideState: 1
-    m_Value: 0.15
-  m_SampleCount:
-    m_OverrideState: 1
-    m_Value: 10
 --- !u!114 &-4373717941636126377
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -358,7 +309,6 @@ MonoBehaviour:
   - {fileID: 7226353872257915055}
   - {fileID: 6788114417483055195}
   - {fileID: -8924545364164533020}
-  - {fileID: -7475396517844448476}
   - {fileID: 7739406744304331026}
   - {fileID: -4373717941636126377}
   - {fileID: -8309044781165913970}
@@ -649,7 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9008a067f4d626c4d8bc4bc48f04bb89, type: 3}
   m_Name: ScreenSpaceAmbientOcclusion
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
     m_OverrideState: 1
     m_Value: 1
