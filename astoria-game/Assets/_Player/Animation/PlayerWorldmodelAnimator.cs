@@ -21,8 +21,11 @@ public class PlayerWorldmodelAnimator : InputHandlerBase
     }
     private bool _sprintInputDown;
     protected override void InitializeActionMap() {
-        RegisterAction(_inputActions.Player.Move, ctx => _movementInput = ctx.ReadValue<Vector2>(), () => _movementInput = Vector2.zero);
+        RegisterAction(_inputActions.Player.Move, ctx => SetNewMovementInput(ctx.ReadValue<Vector2>()), () => SetNewMovementInput(Vector2.zero));
         RegisterAction(_inputActions.Player.Sprint, _ => _sprintInputDown = true, () => _sprintInputDown = false);
+    }
+    private void SetNewMovementInput(Vector2 newMovementInput) {
+        _movementInput = newMovementInput;
     }
     
     private void Update() {
