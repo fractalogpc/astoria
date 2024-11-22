@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Resources;
+using Player;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -9,12 +11,12 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 {
   public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
 
-  public bool EnableDebugging;
+  [SerializeField] private bool EnableDebugging;
 
   #region Variables
 
-  public bool HasObject; // If the playerr is currently holding an object
-  public bool EnableRotateOnRightClick;
+  public bool HasObject; // If the player is currently holding an object
+  [SerializeField] private bool EnableRotateOnRightClick;
 
   [Header("Construction Data")]
   [SerializeField] private ConstructableObjectData[] ConstructableObjects;
@@ -41,7 +43,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private Material _highlightedObjectMaterial;
   private Camera _stashedCamera;
 
-  private TEMPORARYPlayerLookNoMultiplayer _playerLook;
+  private PlayerCamera _playerLook;
 
   private bool _canPlace; // If the currrently held object can be placed
   [SerializeField] private bool _isRotating;
@@ -112,7 +114,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   {
     _stashedCamera = ResourceHolder.Instance.MainCamera;
 
-    _playerLook = GetComponent<TEMPORARYPlayerLookNoMultiplayer>();
+    _playerLook = _stashedCamera.GetComponent<PlayerCamera>();
   }
 
   private void Update()
