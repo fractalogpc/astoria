@@ -392,6 +392,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &284863638 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2275563224315291133, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+  m_PrefabInstance: {fileID: 1051026126}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &309456354
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +454,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 08efd39c0c1253947b9bccc0ffee903e, type: 2}
   _text: {fileID: 2047702061}
   _errorText: {fileID: 2025427527}
-  ConstructionCore: {fileID: 0}
+  ConstructionCore: {fileID: 685397972}
 --- !u!4 &309456357
 Transform:
   m_ObjectHideFlags: 0
@@ -856,6 +867,11 @@ Transform:
   - {fileID: 868582234}
   m_Father: {fileID: 1875429126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &526468435 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8627694299614632010, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+  m_PrefabInstance: {fileID: 1051026126}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &605316910
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +966,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a29aa9fdcc77ac242afbff08004150c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &685397972 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8954425974366867814, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+  m_PrefabInstance: {fileID: 1051026126}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043dd2f1b246c4f49bd18141863f5680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &705559523
@@ -1278,6 +1305,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2509946707023798265, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: MainCamera
+      value: 
+      objectReference: {fileID: 526468435}
+    - target: {fileID: 2509946707023798265, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: InventoryUI
+      value: 
+      objectReference: {fileID: 284863638}
     - target: {fileID: 3629593839374956622, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_Name
       value: Systems

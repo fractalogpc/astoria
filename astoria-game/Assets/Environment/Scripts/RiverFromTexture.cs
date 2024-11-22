@@ -3,6 +3,7 @@ using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR
 public class RiverFromTexture : EditorWindow
 {
 
@@ -238,3 +239,4 @@ public class RiverFromTexture : EditorWindow
         AssetDatabase.Refresh();
     }
 }
+#endif

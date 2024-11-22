@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(MonoBehaviour), true)]
 public class AutoRegisterValidator : Editor
 {
@@ -31,3 +32,4 @@ public class AutoRegisterValidator : Editor
     }
   }
 }
+#endif
