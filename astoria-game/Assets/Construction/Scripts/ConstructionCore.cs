@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Resources;
 using Player;
-using TMPro.Examples;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class ConstructionCore : InputHandlerBase, IStartExecution
 {
   public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
 
-  [SerializeField] private bool EnableDebugging;
+  [SerializeField] private bool EnableDebugging; // Doesn't currently work
 
   #region Variables
 
   public bool HasObject; // If the player is currently holding an object
-  [SerializeField] private bool EnableRotateOnRightClick;
 
   [Header("Construction Data")]
   [SerializeField] private ConstructableObjectData[] ConstructableObjects;
@@ -130,7 +126,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   private void PlaceTemporaryObject()
   {
-    Ray ray = _stashedCamera.ScreenPointToRay(Input.mousePosition);
+    Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+    Ray ray = _stashedCamera.ScreenPointToRay(screenCenter); // This is probably fine, but might cause issues?
 
     // heightOffset doesn't work with props
     if (_currentStructureData.Type != ConstructableObjectData.ConstructableType.Prop)
@@ -457,11 +454,11 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     // Logic for placing an object (setting a parent, etc) goes here
     
     GameObject permanentObject = Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation);
-    if (_currentStructureData.CarveNavmesh) {
-      NavMeshObstacle obstacle = permanentObject.AddComponent<NavMeshObstacle>();
-      obstacle.carving = true;
-      obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
-    }
+    // if (_currentStructureData.CarveNavmesh) {
+    //   NavMeshObstacle obstacle = permanentObject.AddComponent<NavMeshObstacle>();
+    //   obstacle.carving = true;
+    //   obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
+    // }
     // If the object is a prop, call the OnPlaced method
     if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
       permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
@@ -538,7 +535,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     {
       foreach (ConstructionObjectCost cost in data.Cost)
       {
-        if (!ResourceHolder.Instance.InventoryUI.ItemCountOrMoreInInventory(cost.Item, cost.Amount))
+        if (!InventoryUI.Instance.ItemCountOrMoreInInventory(cost.Item, cost.Amount))
         {
           errorText = "You do not have the required resources";
           return false;

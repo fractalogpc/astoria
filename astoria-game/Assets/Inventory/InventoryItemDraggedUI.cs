@@ -43,7 +43,6 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			_startingInventory.ResetAllContainerHighlights();
 			_currentInventoryAbove.HighlightSlotsUnderItem(Item, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
-		Debug.Log("Convert this input to Elliot's input system later.");
 		if (Input.GetKeyDown(KeyCode.R)) {
 			RotateItem();
 		}
@@ -71,7 +70,6 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 	
 	public bool OnLetGoOfDraggedItem() {
-		print($"let go of item {Item.ItemData.ItemName} Draggable");
 		if (_currentInventoryAbove == null) {
 			_startingInventory.ResetAllContainerHighlights();
 			_itemUI.ResetToOriginalPosition();

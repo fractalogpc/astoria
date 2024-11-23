@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
-public class InventoryUI : MonoBehaviour, IStartExecution
+public class InventoryUI : Singleton<InventoryUI>, IStartExecution
 {
 	[Header("Refs, Should be assigned by default.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
@@ -43,7 +43,6 @@ public class InventoryUI : MonoBehaviour, IStartExecution
 		_colliderImage.raycastTarget = true;
 	}
 	public void InitializeStart() {
-		Debug.Log("Remind Matthew to add rotating items later.");
 		if (InventoryData != null) {
 			_itemsAssignedInEditor = InventoryData.Items;
 		}
