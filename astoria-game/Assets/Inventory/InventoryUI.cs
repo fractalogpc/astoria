@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
@@ -14,6 +15,8 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Image))]
 public class InventoryUI : Singleton<InventoryUI>, IStartExecution
 {
+  public UnityEvent<List<InventoryItem>> OnInventoryChange;
+
 	[Header("Refs, Should be assigned by default.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
 
@@ -104,6 +107,8 @@ public class InventoryUI : Singleton<InventoryUI>, IStartExecution
 			return false;
 		}
 		CreateItemPrefab(item, slotIndexBL);
+
+    OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
 	/// <summary>
@@ -129,6 +134,8 @@ public class InventoryUI : Singleton<InventoryUI>, IStartExecution
 			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
+
+    OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
 	private int InstanceEditorItemsIntoInventory() {

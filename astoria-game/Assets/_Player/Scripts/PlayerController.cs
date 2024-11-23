@@ -21,8 +21,9 @@ namespace Player
     #region Variables
 
     [Header("Stable Movement")]
-    public float MaxStableMoveSpeed = 6f;
-    public float MaxStableSprintSpeed = 8f;
+    public float MaxStableCrouchSpeed = 2f;
+    public float MaxStableMoveSpeed = 3.5f;
+    public float MaxStableSprintSpeed = 6f;
     public float StableMovementSharpness = 15f;
 
     [Header("Air Movement")]
@@ -64,8 +65,9 @@ namespace Player
 
     // Input variables
     private Vector2 _moveInput;
-    [SerializeField] private bool _jumpInput;
-    [SerializeField] private bool _crouchInput;
+    private bool _jumpInput;
+    private bool _crouchInput;
+    private bool _sprintInput;
 
     #endregion
 
@@ -76,7 +78,7 @@ namespace Player
       _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
 
       RegisterAction(_inputActions.Player.Move, ctx => _moveInput = ctx.ReadValue<Vector2>(), () => _moveInput = Vector2.zero);
-      RegisterAction(_inputActions.Player.Sprint, _ => _currentMaxSpeed = MaxStableSprintSpeed, () => _currentMaxSpeed = MaxStableMoveSpeed);
+      RegisterAction(_inputActions.Player.Sprint, _ => _sprintInput = true, () => _sprintInput = false);
       RegisterAction(_inputActions.Player.Jump, _ => _jumpInput = true, () => _jumpInput = false);
       RegisterAction(_inputActions.Player.Crouch, _ => _crouchInput = true, () => _crouchInput = false);
     }
@@ -85,8 +87,6 @@ namespace Player
 
     private void Awake()
     {
-      _currentMaxSpeed = MaxStableMoveSpeed;
-
       TransitionToState(CharacterState.Default);
 
       Motor.CharacterController = this;
@@ -109,6 +109,14 @@ namespace Player
       switch (CurrentCharacterState)
       {
         case CharacterState.Default:
+
+          if (_crouchInput) {
+            _currentMaxSpeed = MaxStableCrouchSpeed;
+          } else if (_sprintInput) {
+            _currentMaxSpeed = MaxStableSprintSpeed;
+          } else {
+            _currentMaxSpeed = MaxStableMoveSpeed;
+          }
 
           if (_jumpInput)
           {

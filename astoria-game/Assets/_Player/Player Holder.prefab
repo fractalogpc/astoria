@@ -2789,6 +2789,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnInventoryChange:
+    m_PersistentCalls:
+      m_Calls: []
   _inventoryItemPrefab: {fileID: 5725654330234954917, guid: 13269b01671ab91489ae746ea711d4f0, type: 3}
   _slotPrefab: {fileID: 5178832468966602990, guid: bfabc93eda17f16429cc4f4944fb4008, type: 3}
   InventorySize: {x: 8, y: 6}
@@ -3487,11 +3490,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Motor: {fileID: 8035570666292522932}
   PlayerCamera: {fileID: 6509708209194478353}
-  MaxStableMoveSpeed: 6
-  MaxStableSprintSpeed: 8
+  MaxStableCrouchSpeed: 2
+  MaxStableMoveSpeed: 3.5
+  MaxStableSprintSpeed: 6
   StableMovementSharpness: 15
-  MaxAirMoveSpeed: 10
-  AirAccelerationSpeed: 30
+  MaxAirMoveSpeed: 3
+  AirAccelerationSpeed: 10
   Drag: 0
   AllowJumpingWhenSliding: 0
   JumpUpSpeed: 10
@@ -3502,8 +3506,6 @@ MonoBehaviour:
   Gravity: {x: 0, y: -30, z: 0}
   MeshRoot: {fileID: 3391525737982271263}
   CrouchedCapsuleHeight: 1
-  _jumpInput: 0
-  _crouchInput: 0
 --- !u!114 &8035570666292522932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3595,7 +3597,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnableDebugging: 0
   HasObject: 0
-  EnableRotateOnRightClick: 0
   ConstructableObjects:
   - {fileID: 11400000, guid: beb7ff24859f6804e85c9f737d4e011b, type: 2}
   - {fileID: 11400000, guid: 294795282748d584fbb45fecf3ef6428, type: 2}
@@ -10700,7 +10701,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
 
 public class ConstructionPermObject : MonoBehaviour
 {

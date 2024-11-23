@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CrafterController : MonoBehaviour, IStartExecution
@@ -27,6 +28,8 @@ public class CrafterController : MonoBehaviour, IStartExecution
     Index += index;
 
     _text.text = datas[Index].name;
+
+    UpdateText();
   }
 
   public void InitializeStart() {
@@ -36,6 +39,16 @@ public class CrafterController : MonoBehaviour, IStartExecution
       return;
     }
     _text.text = datas[Index].name;
+
+    InventoryUI.Instance.OnInventoryChange.AddListener(UpdateText);
+
+    UpdateText();
+  }
+
+  private void OnDisable()
+  {
+    // idk, this is annoying. We should be unsubscribing from these events, however sometimes InventoryUI is destroyed before CrafterController resulting in a null error. If this is an error ask me (Elliot) to fix it.
+    // InventoryUI.Instance.OnInventoryChange.RemoveListener(UpdateText);
   }
 
   public void CreateObject() {
@@ -47,7 +60,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     }
   }
 
-  private void Update()
+  private void UpdateText(List<InventoryItem> items = null)
   {
     string errorText = "";
     _canCraft = ResourceHolder.Instance.ConstructionCore.CanGiveObject(datas[Index], out errorText);
