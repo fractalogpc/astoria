@@ -8,8 +8,9 @@ namespace Player
   public class PlayerCamera : InputHandlerBase
   {
     public bool canLook = true;
-    [SerializeField] private Transform _transform;
+    [SerializeField] private Transform _playerTransform;
     [SerializeField] private Transform _cameraTarget;
+    [SerializeField] private Transform _cameraTransform;
 
     [HideInInspector] public Quaternion PlayerYLookQuaternion = Quaternion.identity;
 
@@ -45,8 +46,8 @@ namespace Player
       PlayerYLook();
 
       CameraXLook();
-      Quaternion newRotation = Quaternion.Euler(_cameraXRotation, _transform.rotation.eulerAngles.y, 0);
-      transform.SetPositionAndRotation(_cameraTarget.position, newRotation);
+      Quaternion newRotation = Quaternion.Euler(_cameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
+      _cameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
     }
   }
 }

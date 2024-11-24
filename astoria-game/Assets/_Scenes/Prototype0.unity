@@ -4280,11 +4280,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489539301}
   m_CullTransparentMesh: 1
---- !u!20 &526468435 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 8627694299614632010, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
-  m_PrefabInstance: {fileID: 1051026126}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &527027518
 GameObject:
   m_ObjectHideFlags: 0
@@ -7354,7 +7349,7 @@ PrefabInstance:
     - target: {fileID: 2509946707023798265, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: MainCamera
       value: 
-      objectReference: {fileID: 526468435}
+      objectReference: {fileID: 1051026127}
     - target: {fileID: 2509946707023798265, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: InventoryUI
       value: 
@@ -9093,11 +9088,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6509708209194478353, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+      propertyPath: _playerTransform
+      value: 
+      objectReference: {fileID: 685397973}
+    - target: {fileID: 7527045747064359335, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+      propertyPath: MaxStableMoveSpeed
+      value: 3.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527045747064359335, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+      propertyPath: MaxStableCrouchSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+--- !u!20 &1051026127 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3291170101003091916, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+  m_PrefabInstance: {fileID: 1051026126}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1076339538
 GameObject:
   m_ObjectHideFlags: 0
