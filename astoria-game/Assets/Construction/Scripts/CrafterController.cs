@@ -47,7 +47,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
 
   private void OnDisable()
   {
-    // idk, this is annoying. We should be unsubscribing from these events, however sometimes InventoryUI is destroyed before CrafterController resulting in a null error. If this is an error ask me (Elliot) to fix it.
+    // idk, this is annoying. We should be unsubscribing from these events, however sometimes InventoryUI is destroyed before CrafterController resulting in a null error. If this makes an error ask me (Elliot) to fix it.
     // InventoryUI.Instance.OnInventoryChange.RemoveListener(UpdateText);
   }
 

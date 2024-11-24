@@ -75,6 +75,13 @@ public class InventoryUI : Singleton<InventoryUI>, IStartExecution
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
+
+  public void DestroyInventorySlots() {
+    int childCount = transform.childCount;
+    for (int i = 0; i < childCount; i++) {
+      DestroyImmediate(transform.GetChild(0).gameObject);
+    }
+  }
 	
 	/// <summary>
 	/// Gets a list of all item instances that match the persistent ItemData.

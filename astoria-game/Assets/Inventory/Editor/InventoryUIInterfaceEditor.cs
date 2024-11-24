@@ -13,5 +13,12 @@ public class InventoryUIInterfaceEditor : Editor
 			InventoryUI inventoryUI = (InventoryUI) target;
 			inventoryUI.InitializeInventoryContainers();
 		}
+
+    EditorGUILayout.Space();
+		// Create a button to call InitializeInventoryContainers() on InventoryUI
+		if (GUILayout.Button("Destroy Slots")) {
+			InventoryUI inventoryUI = (InventoryUI) target;
+			inventoryUI.DestroyInventorySlots();
+		}
 	}
 }
