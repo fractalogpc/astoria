@@ -16,7 +16,7 @@ namespace Player
   {
 
     public KinematicCharacterMotor Motor;
-    public PlayerCamera PlayerCamera;
+    public PlayerCamera PlayerCamera; 
 
     #region Variables
 
