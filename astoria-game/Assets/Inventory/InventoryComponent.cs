@@ -10,10 +10,11 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// Attach this script to RectTransforms to create Inventory UIs.
 /// </summary>
+[AddComponentMenu("Inventory/Inventory Component")]
 [RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
-public class InventoryUI : Singleton<InventoryUI>, IStartExecution
+public class InventoryComponent : Singleton<InventoryComponent>, IStartExecution
 {
   public UnityEvent<List<InventoryItem>> OnInventoryChange;
 

@@ -40,7 +40,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     }
     _text.text = datas[Index].name;
 
-    InventoryUI.Instance.OnInventoryChange.AddListener(UpdateText);
+    InventoryComponent.Instance.OnInventoryChange.AddListener(UpdateText);
 
     UpdateText();
   }
@@ -56,7 +56,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     ResourceHolder.Instance.ConstructionCore.TryGiveObject(datas[Index]);
 
     foreach (var item in datas[Index].Cost) {
-      InventoryUI.Instance.TryRemoveItemByData(item.Item, item.Amount);
+      InventoryComponent.Instance.TryRemoveItemByData(item.Item, item.Amount);
     }
   }
 

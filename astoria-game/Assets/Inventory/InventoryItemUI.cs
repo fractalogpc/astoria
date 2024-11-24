@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[AddComponentMenu("")]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(CanvasGroup))]
 [RequireComponent(typeof(CanvasRenderer))]
@@ -26,7 +27,7 @@ public class InventoryItemUI : MonoBehaviour
 	private CanvasGroup _canvasGroup;
 	private ClickableEvents _clickableEvents;
 	
-	[SerializeField] private InventoryUI _parentInventory;
+	[SerializeField] private InventoryComponent _parentInventory;
 
 	private PointerEventData _pointerEventData = new(EventSystem.current);
 	private List<RaycastResult> _raycastResults;
@@ -50,7 +51,7 @@ public class InventoryItemUI : MonoBehaviour
 		_clickableEvents.OnClickUpAnywhere.RemoveListener(OnClickUpAnywhere);
 	}
 	
-	public void InitializeWithItem(InventoryItem item, InventoryUI parentInventory) {
+	public void InitializeWithItem(InventoryItem item, InventoryComponent parentInventory) {
 		_parentInventory = parentInventory;
 		Item = item;
 		_itemImage.sprite = item.ItemData.ItemIcon;
@@ -88,7 +89,7 @@ public class InventoryItemUI : MonoBehaviour
 		Destroy(gameObject);
 	}
 	
-	public void MoveToInventoryAtPosition(InventoryUI inventory, Vector2Int slotIndexBL) {
+	public void MoveToInventoryAtPosition(InventoryComponent inventory, Vector2Int slotIndexBL) {
 		if (!inventory.TryPlaceItem(Item, slotIndexBL)) {
 			Debug.LogWarning($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}.");
 		}

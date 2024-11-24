@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
+[AddComponentMenu("")]
 public class InventoryItemDraggedUI : MonoBehaviour
 {
 	public InventoryItem Item { get; private set; }
@@ -13,8 +15,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	[SerializeField] private RectTransform _rectTransform;
 	[SerializeField] private CanvasGroup _canvasGroup;
 	[SerializeField] private Image _itemIconImage;
-	private InventoryUI _startingInventory;
-	[SerializeField] private InventoryUI _currentInventoryAbove;
+	private InventoryComponent _startingInventory;
+	[SerializeField] private InventoryComponent _currentInventoryAbove;
 	private GraphicRaycaster _canvasGraphicRaycaster;
 	private PointerEventData _pointerEventData = new(EventSystem.current);
 	
@@ -53,7 +55,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		SetVisualSize();
 	}
 	
-	public void Initalize(InventoryUI originalInventory, InventoryItem item, InventoryItemUI itemUI) {
+	public void Initalize(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI) {
 		_itemUI = itemUI;
 		Item = item;
 		_startingInventory = originalInventory;
@@ -87,12 +89,12 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 	
 	
-	private bool GetInventoryUIHoveredOver(out InventoryUI inventory) {
+	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory) {
 		List<RaycastResult> raycastHits = new List<RaycastResult>();
 		_pointerEventData.position = Input.mousePosition;
 		_canvasGraphicRaycaster.Raycast(_pointerEventData, raycastHits);
 		foreach (RaycastResult hit in raycastHits) {
-			if (hit.gameObject.TryGetComponent(out InventoryUI inventoryUI)) {
+			if (hit.gameObject.TryGetComponent(out InventoryComponent inventoryUI)) {
 				inventory = inventoryUI;
 				return true;
 			}
@@ -101,7 +103,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		return false;
 	}
 	
-	private Vector2Int GetSlotIndexInInventory(InventoryUI inventory, Vector2 positionWS) {
+	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionWS) {
 		// Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
 		positionWS = positionWS + new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / Item.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / Item.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();

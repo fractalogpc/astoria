@@ -8,6 +8,7 @@ using UnityEngine;
 /// X - Left To Right
 /// Y - Bottom To Top
 /// </summary>
+[AddComponentMenu("")]
 [Serializable]
 public class Inventory
 {

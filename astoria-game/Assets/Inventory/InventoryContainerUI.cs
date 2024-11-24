@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Attached to a UI element that represents an inventory container.
 /// </summary>
+[AddComponentMenu("")]
 public class InventoryContainerUI : MonoBehaviour
 {
 	public InventoryContainer AttachedContainer { get; private set; }
