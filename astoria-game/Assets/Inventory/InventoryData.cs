@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 [AddComponentMenu("")]
 [Serializable]
-public class Inventory
+public class InventoryData
 {
     public List<InventoryItem> Items {
         get => _items;
@@ -22,7 +22,7 @@ public class Inventory
     public int Width => Containers.GetLength(0);
     public int Height => Containers.GetLength(1);
     
-    public Inventory(int width, int height) {
+    public InventoryData(int width, int height) {
         Containers = new InventoryContainer[width, height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -73,6 +73,12 @@ public class Inventory
             }
         }
     }
+    /// <summary>
+    /// Adds an item to the inventory if possible. Attempts to find a position for the item.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
+    /// <param name="slotIndex">The slot index the item is placed at.</param>
+    /// <returns>Whether or not the placement was successful.</returns>
     public bool TryAddItem(InventoryItem item, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
         if (Items.Contains(item)) return false;
@@ -88,6 +94,12 @@ public class Inventory
         }
         return false;
     }
+    /// <summary>
+    /// Attempts to add an item to the inventory at a specific position.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
+    /// <param name="slotIndexBL">The slotIndex to add the item at.</param>
+    /// <returns>Whether or not adding the item was successful.</returns>
     public bool TryAddItemAtPosition(InventoryItem item, Vector2Int slotIndexBL) {
         if (Items.Contains(item)) return false;
         if (slotIndexBL.x < 0 || slotIndexBL.x >= Width || slotIndexBL.y < 0 || slotIndexBL.y >= Height) return false;
@@ -101,6 +113,12 @@ public class Inventory
         Items.Add(item);
         return true;
     }
+    /// <summary>
+    /// Finds if an item at slotIndex with size is within the inventory bounds.
+    /// </summary>
+    /// <param name="slotIndexBL">The slotIndex to test the bounds from.</param>
+    /// <param name="size">The size of the bounds in slots.</param>
+    /// <returns>Whether or not the item bounds are within the inventory.</returns>
     public bool CornersWithinGrid(Vector2Int slotIndexBL, Vector2Int size) {
         bool bottomLeftInGrid = slotIndexBL.x >= 0 && slotIndexBL.y >= 0;
         bool topRightInGrid = slotIndexBL.x + size.x <= Width && slotIndexBL.y + size.y <= Height;
@@ -116,7 +134,7 @@ public class Inventory
     }
     public bool RemoveItem(InventoryItem item) {
         if (!Items.Contains(item)) return false;
-        Vector2Int bottomLeftContainerIndex = GetBLContainerIndexOf(item);
+        Vector2Int bottomLeftContainerIndex = GetSlotIndexOf(item);
         Vector2Int bounds = item.Size;
         for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
             for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
@@ -126,7 +144,7 @@ public class Inventory
         Items.Remove(item);
         return true;
     }
-    public Vector2Int GetBLContainerIndexOf(InventoryItem item) {
+    public Vector2Int GetSlotIndexOf(InventoryItem item) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
                 if (Containers[x, y].HeldItem == item) return new Vector2Int(x, y);

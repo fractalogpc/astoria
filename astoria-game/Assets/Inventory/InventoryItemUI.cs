@@ -60,7 +60,7 @@ public class InventoryItemUI : MonoBehaviour
 	
 	private void OnClickedOn() {
 		// Remove the item from the inventory so we can shift it, store the index so we can put it back later
-		_parentInventory.InventoryData.GetBLContainerIndexOf(Item);
+		_parentInventory.InventoryData.GetSlotIndexOf(Item);
 		_parentInventory.InventoryData.RemoveItem(Item);
 		InstantiateDraggedItem();
 	}

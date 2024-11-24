@@ -3,21 +3,19 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [CustomEditor(typeof(InventoryComponent))]
-public class InventoryComponentEditor : Editor
+public class InventoryComponentEditor : AutoRegisterValidator
 {
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
 		EditorGUILayout.Space();
-		// Create a button to call InitializeInventoryContainers() on InventoryComponent
-		if (GUILayout.Button("Create Slots")) {
+		if (GUILayout.Button("Preview Slots")) {
 			InventoryComponent inventoryComponent = (InventoryComponent) target;
-			inventoryComponent.InitializeInventoryContainers();
+			inventoryComponent.CreateAndAttachContainersTo(new InventoryData(inventoryComponent.AssignedInventorySize.x, inventoryComponent.AssignedInventorySize.y));
 		}
 		EditorGUILayout.Space();
-		// Create a button to call InitializeInventoryContainers() on InventoryComponent
 		if (GUILayout.Button("Destroy Slots")) {
 			InventoryComponent inventoryComponent = (InventoryComponent) target;
-			inventoryComponent.DestroyInventorySlots();
+			inventoryComponent.DestroyInventoryContainers();
 		}
 	}
 }

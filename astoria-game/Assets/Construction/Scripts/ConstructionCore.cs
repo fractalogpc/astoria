@@ -535,7 +535,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     {
       foreach (ConstructionObjectCost cost in data.Cost)
       {
-        if (!InventoryComponent.Instance.ItemCountOrMoreInInventory(cost.Item, cost.Amount))
+        if (!PlayerInventoryReference.Instance.Inventory.ItemCountOrMoreInInventory(cost.Item, cost.Amount))
         {
           errorText = "You do not have the required resources";
           return false;

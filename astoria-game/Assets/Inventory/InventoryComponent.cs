@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
 
@@ -14,75 +12,107 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
-public class InventoryComponent : Singleton<InventoryComponent>, IStartExecution
+public class InventoryComponent : MonoBehaviour, IStartExecution
 {
-  public UnityEvent<List<InventoryItem>> OnInventoryChange;
-
-	[Header("Refs, Should be assigned by default.")]
+	/// <summary>
+	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
+	/// </summary>
+	[HideInInspector] public InventoryData InventoryData;
+	public Vector2Int AssignedInventorySize => _assignedInventorySize;
+	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
+	public UnityEvent<List<InventoryItem>> OnInventoryChange;
+	
+	
+	[Header("Ensure that the object this is placed on is a direct child of an Overlay Canvas that has a Graphic Raycaster.")]
+	[Header("Ensure Slot Prefab is Square, and has InventoryContainerUI component.")]
 	[SerializeField] private GameObject _inventoryItemPrefab;
+	[SerializeField] private GameObject _slotPrefab;
+	[Header("If outside scripts initialize the inventory, don't use this.")]
+	[SerializeField] private bool _useAssignedInventoryData;
+	[SerializeField] private Vector2Int _assignedInventorySize;
+	[SerializeField] private List<ItemData> _spawnInventoryWith;
 
 	private List<GameObject> _inventoryItemPrefabInstances;
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
-	[Header("Ensure Slot Prefab is Square, and has InventoryContainerUI component.")]
-	[SerializeField] private GameObject _slotPrefab;
 	private GameObject[,] _slotPrefabInstances;
-	[Header("Settings")]
-	[SerializeField] private Vector2Int InventorySize;
-	/// <summary>
-	/// WARNING: DO NOT USE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
-	/// </summary>
-	public Inventory InventoryData;
-	[Header("Ensure that this object is placed on an Overlay Canvas that has a Graphic Raycaster, and is a direct child of it.")]
-	private List<InventoryItem> _itemsAssignedInEditor;
-	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
-
 	
 	private void OnValidate() {
 		_rect = GetComponent<RectTransform>();
 		if (_rect != null && _slotPrefab != null) {
-			_rect.sizeDelta = new Vector2(InventorySize.x * SlotSizeUnits, InventorySize.y * SlotSizeUnits);
+			_rect.sizeDelta = new Vector2(_assignedInventorySize.x * SlotSizeUnits, _assignedInventorySize.y * SlotSizeUnits);
 		}
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
 	public void InitializeStart() {
-		if (InventoryData != null) {
-			_itemsAssignedInEditor = InventoryData.Items;
-		}
-		InitializeInventoryContainers();
-		_inventoryItemPrefabInstances = new List<GameObject>();
-		if (InstanceEditorItemsIntoInventory() > 0) {
-			Debug.LogWarning($"Could not place all items in {gameObject.name}. Some items may be too large or the inventory too small.");
+		if (_useAssignedInventoryData) {
+			CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
 		}
 	}
 
+	/// <summary>
+	/// Creates a new InventoryData of inventorySize, containing itemDatas. Packs the item instances into the inventory.
+	/// </summary>
+	/// <param name="itemDatas">The items to place in the new InventoryData</param>
+	/// <param name="inventorySize">The size of the InventoryData to create.</param>
+	/// <returns>The number of items that could not be placed into the inventory.</returns>
+	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
+		if (itemDatas.Count == 0) return 0;
+		InventoryData = new InventoryData(_assignedInventorySize.x, _assignedInventorySize.y);
+		CreateAndAttachContainersTo(InventoryData);
+		_inventoryItemPrefabInstances = new List<GameObject>();
+		List<InventoryItem> items = new();
+		foreach (ItemData itemData in itemDatas) {
+			items.Add(new InventoryItem(itemData));
+		}
+		int notPlaced = TryAddItemsByData(itemDatas);
+		if (notPlaced > 0) {
+			Debug.LogWarning($"Could not place all items in inventory of {gameObject.name}. Some items may be too large or the inventory too small.");
+			return notPlaced;
+		}
+		return 0;
+	}
+	/// <summary>
+	/// Instantiates the component with the InventoryData.
+	/// </summary>
+	/// <param name="inventoryData">The InventoryData to instantiate with.</param>
+	public void CreateInvFromInventoryData(InventoryData inventoryData) {
+		CreateAndAttachContainersTo(inventoryData);
+		InstantiateInventoryItems(inventoryData);
+	}
+	
 	private void Update() {
+		if (InventoryData == null) return;
 		ResetAllContainerHighlights();
 	}
 
-	public void InitializeInventoryContainers() {
+	public void CreateAndAttachContainersTo(InventoryData inventoryData) {
 		DeleteChildrenOf(_rect.transform);
-		InventoryData = new Inventory(InventorySize.x, InventorySize.y);
-		_slotPrefabInstances = new GameObject[InventoryData.Width, InventoryData.Height];
-		for (int y = 0; y < InventoryData.Height; y++) {
-			for (int x = 0; x < InventoryData.Width; x++) {
+		_slotPrefabInstances = new GameObject[inventoryData.Width, inventoryData.Height];
+		for (int y = 0; y < inventoryData.Height; y++) {
+			for (int x = 0; x < inventoryData.Width; x++) {
 				GameObject slot = Instantiate(_slotPrefab, _rect.transform);
+				slot.name = $"Slot {x}, {y}";
 				slot.GetComponent<RectTransform>().anchoredPosition = new Vector2(x * SlotSizeUnits + SlotSizeUnits / 2, y * SlotSizeUnits + SlotSizeUnits / 2);
-				slot.GetComponent<InventoryContainerUI>().AttachContainer(InventoryData.Containers[x, y]);
+				slot.GetComponent<InventoryContainerUI>().AttachContainer(inventoryData.Containers[x, y]);
 				_slotPrefabInstances[x, y] = slot;
 			}
 		}
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
-
-  public void DestroyInventorySlots() {
-    int childCount = transform.childCount;
-    for (int i = 0; i < childCount; i++) {
-      DestroyImmediate(transform.GetChild(0).gameObject);
-    }
-  }
+	
+	private void InstantiateInventoryItems(InventoryData inventoryData) {
+		_inventoryItemPrefabInstances = new List<GameObject>();
+		foreach (InventoryItem item in inventoryData.Items) {
+			CreateItemPrefab(item, inventoryData.GetSlotIndexOf(item));
+		}
+	}
+	
+	public void DestroyInventoryContainers() {
+		DeleteChildrenOf(transform);
+	}
 	
 	/// <summary>
 	/// Gets a list of all item instances that match the persistent ItemData.
@@ -104,20 +134,37 @@ public class InventoryComponent : Singleton<InventoryComponent>, IStartExecution
 		return true;
 	}
 	/// <summary>
-	/// Attempts to add count items to the inventory. This does not pack items very well. It is recommended to have the player pick up items one by one.
+	/// Attempts to add count items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
 	/// </summary>
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether or not adding all the items was successful.</returns>
-	public bool TryAddItemByData(ItemData itemData, int count = 1) {
+	public bool TryAddItemsByData(ItemData itemData, int count = 1) {
 		InventoryItem item = new InventoryItem(itemData);
 		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
 			return false;
 		}
 		CreateItemPrefab(item, slotIndexBL);
 
-    OnInventoryChange.Invoke(InventoryData.Items);
+		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
+	}
+	/// <summary>
+	/// Attempts to add the items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
+	/// </summary>
+	/// <param name="items">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
+	/// <returns>The amount of items left over.</returns>
+	public int TryAddItemsByData(List<ItemData> items) {
+		int itemsPlaced = 0;
+		if (items.Count == 0) return 0;
+		foreach (ItemData item in items) {
+			if (!TryAddItemsByData(item)) {
+				Debug.LogWarning($"Could not add item {item.ItemName} to {gameObject.name}.");
+				continue;
+			}
+			itemsPlaced++;
+		}
+		return items.Count - itemsPlaced;
 	}
 	/// <summary>
 	/// Tries to remove count items from the inventory that match the ItemData.
@@ -143,25 +190,13 @@ public class InventoryComponent : Singleton<InventoryComponent>, IStartExecution
 			itemUIScript.RemoveSelfFromInventory();
 		}
 
-    OnInventoryChange.Invoke(InventoryData.Items);
+		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
-	private int InstanceEditorItemsIntoInventory() {
-		int itemsPlaced = 0;
-		if (_itemsAssignedInEditor.Count == 0) return 0;
-		foreach (InventoryItem item in _itemsAssignedInEditor) {
-			if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
-				Debug.LogWarning($"Could not add item {item.ItemData.ItemName} to {gameObject.name}.");
-				continue;
-			}
-			CreateItemPrefab(item, slotIndexBL);
-			itemsPlaced++;
-		}
-		return _itemsAssignedInEditor.Count - itemsPlaced;
-	}
+
 	private GameObject CreateItemPrefab(InventoryItem item, Vector2Int slotIndexBL) {
 		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
-		itemPrefab.name = item.ItemData.ItemName + Random.Range(0, 100000).ToString();
+		itemPrefab.name = item.ItemData.ItemName + Random.Range(0, 100000);
 		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
 		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
 		newItemUIScript.InitializeWithItem(item, this);
