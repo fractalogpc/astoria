@@ -47,6 +47,8 @@ public class InventoryComponent : MonoBehaviour, IStartExecution
 	}
 	public void InitializeStart() {
 		if (_useAssignedInventoryData) {
+			print($"Inventory Data Null: {InventoryData == null}");
+			print($"Inventory Data Containers Count: {InventoryData.Containers.Length}");
 			CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
 		}
 	}
@@ -60,6 +62,7 @@ public class InventoryComponent : MonoBehaviour, IStartExecution
 	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
 		if (itemDatas.Count == 0) return 0;
 		InventoryData = new InventoryData(_assignedInventorySize.x, _assignedInventorySize.y);
+		print("created inventory data");
 		CreateAndAttachContainersTo(InventoryData);
 		_inventoryItemPrefabInstances = new List<GameObject>();
 		List<InventoryItem> items = new();
