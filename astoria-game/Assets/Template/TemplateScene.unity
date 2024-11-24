@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 1823688466}
+  ConstructionCore: {fileID: 0}
 --- !u!1 &157207112
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +778,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe92e13562332014eb7668d10e4c9969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls: []
   _highlightMaterial: {fileID: 2100000, guid: f29b9efacb0fa1b45a6ebd5778585717, type: 2}
 --- !u!1 &1281948370
 GameObject:
@@ -1197,11 +1201,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043dd2f1b246c4f49bd18141863f5680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableBuilding: 0
-  EnableRotateOnRightClick: 0
+  EnableDebugging: 0
+  HasObject: 0
   ConstructableObjects:
   - {fileID: 11400000, guid: d1f157cb5300808479e04898d449f22c, type: 2}
-  DefaultObjectIndex: 0
   _minBuildDistance: 1
   _maxBuildDistance: 5
   _groundLayer:
@@ -1210,17 +1213,12 @@ MonoBehaviour:
   _constructionLayer:
     serializedVersion: 2
     m_Bits: 0
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
   _validMaterial: {fileID: 0}
   _invalidMaterial: {fileID: 0}
   _destroyMaterial: {fileID: 0}
   _wallSnapDistance: 3
   _wallAngleTolarence: 35
-  _ConstructionObjectWallLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  _currentStructureData: {fileID: 0}
   _isRotating: 0
   _isDeleting: 0
 --- !u!1 &1823688464

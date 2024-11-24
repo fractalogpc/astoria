@@ -33,6 +33,7 @@ namespace Player
 
     [Header("Jumping")]
     public bool AllowJumpingWhenSliding = false;
+    public bool AllowHoldingJump = false;
     public float JumpUpSpeed = 10f;
     public float JumpScalableForwardSpeed = 0f;
     public float JumpPreGroundingGraceTime = 0.1f;
@@ -285,6 +286,12 @@ namespace Player
                 _jumpRequested = false;
                 _jumpConsumed = true;
                 _jumpedThisFrame = true;
+
+                // Disable jumping if required
+                if (!AllowHoldingJump)
+                {
+                  _jumpInput = false;
+                }
               }
             }
 
