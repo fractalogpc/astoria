@@ -18,17 +18,22 @@ public class InventoryComponent : MonoBehaviour
 	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
 	/// </summary>
 	[HideInInspector] public InventoryData InventoryData;
+
 	public Vector2Int AssignedInventorySize => _assignedInventorySize;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
 	public UnityEvent<List<InventoryItem>> OnInventoryChange;
-	
-	
+
+
 	[Header("Ensure that the object this is placed on is a direct child of an Overlay Canvas that has a Graphic Raycaster.")]
 	[Header("Ensure Slot Prefab is Square, and has InventoryContainerUI component.")]
-	[SerializeField] private GameObject _inventoryItemPrefab;
+	[SerializeField]
+	private GameObject _inventoryItemPrefab;
+
 	[SerializeField] private GameObject _slotPrefab;
+
 	[Header("If outside scripts initialize the inventory, don't use this.")]
 	[SerializeField] private bool _useAssignedInventoryData;
+
 	[SerializeField] private Vector2Int _assignedInventorySize;
 	[SerializeField] private List<ItemData> _spawnInventoryWith;
 
@@ -36,10 +41,11 @@ public class InventoryComponent : MonoBehaviour
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
 	private GameObject[,] _slotPrefabInstances;
-	
+
 	private void OnValidate() {
 		FindReferences();
 	}
+
 	public void Start() {
 		FindReferences();
 		if (_useAssignedInventoryData) {
@@ -50,9 +56,9 @@ public class InventoryComponent : MonoBehaviour
 
 	private void FindReferences() {
 		_rect = GetComponent<RectTransform>();
-		if (_rect != null && _slotPrefab != null) {
-			_rect.sizeDelta = new Vector2(_assignedInventorySize.x * SlotSizeUnits, _assignedInventorySize.y * SlotSizeUnits);
-		}
+		if (_rect != null && _slotPrefab != null)
+			_rect.sizeDelta = new Vector2(_assignedInventorySize.x * SlotSizeUnits,
+				_assignedInventorySize.y * SlotSizeUnits);
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
@@ -71,13 +77,16 @@ public class InventoryComponent : MonoBehaviour
 		foreach (ItemData itemData in itemDatas) {
 			items.Add(new InventoryItem(itemData));
 		}
+
 		int notPlaced = TryAddItemsByData(itemDatas);
 		if (notPlaced > 0) {
 			Debug.LogWarning($"Could not place all items in inventory of {gameObject.name}. Some items may be too large or the inventory too small.");
 			return notPlaced;
 		}
+
 		return 0;
 	}
+
 	/// <summary>
 	/// Instantiates the component with the InventoryData.
 	/// </summary>
@@ -86,7 +95,7 @@ public class InventoryComponent : MonoBehaviour
 		CreateAndAttachContainersTo(inventoryData);
 		InstantiateInventoryItems(inventoryData);
 	}
-	
+
 	private void Update() {
 		if (InventoryData == null) return;
 		ResetAllContainerHighlights();
@@ -105,21 +114,22 @@ public class InventoryComponent : MonoBehaviour
 				_slotPrefabInstances[x, y] = slot;
 			}
 		}
+
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
 	}
-	
+
 	private void InstantiateInventoryItems(InventoryData inventoryData) {
 		_inventoryItemPrefabInstances = new List<GameObject>();
 		foreach (InventoryItem item in inventoryData.Items) {
 			CreateItemPrefab(item, inventoryData.GetSlotIndexOf(item));
 		}
 	}
-	
+
 	public void DestroyInventoryContainers() {
 		DeleteChildrenOf(transform);
 	}
-	
+
 	/// <summary>
 	/// Gets a list of all item instances that match the persistent ItemData.
 	/// </summary>
@@ -128,6 +138,7 @@ public class InventoryComponent : MonoBehaviour
 	public List<InventoryItem> GetItemsOfType(ItemData itemData) {
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
+
 	/// <summary>
 	/// Finds whether there are count instances or more of the item in the inventory.
 	/// </summary>
@@ -139,22 +150,23 @@ public class InventoryComponent : MonoBehaviour
 		if (matchingItemInstances.Count < count) return false;
 		return true;
 	}
+
 	/// <summary>
-	/// Attempts to add count items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
+	/// Attempts to add count items to the inventory. If items are non-rectangular, this does not pack items very well.
+	/// Use this when interacting with the inventory from non-inventory systems.
 	/// </summary>
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether or not adding all the items was successful.</returns>
 	public bool TryAddItemsByData(ItemData itemData, int count = 1) {
-		InventoryItem item = new InventoryItem(itemData);
-		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
-			return false;
-		}
+		InventoryItem item = new(itemData);
+		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) return false;
 		CreateItemPrefab(item, slotIndexBL);
 
 		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
+
 	/// <summary>
 	/// Attempts to add the items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
 	/// </summary>
@@ -168,10 +180,13 @@ public class InventoryComponent : MonoBehaviour
 				Debug.LogWarning($"Could not add item {item.ItemName} to {gameObject.name}.");
 				continue;
 			}
+
 			itemsPlaced++;
 		}
+
 		return items.Count - itemsPlaced;
 	}
+
 	/// <summary>
 	/// Tries to remove count items from the inventory that match the ItemData.
 	/// </summary>
@@ -183,11 +198,11 @@ public class InventoryComponent : MonoBehaviour
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
 			if (itemInstancesToRemove.Count == count) break;
-			if (itemUIScript.Item.ItemData == itemData) {
-				itemInstancesToRemove.Add(itemUIInstance);
-			}
+			if (itemUIScript.Item.ItemData == itemData) itemInstancesToRemove.Add(itemUIInstance);
 		}
-		Debug.Log($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
+
+		Debug.Log(
+			$"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
 		if (itemInstancesToRemove.Count != count) return false;
 		// for future reference, if second term in the for loop == true, keep iterating
 		for (int i = count - 1; i >= 0; i--) {
@@ -207,7 +222,8 @@ public class InventoryComponent : MonoBehaviour
 		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
 		newItemUIScript.InitializeWithItem(item, this);
 		newItemUIScript.OnDestroyItem.AddListener(RemoveItemFromInstancesList);
-		itemRect.anchoredPosition = new Vector2(slotIndexBL.x * SlotSizeUnits + SlotSizeUnits * item.Size.x / 2, slotIndexBL.y * SlotSizeUnits + SlotSizeUnits * item.Size.y / 2);
+		itemRect.anchoredPosition = new Vector2(slotIndexBL.x * SlotSizeUnits + SlotSizeUnits * item.Size.x / 2,
+			slotIndexBL.y * SlotSizeUnits + SlotSizeUnits * item.Size.y / 2);
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, item.Size.x * SlotSizeUnits);
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, item.Size.y * SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
@@ -218,11 +234,13 @@ public class InventoryComponent : MonoBehaviour
 	private void RemoveItemFromInstancesList(GameObject itemPrefabInstance) {
 		_inventoryItemPrefabInstances.Remove(itemPrefabInstance);
 	}
+
 	private void DeleteChildrenOf(Transform parent) {
 		for (int i = parent.childCount - 1; i >= 0; i--) {
 			DestroyImmediate(parent.GetChild(i).gameObject);
 		}
 	}
+
 	/// <summary>
 	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
 	/// </summary>
@@ -238,22 +256,26 @@ public class InventoryComponent : MonoBehaviour
 			CreateItemPrefab(item, index);
 			return true;
 		}
-		
+
 		return false;
 	}
+
 	public bool HighlightSlotsUnderItem(InventoryItem item, Vector2Int slotIndexBL) {
 		List<InventoryContainer> containersItemOverlaps = new();
-		InventoryContainer originContainer = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y].GetComponent<InventoryContainerUI>().AttachedContainer;
+		InventoryContainer originContainer = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y]
+			.GetComponent<InventoryContainerUI>().AttachedContainer;
 		if (originContainer == null) {
 			ResetAllContainerHighlights();
 			return false;
 		}
+
 		containersItemOverlaps.Add(originContainer);
 		for (int y = slotIndexBL.y; y < slotIndexBL.y + item.Size.y; y++) {
 			for (int x = slotIndexBL.x; x < slotIndexBL.x + item.Size.x; x++) {
 				if (x == slotIndexBL.x && y == slotIndexBL.y) continue;
 				try {
-					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
+					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>()
+						.AttachedContainer;
 					containersItemOverlaps.Add(container);
 				}
 				catch (IndexOutOfRangeException) {
@@ -262,6 +284,7 @@ public class InventoryComponent : MonoBehaviour
 				}
 			}
 		}
+
 		bool allContainersEmpty = true;
 		for (int i = 0; i < containersItemOverlaps.Count; i++) {
 			if (containersItemOverlaps[i].HeldItem != null) {
@@ -269,13 +292,16 @@ public class InventoryComponent : MonoBehaviour
 				break;
 			}
 		}
+
 		if (allContainersEmpty) {
 			HighlightContainers(containersItemOverlaps, ContainerHighlight.Green);
 			return true;
 		}
+
 		HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
 		return false;
 	}
+
 	public void ResetAllContainerHighlights() {
 		for (int y = 0; y < InventoryData.Height; y++) {
 			for (int x = 0; x < InventoryData.Width; x++) {
@@ -283,11 +309,11 @@ public class InventoryComponent : MonoBehaviour
 			}
 		}
 	}
+
 	private void HighlightContainers(List<InventoryContainer> containers, ContainerHighlight highlight) {
 		ResetAllContainerHighlights();
 		for (int i = 0; i < containers.Count; i++) {
 			containers[i].Highlight = highlight;
 		}
 	}
-	
 }
