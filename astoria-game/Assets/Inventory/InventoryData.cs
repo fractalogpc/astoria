@@ -85,11 +85,26 @@ public class InventoryData
         Vector2Int bounds = item.Size;
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                if (Containers[x, y].HeldItem != null) continue;
-                if (!CornersWithinGrid(new Vector2Int(x, y), bounds)) continue;
-                if (!IsNotOverlapping(new Vector2Int(x, y), bounds)) continue;
+                // if (Containers[x, y].HeldItem != null) continue;
+                // if (!CornersWithinGrid(new Vector2Int(x, y), bounds)) continue;
+                // if (!IsNotOverlapping(new Vector2Int(x, y), bounds)) continue;
                 slotIndex = new Vector2Int(x, y);
-                return TryAddItemAtPosition(item, new Vector2Int(x, y));
+                
+                bool successNormal;
+                bool successRotated;
+                
+                // Try normally
+                item.Rotated = false;
+                successNormal = TryAddItemAtPosition(item, new Vector2Int(x, y));
+                if (successNormal) {
+                    return true;
+                }
+                // Try Rotated
+                item.Rotated = true;
+                successRotated = TryAddItemAtPosition(item, new Vector2Int(x, y));
+                if (successRotated) {
+                    return true;
+                }
             }
         }
         return false;

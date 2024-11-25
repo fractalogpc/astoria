@@ -158,9 +158,10 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether or not adding all the items was successful.</returns>
-	public bool TryAddItemsByData(ItemData itemData, int count = 1) {
+	public bool TryAddItemsByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
 		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) return false;
+		print($"======================= Item {item.ItemData.ItemName} placed at {slotIndexBL}. Rotated: {item.Rotated} Size: {item.Size}.");
 		CreateItemPrefab(item, slotIndexBL);
 
 		OnInventoryChange.Invoke(InventoryData.Items);
