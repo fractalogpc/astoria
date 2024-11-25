@@ -18,26 +18,6 @@ public abstract class Singleton<T> : StaticInstance<T> where T : MonoBehaviour {
   }
 }
 
-public abstract class LocalPlayerSingleton<T> : NetworkBehaviour where T : NetworkBehaviour {
-  public static T Instance { get; private set; }
-
-  protected virtual void Awake() {
-    if (!isLocalPlayer) {
-      Destroy(this);
-    }
-    if (Instance != null) {
-      Destroy(this);
-      return;
-    }
-    Instance = this as T;
-  }
-
-  protected virtual void OnApplicationQuit() {
-    Instance = null;
-    Destroy(gameObject);
-  }
-}
-
 public abstract class PersistentSingleton<T> : Singleton<T> where T : MonoBehaviour {
   protected override void Awake() {
     DontDestroyOnLoad(gameObject);

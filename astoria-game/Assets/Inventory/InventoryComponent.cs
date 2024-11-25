@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
-public class InventoryComponent : MonoBehaviour, IStartExecution
+public class InventoryComponent : MonoBehaviour
 {
 	/// <summary>
 	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
@@ -38,19 +38,23 @@ public class InventoryComponent : MonoBehaviour, IStartExecution
 	private GameObject[,] _slotPrefabInstances;
 	
 	private void OnValidate() {
+		FindReferences();
+	}
+	public void Start() {
+		FindReferences();
+		if (_useAssignedInventoryData) {
+			InventoryData = null;
+			CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
+		}
+	}
+
+	private void FindReferences() {
 		_rect = GetComponent<RectTransform>();
 		if (_rect != null && _slotPrefab != null) {
 			_rect.sizeDelta = new Vector2(_assignedInventorySize.x * SlotSizeUnits, _assignedInventorySize.y * SlotSizeUnits);
 		}
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
-	}
-	public void InitializeStart() {
-		if (_useAssignedInventoryData) {
-			print($"Inventory Data Null: {InventoryData == null}");
-			print($"Inventory Data Containers Count: {InventoryData.Containers.Length}");
-			CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
-		}
 	}
 
 	/// <summary>
@@ -60,9 +64,7 @@ public class InventoryComponent : MonoBehaviour, IStartExecution
 	/// <param name="inventorySize">The size of the InventoryData to create.</param>
 	/// <returns>The number of items that could not be placed into the inventory.</returns>
 	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
-		if (itemDatas.Count == 0) return 0;
-		InventoryData = new InventoryData(_assignedInventorySize.x, _assignedInventorySize.y);
-		print("created inventory data");
+		InventoryData = new InventoryData(inventorySize.x, inventorySize.y);
 		CreateAndAttachContainersTo(InventoryData);
 		_inventoryItemPrefabInstances = new List<GameObject>();
 		List<InventoryItem> items = new();
@@ -96,6 +98,7 @@ public class InventoryComponent : MonoBehaviour, IStartExecution
 		for (int y = 0; y < inventoryData.Height; y++) {
 			for (int x = 0; x < inventoryData.Width; x++) {
 				GameObject slot = Instantiate(_slotPrefab, _rect.transform);
+				print($"slot null? {slot == null}");
 				slot.name = $"Slot {x}, {y}";
 				slot.GetComponent<RectTransform>().anchoredPosition = new Vector2(x * SlotSizeUnits + SlotSizeUnits / 2, y * SlotSizeUnits + SlotSizeUnits / 2);
 				slot.GetComponent<InventoryContainerUI>().AttachContainer(inventoryData.Containers[x, y]);
