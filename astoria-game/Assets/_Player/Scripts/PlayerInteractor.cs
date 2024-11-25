@@ -16,7 +16,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   }
 
   public void InitializeStart() {
-    _camera = ResourceHolder.Instance.MainCamera;
+    _camera = Camera.main;
   }
 
   private void Interact() {

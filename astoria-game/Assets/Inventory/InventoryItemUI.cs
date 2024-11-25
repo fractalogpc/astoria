@@ -81,6 +81,7 @@ public class InventoryItemUI : MonoBehaviour
 	public void ResetToOriginalPosition() {
 		if (!_parentInventory.InventoryData.TryAddItemAtPosition(Item, _BLContainerIndex)) {
 			Debug.LogError($"Could not put item {Item.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
+			Destroy(gameObject);
 		}
 	}
 	public void RemoveSelfFromInventory() {

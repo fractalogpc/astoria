@@ -108,8 +108,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   public void InitializeStart()
   {
-    _stashedCamera = ResourceHolder.Instance.MainCamera;
-
+    _stashedCamera = Camera.main;
     _playerLook = _stashedCamera.GetComponent<PlayerCamera>();
   }
 

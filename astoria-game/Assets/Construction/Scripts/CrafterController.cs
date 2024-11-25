@@ -40,7 +40,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     }
     _text.text = datas[Index].name;
 
-    LocalPlayerReference.Instance.Inventory().OnInventoryChange.AddListener(UpdateText);
+    // LocalPlayerReference.Instance.Inventory().OnInventoryChange.AddListener(UpdateText);
 
     UpdateText();
   }

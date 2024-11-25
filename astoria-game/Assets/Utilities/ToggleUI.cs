@@ -11,11 +11,8 @@ public class ToggleUI : InputHandlerBase
 
   protected override void InitializeActionMap()
   {
-    _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
-
     RegisterAction(_inputActions.Player.Inventory, ctx => ToggleInventory());
-
-    RegisterAction(_inputActions.UI.ToggleUI, ctx => ToggleInventory());
+    RegisterAction(_inputActions.UI.CloseUI, ctx => ToggleInventory());
   }
 
   private void ToggleInventory() {

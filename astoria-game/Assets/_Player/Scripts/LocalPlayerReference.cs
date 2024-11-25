@@ -26,7 +26,7 @@ public class LocalPlayerReference : MonoBehaviour
                 return player;
             }
         }
-        Debug.LogError("LocalPlayerReference: Could not find local player.");
+        Debug.LogError("LocalPlayerReference: Could not find local player. You can ignore this if the host player has not spawned yet.");
         return null;
     }
 
