@@ -32,8 +32,7 @@ public class LocalPlayerReference : MonoBehaviour
 
     public InventoryComponent Inventory() {
         if (!LocalPlayerExists) {
-            Debug.LogError(
-                "LocalPlayerReference: Local player does not exist. Please ensure player exists before attempting to access inventory.");
+            Debug.LogError("LocalPlayerReference: Local player does not exist. Please ensure player exists before attempting to access inventory.");
             return null;
         }
         return _localPlayer.GetComponentInChildren<InventoryComponent>();
