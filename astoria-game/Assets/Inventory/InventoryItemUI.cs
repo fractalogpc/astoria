@@ -17,16 +17,18 @@ public class InventoryItemUI : MonoBehaviour
 
 	[Header("Ext Refs")]
 	[SerializeField] private GameObject _inventoryItemDraggedPrefab;
+
 	private GameObject _draggedInstance;
-	
+
 	[Header("Self Refs")]
 	[SerializeField] private Image _itemImage;
+
 	[SerializeField] private TextMeshProUGUI _itemText;
 	private RectTransform _rectTransform;
-    private GraphicRaycaster _canvasGraphicRaycaster;
+	private GraphicRaycaster _canvasGraphicRaycaster;
 	private CanvasGroup _canvasGroup;
 	private ClickableEvents _clickableEvents;
-	
+
 	[SerializeField] private InventoryComponent _parentInventory;
 
 	private PointerEventData _pointerEventData = new(EventSystem.current);
@@ -35,7 +37,7 @@ public class InventoryItemUI : MonoBehaviour
 
 	[Header("Events")]
 	public UnityEvent<GameObject> OnDestroyItem;
-	
+
 	private void Start() {
 		// InitializeWithItem(Item); should be called by instantiating object
 		_rectTransform = GetComponent<RectTransform>();
@@ -46,18 +48,20 @@ public class InventoryItemUI : MonoBehaviour
 		_clickableEvents.OnClickUpAnywhere.AddListener(OnClickUpAnywhere);
 		_raycastResults = new List<RaycastResult>();
 	}
+
 	private void OnDisable() {
 		_clickableEvents.OnClickDownSelected.RemoveListener(OnClickedOn);
 		_clickableEvents.OnClickUpAnywhere.RemoveListener(OnClickUpAnywhere);
 	}
-	
+
 	public void InitializeWithItem(InventoryItem item, InventoryComponent parentInventory) {
 		_parentInventory = parentInventory;
 		Item = item;
+		_BLContainerIndex = parentInventory.InventoryData.GetSlotIndexOf(item);
 		_itemImage.sprite = item.ItemData.ItemIcon;
 		_itemText.text = item.ItemData.ItemName;
 	}
-	
+
 	private void OnClickedOn() {
 		// Remove the item from the inventory so we can shift it, store the index so we can put it back later
 		_parentInventory.InventoryData.GetSlotIndexOf(Item);
@@ -70,7 +74,7 @@ public class InventoryItemUI : MonoBehaviour
 		_draggedInstance.GetComponent<InventoryItemDraggedUI>().OnLetGoOfDraggedItem();
 		_draggedInstance = null;
 	}
-	
+
 	private void InstantiateDraggedItem() {
 		// Parented to whole canvas
 		_draggedInstance = Instantiate(_inventoryItemDraggedPrefab, _rectTransform.GetComponentInParent<Canvas>().transform);
@@ -79,27 +83,26 @@ public class InventoryItemUI : MonoBehaviour
 	}
 
 	public void ResetToOriginalPosition() {
+		print($"Size: {Item.Size} Index: {_BLContainerIndex}");
 		if (!_parentInventory.InventoryData.TryAddItemAtPosition(Item, _BLContainerIndex)) {
 			Debug.LogError($"Could not put item {Item.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
 			Destroy(gameObject);
 		}
 	}
+
 	public void RemoveSelfFromInventory() {
 		_parentInventory.InventoryData.RemoveItem(Item);
-		OnDestroyItem?.Invoke(this.gameObject);
+		OnDestroyItem?.Invoke(gameObject);
 		Destroy(gameObject);
 	}
-	
+
 	public void MoveToInventoryAtPosition(InventoryComponent inventory, Vector2Int slotIndexBL) {
 		if (!inventory.TryPlaceItem(Item, slotIndexBL)) {
 			Debug.LogWarning($"Could not move item {Item.ItemData.ItemName} to {inventory.name} at position {slotIndexBL}.");
 		}
 		else {
-			OnDestroyItem?.Invoke(this.gameObject);
+			OnDestroyItem?.Invoke(gameObject);
 			Destroy(gameObject);
 		}
 	}
-	
-
-
 }

@@ -262,8 +262,15 @@ public class InventoryComponent : MonoBehaviour
 
 	public bool HighlightSlotsUnderItem(InventoryItem item, Vector2Int slotIndexBL) {
 		List<InventoryContainer> containersItemOverlaps = new();
-		InventoryContainer originContainer = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y]
-			.GetComponent<InventoryContainerUI>().AttachedContainer;
+		InventoryContainer originContainer;
+		try {
+			originContainer = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y].GetComponent<InventoryContainerUI>().AttachedContainer;
+		}
+		catch (IndexOutOfRangeException) {
+			Debug.Log($"Ask Matthew to handle highlighting when the slotIndexBL is out of bounds but should still partially show.");
+			ResetAllContainerHighlights();
+			return false;
+		}
 		if (originContainer == null) {
 			ResetAllContainerHighlights();
 			return false;
