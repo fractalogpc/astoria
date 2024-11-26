@@ -167,4 +167,7 @@ public class InventoryData
         }
         return new Vector2Int(-1, -1);
     }
+    public bool SlotIndexInBounds(Vector2Int slotIndex) {
+        return slotIndex.x >= 0 && slotIndex.x < Width && slotIndex.y >= 0 && slotIndex.y < Height;
+    }
 }

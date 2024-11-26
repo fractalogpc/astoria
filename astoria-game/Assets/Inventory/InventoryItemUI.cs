@@ -83,7 +83,6 @@ public class InventoryItemUI : MonoBehaviour
 	}
 
 	public void ResetToOriginalPosition() {
-		print($"Size: {Item.Size} Index: {_BLContainerIndex}");
 		if (!_parentInventory.InventoryData.TryAddItemAtPosition(Item, _BLContainerIndex)) {
 			Debug.LogError($"Could not put item {Item.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
 			Destroy(gameObject);

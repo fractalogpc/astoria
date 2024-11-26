@@ -161,7 +161,6 @@ public class InventoryComponent : MonoBehaviour
 	public bool TryAddItemsByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
 		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) return false;
-		print($"======================= Item {item.ItemData.ItemName} placed at {slotIndexBL}. Rotated: {item.Rotated} Size: {item.Size}.");
 		CreateItemPrefab(item, slotIndexBL);
 
 		OnInventoryChange.Invoke(InventoryData.Items);
@@ -263,51 +262,35 @@ public class InventoryComponent : MonoBehaviour
 
 	public bool HighlightSlotsUnderItem(InventoryItem item, Vector2Int slotIndexBL) {
 		List<InventoryContainer> containersItemOverlaps = new();
-		InventoryContainer originContainer;
-		try {
-			originContainer = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y].GetComponent<InventoryContainerUI>().AttachedContainer;
-		}
-		catch (IndexOutOfRangeException) {
-			Debug.Log($"Ask Matthew to handle highlighting when the slotIndexBL is out of bounds but should still partially show.");
-			ResetAllContainerHighlights();
-			return false;
-		}
-		if (originContainer == null) {
-			ResetAllContainerHighlights();
-			return false;
-		}
-
-		containersItemOverlaps.Add(originContainer);
+		bool couldPlace = true;
 		for (int y = slotIndexBL.y; y < slotIndexBL.y + item.Size.y; y++) {
 			for (int x = slotIndexBL.x; x < slotIndexBL.x + item.Size.x; x++) {
 				if (x == slotIndexBL.x && y == slotIndexBL.y) continue;
 				try {
-					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>()
-						.AttachedContainer;
+					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
 					containersItemOverlaps.Add(container);
 				}
 				catch (IndexOutOfRangeException) {
-					HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
-					return false;
+					couldPlace = false;
 				}
 			}
 		}
-
-		bool allContainersEmpty = true;
+		
 		for (int i = 0; i < containersItemOverlaps.Count; i++) {
 			if (containersItemOverlaps[i].HeldItem != null) {
-				allContainersEmpty = false;
+				couldPlace = false;
 				break;
 			}
 		}
 
-		if (allContainersEmpty) {
+		if (couldPlace) {
 			HighlightContainers(containersItemOverlaps, ContainerHighlight.Green);
 			return true;
 		}
-
-		HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
-		return false;
+		else {
+			HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
+			return false;
+		}
 	}
 
 	public void ResetAllContainerHighlights() {
