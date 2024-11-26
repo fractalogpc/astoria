@@ -21,6 +21,8 @@ public class CrafterController : MonoBehaviour, IStartExecution
   [SerializeField] private TMPro.TextMeshProUGUI _text;
   [SerializeField] private TMPro.TextMeshProUGUI _errorText;
 
+  private ConstructionCore _constructionCore;
+
 
   private bool _canCraft;
 
@@ -42,6 +44,14 @@ public class CrafterController : MonoBehaviour, IStartExecution
 
     // LocalPlayerReference.Instance.Inventory().OnInventoryChange.AddListener(UpdateText);
 
+    ResourceHolder.Instance.GameStateHandler.AddOnStateEnter(GameStateHandler.GameState.Playing, () => {
+      Initialize();
+    });
+  }
+
+  private void Initialize() {
+    _constructionCore = LocalPlayerReference.Instance.LocalPlayer.GetComponent<ConstructionCore>();
+
     UpdateText();
   }
 
@@ -53,7 +63,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
 
   public void CreateObject() {
     if (!_canCraft) return;
-    ResourceHolder.Instance.ConstructionCore.TryGiveObject(datas[Index]);
+    _constructionCore.TryGiveObject(datas[Index]);
 
     foreach (var item in datas[Index].Cost) {
       LocalPlayerReference.Instance.Inventory().TryRemoveItemByData(item.Item, item.Amount);
@@ -63,7 +73,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
   private void UpdateText(List<InventoryItem> items = null)
   {
     string errorText = "";
-    _canCraft = ResourceHolder.Instance.ConstructionCore.CanGiveObject(datas[Index], out errorText);
+    _canCraft = _constructionCore.CanGiveObject(datas[Index], out errorText);
     if (_canCraft) {
       _errorText.text = "";
     } else {
