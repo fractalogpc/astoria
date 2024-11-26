@@ -8,7 +8,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 {
   public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
 
-  [SerializeField] private bool EnableDebugging; // Doesn't currently work
+  public bool EnableDebugging;
+  public int DebugIndex = 0;
 
   #region Variables
 
@@ -59,14 +60,13 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     // Debugging
     if (!EnableDebugging) return;
     
-    RegisterAction(_inputActions.Player.Build, _ => ToggleBuilding());
-    Debug.LogWarning("ConstructionCore: The first three construction objects are not bound to keys. The bind has been used for combat instead. Please choose a different key binding.");
+    RegisterAction(_inputActions.Player.Build, _ => DebugBuild());
     // RegisterAction(_inputActions.Player.KeyOne, _ => ChangeActiveObject(0));
     // RegisterAction(_inputActions.Player.KeyTwo, _ => ChangeActiveObject(1));
     // RegisterAction(_inputActions.Player.KeyThree, _ => ChangeActiveObject(2));
-    RegisterAction(_inputActions.Player.KeyFour, _ => ChangeActiveObject(3));
-    RegisterAction(_inputActions.Player.KeyFive, _ => ChangeActiveObject(4));
-    RegisterAction(_inputActions.Player.KeySix, _ => ChangeActiveObject(5));
+    // RegisterAction(_inputActions.Player.KeyFour, _ => ChangeActiveObject(3));
+    // RegisterAction(_inputActions.Player.KeyFive, _ => ChangeActiveObject(4));
+    // RegisterAction(_inputActions.Player.KeySix, _ => ChangeActiveObject(5));
   }
 
   private void ToggleBuilding()
@@ -82,6 +82,11 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
       _currentStructureData = null;
       _playerLook.canLook = true;
     }
+  }
+
+  private void DebugBuild() {
+    if (HasObject) return;
+    TryGiveObject(ConstructableObjects[DebugIndex]);
   }
 
   private void ToggleRotating(bool enable)
