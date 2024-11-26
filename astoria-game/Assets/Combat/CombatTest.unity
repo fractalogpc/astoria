@@ -741,6 +741,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 303398999124722286, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: sceneId
+      value: 82429039
+      objectReference: {fileID: 0}
     - target: {fileID: 916802654918332166, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2756,68 +2760,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491855478}
   m_CullTransparentMesh: 1
---- !u!1001 &1543487443
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1875429126}
-    m_Modifications:
-    - target: {fileID: 1743353957770956, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_Name
-      value: PF Conifer Bare HDRP
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 6.08
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 8.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
---- !u!4 &1543487444 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4534264641828652, guid: 4bee36a3c60253b4c8cbffb37e82cece, type: 3}
-  m_PrefabInstance: {fileID: 1543487443}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1550650177
 GameObject:
   m_ObjectHideFlags: 0
@@ -3130,6 +3072,7 @@ GameObject:
   - component: {fileID: 1606857340}
   - component: {fileID: 1606857339}
   - component: {fileID: 1606857341}
+  - component: {fileID: 1606857342}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -3359,6 +3302,19 @@ MonoBehaviour:
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
   m_ObsoleteContactShadows: 0
+--- !u!114 &1606857342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606857338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69260181708596243a4948c91d38e3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _directionalLight: {fileID: 1606857339}
 --- !u!1 &1733908690
 GameObject:
   m_ObjectHideFlags: 0
@@ -3623,7 +3579,6 @@ Transform:
   - {fileID: 605316912}
   - {fileID: 1290072175}
   - {fileID: 414001995}
-  - {fileID: 1543487444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1982581255

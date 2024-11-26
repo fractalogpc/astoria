@@ -17,10 +17,10 @@ public class TimeOfDay
 	private bool _zeroStart;
 
 	// For inspector debugging
-	[SerializeField] private int _day;
-	[SerializeField] private int _hour;
-	[SerializeField] private int _minute;
-	[SerializeField] private int _second;
+	[SerializeField][ReadOnly]  private int _day;
+	[SerializeField][ReadOnly]  private int _hour;
+	[SerializeField][ReadOnly]  private int _minute;
+	[SerializeField][ReadOnly]  private int _second;
 
 	/// <summary>
 	/// Seconds elapsed since the start of the game. Note that this does not automatically update, you need to call Tick() or SetTime() to update it.
@@ -99,11 +99,9 @@ public class TimeCycleCore : NetworkBehaviour
 	[SerializeField][Range(0, 24)] private float _startGameHour;
 	[SerializeField] private float _dayCycleInMinutes = 0.5f;
 	[Tooltip("If the game starts at Day 0, 00:00:00, or Day 1, 00:00:00.")] [SerializeField]
-	private bool _zeroIndexed = false;
-
-	[Header("Display Only - Changing these values doesn't do anything.")]
+	private bool _daysStartAtZero = false;
+	
 	public TimeOfDay _timeOfDay;
-
 
 	// Yet to be implemented
 	public UnityEvent OnDayChanged;
@@ -119,7 +117,7 @@ public class TimeCycleCore : NetworkBehaviour
 
 	private void Start() {
 		_networkTime = NetworkTime.time;
-		_timeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _zeroIndexed);
+		_timeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
 	}
 
 	private void Update() {

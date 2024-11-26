@@ -107,7 +107,6 @@ public class InventoryComponent : MonoBehaviour
 		for (int y = 0; y < inventoryData.Height; y++) {
 			for (int x = 0; x < inventoryData.Width; x++) {
 				GameObject slot = Instantiate(_slotPrefab, _rect.transform);
-				print($"slot null? {slot == null}");
 				slot.name = $"Slot {x}, {y}";
 				slot.GetComponent<RectTransform>().anchoredPosition = new Vector2(x * SlotSizeUnits + SlotSizeUnits / 2, y * SlotSizeUnits + SlotSizeUnits / 2);
 				slot.GetComponent<InventoryContainerUI>().AttachContainer(inventoryData.Containers[x, y]);
