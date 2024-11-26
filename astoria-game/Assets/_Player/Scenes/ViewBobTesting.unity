@@ -3582,7 +3582,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 768, y: 576}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1795169488066829135
 GameObject:
@@ -4274,14 +4274,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InventoryData:
+    _items: []
   OnInventoryChange:
     m_PersistentCalls:
       m_Calls: []
   _inventoryItemPrefab: {fileID: 5725654330234954917, guid: 13269b01671ab91489ae746ea711d4f0, type: 3}
   _slotPrefab: {fileID: 5178832468966602990, guid: bfabc93eda17f16429cc4f4944fb4008, type: 3}
-  InventorySize: {x: 8, y: 6}
-  InventoryData:
-    _items: []
+  _useAssignedInventoryData: 0
+  _assignedInventorySize: {x: 0, y: 0}
+  _spawnInventoryWith: []
 --- !u!224 &2281606193192182075
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11788,8 +11790,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -11806,12 +11808,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: -2
+      outSlope: -2
+      tangentMode: 34
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
