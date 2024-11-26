@@ -274,7 +274,7 @@ namespace KinematicCharacterController
         /// </summary>
         [Tooltip("How the character interacts with non-kinematic rigidbodies. \"Kinematic\" mode means the character pushes the rigidbodies with infinite force (as a kinematic body would). \"SimulatedDynamic\" pushes the rigidbodies with a simulated mass value.")]
         public RigidbodyInteractionType RigidbodyInteractionType;
-        [Tooltip("Mass used for pushing bodies")]
+        [Tooltip("MassKg used for pushing bodies")]
         public float SimulatedCharacterMass = 1f;
         /// <summary>
         /// Determines if the character preserves moving platform velocities when de-grounding from them

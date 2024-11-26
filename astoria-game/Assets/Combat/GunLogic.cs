@@ -3,61 +3,16 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public struct Aerodynamics {
-	public float DragCoefficient;
-	public float CrossSectionalArea;
-	public float AirDensity;
-	public Aerodynamics(float dragCoefficient, float crossSectionalArea, float airDensity) {
-		DragCoefficient = dragCoefficient;
-		CrossSectionalArea = crossSectionalArea;
-		AirDensity = airDensity;
-	}
-}
-
 public struct AllowedModes
 {
 	bool SemiAuto;
 	bool FullAuto;
 }
 
-public class Projectile
-{
-	public float Damage;
-	public float Mass;
-	public Vector3 Position;
-	public Vector3 Velocity;
-	public Aerodynamics Aerodynamics;
-	
-	public Projectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics) {
-		Damage = damage;
-		Mass = mass;
-		Position = startPosition;
-		Velocity = startVelocity;
-		Aerodynamics = aerodynamics;
-	}
-	public RaycastHit TickProjectile(float deltaTime) {
-		// Calculate drag force direction
-		Vector3 dragForceDirection = -Velocity.normalized;
-		// Calculate drag force magnitude
-		float dragForceMagnitude = 0.5f * Aerodynamics.DragCoefficient * Aerodynamics.CrossSectionalArea * Aerodynamics.AirDensity * Velocity.sqrMagnitude;
-		// Compute drag acceleration
-		Vector3 dragAcceleration = dragForceDirection * (dragForceMagnitude / Mass);
-
-		// Update velocity considering both drag and gravity
-		Velocity += (dragAcceleration + Physics.gravity) * deltaTime;
-
-		// Update position based on new velocity
-		Position += Velocity * deltaTime;
-
-		// Handle collision
-		Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
-		Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
-		return hit;
-	}
-}
-
 public class GunLogic : CombatWeaponLogic
 {
+	[Header("Refs")]
+	[SerializeField] private ProjectileManager _projectileManager;
 	[Header("Projectile Settings")]
 	[SerializeField] private int _samplesPerFixedUpdate = 5;
 	[Header("Bullet Data")]
@@ -89,6 +44,7 @@ public class GunLogic : CombatWeaponLogic
 
 	private bool _triggerDown;
 	private float _timeSinceLastShot;
+	
 	protected override void InitializeActionMap() {
 		base.InitializeActionMap();
 		RegisterAction(_inputActions.Player.Reload, ctx => ReloadDown());
@@ -133,45 +89,35 @@ public class GunLogic : CombatWeaponLogic
 
 	private void Start() {
 		Debug.Log("Replace magazine capacity here with an actual magazine item later");
+		_projectileManager = ProjectileManager.Instance;
 	}
 
 	private void Fire() {
 		_timeSinceLastShot = 0;
 		_currentAmmo--;
-		Projectile newProjectile = new Projectile(
+		_projectileManager.FireProjectile(
 			_damage, 
 			_bulletMassKg, 
 			Camera.main.transform.position, 
 			Camera.main.transform.forward * _initialVelocityMS, 
-			new Aerodynamics(
+			new ProjectileManager.Aerodynamics(
 				_dragCoefficient, 
-				Mathf.PI * Mathf.Pow(_bulletDiameterM / 2, 2), 
+				Mathf.Pow(_bulletDiameterM / 2, 2) * Mathf.PI, 
 				_airDensityKgPerM
-			)
+			),
+			OnBulletHit
 		);
-		_projectilesToTick.Add(newProjectile);
+	}
+
+	private void OnBulletHit(RaycastHit hit) {
+		Debug.Log($"Hit {hit.collider.name} at {hit.point}");
 	}
 
 	private void Update() {
 		_timeSinceLastShot += Time.deltaTime / 2;
-		if (_triggerDown && CurrentFireMode == FireMode.FullAuto && _timeSinceLastShot > _cycleTimeFullAuto) {
+		if (_triggerDown && CurrentFireMode == FireMode.FullAuto && _timeSinceLastShot > _cycleTimeFullAuto && CanFire) {
 			Fire();
 		}
 		_timeSinceLastShot += Time.deltaTime / 2;
-	}
-
-
-	private List<Projectile> _projectilesToTick = new List<Projectile>();
-	private void FixedUpdate() {
-		foreach (Projectile projectile in _projectilesToTick) {
-			for (int i = 0; i < _samplesPerFixedUpdate; i++) {
-				RaycastHit hit = projectile.TickProjectile(Time.fixedDeltaTime / _samplesPerFixedUpdate);
-				if (hit.collider != null) {
-					Debug.Log($"Hit {hit.collider.name} at {hit.point}");
-					_projectilesToTick.Remove(projectile);
-					break;
-				}
-			}
-		}
 	}
 }
