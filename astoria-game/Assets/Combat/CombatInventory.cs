@@ -1,80 +1,75 @@
 using System;
 using System.Collections.Generic;
+using Mirror;
 using Mirror.BouncyCastle.Security;
 using UnityEngine;
 
 /// <summary>
-/// Holds a list of weapons that the player can use in combat. CombatViewmodelAndLogicManager reads from this to spawn in the weapon.
+/// Handles calling CombatCore with the main 3 weapon slots.
 /// </summary>
-[Serializable]
-public class CombatWeaponInstance
-{
-    public CombatWeaponData WeaponData;
-    public GameObject WeaponViewmodel;
-    public GameObject WeaponLogic;
-}
-
 public class CombatInventory : MonoBehaviour
 {
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
     [SerializeField] private CombatWeaponLogicManager _combatWeaponLogicManager;
-    [SerializeField] private CombatWeaponInstance _defaultWeapon;
+    [SerializeField] private WeaponData _defaultWeapon;
     public enum WeaponSlot
     {
-        Primary,
-        Pistol,
-        Special,
+        PrimarySlot,
+        SecondarySlot,
+        SpecialSlot,
     }
-    public CombatWeaponInstance CurrentWeapon => CurrentSlot switch
+    [ReadOnly] public WeaponSlot CurrentSlot;
+    public CombatWeapon CurrentWeapon => CurrentSlot switch
     {
-        WeaponSlot.Primary => PrimaryWeapon,
-        WeaponSlot.Pistol => PistolWeapon,
-        WeaponSlot.Special => SpecialWeapon,
+        WeaponSlot.PrimarySlot => PrimaryWeapon,
+        WeaponSlot.SecondarySlot => SecondaryWeapon,
+        WeaponSlot.SpecialSlot => SpecialWeapon,
         _ => throw new ArgumentOutOfRangeException()
     };
-    public WeaponSlot CurrentSlot;
-    [Header("Dont change these manually, these are assigned by the script.")]
-    public CombatWeaponInstance PrimaryWeapon;
-    public CombatWeaponInstance PistolWeapon;
-    public CombatWeaponInstance SpecialWeapon;
+    [ReadOnly] public CombatWeapon PrimaryWeapon;
+    [ReadOnly] public CombatWeapon SecondaryWeapon;
+    [ReadOnly] public CombatWeapon SpecialWeapon;
 
-    public CombatWeaponInstance CreateInstanceFromData(CombatWeaponData data) {
-        CombatWeaponInstance instance = new CombatWeaponInstance();
-        instance.WeaponData = data;
-        instance.WeaponViewmodel = _combatViewmodelManager.SetWeaponViewmodel(data.WeaponViewmodelPrefab);
-        instance.WeaponLogic = Instantiate(data.WeaponLogicPrefab);
+    public CombatWeapon CreateInstanceFromData(WeaponData data) {
+        CombatWeapon instance = new CombatWeapon(data, _combatViewmodelManager, _combatWeaponLogicManager);
         return instance;
     }
     /// <summary>
     /// Equips the weapon in the specified slot. Calls the CombatViewmodelManager and CombatWeaponLogicManager to spawn in the viewmodel and logic prefabs.
     /// </summary>
     /// <param name="slot">The specified slot.</param>
-    public void EquipWeaponInSlot(WeaponSlot slot) {
+    public void EquipSlot(WeaponSlot slot) {
         CurrentSlot = slot;
         switch (slot) {
-            case WeaponSlot.Primary:
-                _combatViewmodelManager.SetWeaponViewmodel(PrimaryWeapon.WeaponViewmodel);
+            case WeaponSlot.PrimarySlot:
+                _combatViewmodelManager.SetCurrentViewmodel(PrimaryWeapon.WeaponViewmodel);
                 break;
-            case WeaponSlot.Pistol:
-                _combatViewmodelManager.SetWeaponViewmodel(PistolWeapon.WeaponViewmodel);
+            case WeaponSlot.SecondarySlot:
+                _combatViewmodelManager.SetCurrentViewmodel(SecondaryWeapon.WeaponViewmodel);
                 break;
-            case WeaponSlot.Special:
-                _combatViewmodelManager.SetWeaponViewmodel(SpecialWeapon.WeaponViewmodel);
+            case WeaponSlot.SpecialSlot:
+                _combatViewmodelManager.SetCurrentViewmodel(SpecialWeapon.WeaponViewmodel);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
-    private void SwitchToPrimary() {
-        CurrentSlot = WeaponSlot.Primary;
-        _combatViewmodelManager.SetWeaponViewmodel(PrimaryWeapon.WeaponViewmodel);
-    }
-    private void SwitchToPistol() {
-        CurrentSlot = WeaponSlot.Pistol;
-        _combatViewmodelManager.SetWeaponViewmodel(PistolWeapon.WeaponViewmodel);
-    }
-    private void SwitchToSpecial() {
-        CurrentSlot = WeaponSlot.Special;
-        _combatViewmodelManager.SetWeaponViewmodel(SpecialWeapon.WeaponViewmodel);
-    }
+    // public bool AddWeaponToSlot(WeaponData data, WeaponSlot slot) {
+    //     switch (slot) {
+    //         case WeaponSlot.PrimarySlot:
+    //             if (PrimaryWeapon != null) return false;
+    //             PrimaryWeapon = weapon;
+    //             break;
+    //         case WeaponSlot.SecondarySlot:
+    //             if (SecondaryWeapon != null) return false;
+    //             SecondaryWeapon = weapon;
+    //             break;
+    //         case WeaponSlot.SpecialSlot:
+    //             SpecialWeapon = weapon;
+    //             break;
+    //         default:
+    //             throw new ArgumentOutOfRangeException();
+    //     }
+    //     return true;
+    // }
 }

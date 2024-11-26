@@ -60,10 +60,10 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     if (!EnableDebugging) return;
     
     RegisterAction(_inputActions.Player.Build, _ => ToggleBuilding());
-
-    RegisterAction(_inputActions.Player.KeyOne, _ => ChangeActiveObject(0));
-    RegisterAction(_inputActions.Player.KeyTwo, _ => ChangeActiveObject(1));
-    RegisterAction(_inputActions.Player.KeyThree, _ => ChangeActiveObject(2));
+    Debug.LogWarning("ConstructionCore: The first three construction objects are not bound to keys. The bind has been used for combat instead. Please choose a different key binding.");
+    // RegisterAction(_inputActions.Player.KeyOne, _ => ChangeActiveObject(0));
+    // RegisterAction(_inputActions.Player.KeyTwo, _ => ChangeActiveObject(1));
+    // RegisterAction(_inputActions.Player.KeyThree, _ => ChangeActiveObject(2));
     RegisterAction(_inputActions.Player.KeyFour, _ => ChangeActiveObject(3));
     RegisterAction(_inputActions.Player.KeyFive, _ => ChangeActiveObject(4));
     RegisterAction(_inputActions.Player.KeySix, _ => ChangeActiveObject(5));

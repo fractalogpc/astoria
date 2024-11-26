@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "AttackSecondary",
+                    "type": "Button",
+                    "id": "ae3f98ac-c423-4d24-a564-5158546080ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
@@ -60,6 +69,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "641cd816-40e6-41b4-8c3d-04687c349290",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Previous",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
@@ -72,15 +90,6 @@
                     "name": "Next",
                     "type": "Button",
                     "id": "b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Sprint",
-                    "type": "Button",
-                    "id": "641cd816-40e6-41b4-8c3d-04687c349290",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -123,7 +132,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "KeyOne",
+                    "name": "EquipPrimary",
                     "type": "Button",
                     "id": "076c410b-740e-446d-9baa-ec274710e342",
                     "expectedControlType": "",
@@ -132,7 +141,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "KeyTwo",
+                    "name": "EquipSecondary",
                     "type": "Button",
                     "id": "2cf71286-a0f9-4bb4-ac48-5ac703cc398e",
                     "expectedControlType": "",
@@ -141,7 +150,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "KeyThree",
+                    "name": "EquipSpecial",
                     "type": "Button",
                     "id": "e462b9f1-30fa-4187-8d5c-420592a1142d",
                     "expectedControlType": "",
@@ -645,7 +654,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "KeyOne",
+                    "action": "EquipPrimary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -656,7 +665,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "KeyTwo",
+                    "action": "EquipSecondary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -667,7 +676,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "KeyThree",
+                    "action": "EquipSpecial",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -712,6 +721,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aff92c9b-be34-4fb5-8e01-2a554bc3664d",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "AttackSecondary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

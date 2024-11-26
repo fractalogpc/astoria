@@ -55,6 +55,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""AttackSecondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae3f98ac-c423-4d24-a564-5158546080ab"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""852140f2-7766-474d-8707-702459ba45f3"",
@@ -82,6 +91,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""641cd816-40e6-41b4-8c3d-04687c349290"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Previous"",
                     ""type"": ""Button"",
                     ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
@@ -94,15 +112,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Next"",
                     ""type"": ""Button"",
                     ""id"": ""b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Sprint"",
-                    ""type"": ""Button"",
-                    ""id"": ""641cd816-40e6-41b4-8c3d-04687c349290"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -145,7 +154,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""KeyOne"",
+                    ""name"": ""EquipPrimary"",
                     ""type"": ""Button"",
                     ""id"": ""076c410b-740e-446d-9baa-ec274710e342"",
                     ""expectedControlType"": """",
@@ -154,7 +163,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KeyTwo"",
+                    ""name"": ""EquipSecondary"",
                     ""type"": ""Button"",
                     ""id"": ""2cf71286-a0f9-4bb4-ac48-5ac703cc398e"",
                     ""expectedControlType"": """",
@@ -163,7 +172,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KeyThree"",
+                    ""name"": ""EquipSpecial"",
                     ""type"": ""Button"",
                     ""id"": ""e462b9f1-30fa-4187-8d5c-420592a1142d"",
                     ""expectedControlType"": """",
@@ -667,7 +676,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""KeyOne"",
+                    ""action"": ""EquipPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -678,7 +687,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""KeyTwo"",
+                    ""action"": ""EquipSecondary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -689,7 +698,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""KeyThree"",
+                    ""action"": ""EquipSpecial"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -734,6 +743,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aff92c9b-be34-4fb5-8e01-2a554bc3664d"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AttackSecondary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1355,19 +1375,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_AttackSecondary = m_Player.FindAction("AttackSecondary", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
-        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Build = m_Player.FindAction("Build", throwIfNotFound: true);
         m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
         m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
         m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
-        m_Player_KeyOne = m_Player.FindAction("KeyOne", throwIfNotFound: true);
-        m_Player_KeyTwo = m_Player.FindAction("KeyTwo", throwIfNotFound: true);
-        m_Player_KeyThree = m_Player.FindAction("KeyThree", throwIfNotFound: true);
+        m_Player_EquipPrimary = m_Player.FindAction("EquipPrimary", throwIfNotFound: true);
+        m_Player_EquipSecondary = m_Player.FindAction("EquipSecondary", throwIfNotFound: true);
+        m_Player_EquipSpecial = m_Player.FindAction("EquipSpecial", throwIfNotFound: true);
         m_Player_KeyFour = m_Player.FindAction("KeyFour", throwIfNotFound: true);
         m_Player_KeyFive = m_Player.FindAction("KeyFive", throwIfNotFound: true);
         m_Player_KeySix = m_Player.FindAction("KeySix", throwIfNotFound: true);
@@ -1455,19 +1476,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_AttackSecondary;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
-    private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Build;
     private readonly InputAction m_Player_Rotate;
     private readonly InputAction m_Player_Delete;
     private readonly InputAction m_Player_Scroll;
-    private readonly InputAction m_Player_KeyOne;
-    private readonly InputAction m_Player_KeyTwo;
-    private readonly InputAction m_Player_KeyThree;
+    private readonly InputAction m_Player_EquipPrimary;
+    private readonly InputAction m_Player_EquipSecondary;
+    private readonly InputAction m_Player_EquipSpecial;
     private readonly InputAction m_Player_KeyFour;
     private readonly InputAction m_Player_KeyFive;
     private readonly InputAction m_Player_KeySix;
@@ -1479,19 +1501,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @AttackSecondary => m_Wrapper.m_Player_AttackSecondary;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Previous => m_Wrapper.m_Player_Previous;
         public InputAction @Next => m_Wrapper.m_Player_Next;
-        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Build => m_Wrapper.m_Player_Build;
         public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
         public InputAction @Delete => m_Wrapper.m_Player_Delete;
         public InputAction @Scroll => m_Wrapper.m_Player_Scroll;
-        public InputAction @KeyOne => m_Wrapper.m_Player_KeyOne;
-        public InputAction @KeyTwo => m_Wrapper.m_Player_KeyTwo;
-        public InputAction @KeyThree => m_Wrapper.m_Player_KeyThree;
+        public InputAction @EquipPrimary => m_Wrapper.m_Player_EquipPrimary;
+        public InputAction @EquipSecondary => m_Wrapper.m_Player_EquipSecondary;
+        public InputAction @EquipSpecial => m_Wrapper.m_Player_EquipSpecial;
         public InputAction @KeyFour => m_Wrapper.m_Player_KeyFour;
         public InputAction @KeyFive => m_Wrapper.m_Player_KeyFive;
         public InputAction @KeySix => m_Wrapper.m_Player_KeySix;
@@ -1514,6 +1537,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @AttackSecondary.started += instance.OnAttackSecondary;
+            @AttackSecondary.performed += instance.OnAttackSecondary;
+            @AttackSecondary.canceled += instance.OnAttackSecondary;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -1523,15 +1549,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
             @Previous.started += instance.OnPrevious;
             @Previous.performed += instance.OnPrevious;
             @Previous.canceled += instance.OnPrevious;
             @Next.started += instance.OnNext;
             @Next.performed += instance.OnNext;
             @Next.canceled += instance.OnNext;
-            @Sprint.started += instance.OnSprint;
-            @Sprint.performed += instance.OnSprint;
-            @Sprint.canceled += instance.OnSprint;
             @Build.started += instance.OnBuild;
             @Build.performed += instance.OnBuild;
             @Build.canceled += instance.OnBuild;
@@ -1544,15 +1570,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Scroll.started += instance.OnScroll;
             @Scroll.performed += instance.OnScroll;
             @Scroll.canceled += instance.OnScroll;
-            @KeyOne.started += instance.OnKeyOne;
-            @KeyOne.performed += instance.OnKeyOne;
-            @KeyOne.canceled += instance.OnKeyOne;
-            @KeyTwo.started += instance.OnKeyTwo;
-            @KeyTwo.performed += instance.OnKeyTwo;
-            @KeyTwo.canceled += instance.OnKeyTwo;
-            @KeyThree.started += instance.OnKeyThree;
-            @KeyThree.performed += instance.OnKeyThree;
-            @KeyThree.canceled += instance.OnKeyThree;
+            @EquipPrimary.started += instance.OnEquipPrimary;
+            @EquipPrimary.performed += instance.OnEquipPrimary;
+            @EquipPrimary.canceled += instance.OnEquipPrimary;
+            @EquipSecondary.started += instance.OnEquipSecondary;
+            @EquipSecondary.performed += instance.OnEquipSecondary;
+            @EquipSecondary.canceled += instance.OnEquipSecondary;
+            @EquipSpecial.started += instance.OnEquipSpecial;
+            @EquipSpecial.performed += instance.OnEquipSpecial;
+            @EquipSpecial.canceled += instance.OnEquipSpecial;
             @KeyFour.started += instance.OnKeyFour;
             @KeyFour.performed += instance.OnKeyFour;
             @KeyFour.canceled += instance.OnKeyFour;
@@ -1578,6 +1604,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @AttackSecondary.started -= instance.OnAttackSecondary;
+            @AttackSecondary.performed -= instance.OnAttackSecondary;
+            @AttackSecondary.canceled -= instance.OnAttackSecondary;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -1587,15 +1616,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
             @Previous.started -= instance.OnPrevious;
             @Previous.performed -= instance.OnPrevious;
             @Previous.canceled -= instance.OnPrevious;
             @Next.started -= instance.OnNext;
             @Next.performed -= instance.OnNext;
             @Next.canceled -= instance.OnNext;
-            @Sprint.started -= instance.OnSprint;
-            @Sprint.performed -= instance.OnSprint;
-            @Sprint.canceled -= instance.OnSprint;
             @Build.started -= instance.OnBuild;
             @Build.performed -= instance.OnBuild;
             @Build.canceled -= instance.OnBuild;
@@ -1608,15 +1637,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Scroll.started -= instance.OnScroll;
             @Scroll.performed -= instance.OnScroll;
             @Scroll.canceled -= instance.OnScroll;
-            @KeyOne.started -= instance.OnKeyOne;
-            @KeyOne.performed -= instance.OnKeyOne;
-            @KeyOne.canceled -= instance.OnKeyOne;
-            @KeyTwo.started -= instance.OnKeyTwo;
-            @KeyTwo.performed -= instance.OnKeyTwo;
-            @KeyTwo.canceled -= instance.OnKeyTwo;
-            @KeyThree.started -= instance.OnKeyThree;
-            @KeyThree.performed -= instance.OnKeyThree;
-            @KeyThree.canceled -= instance.OnKeyThree;
+            @EquipPrimary.started -= instance.OnEquipPrimary;
+            @EquipPrimary.performed -= instance.OnEquipPrimary;
+            @EquipPrimary.canceled -= instance.OnEquipPrimary;
+            @EquipSecondary.started -= instance.OnEquipSecondary;
+            @EquipSecondary.performed -= instance.OnEquipSecondary;
+            @EquipSecondary.canceled -= instance.OnEquipSecondary;
+            @EquipSpecial.started -= instance.OnEquipSpecial;
+            @EquipSpecial.performed -= instance.OnEquipSpecial;
+            @EquipSpecial.canceled -= instance.OnEquipSpecial;
             @KeyFour.started -= instance.OnKeyFour;
             @KeyFour.performed -= instance.OnKeyFour;
             @KeyFour.canceled -= instance.OnKeyFour;
@@ -1822,19 +1851,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnAttackSecondary(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
         void OnPrevious(InputAction.CallbackContext context);
         void OnNext(InputAction.CallbackContext context);
-        void OnSprint(InputAction.CallbackContext context);
         void OnBuild(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnDelete(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
-        void OnKeyOne(InputAction.CallbackContext context);
-        void OnKeyTwo(InputAction.CallbackContext context);
-        void OnKeyThree(InputAction.CallbackContext context);
+        void OnEquipPrimary(InputAction.CallbackContext context);
+        void OnEquipSecondary(InputAction.CallbackContext context);
+        void OnEquipSpecial(InputAction.CallbackContext context);
         void OnKeyFour(InputAction.CallbackContext context);
         void OnKeyFive(InputAction.CallbackContext context);
         void OnKeySix(InputAction.CallbackContext context);

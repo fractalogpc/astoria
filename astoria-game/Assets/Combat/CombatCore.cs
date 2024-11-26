@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 /// <summary>
@@ -11,36 +12,22 @@ using UnityEngine;
 /// Calling fire functions. (CombatWeaponLogic)
 /// </summary>
 
-[RequireComponent(typeof(CombatInput))]
 [RequireComponent(typeof(CombatInventory))]
-public class CombatCore : MonoBehaviour
+public class CombatCore : NetworkedInputHandlerBase
 {
-    [SerializeField] private CombatInput _combatInput;
     [SerializeField] private CombatInventory _inventory;
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
-    [SerializeField] private CombatWeaponData DebugPrimary;
-    [SerializeField] private CombatWeaponData DebugPistol;
-    [SerializeField] private CombatWeaponData DebugSpecial;
-   
-    private void Start() {
-        _combatInput.WeaponPrimary.AddListener(SwitchToPrimary);
-        _combatInput.WeaponPistol.AddListener(SwitchToPistol);
-        _combatInput.WeaponSpecial.AddListener(SwitchToSpecial);    
+    [SerializeField] private WeaponData DebugPrimary;
+    [SerializeField] private WeaponData DebugPistol;
+    [SerializeField] private WeaponData DebugSpecial;
+
+    protected override void InitializeActionMap() {
+        
     }
 
-    private void OnDisable() {
-        _combatInput.WeaponPrimary.RemoveListener(SwitchToPrimary);
-        _combatInput.WeaponPistol.RemoveListener(SwitchToPistol);
-        _combatInput.WeaponSpecial.RemoveListener(SwitchToSpecial);
+    public void EquipWeapon(WeaponData data) {
+        
     }
 
-    private void SwitchToPrimary() {
-        _inventory.EquipWeaponInSlot(CombatInventory.WeaponSlot.Primary);
-    }
-    private void SwitchToPistol() {
-        _inventory.EquipWeaponInSlot(CombatInventory.WeaponSlot.Primary);
-    }
-    private void SwitchToSpecial() {
-        _inventory.EquipWeaponInSlot(CombatInventory.WeaponSlot.Primary);
-    }
+    
 }
