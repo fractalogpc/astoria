@@ -21,7 +21,7 @@ public struct Aerodymanics {
 	}
 }
 
-public struct FireModes
+public struct AllowedModes
 {
 	bool SemiAuto;
 	bool FullAuto;
@@ -48,6 +48,7 @@ public class Projectile
 		Velocity += Physics.gravity * deltaTime;
 		Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
 		Position += Velocity * deltaTime;
+		Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
 		return hit;
 	}
 }
@@ -57,14 +58,14 @@ public class GunLogic : CombatWeaponLogic
 	[Header("Projectile Settings")]
 	[SerializeField] private int _samplesPerFixedUpdate = 5;
 	[Header("Bullet Data")]
-	[SerializeField] private float _damage;
-	[SerializeField] private float _initialVelocityMS;
-	[SerializeField] private float _bulletMassKg;
-	[SerializeField] private float _bulletDiameterM;
+	[SerializeField] private float _damage = 30f;
+	[SerializeField] private float _initialVelocityMS = 400f;
+	[SerializeField] private float _bulletMassKg = 0.07f;
+	[SerializeField] private float _bulletDiameterM = 0.009f;
 	[SerializeField] private float _airDensityKgPerM = 1.1f;
-	[SerializeField] private float _dragCoefficient;
+	[SerializeField] private float _dragCoefficient = 0.149f;
 	[Header("Weapon Settings")]
-	public FireModes AllowedFireModes;
+	public AllowedModes AllowedFireModes;
 	public FireMode CurrentFireMode;
 	public enum FireMode {
 		SemiAuto,
@@ -100,8 +101,7 @@ public class GunLogic : CombatWeaponLogic
 				Fire();
 				break;
 			case FireMode.FullAuto:
-				if (_timeSinceLastShot < _cycleTimeFullAuto) return;
-				Fire();
+				// Handled by Update()
 				break;
 		}
 	}
@@ -119,7 +119,7 @@ public class GunLogic : CombatWeaponLogic
 	}
 
 	public void SwitchFireMode() {
-		
+		CurrentFireMode = CurrentFireMode == FireMode.SemiAuto ? FireMode.FullAuto : FireMode.SemiAuto;
 	}
 	
 	public void ReloadDown() {

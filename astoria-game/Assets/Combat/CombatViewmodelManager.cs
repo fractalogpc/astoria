@@ -12,7 +12,7 @@ public class CombatViewmodelManager : MonoBehaviour
 	/// </summary>
 	/// <param name="viewmodelInstance">The viewmodel instance to set to.</param>
 	/// <returns>Whether or not setting the viewmodel was successful.</returns>
-	public bool SetCurrentViewmodel(GameObject viewmodelInstance)
+	public bool SetCurrentViewmodelTo(GameObject viewmodelInstance)
 	{
 		if (_viewmodelParent.childCount > 0)
 		{
@@ -35,7 +35,7 @@ public class CombatViewmodelManager : MonoBehaviour
 	/// </summary>
 	/// <param name="viewmodelPrefab">The viewmodel prefab to instantiate.</param>
 	/// <returns>The viewmodel instance.</returns>
-	public GameObject AddNewViewmodel(GameObject viewmodelPrefab) {
+	public GameObject AddViewmodel(GameObject viewmodelPrefab) {
 		GameObject viewmodel = Instantiate(viewmodelPrefab, _viewmodelParent);
 		viewmodel.SetActive(false);
 		return viewmodel;

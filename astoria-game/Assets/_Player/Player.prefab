@@ -314,6 +314,7 @@ GameObject:
   - component: {fileID: 9088220939750902593}
   - component: {fileID: 5301573614924863385}
   - component: {fileID: 2627650646237878555}
+  - component: {fileID: 9002593964255495585}
   m_Layer: 0
   m_Name: CombatSystem
   m_TagString: Untagged
@@ -348,10 +349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614bf1a9f382d6942ba3ce85c224612c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _combatViewmodelManager: {fileID: 0}
-  _combatWeaponLogicManager: {fileID: 0}
-  _defaultWeapon: {fileID: 0}
-  CurrentSlot: 0
 --- !u!114 &2627650646237878555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,10 +364,25 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  _combatViewmodelManager: {fileID: 0}
+  _combatViewmodelManager: {fileID: 8665975738431017114}
+  _combatWeaponLogicManager: {fileID: 9002593964255495585}
   DebugPrimary: {fileID: 0}
   DebugPistol: {fileID: 0}
   DebugSpecial: {fileID: 0}
+--- !u!114 &9002593964255495585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642439937972844160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1093072ecc664ab7bf05f9740111261e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponLogicParent: {fileID: 9088220939750902593}
+  _currentWeaponLogic: {fileID: 0}
 --- !u!1 &923064617839545944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,7 +1246,6 @@ Transform:
   - {fileID: 7052466596731521693}
   - {fileID: 9088220939750902593}
   - {fileID: 6245448379990478009}
-  - {fileID: 6126032875406853262}
   - {fileID: 94701644033090388}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1365,7 +1376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34eea317f9325a746b33c1d10bb43de6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Motor: {fileID: 0}
+  Motor: {fileID: 3739774951926790246}
   PlayerCamera: {fileID: 4396451452828267896}
   MaxStableCrouchSpeed: 2
   MaxStableMoveSpeed: 3.5
@@ -1391,7 +1402,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 043dd2f1b246c4f49bd18141863f5680, type: 3}
   m_Name: 
@@ -2104,7 +2115,7 @@ GameObject:
   - component: {fileID: 7656132647285616417}
   - component: {fileID: 8213902068015065991}
   m_Layer: 8
-  m_Name: PlayerWorldmodel
+  m_Name: Worldmodel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3813,7 +3824,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6126032875406853262}
   m_Father: {fileID: 4723388315618955371}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &7446644550364225707
@@ -4027,7 +4039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canLook: 1
-  _playerTransform: {fileID: 0}
+  _playerTransform: {fileID: 4723388315618955371}
   _cameraTarget: {fileID: 6159813253559258251}
   _cameraTransform: {fileID: 8706593742784918896}
   PlayerYLookQuaternion: {x: 0, y: 0, z: 0, w: 1}
@@ -7549,7 +7561,7 @@ GameObject:
   - component: {fileID: 6126032875406853262}
   - component: {fileID: 8665975738431017114}
   m_Layer: 0
-  m_Name: PlayerViewmodel
+  m_Name: ViewmodelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7564,11 +7576,11 @@ Transform:
   m_GameObject: {fileID: 7164937338993327052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4723388315618955371}
+  m_Father: {fileID: 8706593742784918896}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8665975738431017114
 MonoBehaviour:

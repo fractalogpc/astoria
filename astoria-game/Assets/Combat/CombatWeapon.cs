@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class CombatWeapon
 {
-    public GameObject WeaponViewmodel;
-    public GameObject WeaponLogic;
+    public WeaponData ConstantData;
+    public GameObject WeaponViewmodelInstance;
+    public GameObject WeaponLogicInstance;
     
-    public CombatWeapon(WeaponData data, CombatViewmodelManager viewmodelManager, CombatWeaponLogicManager weaponLogicManager) {
-        WeaponViewmodel = viewmodelManager.AddNewViewmodel(data.WeaponViewmodelPrefab);
-        WeaponLogic = weaponLogicManager.SpawnWeaponLogic(data.WeaponLogicPrefab);
+    public CombatWeapon(WeaponData data, GameObject viewmodelInstance, GameObject weaponLogicInstance) {
+        WeaponViewmodelInstance = viewmodelInstance;
+        WeaponLogicInstance = weaponLogicInstance;
     }
 }
