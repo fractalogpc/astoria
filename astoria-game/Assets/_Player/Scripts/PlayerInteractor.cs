@@ -22,7 +22,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   private void Interact() {
     Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
     if (Physics.Raycast(ray, out RaycastHit hit, _interactDistance)) {
-      Interactable interactable = hit.collider.GetComponent<Interactable>();
+      Interactable interactable = hit.collider.GetComponentInChildren<Interactable>();
       interactable?.Interact();
     }
   }

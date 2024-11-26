@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 /// <summary>
 /// Manages and switches between different viewmodels. Also acts as an interface for calling each one's CombatViewmodel.
 /// </summary>
-public class CombatViewmodelManager : MonoBehaviour
+public class CombatViewmodelManager : NetworkBehaviour
 {
 	[SerializeField] private Transform _viewmodelParent;
-	[SerializeField] private CombatViewmodel _currentViewmodel;
+	[SerializeField][ReadOnly] private CombatViewmodel _currentViewmodel;
 
 	/// <summary>
 	/// Sets the current viewmodel to the specified viewmodel. The viewmodel must be a child of the _viewmodelParent.

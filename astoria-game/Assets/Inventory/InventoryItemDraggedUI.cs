@@ -125,6 +125,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
   private void SpawnDroppedItem() {
     GameObject dropped = Instantiate(Item.ItemData.DroppedItemPrefab);
-    dropped.transform.position = LocalPlayerReference.Instance.LocalPlayer.transform.position + Vector3.up;
+    Debug.Log("Add some kind of settings for dropped items later.");
+    dropped.transform.position = LocalPlayerReference.Instance.LocalPlayer.transform.position + Vector3.forward * 2;
+    dropped.GetComponent<DroppedItem>().Item = Item.ItemData;
   }
 }

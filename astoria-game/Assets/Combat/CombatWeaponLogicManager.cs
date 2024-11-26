@@ -8,7 +8,7 @@ using UnityEngine;
 public class CombatWeaponLogicManager : MonoBehaviour
 {
 	[SerializeField] private Transform _weaponLogicParent;
-	[SerializeField] private GameObject _currentWeaponLogic;
+	[SerializeField][ReadOnly] private GameObject _currentWeaponLogic;
 	public GameObject AddWeaponLogic(GameObject weaponLogicPrefab) {
 		GameObject newLogic = Instantiate(weaponLogicPrefab, _weaponLogicParent);
 		newLogic.SetActive(false);
