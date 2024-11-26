@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public struct Aerodymanics {
+public struct Aerodynamics {
 	public float DragCoefficient;
 	public float CrossSectionalArea;
 	public float AirDensity;
-	public float _speed;
-	public Aerodymanics(float dragCoefficient, float crossSectionalArea, float airDensity, float speed) {
+	public Aerodynamics(float dragCoefficient, float crossSectionalArea, float airDensity) {
 		DragCoefficient = dragCoefficient;
 		CrossSectionalArea = crossSectionalArea;
 		AirDensity = airDensity;
-		_speed = speed;
-	}
-	public float DragForce => 0.5f * DragCoefficient * CrossSectionalArea * AirDensity * _speed * _speed;
-	public Aerodymanics NextAerodynamics(float mass, float deltaTime) {
-		float acceleration = DragForce / mass;
-		return new Aerodymanics(DragCoefficient, CrossSectionalArea, AirDensity, _speed - acceleration * deltaTime);
 	}
 }
 
@@ -33,21 +26,31 @@ public class Projectile
 	public float Mass;
 	public Vector3 Position;
 	public Vector3 Velocity;
-	public Aerodymanics Aerodymanics;
+	public Aerodynamics Aerodynamics;
 	
-	public Projectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodymanics aerodymanics) {
+	public Projectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics) {
 		Damage = damage;
 		Mass = mass;
 		Position = startPosition;
 		Velocity = startVelocity;
-		Aerodymanics = aerodymanics;
+		Aerodynamics = aerodynamics;
 	}
 	public RaycastHit TickProjectile(float deltaTime) {
-		Aerodymanics = Aerodymanics.NextAerodynamics(Mass, deltaTime);
-		Velocity = Aerodymanics._speed * Velocity.normalized;
-		Velocity += Physics.gravity * deltaTime;
-		Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
+		// Calculate drag force direction
+		Vector3 dragForceDirection = -Velocity.normalized;
+		// Calculate drag force magnitude
+		float dragForceMagnitude = 0.5f * Aerodynamics.DragCoefficient * Aerodynamics.CrossSectionalArea * Aerodynamics.AirDensity * Velocity.sqrMagnitude;
+		// Compute drag acceleration
+		Vector3 dragAcceleration = dragForceDirection * (dragForceMagnitude / Mass);
+
+		// Update velocity considering both drag and gravity
+		Velocity += (dragAcceleration + Physics.gravity) * deltaTime;
+
+		// Update position based on new velocity
 		Position += Velocity * deltaTime;
+
+		// Handle collision
+		Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
 		Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
 		return hit;
 	}
@@ -138,13 +141,12 @@ public class GunLogic : CombatWeaponLogic
 		Projectile newProjectile = new Projectile(
 			_damage, 
 			_bulletMassKg, 
-			transform.position, 
-			transform.forward * _initialVelocityMS, 
-			new Aerodymanics(
+			Camera.main.transform.position, 
+			Camera.main.transform.forward * _initialVelocityMS, 
+			new Aerodynamics(
 				_dragCoefficient, 
-				_bulletDiameterM, 
-				_airDensityKgPerM, 
-				_initialVelocityMS
+				Mathf.PI * Mathf.Pow(_bulletDiameterM / 2, 2), 
+				_airDensityKgPerM
 			)
 		);
 		_projectilesToTick.Add(newProjectile);

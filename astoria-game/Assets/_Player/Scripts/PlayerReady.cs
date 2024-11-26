@@ -1,9 +1,9 @@
 using Mirror;
 using UnityEngine;
 
-public class PlayerReady : NetworkBehaviour, IStartExecution
+public class PlayerReady : NetworkBehaviour
 {
-  public void InitializeStart()
+  public void Start()
   {
     Debug.LogWarning("Matthew please fix this, isLocalPlayer is always false");
     // if (isLocalPlayer)
@@ -17,7 +17,6 @@ public class PlayerReady : NetworkBehaviour, IStartExecution
   public void CmdSetPlayerReady()
   {
     if (!isServer) return;
-
     FindFirstObjectByType<GameStateController>()?.OnPlayerReady();
   }
 }

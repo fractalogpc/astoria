@@ -72,14 +72,14 @@ public abstract class InputHandlerBase : MonoBehaviour, IOnEnableExecution
 /// <summary>
 /// Abstract base class for handling input actions.
 /// </summary>
-public abstract class NetworkedInputHandlerBase : NetworkBehaviour, IOnEnableExecution
+public abstract class NetworkedInputHandlerBase : NetworkBehaviour
 {
   protected PlayerInputActions _inputActions;
 
   // Dictionary to store input actions and their callbacks
   protected Dictionary<InputAction, Action<InputAction.CallbackContext>> _actionMap = new();
 
-  public void InitializeOnEnable() {
+  public void OnEnable() {
     _inputActions = InputReader.Instance.InputActions;
     InitializeActionMap();
     // Subscribe all actions in the dictionary
