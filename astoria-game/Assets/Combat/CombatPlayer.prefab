@@ -1885,7 +1885,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2674780607426674816}
-  - component: {fileID: 6261152064990321213}
   - component: {fileID: 1611823936286701696}
   - component: {fileID: 8998320041997941684}
   m_Layer: 0
@@ -1910,42 +1909,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3311421590604481468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6261152064990321213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2009221009055117056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff23a1a9909b8014c9ea0491d813cd44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FireDown:
-    m_PersistentCalls:
-      m_Calls: []
-  FireUp:
-    m_PersistentCalls:
-      m_Calls: []
-  ADSStart:
-    m_PersistentCalls:
-      m_Calls: []
-  ADSEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  ReloadDown:
-    m_PersistentCalls:
-      m_Calls: []
-  WeaponPrimary:
-    m_PersistentCalls:
-      m_Calls: []
-  WeaponPistol:
-    m_PersistentCalls:
-      m_Calls: []
-  WeaponSpecial:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1611823936286701696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1960,23 +1923,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _combatViewmodelManager: {fileID: 0}
   _combatWeaponLogicManager: {fileID: 0}
-  _defaultWeapon:
-    WeaponData: {fileID: 0}
-    WeaponViewmodel: {fileID: 0}
-    WeaponLogic: {fileID: 0}
+  _defaultWeapon: {fileID: 0}
   CurrentSlot: 0
-  PrimaryWeapon:
-    WeaponData: {fileID: 0}
-    WeaponViewmodel: {fileID: 0}
-    WeaponLogic: {fileID: 0}
-  PistolWeapon:
-    WeaponData: {fileID: 0}
-    WeaponViewmodel: {fileID: 0}
-    WeaponLogic: {fileID: 0}
-  SpecialWeapon:
-    WeaponData: {fileID: 0}
-    WeaponViewmodel: {fileID: 0}
-    WeaponLogic: {fileID: 0}
 --- !u!114 &8998320041997941684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1989,7 +1937,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc808ac73d8e994dad6f66b9035c73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _combatInput: {fileID: 6261152064990321213}
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _inventory: {fileID: 1611823936286701696}
   _combatViewmodelManager: {fileID: 0}
   DebugPrimary: {fileID: 0}
