@@ -1,36 +1,46 @@
 ﻿using UnityEngine;
 /// <summary>
-/// Manages and switches between different viewmodels. Also acts as an interface for calling each one's CombatWeaponViewmodel.
+/// Manages and switches between different viewmodels. Also acts as an interface for calling each one's CombatViewmodel.
 /// </summary>
 public class CombatViewmodelManager : MonoBehaviour
 {
 	[SerializeField] private Transform _viewmodelParent;
-	[SerializeField] private CombatWeaponViewmodel _currentViewmodel;
+	[SerializeField] private CombatViewmodel _currentViewmodel;
 
 	/// <summary>
 	/// Sets the current viewmodel to the specified viewmodel. The viewmodel must be a child of the _viewmodelParent.
 	/// </summary>
-	/// <param name="viewmodelPrefab">The viewmodel instance to set to.</param>
+	/// <param name="viewmodelInstance">The viewmodel instance to set to.</param>
 	/// <returns>Whether or not setting the viewmodel was successful.</returns>
-	public bool SetCurrentViewmodel(GameObject viewmodelPrefab)
+	public bool SetCurrentViewmodel(GameObject viewmodelInstance)
 	{
 		if (_viewmodelParent.childCount > 0)
 		{
 			DisableAllViewmodels();
 		}
-		GameObject viewmodel = _viewmodelParent.Find(viewmodelPrefab.name)?.gameObject;
-		_currentViewmodel = viewmodel.GetComponent<CombatWeaponViewmodel>();
-		return viewmodel;
+		if (!ViewmodelInstanceExists(viewmodelInstance))
+		{
+			Debug.LogError($"CombatViewmodelManager: Could not find viewmodel {viewmodelInstance.name}.");
+			return false;
+		}
+		viewmodelInstance.SetActive(true);
+		_currentViewmodel = viewmodelInstance.GetComponent<CombatViewmodel>();
+		return true;
 	}
 	public GameObject GetCurrentViewmodel() {
 		return _currentViewmodel.gameObject;
 	}
+	/// <summary>
+	/// Instantiates a new viewmodel prefab. The instance starts disabled.
+	/// </summary>
+	/// <param name="viewmodelPrefab">The viewmodel prefab to instantiate.</param>
+	/// <returns>The viewmodel instance.</returns>
 	public GameObject AddNewViewmodel(GameObject viewmodelPrefab) {
 		GameObject viewmodel = Instantiate(viewmodelPrefab, _viewmodelParent);
+		viewmodel.SetActive(false);
 		return viewmodel;
 	}
-	
-	private bool ViewmodelExists(GameObject viewmodelInstance) {
+	private bool ViewmodelInstanceExists(GameObject viewmodelInstance) {
 		foreach (Transform child in _viewmodelParent) {
 			if (child.gameObject == viewmodelInstance) {
 				return true;

@@ -5,7 +5,7 @@ using UnityEngine;
 /// This should be attached to every weapon viewmodel prefab at the top level. It handles animations and effects for the weapon.
 /// Depends on CombatViewmodelAndLogicManager to call public functions
 /// </summary>
-public class CombatWeaponViewmodel : MonoBehaviour
+public class CombatViewmodel : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private AnimationClip _idleAnimation;

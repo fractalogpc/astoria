@@ -15,7 +15,6 @@ using UnityEngine;
 [RequireComponent(typeof(CombatInventory))]
 public class CombatCore : NetworkedInputHandlerBase
 {
-    [SerializeField] private CombatInventory _inventory;
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
     [SerializeField] private WeaponData DebugPrimary;
     [SerializeField] private WeaponData DebugPistol;
