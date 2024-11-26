@@ -75,6 +75,9 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		if (_currentInventoryAbove == null) {
 			_startingInventory.ResetAllContainerHighlights();
 			_itemUI.ResetToOriginalPosition();
+      SpawnDroppedItem();
+      // Remove the item from the player's inventory.
+      _itemUI.RemoveSelfFromInventory();
 			Destroy(gameObject);
 			return false;
 		}
@@ -119,4 +122,9 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		);
 		return slotIndex;
 	}
+
+  private void SpawnDroppedItem() {
+    GameObject dropped = Instantiate(Item.ItemData.DroppedItemPrefab);
+    dropped.transform.position = LocalPlayerReference.Instance.LocalPlayer.transform.position + Vector3.up;
+  }
 }
