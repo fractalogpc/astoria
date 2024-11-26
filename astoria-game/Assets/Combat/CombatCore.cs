@@ -22,7 +22,7 @@ public class CombatCore : NetworkedInputHandlerBase
     [SerializeField] private CombatWeaponLogicManager _combatWeaponLogicManager;
     [SerializeField] private List<CombatWeapon> _weaponInstances = new List<CombatWeapon>();
     
-    // These should be handed by the CombatInventory
+    // These should be handled by the CombatInventory
     [SerializeField] private WeaponData DebugPrimary;
     [SerializeField] private WeaponData DebugPistol;
     [SerializeField] private WeaponData DebugSpecial;
@@ -33,7 +33,9 @@ public class CombatCore : NetworkedInputHandlerBase
     
     
     protected override void InitializeActionMap() {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer) {
+            Debug.LogWarning("CombatCore: IsLocalPlayer always false. This needs to be fixed for multiplayer");
+        }
         RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipPrimary());
         RegisterAction(_inputActions.Player.EquipSecondary, ctx => EquipSecondary());
         RegisterAction(_inputActions.Player.EquipSpecial, ctx => EquipSpecial());
@@ -45,6 +47,7 @@ public class CombatCore : NetworkedInputHandlerBase
         if (DebugSpecial != null) _specialWeapon = RegisterWeaponByData(DebugSpecial);
     }
     private void EquipPrimary() {
+        print("Equipping primary weapon.");
         EquipWeapon(_primaryWeapon);
     }
     private void EquipSecondary() {

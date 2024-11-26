@@ -82,7 +82,6 @@ public abstract class NetworkedInputHandlerBase : NetworkBehaviour, IOnEnableExe
   public void InitializeOnEnable() {
     _inputActions = InputReader.Instance.InputActions;
     InitializeActionMap();
-
     // Subscribe all actions in the dictionary
     foreach (var action in _actionMap) {
       action.Key.performed += action.Value;

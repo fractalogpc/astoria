@@ -60,7 +60,7 @@ public class GunLogic : CombatWeaponLogic
 	[Header("Bullet Data")]
 	[SerializeField] private float _damage = 30f;
 	[SerializeField] private float _initialVelocityMS = 400f;
-	[SerializeField] private float _bulletMassKg = 0.07f;
+	[SerializeField] private float _bulletMassKg = 0.007f;
 	[SerializeField] private float _bulletDiameterM = 0.009f;
 	[SerializeField] private float _airDensityKgPerM = 1.1f;
 	[SerializeField] private float _dragCoefficient = 0.149f;
@@ -80,7 +80,7 @@ public class GunLogic : CombatWeaponLogic
 	[Header("Ammo Settings")]
 	public bool CanFire => _currentAmmo > 0;
 	[SerializeField] private int _magazineCapacity;
-	[SerializeField] private int _currentAmmo;
+	[SerializeField][ReadOnly] private int _currentAmmo;
 	[SerializeField] private bool _openBolt;
 	// TODO: Implement Chamber Round
 
@@ -92,7 +92,8 @@ public class GunLogic : CombatWeaponLogic
 		RegisterAction(_inputActions.Player.SwitchFireMode, ctx => SwitchFireMode());
 	}
 
-	public override void AttackDown() {
+	protected override void AttackDown() {
+		print("called attack down");
 		_triggerDown = true;
 		if (!CanFire) return;
 		switch (CurrentFireMode) {
@@ -106,28 +107,34 @@ public class GunLogic : CombatWeaponLogic
 		}
 	}
 	
-	public override void AttackUp() {
+	protected override void AttackUp() {
 		_triggerDown = false;
 	}
 
-	public override void AttackSecondaryDown() {
+	protected override void AttackSecondaryDown() {
 		throw new System.NotImplementedException();
 	}
 
-	public override void AttackSecondaryUp() {
+	protected override void AttackSecondaryUp() {
 		throw new System.NotImplementedException();
 	}
 
-	public void SwitchFireMode() {
+	protected void SwitchFireMode() {
 		CurrentFireMode = CurrentFireMode == FireMode.SemiAuto ? FireMode.FullAuto : FireMode.SemiAuto;
 	}
 	
-	public void ReloadDown() {
+	protected void ReloadDown() {
+		print("reloading");
 		_currentAmmo = _magazineCapacity;
+	}
+
+	private void Start() {
+		Debug.Log("Replace magazine capacity here with an actual magazine item later");
 	}
 
 	private void Fire() {
 		_timeSinceLastShot = 0;
+		_currentAmmo--;
 		Projectile newProjectile = new Projectile(
 			_damage, 
 			_bulletMassKg, 

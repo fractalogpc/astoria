@@ -8,18 +8,20 @@ using UnityEngine;
 public abstract class CombatWeaponLogic : NetworkedInputHandlerBase
 {
 	protected override void InitializeActionMap() {
-		if (!isLocalPlayer) return;
+		if (!isLocalPlayer) {
+			Debug.LogWarning("CombatWeaponLogic: IsLocalPlayer always false. This needs to be fixed for multiplayer");
+		}
 		RegisterAction(_inputActions.Player.Attack, ctx => AttackDown(), () => AttackUp());
 		RegisterAction(_inputActions.Player.AttackSecondary, ctx => AttackSecondaryDown(), () => AttackSecondaryUp());
 		RegisterAction(_inputActions.Player.InspectItem, ctx => Inspect());
 	}
 
-	public abstract void AttackDown();
-	public abstract void AttackUp();
-	public abstract void AttackSecondaryDown();
-	public abstract void AttackSecondaryUp();
+	protected abstract void AttackDown();
+	protected abstract void AttackUp();
+	protected abstract void AttackSecondaryDown();
+	protected abstract void AttackSecondaryUp();
 
-	public virtual void Inspect() {
+	protected virtual void Inspect() {
 		Debug.Log("Inspecting weapon");	
 	}
 }

@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 5301573614924863385}
   - component: {fileID: 2627650646237878555}
   - component: {fileID: 9002593964255495585}
+  - component: {fileID: 2956634426805501697}
   m_Layer: 0
   m_Name: CombatSystem
   m_TagString: Untagged
@@ -366,6 +367,7 @@ MonoBehaviour:
   syncInterval: 0
   _combatViewmodelManager: {fileID: 8665975738431017114}
   _combatWeaponLogicManager: {fileID: 9002593964255495585}
+  _weaponInstances: []
   DebugPrimary: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
   DebugPistol: {fileID: 0}
   DebugSpecial: {fileID: 0}
@@ -383,6 +385,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponLogicParent: {fileID: 9088220939750902593}
   _currentWeaponLogic: {fileID: 0}
+--- !u!114 &2956634426805501697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642439937972844160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &923064617839545944
 GameObject:
   m_ObjectHideFlags: 0
@@ -7575,8 +7589,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7164937338993327052}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.439, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
