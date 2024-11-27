@@ -35,7 +35,7 @@ public class GunLogic : CombatWeaponLogic
 	[Header("FullAuto Settings")]
 	[SerializeField] private float _cycleTimeFullAuto;
 	[Header("Recoil Settings")]
-	[SerializeField] private float _recoilForce;
+	[SerializeField] private float _recoilDegrees;
 	[Header("Ammo Settings")]
 	public bool CanFire => _currentAmmo > 0;
 	[SerializeField] private int _magazineCapacity;
