@@ -156,7 +156,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
-	/// <returns>Whether or not adding all the items was successful.</returns>
+	/// <returns>Whether adding all the items was successful.</returns>
 	public bool TryAddItemsByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
 		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) return false;
@@ -191,7 +191,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="itemData">The ItemData to check against.</param>
 	/// <param name="count">The count of items to remove.</param>
-	/// <returns>Whether or not the count of matching items could be removed.</returns>
+	/// <returns>Whether the count of matching items could be removed.</returns>
 	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
 		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
@@ -200,8 +200,7 @@ public class InventoryComponent : MonoBehaviour
 			if (itemUIScript.Item.ItemData == itemData) itemInstancesToRemove.Add(itemUIInstance);
 		}
 
-		Debug.Log(
-			$"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
+		Debug.Log($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
 		if (itemInstancesToRemove.Count != count) return false;
 		// for future reference, if second term in the for loop == true, keep iterating
 		for (int i = count - 1; i >= 0; i--) {
@@ -264,7 +263,6 @@ public class InventoryComponent : MonoBehaviour
 		bool couldPlace = true;
 		for (int y = slotIndexBL.y; y < slotIndexBL.y + item.Size.y; y++) {
 			for (int x = slotIndexBL.x; x < slotIndexBL.x + item.Size.x; x++) {
-				if (x == slotIndexBL.x && y == slotIndexBL.y) continue;
 				try {
 					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
 					containersItemOverlaps.Add(container);
