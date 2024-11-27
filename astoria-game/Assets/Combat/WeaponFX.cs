@@ -32,24 +32,22 @@ public class WeaponFX : MonoBehaviour
   [SerializeField] private ParticleSystem _muzzleFlash;
   [SerializeField] private ParticleSystem _muzzleSmoke;
 
-  private void Update() {
-    if (Input.GetMouseButtonDown(0)) {
-      PlayFireFX();
-    }
-  }
-
   public void PlayFireFX() {
-    // Play slide animation
-    PlaySlideAnim();
+    if (_slide != null && _muzzle != null && _shellPrefab != null && _muzzleFlash != null && _muzzleSmoke != null) {
+      // Play slide animation
+      PlaySlideAnim();
+      
+      // Play shell ejection
+      PlayShellEjection();
+  
+      // Play muzzle flash
+      PlayMuzzleFlash();
+    }
 
-    // Play fire sound
-    PlayFireSound();
-
-    // Play shell ejection
-    PlayShellEjection();
-
-    // Play muzzle flash
-    PlayMuzzleFlash();
+    if (_fireSound != null) {
+      // Play fire sound
+      PlayFireSound();
+    }
   }
 
   private void PlaySlideAnim() {

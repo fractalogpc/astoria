@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 
 public struct AllowedModes
 {
@@ -41,6 +42,8 @@ public class GunLogic : CombatWeaponLogic
 	[SerializeField][ReadOnly] private int _currentAmmo;
 	[SerializeField] private bool _openBolt;
 	// TODO: Implement Chamber Round
+	[Header("Events")]
+	public UnityEvent OnFire;
 
 	private bool _triggerDown;
 	private float _timeSinceLastShot;
@@ -87,6 +90,11 @@ public class GunLogic : CombatWeaponLogic
 		_currentAmmo = _magazineCapacity;
 	}
 
+	protected override void OnValidate() {
+		base.OnValidate();
+		Debug.LogWarning("Ignore the previous error. The NetworkIdentity will be on the parents of GunLogic.");
+	}
+
 	private void Start() {
 		Debug.Log("Replace magazine capacity here with an actual magazine item later");
 		_projectileManager = ProjectileManager.Instance;
@@ -107,6 +115,7 @@ public class GunLogic : CombatWeaponLogic
 			),
 			OnBulletHit
 		);
+		OnFire?.Invoke();
 	}
 
 	private void OnBulletHit(RaycastHit hit) {

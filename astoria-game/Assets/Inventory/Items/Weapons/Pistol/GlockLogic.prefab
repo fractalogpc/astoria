@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 754057648204598019}
   - component: {fileID: 5597721874376248080}
   - component: {fileID: 7558892523565115691}
+  - component: {fileID: 721945864746496926}
   m_Layer: 0
   m_Name: GlockLogic
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  _projectileManager: {fileID: 0}
   _samplesPerFixedUpdate: 5
   _damage: 35
   _initialVelocityMS: 400
@@ -62,6 +64,21 @@ MonoBehaviour:
   _magazineCapacity: 26
   _currentAmmo: 26
   _openBolt: 0
+  OnFire:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 721945864746496926}
+        m_TargetAssemblyTypeName: WeaponFX, Assembly-CSharp
+        m_MethodName: PlayFireFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7558892523565115691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,3 +91,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &721945864746496926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6135642899301322287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 525fca9eed4b34047a444217973d4780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slide: {fileID: 0}
+  _muzzle: {fileID: 0}
+  _slideForce: 0.1
+  _slideDuration: 0.1
+  _slideCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _fireSound: {fileID: 8300000, guid: 441b78dc097d23145ae45e009d0ec948, type: 3}
+  _shellPrefab: {fileID: 0}
+  _shellLifetime: 1
+  _shellEjectPoint: {fileID: 0}
+  _shellEjectDirection: {fileID: 0}
+  _shellForceMultMin: 1
+  _shellForceMultMax: 2
+  _shellForceDirectionRandomness: 0.1
+  _shellTorqueMultMin: 1
+  _shellTorqueMultMax: 2
+  _shellTorqueVector: {x: 0, y: 0, z: 0}
+  _shellTorqueDirectionRandomness: 0.1
+  _muzzleFlash: {fileID: 0}
+  _muzzleSmoke: {fileID: 0}
