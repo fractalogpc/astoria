@@ -1139,6 +1139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableDebugging: 0
+  DebugIndex: 0
   HasObject: 0
   ConstructableObjects:
   - {fileID: 11400000, guid: beb7ff24859f6804e85c9f737d4e011b, type: 2}
@@ -1921,10 +1922,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614bf1a9f382d6942ba3ce85c224612c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _combatViewmodelManager: {fileID: 0}
-  _combatWeaponLogicManager: {fileID: 0}
-  _defaultWeapon: {fileID: 0}
-  CurrentSlot: 0
 --- !u!114 &8998320041997941684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1940,8 +1937,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  _inventory: {fileID: 1611823936286701696}
   _combatViewmodelManager: {fileID: 0}
+  _combatWeaponLogicManager: {fileID: 0}
+  _weaponInstances: []
   DebugPrimary: {fileID: 0}
   DebugPistol: {fileID: 0}
   DebugSpecial: {fileID: 0}
@@ -4312,6 +4310,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b87011183f4d954492b091822d3d53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _viewmodelParent: {fileID: 2433624371136048096}
   _currentViewmodel: {fileID: 0}
 --- !u!1 &4225188586061968475
@@ -6332,6 +6333,8 @@ GameObject:
   - component: {fileID: 7830414129980514934}
   - component: {fileID: 5762409199154436856}
   - component: {fileID: 6065664314580501829}
+  - component: {fileID: 6613515532940567450}
+  - component: {fileID: 1209134242389397402}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6579,6 +6582,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6613515532940567450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858135569678799264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88378f0d04a0467c80e02d7e701eb3e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraAnimator: {fileID: 0}
+  _idleAnimation: {fileID: 0}
+  _walkAnimation: {fileID: 0}
+  _sprintAnimation: {fileID: 0}
+  _drawAnimation: {fileID: 0}
+  _fireAnimation: {fileID: 0}
+  _reloadEmptyAnimation: {fileID: 0}
+  _reloadPartialAnimation: {fileID: 0}
+  _holsterAnimation: {fileID: 0}
+--- !u!114 &1209134242389397402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858135569678799264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aab38c9f8bbe7b746a8b0cd5b3f27e27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5860303781690382680
