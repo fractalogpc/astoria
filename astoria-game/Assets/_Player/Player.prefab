@@ -11480,8 +11480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InventoryData:
-    _items: []
   OnInventoryChange:
     m_PersistentCalls:
       m_Calls: []
@@ -12784,6 +12782,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8735895e57a10d42b5f86919375953a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _openUI:
+    m_Name: Open UI
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 38c9144f-2d19-42a9-a322-2945af927e21
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 7fecd680-b201-4ffd-9a8d-6df0a144e949
+      m_Path: <Keyboard>/i
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Open UI
+      m_Flags: 0
+    m_Flags: 0
+  _closeUI:
+    m_Name: Close UI
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 283e054a-30c5-463e-8532-79529ea5de9f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0bbbf7e7-20f5-49cf-9ae0-e5abe231e203
+      m_Path: <Keyboard>/i
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Close UI
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 062d61a6-6ebe-4d09-ab81-0253c43eeda0
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Close UI
+      m_Flags: 0
+    m_Flags: 0
   _inventoryCanvasGroup: {fileID: 8921343721439143123}
 --- !u!114 &1631809772494724130
 MonoBehaviour:

@@ -17,7 +17,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <summary>
 	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
 	/// </summary>
-	[HideInInspector] public InventoryData InventoryData;
+	[HideInInspector] public InventoryData InventoryData = null;
 
 	public Vector2Int AssignedInventorySize => _assignedInventorySize;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
