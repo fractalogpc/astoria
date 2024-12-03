@@ -2915,7 +2915,7 @@ GameObject:
   - component: {fileID: 1111324267}
   - component: {fileID: 1111324269}
   - component: {fileID: 1111324268}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: TriggerTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2970,19 +2970,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4500c78799d034d8e9f7bcfea429a98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerTag: Player
   _onTriggerEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1111324264}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 1111324269}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Triggered
+          m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
   _onTriggerExit:
@@ -5377,7 +5378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializedBakingSet: {fileID: 11400000, guid: 552e26093a74f574190a6b00020ad63d, type: 2}
-  sceneGUID: fc791b3575ad4497da093c1d178a3702
+  sceneGUID: 08ca1f8442f9b7b4eada118dd3f76905
   obsoleteAsset: {fileID: 0}
   obsoleteCellSharedDataAsset: {fileID: 0}
   obsoleteCellSupportDataAsset: {fileID: 0}
