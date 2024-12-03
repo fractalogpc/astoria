@@ -120,6 +120,8 @@ public class GunLogic : CombatWeaponLogic
 
 	private void OnBulletHit(RaycastHit hit) {
 		Debug.Log($"Hit {hit.collider.name} at {hit.point}");
+		ProjectileHittable hittable = hit.collider.gameObject.transform.GetComponentInChildren<ProjectileHittable>();
+		hittable.HitWithProjectile();
 	}
 
 	private void Update() {
