@@ -9,7 +9,6 @@ using UnityEngine;
 /// Y - Bottom To Top
 /// </summary>
 [AddComponentMenu("")]
-[Serializable]
 public class InventoryData
 {
     public List<InventoryItem> Items {
