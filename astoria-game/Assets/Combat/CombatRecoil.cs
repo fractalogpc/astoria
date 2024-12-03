@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 /// <summary>
 /// Adds recoil to the camera; viewmodel sway is handled by CombatViewmodel.
 /// </summary>
