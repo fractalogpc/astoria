@@ -4,6 +4,15 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
+public struct RecoilProfile
+{
+	// public AnimationCurve BackwardsDisplacement;
+	// public AnimationCurve LateralDisplacement;
+	// public AnimationCurve VerticalDisplacement;
+	// public AnimationCurve VerticalRotation;
+	public float RecoilDegreeSecs;
+}
+
 public struct AllowedModes
 {
 	bool SemiAuto;
@@ -35,7 +44,7 @@ public class GunLogic : CombatWeaponLogic
 	[Header("FullAuto Settings")]
 	[SerializeField] private float _cycleTimeFullAuto;
 	[Header("Recoil Settings")]
-	[SerializeField] private float _recoilDegrees;
+	[SerializeField] private RecoilProfile _recoilDegrees;
 	[Header("Ammo Settings")]
 	public bool CanFire => _currentAmmo > 0;
 	[SerializeField] private int _magazineCapacity;
