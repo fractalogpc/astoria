@@ -23,11 +23,12 @@ Next Steps:
    Then, bake out these texture maps. 
    Make sure to COMMIT AND PUSH to the repo for EACH texture map, with "Baked [MapType] for [Model Name]".
    Save them to PreExportTextures, and name them "ModelName_MapType". Ex: TallCup_Normal.
-   -Diffuse 
+   -Diffuse
    -Normal
    -Metallic
    -Roughness
    -Ambient Occlusion
+   -Displacement/Height
 5. Ensure your model meets the Baked QA Check.
 6. If your model doesn't need to be animated, proceed to step 7. Otherwise, skip past to step 8A.
 7. Make a copy of your blend file to the Export to Unity folder. Refer to the Incoming section
