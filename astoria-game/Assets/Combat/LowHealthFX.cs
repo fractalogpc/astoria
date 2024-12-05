@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 /// Handles visual effects for the player when they take damage or are low on health.
 /// Requires CombatHealth.
 /// </summary>
-public class CombatPlayerFX : MonoBehaviour
+public class LowHealthFX : MonoBehaviour
 {
     private CombatHealth _health;
     [SerializeField] private Volume _lowHealthEffects;
