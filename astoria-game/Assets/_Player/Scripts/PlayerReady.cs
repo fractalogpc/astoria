@@ -3,20 +3,19 @@ using UnityEngine;
 
 public class PlayerReady : NetworkBehaviour
 {
-  public void Start()
-  {
-    Debug.LogWarning("Matthew please fix this, isLocalPlayer is always false");
-    // if (isLocalPlayer)
-    // {
-      CmdSetPlayerReady();
-      Debug.Log("Player is ready.");
-    // }
+  [SerializeField] private GameObject _playerWorldmodel;
+  [SerializeField] private GameObject _playerViewmodel;
+  public void InitializeLocalPlayer() {
+    SetLayerAllChildren(_playerViewmodel.transform, LayerMask.NameToLayer("LocalPlayerWorldmodel"));
+    SetLayerAllChildren(_playerWorldmodel.transform, LayerMask.NameToLayer("LocalPlayerViewmodel"));
   }
-
-  [Command]
-  public void CmdSetPlayerReady()
+  
+  void SetLayerAllChildren(Transform root, int layer)
   {
-    if (!isServer) return;
-    FindFirstObjectByType<GameStateController>()?.OnPlayerReady();
+    var children = root.GetComponentsInChildren<Transform>(includeInactive: true);
+    foreach (var child in children)
+    {
+      child.gameObject.layer = layer;
+    }
   }
 }
