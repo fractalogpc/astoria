@@ -53,7 +53,6 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
 
     RegisterAction(_inputActions.Player.Attack, _ => OnClick());
-
     RegisterAction(_inputActions.Player.Rotate, _ => ToggleRotating(true), () => ToggleRotating(false));
     RegisterAction(_inputActions.Player.Delete, _ => ToggleDeleting());
 
