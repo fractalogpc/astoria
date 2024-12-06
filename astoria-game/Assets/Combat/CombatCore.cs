@@ -34,7 +34,7 @@ public class CombatCore : NetworkedInputHandlerBase
     
     protected override void InitializeActionMap() {
         if (!isLocalPlayer) {
-            Debug.LogWarning("CombatCore: IsLocalPlayer always false. This needs to be fixed for multiplayer");
+            Debug.LogWarning($"CombatCore: {gameObject.name} is not the local player.");
         }
         RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipPrimary());
         RegisterAction(_inputActions.Player.EquipSecondary, ctx => EquipSecondary());

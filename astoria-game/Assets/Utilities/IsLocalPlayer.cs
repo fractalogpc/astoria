@@ -20,10 +20,10 @@ public class IsLocalPlayer : NetworkBehaviour
 	}
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
-	private void Awake() {
+	private void Start() {
 		if (isLocalPlayer) {
 			IfLocalPlayer?.Invoke();
 		}
-		print($"{gameObject.name} IsLocalPlayer = {isLocalPlayer}");
+		Debug.Log($"{gameObject.name} IsLocalPlayer = {isLocalPlayer}");
 	}
 }
