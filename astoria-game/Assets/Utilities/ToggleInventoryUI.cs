@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ToggleUI : InputHandlerBase
+public class ToggleInventoryUI : InputHandlerBase
 {
   private bool _isInventoryOpen = false;
-
-  [SerializeField] private InputAction _openUI;
-  [SerializeField] private InputAction _closeUI;
   [SerializeField] private CanvasGroup _inventoryCanvasGroup;
 
   protected override void InitializeActionMap()
   {
-    RegisterAction(_openUI, ctx => ToggleInventory());
-    RegisterAction(_closeUI, ctx => ToggleInventory());
+    RegisterAction(_inputActions.Player.Inventory, ctx => ToggleInventory());
   }
 
   private void ToggleInventory() {

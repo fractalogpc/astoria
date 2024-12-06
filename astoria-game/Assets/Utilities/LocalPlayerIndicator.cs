@@ -8,22 +8,18 @@ using UnityEngine.Events;
 	API Reference: https://mirror-networking.com/docs/api/Mirror.NetworkBehaviour.html
 */
 
-public class IsLocalPlayer : NetworkBehaviour
+public class LocalPlayerIndicator : NetworkBehaviour
 {
-	public UnityEvent IfLocalPlayer;
-
-	/// <summary>
-	/// Add your validation code here after the base.OnValidate(); call.
-	/// </summary>
-	protected override void OnValidate() {
-		base.OnValidate();
-	}
+	[Header("IsLocalPlayer is only true for the top-level player object.\nReference this boolean in child objects.")]
+	public bool IsLocalClientPlayer => isLocalPlayer;
+	public UnityEvent OnLocalPlayerStart;
+	public UnityEvent OnNetworkedPlayerStart;
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 	private void Start() {
 		if (isLocalPlayer) {
-			IfLocalPlayer?.Invoke();
+			OnLocalPlayerStart?.Invoke();
 		}
-		Debug.Log($"{gameObject.name} IsLocalPlayer = {isLocalPlayer}");
+		Debug.Log($"{gameObject.name} LocalPlayerIndicator = {isLocalPlayer}");
 	}
 }

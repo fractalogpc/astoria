@@ -264,25 +264,28 @@ MonoBehaviour:
   fadeRadius: 0
   priority: 0
   customPasses:
-  - rid: 1480184687786721413
+  - rid: 1480184697531138048
   injectionPoint: 1
   m_TargetCamera: {fileID: 0}
   useTargetCamera: 0
   references:
     version: 2
     RefIds:
-    - rid: 1480184687786721413
+    - rid: 1480184697531138048
       type: {class: DatamoshPass, ns: , asm: Assembly-CSharp}
       data:
-        m_Name: Custom Pass
-        enabled: 1
+        m_Name: DatamoshPass
+        enabled: 0
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        OutputCustomRenderTexture: {fileID: 8600000, guid: feda8df72cca55f4592743de7b38aebe, type: 2}
+        DatamoshTexture: {fileID: 8400000, guid: b534d1bf7955ed640851bd57be4c0c64, type: 2}
+        MotionVectorTexture: {fileID: 8400000, guid: 91ab48bbe7688104780fb323362b1d18, type: 2}
+        DatamoshIntensity: 0.1
         CaptureInterval: 0.1
+        DatamoshMaterial: {fileID: -876546973899608171, guid: 8a0b3ab39e3d93d449d54e82bd1ae584, type: 3}
 --- !u!1 &4085262054262924380
 GameObject:
   m_ObjectHideFlags: 0

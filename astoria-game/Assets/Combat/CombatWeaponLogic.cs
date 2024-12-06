@@ -9,7 +9,7 @@ public abstract class CombatWeaponLogic : NetworkedInputHandlerBase
 {
 	protected override void InitializeActionMap() {
 		// if (!isLocalPlayer) {
-		// 	Debug.LogWarning("CombatWeaponLogic: IsLocalPlayer always false. This needs to be fixed for multiplayer");
+		// 	Debug.LogWarning("CombatWeaponLogic: LocalPlayerIndicator always false. This needs to be fixed for multiplayer");
 		// }
 		RegisterAction(_inputActions.Player.Attack, ctx => AttackDown(), () => AttackUp());
 		RegisterAction(_inputActions.Player.AttackSecondary, ctx => AttackSecondaryDown(), () => AttackSecondaryUp());
