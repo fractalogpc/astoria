@@ -131,7 +131,7 @@ public class WorldStreaming : MonoBehaviour
         terrainGO.GetComponent<Terrain>().materialTemplate = terrainMaterial;
       }
 
-      if ()
+      // if ()
 
       // Save the terrain data to disk
       #if UNITY_EDITOR
