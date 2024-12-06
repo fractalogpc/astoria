@@ -33,8 +33,10 @@ public class CombatCore : NetworkedInputHandlerBase
     
     
     protected override void InitializeActionMap() {
-        if (!isLocalPlayer) {
-            Debug.LogWarning($"CombatCore: {gameObject.name} is not the local player.");
+        LocalPlayerIndicator localPlayerIndicator = GetComponentInParent<LocalPlayerIndicator>();
+        if (!localPlayerIndicator.IsLocalClientPlayer) {
+            Debug.Log($"{localPlayerIndicator.gameObject.name} CombatCore: Skipping initialization of inputs for network player.");
+            return;
         }
         RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipPrimary());
         RegisterAction(_inputActions.Player.EquipSecondary, ctx => EquipSecondary());
