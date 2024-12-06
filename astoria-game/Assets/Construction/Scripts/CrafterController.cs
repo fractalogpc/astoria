@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class CrafterController : MonoBehaviour, IStartExecution
@@ -50,7 +51,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
   }
 
   private void Initialize() {
-    _constructionCore = LocalPlayerReference.Instance.LocalPlayer.GetComponent<ConstructionCore>();
+    _constructionCore = NetworkClient.localPlayer.gameObject.GetComponent<ConstructionCore>();
 
     UpdateText();
   }
@@ -66,7 +67,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     _constructionCore.TryGiveObject(datas[Index]);
 
     foreach (var item in datas[Index].Cost) {
-      LocalPlayerReference.Instance.Inventory().TryRemoveItemByData(item.Item, item.Amount);
+      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryRemoveItemByData(item.Item, item.Amount);
     }
   }
 

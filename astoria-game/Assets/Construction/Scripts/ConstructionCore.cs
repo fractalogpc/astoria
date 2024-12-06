@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mirror;
 using Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -538,7 +539,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     {
       foreach (ConstructionObjectCost cost in data.Cost)
       {
-        if (!LocalPlayerReference.Instance.Inventory().ItemCountOrMoreInInventory(cost.Item, cost.Amount))
+        if (!NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().ItemCountOrMoreInInventory(cost.Item, cost.Amount))
         {
           errorText = "You do not have the required resources";
           return false;

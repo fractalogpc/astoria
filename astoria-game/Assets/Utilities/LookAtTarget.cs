@@ -1,3 +1,4 @@
+using Mirror;
 using Mirror.BouncyCastle.Asn1.X509;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ public class LookAtTarget : MonoBehaviour, IStartExecution
   
   private void Initialize() {
     _tryInitialize = true;
-    GameObject targetObject = LocalPlayerReference.Instance.LocalPlayer;
+    GameObject targetObject = NetworkClient.localPlayer.gameObject;
 
     if (targetObject != null) {
       target = targetObject.transform;

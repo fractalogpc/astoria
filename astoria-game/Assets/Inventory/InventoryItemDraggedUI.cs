@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Mirror;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -126,7 +127,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
   private void SpawnDroppedItem() {
     GameObject dropped = Instantiate(Item.ItemData.DroppedItemPrefab);
     Debug.Log("Add some kind of settings for dropped items later.");
-    dropped.transform.position = LocalPlayerReference.Instance.LocalPlayer.transform.position + Vector3.forward * 2;
+    dropped.transform.position = NetworkClient.localPlayer.gameObject.transform.position + Vector3.forward * 2;
     dropped.GetComponent<DroppedItem>().Item = Item.ItemData;
   }
 }

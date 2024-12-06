@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Android;
 
 public class InitializePlayerInventory : MonoBehaviour, IStartExecution
 {
@@ -14,10 +15,11 @@ public class InitializePlayerInventory : MonoBehaviour, IStartExecution
     }
 
     public void Initialize() {
-        if (LocalPlayerReference.Instance.LocalPlayer == null) return;
-        Debug.Log(LocalPlayerReference.Instance.LocalPlayer.GetComponentInChildren<InventoryComponent>().InventoryData);
-        transform.GetComponent<InventoryComponent>().CreateInvFromInventoryData(LocalPlayerReference.Instance.LocalPlayer.GetComponentInChildren<InventoryComponent>().InventoryData);
-        _initialized = true;
+        Debug.Log("Removed InitializePlayerInventory initalization. Reimplement with NetworkClient.localPlayer instead.");
+        // if (LocalPlayerReference.Instance.LocalPlayer == null) return;
+        // Debug.Log(LocalPlayerReference.Instance.LocalPlayer.GetComponentInChildren<InventoryComponent>().InventoryData);
+        // transform.GetComponent<InventoryComponent>().CreateInvFromInventoryData(LocalPlayerReference.Instance.LocalPlayer.GetComponentInChildren<InventoryComponent>().InventoryData);
+        // _initialized = true;
     }
 
     private void Update() {
