@@ -11,11 +11,12 @@ public class ToggleInventoryUI : InputHandlerBase
   protected override void InitializeActionMap()
   {
     RegisterAction(_inputActions.Player.Inventory, ctx => ToggleInventory());
+    RegisterAction(_inputActions.UI.CloseUI, ctx => ToggleInventory());
+    RegisterAction(_inputActions.UI.CloseInventory, ctx => ToggleInventory());
   }
 
   private void ToggleInventory() {
     _isInventoryOpen = !_isInventoryOpen;
-    
     _inventoryCanvasGroup.alpha = _isInventoryOpen ? 1 : 0;
     _inventoryCanvasGroup.blocksRaycasts = _isInventoryOpen;
     _inventoryCanvasGroup.interactable = _isInventoryOpen;
