@@ -92,6 +92,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="inventoryData">The InventoryData to instantiate with.</param>
 	public void CreateInvFromInventoryData(InventoryData inventoryData) {
+		InventoryData = inventoryData;
 		CreateAndAttachContainersTo(inventoryData);
 		InstantiateInventoryItems(inventoryData);
 	}
@@ -102,8 +103,8 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	public void CreateAndAttachContainersTo(InventoryData inventoryData) {
-		DeleteChildrenOf(_rect.transform);
 		_slotPrefabInstances = new GameObject[inventoryData.Width, inventoryData.Height];
+		DeleteChildrenOf(_rect.transform);
 		for (int y = 0; y < inventoryData.Height; y++) {
 			for (int x = 0; x < inventoryData.Width; x++) {
 				GameObject slot = Instantiate(_slotPrefab, _rect.transform);

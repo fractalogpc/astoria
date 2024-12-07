@@ -43,4 +43,8 @@ public class InventoryContainerUI : MonoBehaviour
 				throw new ArgumentOutOfRangeException(nameof(highlight), highlight, null);
 		}
 	}
+	
+	private void OnDestroy() {
+		DetachCurrentContainer();
+	}
 }

@@ -9,6 +9,8 @@ public class InitializeWithPlayerInventory : NetworkBehaviour
     
     public void Initialize() {
         InventoryComponent mainPlayerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
+        print(mainPlayerInventory.InventoryData == null);
         _componentToInitialize.CreateInvFromInventoryData(mainPlayerInventory.InventoryData);
+        print("Running initalize player inventory for station");
     }
 }
