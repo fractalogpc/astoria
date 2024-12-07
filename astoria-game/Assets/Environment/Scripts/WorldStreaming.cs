@@ -24,6 +24,21 @@ public class EditorUpdate
 }
 #endif
 
+[CustomEditor(typeof(WorldStreaming))]
+public class WorldStreamingButton : Editor
+{
+
+  public override void OnInspectorGUI() {
+    DrawDefaultInspector();
+
+    WorldStreaming worldStreaming = (WorldStreaming)target;
+    if (GUILayout.Button("Create Sector Objects")) {
+      worldStreaming.CreateSectorObjects();
+    }
+  }
+
+}
+
 public class WorldStreaming : MonoBehaviour
 {
   [SerializeField] private int gridWidth = 2;
@@ -36,13 +51,36 @@ public class WorldStreaming : MonoBehaviour
   [SerializeField] private int defaultTerrainResolution = 1025;
   [SerializeField] private Transform player;
   [SerializeField] private Transform terrainParent;
+  [SerializeField] private Transform gameObjectParent;
   [SerializeField] private float loadDistance = 100f;
   [SerializeField] private float unloadDistance = 150f;
 
   private Dictionary<Vector2Int, Terrain> loadedTerrains = new Dictionary<Vector2Int, Terrain>();
+  private Dictionary<Vector2Int, GameObject> gameObjectSectors = new Dictionary<Vector2Int, GameObject>();
 
   public void EditorUpdate() {
     LoadClickedSquares();
+  }
+
+  public void CreateSectorObjects() {
+    Start();
+  }
+
+  private void Start() {
+    // Assemble game object sectors
+    for (int x = 0; x < gridWidth; x++) {
+      for (int y = 0; y < gridHeight; y++) {
+        Vector2Int tilePos = new Vector2Int(x, y);
+        GameObject sector = gameObjectParent.Find($"Sector_{x}_{y}")?.gameObject;
+        if (sector == null) {
+          sector = new GameObject($"Sector_{x}_{y}");
+          sector.transform.SetParent(gameObjectParent);
+          sector.transform.position = new Vector3(x * tileWidth, 0, y * tileHeight);
+        }
+        sector.SetActive(false);
+        gameObjectSectors[tilePos] = sector;
+      }
+    }
   }
 
   private void Update() {
@@ -93,15 +131,15 @@ public class WorldStreaming : MonoBehaviour
     // For example, load terrain data from disk and instantiate it
     string terrainPath = $"Terrains/Terrain_{tilePos.x}_{tilePos.y}";
     TerrainData terrainData = Resources.Load<TerrainData>(terrainPath);
-      GameObject terrainPrefab = Resources.Load<GameObject>("TerrainPrefab");
-      GameObject terrainGO;
-      if (terrainPrefab != null) {
-        terrainGO = Instantiate(terrainPrefab, Vector3.zero, Quaternion.identity);
-        terrainGO.transform.SetParent(terrainParent);
-      } else {
-        Debug.LogWarning("Terrain prefab not found in resources.");
-        return;
-      }
+    GameObject terrainPrefab = Resources.Load<GameObject>("TerrainPrefab");
+    GameObject terrainGO;
+    if (terrainPrefab != null) {
+      terrainGO = Instantiate(terrainPrefab, Vector3.zero, Quaternion.identity);
+      terrainGO.transform.SetParent(terrainParent);
+    } else {
+      Debug.LogWarning("Terrain prefab not found in resources.");
+      return;
+    }
     if (terrainData != null) {
       // Set the terrain data
       terrainGO.GetComponent<Terrain>().terrainData = terrainData;
@@ -149,6 +187,11 @@ public class WorldStreaming : MonoBehaviour
             Debug.LogWarning("Cannot create asset at runtime. This should only be done in the editor.");
       #endif
     }
+
+    // Load sector game object
+    if (gameObjectSectors.TryGetValue(tilePos, out GameObject sector)) {
+      sector.SetActive(true);
+    }
   }
 
   private void UnloadTerrain(Vector2Int tilePos) {
@@ -160,6 +203,11 @@ public class WorldStreaming : MonoBehaviour
         DestroyImmediate(terrain.gameObject);
       }
       loadedTerrains.Remove(tilePos);
+    }
+
+    // Unload sector game object
+    if (gameObjectSectors.TryGetValue(tilePos, out GameObject sector)) {
+      sector.SetActive(false);
     }
   }
 
