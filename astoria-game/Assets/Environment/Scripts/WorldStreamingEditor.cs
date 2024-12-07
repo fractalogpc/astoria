@@ -5,8 +5,8 @@ using UnityEngine;
 public class WorldStreamingEditor : EditorWindow {
   public delegate void GridSquareClicked(int x, int y);  // Delegate for callback
 
-  private int gridWidth = 2;
-  private int gridHeight = 2;
+  private int gridWidth = 8;
+  private int gridHeight = 8;
   private float squareSize = 40f;  // Size of each square in the grid
   private Color defaultColor = Color.red;
   private Color clickColor = Color.green;

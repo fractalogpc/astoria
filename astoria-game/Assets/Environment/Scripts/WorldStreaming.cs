@@ -108,6 +108,14 @@ public class WorldStreaming : MonoBehaviour
       terrainGO.GetComponent<TerrainCollider>().terrainData = terrainData;
       terrainGO.transform.position = new Vector3(tilePos.x * tileWidth, 0, tilePos.y * tileWidth);
       loadedTerrains[tilePos] = terrainGO.GetComponent<Terrain>();
+
+      if (initializeTileWithMaterial) {
+        terrainGO.GetComponent<Terrain>().materialType = Terrain.MaterialType.Custom;
+        terrainGO.GetComponent<Terrain>().materialTemplate = terrainMaterial;
+      }
+
+      terrainGO.GetComponent<Terrain>().allowAutoConnect = true;
+      
     } else {
       Debug.LogWarning($"Terrain data not found at path: {terrainPath}");
       // Create a new terrain
@@ -131,7 +139,7 @@ public class WorldStreaming : MonoBehaviour
         terrainGO.GetComponent<Terrain>().materialTemplate = terrainMaterial;
       }
 
-      // if ()
+      terrainGO.GetComponent<Terrain>().allowAutoConnect = true;
 
       // Save the terrain data to disk
       #if UNITY_EDITOR
