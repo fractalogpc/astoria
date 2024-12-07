@@ -31,8 +31,11 @@ public class CombatCore : NetworkedInputHandlerBase
     private CombatWeapon _secondaryWeapon;
     private CombatWeapon _specialWeapon;
     
-    
     protected override void InitializeActionMap() {
+        // Unused so InitializeInputs can be called by LocalPlayerIndicator when ready.
+    }
+    
+    public void InitializeInputs() {
         LocalPlayerIndicator localPlayerIndicator = GetComponentInParent<LocalPlayerIndicator>();
         if (!localPlayerIndicator.IsLocalClientPlayer) {
             Debug.Log($"{localPlayerIndicator.gameObject.name} CombatCore: Skipping initialization of inputs for network player.");

@@ -29,16 +29,24 @@ public class InputReader : Singleton<InputReader>, IStartExecution {
 
     CurrentMap = newInputMap;
     switch (newInputMap) {
-      case InputMap.UI:
+      case InputMap.GenericUI:
         InputActions.Player.Disable();
-        InputActions.UI.Enable();
+        InputActions.InventoryUI.Disable();
+        InputActions.GenericUI.Enable();
         break;
       case InputMap.Player:
-        InputActions.UI.Disable();
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Disable();
         InputActions.Player.Enable();
         break;
+      case InputMap.InventoryUI:
+        InputActions.Player.Disable();
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Enable();
+        break;
       case InputMap.Null:
-        InputActions.UI.Disable();
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Disable();
         InputActions.Player.Disable();
         break;
       default:
@@ -54,6 +62,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution {
 [Serializable]
 public enum InputMap {
   Null = -1,
-  UI = 0,
+  GenericUI = 0,
   Player = 1,
+  InventoryUI = 2,
 }

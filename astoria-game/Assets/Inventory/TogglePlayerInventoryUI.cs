@@ -10,8 +10,8 @@ public class TogglePlayerInventoryUI : InputHandlerBase
 
   protected override void InitializeActionMap()
   {
-    RegisterAction(_inputActions.Player.Inventory, ctx => SetVisibility(true));
-    RegisterAction(_inputActions.UI.CloseInventory, ctx => SetVisibility(false));
+    RegisterAction(_inputActions.Player.OpenInventory, ctx => SetVisibility(true));
+    RegisterAction(_inputActions.InventoryUI.CloseInventory, ctx => SetVisibility(false));
   }
     
   private void SetVisibility(bool show)
@@ -24,7 +24,7 @@ public class TogglePlayerInventoryUI : InputHandlerBase
     if (show) {
       Cursor.visible = true;
       Cursor.lockState = CursorLockMode.None;
-      InputReader.Instance.SwitchInputMap(InputMap.UI);
+      InputReader.Instance.SwitchInputMap(InputMap.InventoryUI);
     }
     else {
       Cursor.visible = false;
