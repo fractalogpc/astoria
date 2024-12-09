@@ -12,7 +12,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 {
 	public InventoryItem Item { get; private set; }
 	private InventoryItemUI _itemUI;
-	
+
 	[SerializeField] private RectTransform _rectTransform;
 	[SerializeField] private CanvasGroup _canvasGroup;
 	[SerializeField] private Image _itemIconImage;
@@ -20,21 +20,25 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	[SerializeField] private InventoryComponent _currentInventoryAbove;
 	private GraphicRaycaster _canvasGraphicRaycaster;
 	private PointerEventData _pointerEventData = new(EventSystem.current);
-	
+
 	private bool _followMouse;
 
-	private void OnValidate() {
+	private void OnValidate()
+	{
 		_rectTransform = GetComponent<RectTransform>();
 		_rectTransform.anchorMin = Vector2.zero;
 	}
-	
 
-	private void Start() {
+
+	private void Start()
+	{
 		_canvasGraphicRaycaster = _rectTransform.GetComponentInParent<GraphicRaycaster>();
 	}
-	
-	private void Update() {
-		if (!_followMouse) {
+
+	private void Update()
+	{
+		if (!_followMouse)
+		{
 			_canvasGroup.alpha = 0;
 			return;
 		}
@@ -42,21 +46,25 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		_canvasGroup.alpha = 1;
 		_rectTransform.anchoredPosition = Input.mousePosition;
 		GetInventoryUIHoveredOver(out _currentInventoryAbove);
-		if (_currentInventoryAbove != null) {
+		if (_currentInventoryAbove != null)
+		{
 			_startingInventory.ResetAllContainerHighlights();
 			_currentInventoryAbove.HighlightSlotsUnderItem(Item, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
-		if (Input.GetKeyDown(KeyCode.R)) {
+		if (Input.GetKeyDown(KeyCode.R))
+		{
 			RotateItem();
 		}
 	}
-	
-	private void RotateItem() {
+
+	private void RotateItem()
+	{
 		Item.Rotated = !Item.Rotated;
 		SetVisualSize();
 	}
-	
-	public void Initalize(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI) {
+
+	public void Initalize(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI)
+	{
 		_itemUI = itemUI;
 		Item = item;
 		_startingInventory = originalInventory;
@@ -66,39 +74,46 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		_canvasGroup.alpha = 0;
 	}
 
-	private void SetVisualSize() {
+	private void SetVisualSize()
+	{
 		_rectTransform.sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
 		_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits / 2, Item.Size.y * _startingInventory.SlotSizeUnits / 2);
 		_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
 	}
-	
-	public bool OnLetGoOfDraggedItem() {
-		if (_currentInventoryAbove == null) {
+
+	public bool OnLetGoOfDraggedItem()
+	{
+		if (_currentInventoryAbove == null)
+		{
 			_startingInventory.ResetAllContainerHighlights();
 			_itemUI.ResetToOriginalPosition();
-      SpawnDroppedItem();
-      // Remove the item from the player's inventory.
-      _itemUI.RemoveSelfFromInventory();
+			_startingInventory.SpawnDroppedItem(Item);
+			// Remove the item from the player's inventory.
+			_itemUI.RemoveSelfFromInventory();
 			Destroy(gameObject);
 			return false;
 		}
-		else {
+		else
+		{
 			_startingInventory.ResetAllContainerHighlights();
 			_currentInventoryAbove.ResetAllContainerHighlights();
 			_itemUI.MoveToInventoryAtPosition(_currentInventoryAbove, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 			Destroy(gameObject);
 			return true;
 		}
-		
+
 	}
-	
-	
-	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory) {
+
+
+	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory)
+	{
 		List<RaycastResult> raycastHits = new List<RaycastResult>();
 		_pointerEventData.position = Input.mousePosition;
 		_canvasGraphicRaycaster.Raycast(_pointerEventData, raycastHits);
-		foreach (RaycastResult hit in raycastHits) {
-			if (hit.gameObject.TryGetComponent(out InventoryComponent inventoryUI)) {
+		foreach (RaycastResult hit in raycastHits)
+		{
+			if (hit.gameObject.TryGetComponent(out InventoryComponent inventoryUI))
+			{
 				inventory = inventoryUI;
 				return true;
 			}
@@ -106,8 +121,9 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		inventory = null;
 		return false;
 	}
-	
-	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionWS) {
+
+	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionWS)
+	{
 		// Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
 		positionWS = positionWS + new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / Item.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / Item.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
@@ -123,11 +139,4 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		);
 		return slotIndex;
 	}
-
-  private void SpawnDroppedItem() {
-    GameObject dropped = Instantiate(Item.ItemData.DroppedItemPrefab);
-    Debug.Log("Add some kind of settings for dropped items later.");
-    dropped.transform.position = NetworkClient.localPlayer.gameObject.transform.position + Vector3.forward * 2;
-    dropped.GetComponent<DroppedItem>().Item = Item.ItemData;
-  }
 }

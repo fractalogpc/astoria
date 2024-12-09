@@ -68,7 +68,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="itemDatas">The items to place in the new InventoryData</param>
 	/// <param name="inventorySize">The size of the InventoryData to create.</param>
-	/// <returns>The number of items that could not be placed into the inventory.</returns>
+	// /// <returns>The number of items that could not be placed into the inventory.</returns>
 	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
 		InventoryData = new InventoryData(inventorySize.x, inventorySize.y);
 		CreateAndAttachContainersTo(InventoryData);
@@ -160,7 +160,11 @@ public class InventoryComponent : MonoBehaviour
 	/// <returns>Whether adding all the items was successful.</returns>
 	public bool TryAddItemsByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
-		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) return false;
+		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
+			Debug.Log("Item dropped");
+			SpawnDroppedItem(item);
+			return false;
+		}
 		CreateItemPrefab(item, slotIndexBL);
 
 		OnInventoryChange.Invoke(InventoryData.Items);
@@ -304,5 +308,21 @@ public class InventoryComponent : MonoBehaviour
 		for (int i = 0; i < containers.Count; i++) {
 			containers[i].Highlight = highlight;
 		}
+	}
+
+	public void SpawnDroppedItem(InventoryItem item)
+	{
+		GameObject dropped = Instantiate(item.ItemData.DroppedItemPrefab);
+		GameObject localPlayer = GameObject.FindWithTag("Player");
+		Debug.LogWarning("Matthew fix this");
+		dropped.transform.position = localPlayer.transform.position + Vector3.up * 2f;
+		dropped.GetComponentInChildren<Rigidbody>().AddForce(Vector3.down * 0.5f + localPlayer.transform.forward * 2.5f + RandomJitter(0.1f), ForceMode.Impulse);
+		dropped.GetComponentInChildren<Rigidbody>().AddTorque(localPlayer.transform.right * 0.5f + RandomJitter(0.1f), ForceMode.Impulse);
+		dropped.GetComponent<DroppedItem>().Item = item.ItemData;
+	}
+
+	private Vector3 RandomJitter(float jitterAmount)
+	{
+		return new Vector3(UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount));
 	}
 }
