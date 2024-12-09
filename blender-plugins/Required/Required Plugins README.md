@@ -1,7 +1,7 @@
 
 # Required / Essential Plugins
 
-These should always be installed. Without these, your blender installation won't be compatible with our workflow & and will cause all sorts of issues down the line.
+These should always be installed. Without these, your blender installation won't be compatible with our workflow and will cause all sorts of issues down the line.
 
 ### [Blender To Unity FBX Exporter](https://github.com/EdyJ/blender-to-unity-fbx-exporter)
 
