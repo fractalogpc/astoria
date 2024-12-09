@@ -3020,8 +3020,6 @@ GameObject:
   - component: {fileID: 1033706171325523888}
   - component: {fileID: 8628136263926744832}
   - component: {fileID: 6613076594192004588}
-  - component: {fileID: 5255334561358822098}
-  - component: {fileID: 7308060681774751561}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -3143,7 +3141,7 @@ MonoBehaviour:
   MaxStableSlopeAngle: 60
   StableGroundLayers:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 73
   DiscreteCollisionEvents: 0
   StepHandling: 2
   MaxStepHeight: 0.5
@@ -3245,56 +3243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5255334561358822098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcba9fed344355148b3e1c048e3316b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  OnLocalPlayerStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2627650646237878555}
-        m_TargetAssemblyTypeName: CombatCore, Assembly-CSharp
-        m_MethodName: InitializeInputs
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnNetworkedPlayerStart:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &7308060681774751561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6dfb169d892ca946a1ef91236f2cdee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  _playerWorldmodel: {fileID: 2040652133788255361}
-  _playerViewmodel: {fileID: 7164937338993327052}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -12712,9 +12660,9 @@ GameObject:
   - component: {fileID: 7111015380006678387}
   - component: {fileID: 8639212715335339482}
   - component: {fileID: 3862205671205058287}
-  - component: {fileID: 804674036763143527}
   - component: {fileID: 1631809772494724130}
   - component: {fileID: 8921343721439143123}
+  - component: {fileID: 4429388941883596627}
   m_Layer: 0
   m_Name: InventoryCanvas
   m_TagString: Untagged
@@ -12806,19 +12754,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &804674036763143527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275362077817861799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8735895e57a10d42b5f86919375953a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inventoryCanvasGroup: {fileID: 8921343721439143123}
 --- !u!114 &1631809772494724130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12843,6 +12778,19 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &4429388941883596627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275362077817861799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8735895e57a10d42b5f86919375953a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventoryCanvasGroup: {fileID: 8921343721439143123}
 --- !u!1 &7286227479379771327
 GameObject:
   m_ObjectHideFlags: 0
