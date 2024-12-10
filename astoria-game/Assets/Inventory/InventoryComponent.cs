@@ -54,6 +54,23 @@ public class InventoryComponent : MonoBehaviour
 		}
 	}
 
+	private void AttachToInventoryData(InventoryData inventoryData) {
+		InventoryData = inventoryData;
+		InventoryData.OnInventoryUpdate += UpdateInventory;
+	}
+	
+	private void UpdateInventory(InventoryComponent caller) {
+		if (caller != this) {
+			Debug.Log($"Rebuilding caller was {caller.gameObject.name}.");
+			CreateInvFromInventoryData(InventoryData);
+		}
+		
+	}
+	
+	private void OnDisable() {
+		InventoryData.OnInventoryUpdate -= UpdateInventory;
+	}
+
 	private void FindReferences() {
 		_rect = GetComponent<RectTransform>();
 		if (_rect != null && _slotPrefab != null)
@@ -70,7 +87,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="inventorySize">The size of the InventoryData to create.</param>
 	// /// <returns>The number of items that could not be placed into the inventory.</returns>
 	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
-		InventoryData = new InventoryData(inventorySize.x, inventorySize.y);
+		AttachToInventoryData(new InventoryData(inventorySize.x, inventorySize.y));
 		CreateAndAttachContainersTo(InventoryData);
 		_inventoryItemPrefabInstances = new List<GameObject>();
 		List<InventoryItem> items = new();
@@ -92,7 +109,8 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="inventoryData">The InventoryData to instantiate with.</param>
 	public void CreateInvFromInventoryData(InventoryData inventoryData) {
-		InventoryData = inventoryData;
+		Debug.Log($"Building Inventory UI for {gameObject.name}.");
+		AttachToInventoryData(inventoryData);
 		CreateAndAttachContainersTo(inventoryData);
 		InstantiateInventoryItems(inventoryData);
 	}
@@ -160,7 +178,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <returns>Whether adding all the items was successful.</returns>
 	public bool TryAddItemsByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
-		if (!InventoryData.TryAddItem(item, out Vector2Int slotIndexBL)) {
+		if (!InventoryData.TryAddItem(this, item, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
 			SpawnDroppedItem(item);
 			return false;
@@ -244,6 +262,20 @@ public class InventoryComponent : MonoBehaviour
 		}
 	}
 
+	public void SpawnDroppedItem(InventoryItem item) {
+		GameObject dropped = Instantiate(item.ItemData.DroppedItemPrefab);
+		Debug.LogWarning("Fix this localPlayer reference to reference using NetworkClient instead of GameObject.FindWithTag.");
+		GameObject localPlayer = GameObject.FindWithTag("Player");
+		dropped.transform.position = localPlayer.transform.position + Vector3.up * 2f;
+		dropped.GetComponentInChildren<Rigidbody>().AddForce(Vector3.down * 0.5f + localPlayer.transform.forward * 2.5f + RandomJitter(0.1f), ForceMode.Impulse);
+		dropped.GetComponentInChildren<Rigidbody>().AddTorque(localPlayer.transform.right * 0.5f + RandomJitter(0.1f), ForceMode.Impulse);
+		dropped.GetComponent<DroppedItem>().Item = item.ItemData;
+	}
+
+	private Vector3 RandomJitter(float jitterAmount) {
+		return new Vector3(UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount));
+	}
+	
 	/// <summary>
 	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
 	/// </summary>
@@ -254,7 +286,7 @@ public class InventoryComponent : MonoBehaviour
 		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
 		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
 		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
-		bool couldPlace = InventoryData.TryAddItemAtPosition(item, index);
+		bool couldPlace = InventoryData.TryAddItemAtPosition(this, item, index);
 		if (couldPlace) {
 			CreateItemPrefab(item, index);
 			return true;
@@ -308,21 +340,5 @@ public class InventoryComponent : MonoBehaviour
 		for (int i = 0; i < containers.Count; i++) {
 			containers[i].Highlight = highlight;
 		}
-	}
-
-	public void SpawnDroppedItem(InventoryItem item)
-	{
-		GameObject dropped = Instantiate(item.ItemData.DroppedItemPrefab);
-		GameObject localPlayer = GameObject.FindWithTag("Player");
-		Debug.LogWarning("Matthew fix this");
-		dropped.transform.position = localPlayer.transform.position + Vector3.up * 2f;
-		dropped.GetComponentInChildren<Rigidbody>().AddForce(Vector3.down * 0.5f + localPlayer.transform.forward * 2.5f + RandomJitter(0.1f), ForceMode.Impulse);
-		dropped.GetComponentInChildren<Rigidbody>().AddTorque(localPlayer.transform.right * 0.5f + RandomJitter(0.1f), ForceMode.Impulse);
-		dropped.GetComponent<DroppedItem>().Item = item.ItemData;
-	}
-
-	private Vector3 RandomJitter(float jitterAmount)
-	{
-		return new Vector3(UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount));
 	}
 }

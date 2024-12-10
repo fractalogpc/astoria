@@ -63,7 +63,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		SetVisualSize();
 	}
 
-	public void Initalize(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI)
+	public void Initialize(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI)
 	{
 		_itemUI = itemUI;
 		Item = item;
@@ -86,9 +86,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		if (_currentInventoryAbove == null)
 		{
 			_startingInventory.ResetAllContainerHighlights();
-			_itemUI.ResetToOriginalPosition();
 			_startingInventory.SpawnDroppedItem(Item);
-			// Remove the item from the player's inventory.
+			// The item is already removed from both inventory data
 			_itemUI.RemoveSelfFromInventory();
 			Destroy(gameObject);
 			return false;
@@ -122,14 +121,13 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		return false;
 	}
 
-	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionWS)
+	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionSS)
 	{
-		// Debug.Log("Change this logic here later to support placing items based on center instead of bottom left.");
-		positionWS = positionWS + new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / Item.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / Item.Size.y / 2);
+		// Add an offset to get the position of the bottom left grid slot of the item.
+		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / Item.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / Item.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
-		Vector2 localPoint;
-		localPoint = inventoryRect.InverseTransformPoint(positionWS) + new Vector3(inventoryRect.sizeDelta.x / 2, inventoryRect.sizeDelta.y / 2, 0);
-		// print("item anchored pos" + positionWS);
+		Vector2 localPoint = inventoryRect.InverseTransformPoint(positionSS) + new Vector3(inventoryRect.sizeDelta.x / 2, inventoryRect.sizeDelta.y / 2, 0);
+		// print("item anchored pos" + positionSS);
 		// print("item transform.position" + _rectTransform.position);
 		// print("mouse pos" + Input.mousePosition);
 		// print("Inventory TransformPoint: " + localPoint);
@@ -137,6 +135,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			Mathf.FloorToInt(localPoint.x / inventory.SlotSizeUnits),
 			Mathf.FloorToInt(localPoint.y / inventory.SlotSizeUnits)
 		);
+		print(slotIndex);
 		return slotIndex;
 	}
 }

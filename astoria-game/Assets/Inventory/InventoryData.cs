@@ -20,6 +20,9 @@ public class InventoryData
 
     public int Width => Containers.GetLength(0);
     public int Height => Containers.GetLength(1);
+
+    public delegate void InventoryUpdate(InventoryComponent caller);
+    public event InventoryUpdate OnInventoryUpdate;
     
     public InventoryData(int width, int height) {
         Containers = new InventoryContainer[width, height];
@@ -73,12 +76,13 @@ public class InventoryData
         }
     }
     /// <summary>
-    /// Adds an item to the inventory if possible. Attempts to find a position for the item.
+    /// Adds an item to the inventory if possible. Attempts to find a position for the item. Calls OnInventoryUpdate if successful.
     /// </summary>
+    /// <param name="caller">The inventory component that is calling this method.</param>
     /// <param name="item">The item to add.</param>
     /// <param name="slotIndex">The slot index the item is placed at.</param>
-    /// <returns>Whether or not the placement was successful.</returns>
-    public bool TryAddItem(InventoryItem item, out Vector2Int slotIndex) {
+    /// <returns>Whether the placement was successful.</returns>
+    public bool TryAddItem(InventoryComponent caller, InventoryItem item, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
         if (Items.Contains(item)) return false;
         Vector2Int bounds = item.Size;
@@ -94,13 +98,13 @@ public class InventoryData
                 
                 // Try normally
                 item.Rotated = false;
-                successNormal = TryAddItemAtPosition(item, new Vector2Int(x, y));
+                successNormal = TryAddItemAtPosition(caller, item, new Vector2Int(x, y));
                 if (successNormal) {
                     return true;
                 }
                 // Try Rotated
                 item.Rotated = true;
-                successRotated = TryAddItemAtPosition(item, new Vector2Int(x, y));
+                successRotated = TryAddItemAtPosition(caller, item, new Vector2Int(x, y));
                 if (successRotated) {
                     return true;
                 }
@@ -109,12 +113,12 @@ public class InventoryData
         return false;
     }
     /// <summary>
-    /// Attempts to add an item to the inventory at a specific position.
+    /// Attempts to add an item to the inventory at a specific position. Calls OnInventoryUpdate if successful.
     /// </summary>
     /// <param name="item">The item to add.</param>
     /// <param name="slotIndexBL">The slotIndex to add the item at.</param>
-    /// <returns>Whether or not adding the item was successful.</returns>
-    public bool TryAddItemAtPosition(InventoryItem item, Vector2Int slotIndexBL) {
+    /// <returns>Whether adding the item was successful.</returns>
+    public bool TryAddItemAtPosition(InventoryComponent caller, InventoryItem item, Vector2Int slotIndexBL) {
         if (Items.Contains(item)) return false;
         if (slotIndexBL.x < 0 || slotIndexBL.x >= Width || slotIndexBL.y < 0 || slotIndexBL.y >= Height) return false;
         Vector2Int bounds = item.Size;
@@ -125,6 +129,7 @@ public class InventoryData
             }
         }
         Items.Add(item);
+        OnInventoryUpdate?.Invoke(caller);
         return true;
     }
     /// <summary>
@@ -132,7 +137,7 @@ public class InventoryData
     /// </summary>
     /// <param name="slotIndexBL">The slotIndex to test the bounds from.</param>
     /// <param name="size">The size of the bounds in slots.</param>
-    /// <returns>Whether or not the item bounds are within the inventory.</returns>
+    /// <returns>Whether the item bounds are within the inventory.</returns>
     public bool CornersWithinGrid(Vector2Int slotIndexBL, Vector2Int size) {
         bool bottomLeftInGrid = slotIndexBL.x >= 0 && slotIndexBL.y >= 0;
         bool topRightInGrid = slotIndexBL.x + size.x <= Width && slotIndexBL.y + size.y <= Height;
@@ -146,7 +151,12 @@ public class InventoryData
         }
         return true;
     }
-    public bool RemoveItem(InventoryItem item) {
+    /// <summary>
+    /// Removes an item from the inventory. Calls OnInventoryUpdate if successful.
+    /// </summary>
+    /// <param name="item">The item instance to remove.</param>
+    /// <returns>Whether the item was found and able to be removed.</returns>
+    public bool RemoveItem(InventoryComponent caller, InventoryItem item) {
         if (!Items.Contains(item)) return false;
         Vector2Int bottomLeftContainerIndex = GetSlotIndexOf(item);
         Vector2Int bounds = item.Size;
@@ -156,6 +166,7 @@ public class InventoryData
             }
         }
         Items.Remove(item);
+        OnInventoryUpdate?.Invoke(caller);
         return true;
     }
     public Vector2Int GetSlotIndexOf(InventoryItem item) {
