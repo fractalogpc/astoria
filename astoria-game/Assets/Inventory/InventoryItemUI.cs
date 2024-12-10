@@ -50,7 +50,6 @@ public class InventoryItemUI : MonoBehaviour
 	}
 
 	private void OnDisable() {
-		print($"{gameObject.transform.parent.gameObject.name} > {gameObject.name} - {_clickableEvents == null}");
 		_clickableEvents.OnClickDownSelected.RemoveListener(OnClickedOn);
 		_clickableEvents.OnClickUpAnywhere.RemoveListener(OnClickUpAnywhere);
 	}

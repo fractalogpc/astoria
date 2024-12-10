@@ -58,10 +58,15 @@ public class InventoryComponent : MonoBehaviour
 		InventoryData = inventoryData;
 		InventoryData.OnInventoryUpdate += UpdateInventory;
 	}
+
+	private void DetachFromCurrentInventoryData() {
+		InventoryData.OnInventoryUpdate -= UpdateInventory;
+		InventoryData = null;
+	}
 	
 	private void UpdateInventory(InventoryComponent caller) {
 		if (caller != this) {
-			Debug.Log($"Rebuilding caller was {caller.gameObject.name}.");
+			Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
 			CreateInvFromInventoryData(InventoryData);
 		}
 		
@@ -109,7 +114,11 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="inventoryData">The InventoryData to instantiate with.</param>
 	public void CreateInvFromInventoryData(InventoryData inventoryData) {
-		Debug.Log($"Building Inventory UI for {gameObject.name}.");
+		if (InventoryData != null) {
+			DetachFromCurrentInventoryData();
+			DestroyInventoryContainersAndItems();
+		}
+		
 		AttachToInventoryData(inventoryData);
 		CreateAndAttachContainersTo(inventoryData);
 		InstantiateInventoryItems(inventoryData);
@@ -122,7 +131,6 @@ public class InventoryComponent : MonoBehaviour
 
 	public void CreateAndAttachContainersTo(InventoryData inventoryData) {
 		_slotPrefabInstances = new GameObject[inventoryData.Width, inventoryData.Height];
-		DeleteChildrenOf(_rect.transform);
 		for (int y = 0; y < inventoryData.Height; y++) {
 			for (int x = 0; x < inventoryData.Width; x++) {
 				GameObject slot = Instantiate(_slotPrefab, _rect.transform);
@@ -144,8 +152,13 @@ public class InventoryComponent : MonoBehaviour
 		}
 	}
 
-	public void DestroyInventoryContainers() {
-		DeleteChildrenOf(transform);
+	/// <summary>
+	/// Only used by the editor script to destroy previewed inventory containers.
+	/// </summary>
+	public void DestroyInventoryContainersAndItems() {
+		_slotPrefabInstances = null;
+		_inventoryItemPrefabInstances.Clear();
+		DeleteChildrenOf(_rect.transform);
 	}
 
 	/// <summary>
@@ -283,6 +296,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="positionSS">The position to place at in screen space.</param>
 	/// <returns></returns>
 	public bool TryPlaceItem(InventoryItem item, Vector2Int slotIndexBL) {
+		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
 		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
 		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
 		Vector2Int index = cntrSlotScript.AttachedContainer.Index;

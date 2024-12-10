@@ -15,7 +15,7 @@ public class InventoryComponentEditor : AutoRegisterValidator
 		EditorGUILayout.Space();
 		if (GUILayout.Button("Destroy Slots")) {
 			InventoryComponent inventoryComponent = (InventoryComponent) target;
-			inventoryComponent.DestroyInventoryContainers();
+			inventoryComponent.DestroyInventoryContainersAndItems();
 		}
 	}
 }
