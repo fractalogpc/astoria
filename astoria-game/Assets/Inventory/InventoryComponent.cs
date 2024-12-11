@@ -57,8 +57,8 @@ public class InventoryComponent : MonoBehaviour
 	private void AttachToInventoryData(InventoryData inventoryData) {
 		InventoryData = inventoryData;
 		InventoryData.OnInventoryUpdate += UpdateInventory;
+		_rect.sizeDelta = new Vector2(InventoryData.Width * SlotSizeUnits, InventoryData.Height * SlotSizeUnits);
 	}
-
 	private void DetachFromCurrentInventoryData() {
 		InventoryData.OnInventoryUpdate -= UpdateInventory;
 		InventoryData = null;
