@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!43 &-501311816201848465
 Mesh:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -17,8 +17,8 @@ Mesh:
     firstVertex: 0
     vertexCount: 7
     localAABB:
-      m_Center: {x: 0, y: 0.56724644, z: 0}
-      m_Extent: {x: 12.481026, y: 11.913779, z: 0}
+      m_Center: {x: 0.00063991547, y: -0.1950159, z: 0}
+      m_Extent: {x: 5.204501, y: 10.823389, z: 0}
   m_Shapes:
     vertices: []
     shapes: []
@@ -97,7 +97,7 @@ Mesh:
       format: 0
       dimension: 0
     m_DataSize: 224
-    _typelessdata: 48b247c1dfcc0a40000000000000000000000000000080bf00000000e73d163f199f5bc0736335c1000000000000000000000000ffff7fbf429db93e20c23b3d879b2e40668b35c1000000000000000000000000000080bfccfa1b3f70283a3df8383b400bc932c1000000000000000000000000000080bf4b001e3f8074563d48b24741a1518d40000000000000000000000000000080bf0000803f714a2d3f48b2474148b24741000000000000000000000000000080bf0000803f0000803f48b247c148b24741000000000000000000000000000080bf000000000000803f
+    _typelessdata: 0886a6c0b771b8bf000000000000000000000000ffff7fbf70ea843eb487e23e9793a4c0634b30c1000000000000000000000000000080bfdb5a863e00000000098ba440634b30c1000000000000000000000000000080bf69cf3c3f000000008490a6408a1f9ec0000000000000000000000000000080bfa88e3d3fc8bc8f3e23709340633cbd3f000000000000000000000000000080bf1a7d363f50ca133f98080640d10d2a41000000000000000000000000000080bf74c4183f0000803f45410dc0d10d2a41000000000000000000000000ffff7fbfe1cbcb3e0000803f
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -192,19 +192,19 @@ MonoBehaviour:
   Tolerance: 0.15
   NormalScale: 0.01
   ShapePoints:
-  - {x: 0, y: 0.41311795}
-  - {x: 0.3625279, y: 0.9541606}
-  - {x: 0.6092956, y: 0.9545513}
-  - {x: 0.617192, y: 0.9476428}
-  - {x: 1, y: 0.32308286}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0.25960112, y: 0.5575584}
+  - {x: 0.26241192, y: 1}
+  - {x: 0.7375398, y: 1}
+  - {x: 0.740458, y: 0.71926284}
+  - {x: 0.7128464, y: 0.4226942}
+  - {x: 0.59674764, y: 0}
+  - {x: 0.39803985, y: 0}
   Preset: {fileID: 11400000, guid: eafc2aa7bd78be2479c6f7af837d920a, type: 2}
   OverrideOutput: []
 --- !u!21 &2826748007906098208
 Material:
   serializedVersion: 8
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -291,11 +291,11 @@ Material:
     - AI_CLIP_NEIGHBOURS_FRAMES: 0
     - _AI_AlphaToCoverage: 0
     - _AI_Clip: 0.5
-    - _AI_DepthSize: 24.82461
+    - _AI_DepthSize: 21.527592
     - _AI_Frames: 16
     - _AI_FramesX: 16
     - _AI_FramesY: 16
-    - _AI_ImpostorSize: 24.962051
+    - _AI_ImpostorSize: 21.646778
     - _AI_Parallax: 1
     - _AI_ShadowBias: 0.25
     - _AI_ShadowView: 1
@@ -315,7 +315,7 @@ Material:
     - _CutoutNoiseTillingValue: 10
     - _CutoutNoiseValue: 1
     - _CutoutShadowMode: 1
-    - _DepthSize: 24.82461
+    - _DepthSize: 21.527592
     - _DitherCategory: 1
     - _DitherConstantValue: 0
     - _DitherDistanceMaxValue: 0
@@ -378,7 +378,7 @@ Material:
     - _ImpostorMaskShadingInfo: 0
     - _ImpostorMetallicValue: 0
     - _ImpostorOcclusionValue: 1
-    - _ImpostorSize: 24.962051
+    - _ImpostorSize: 21.646778
     - _ImpostorSmoothnessValue: 1
     - _InteractionInteractionEnd: 1
     - _IsCollected: 0
@@ -489,8 +489,8 @@ Material:
     - _global_push_layer_value: 0
     - _global_wind_layer_value: 0
     m_Colors:
-    - _AI_Offset: {r: -0.030337334, g: 9.481085, b: -0.29585648, a: -0}
-    - _AI_SizeOffset: {r: 24.962051, g: 24.82461, b: 0, a: 0}
+    - _AI_Offset: {r: -0.030337334, g: 9.481085, b: -0.29585648, a: 0.009009009}
+    - _AI_SizeOffset: {r: 21.646778, g: 21.527592, b: 0, a: -0.0005630631}
     - _CutoutMeshRemap: {r: 0, g: 1, b: 0, a: 0}
     - _DrynessBlendRemap: {r: 0.1, g: 0.2, b: 0, a: 0}
     - _DrynessColor: {r: 1, g: 0.7083712, b: 0.495283, a: 1}
@@ -501,7 +501,7 @@ Material:
     - _HueVariation: {r: 0, g: 0, b: 0, a: 0}
     - _ImpostorColor: {r: 1, g: 1, b: 1, a: 1}
     - _ImpostorColorTwo: {r: 1, g: 1, b: 1, a: 1}
-    - _Offset: {r: -0.030337334, g: 9.481085, b: -0.29585648, a: -0}
+    - _Offset: {r: -0.030337334, g: 9.481085, b: -0.29585648, a: 0.009009009}
     - _OverlayBlendRemap1: {r: 0.1, g: 0.2, b: 0, a: 0}
     - _OverlayColor: {r: 0.2815503, g: 0.4009458, b: 0.5377358, a: 1}
     - _OverlayLumaRemap: {r: 0, g: 1, b: 0, a: 0}
