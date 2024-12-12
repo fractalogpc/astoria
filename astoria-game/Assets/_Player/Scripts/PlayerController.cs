@@ -9,14 +9,15 @@ namespace Player
   public enum CharacterState
   {
     Default,
-    Water
+    Water,
+    Noclip
   }
 
   public class PlayerController : InputHandlerBase, IStartExecution, ICharacterController
   {
 
     public KinematicCharacterMotor Motor;
-    public PlayerCamera PlayerCamera; 
+    public PlayerCamera PlayerCamera;
 
     #region Variables
 
@@ -38,6 +39,10 @@ namespace Player
     public float JumpScalableForwardSpeed = 0f;
     public float JumpPreGroundingGraceTime = 0.1f;
     public float JumpPostGroundingGraceTime = 0.1f;
+
+    [Header("Noclip")]
+    public float NoclipMoveSpeed = 10f;
+    public float NoclipRunSpeed = 20f;
 
     [Header("Misc")]
     public List<Collider> IgnoredColliders = new List<Collider>();
@@ -82,9 +87,19 @@ namespace Player
       RegisterAction(_inputActions.Player.Sprint, _ => _sprintInput = true, () => _sprintInput = false);
       RegisterAction(_inputActions.Player.Jump, _ => _jumpInput = true, () => _jumpInput = false);
       RegisterAction(_inputActions.Player.Crouch, _ => _crouchInput = true, () => _crouchInput = false);
+
+      RegisterAction(_inputActions.Player.Noclip, _ => ToggleNoclip(), null);
     }
 
     #endregion
+
+    private void ToggleNoclip() {
+      if (CurrentCharacterState == CharacterState.Noclip) {
+        TransitionToState(CharacterState.Default);
+      } else {
+        TransitionToState(CharacterState.Noclip);
+      }
+    }
 
     private void Awake()
     {
@@ -102,6 +117,11 @@ namespace Player
     private void Update()
     {
       HandleCharacterInput();
+
+      if (CurrentCharacterState == CharacterState.Noclip)
+      {
+        HandleNoclipMovement();
+      }
     }
 
     private void HandleCharacterInput()
@@ -111,11 +131,16 @@ namespace Player
       {
         case CharacterState.Default:
 
-          if (_crouchInput) {
+          if (_crouchInput)
+          {
             _currentMaxSpeed = MaxStableCrouchSpeed;
-          } else if (_sprintInput) {
+          }
+          else if (_sprintInput)
+          {
             _currentMaxSpeed = MaxStableSprintSpeed;
-          } else {
+          }
+          else
+          {
             _currentMaxSpeed = MaxStableMoveSpeed;
           }
 
@@ -150,6 +175,19 @@ namespace Player
       }
     }
 
+    private void HandleNoclipMovement() {
+      Vector3 moveDirection = transform.rotation * new Vector3(_moveInput.x, (_jumpInput ? 1 : 0) + (_crouchInput ? -1 : 0), _moveInput.y);
+      Debug.Log(moveDirection);
+      
+      // Orientate the moveDirection vector with the Camera's Y axis
+      // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
+
+      Vector3 move = moveDirection * (!_sprintInput ? NoclipMoveSpeed : NoclipRunSpeed) * Time.deltaTime;
+      transform.position += move;
+
+      transform.rotation = PlayerCamera.PlayerYLookQuaternion;
+    }
+
     private Quaternion _nextFrameRotation = Quaternion.identity;
 
     /// <summary>
@@ -164,7 +202,8 @@ namespace Player
     /// This should only be called from PlayerCamera script.
     /// </summary>
     /// <param name="rotation"></param>
-    public void SetRotation(Quaternion rotation) {
+    public void SetRotation(Quaternion rotation)
+    {
       _nextFrameRotation = rotation;
     }
 
@@ -452,6 +491,10 @@ namespace Player
           break;
         case CharacterState.Water:
           break;
+        case CharacterState.Noclip:
+          Motor.enabled = false;
+          GetComponent<Collider>().enabled = false;
+          break;
       }
     }
 
@@ -462,6 +505,10 @@ namespace Player
         case CharacterState.Default:
           break;
         case CharacterState.Water:
+          break;
+        case CharacterState.Noclip:
+          Motor.enabled = true;
+          GetComponent<Collider>().enabled = true;
           break;
       }
     }
