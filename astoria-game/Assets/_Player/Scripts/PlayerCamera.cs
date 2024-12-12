@@ -10,11 +10,12 @@ namespace Player
     public bool canLook = true;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Transform _cameraTarget;
-    [SerializeField] private Transform _cameraTransform;
+    [SerializeField] private Transform CameraTransform;
 
     [HideInInspector] public Quaternion PlayerYLookQuaternion = Quaternion.identity;
 
-    private float _cameraXRotation = 0;
+    [HideInInspector] public float CameraXRotation = 0;
+    [HideInInspector] public float CameraYRotation = 0;
     private Vector2 _mouseInput;
 
     protected override void InitializeActionMap()
@@ -34,9 +35,9 @@ namespace Player
 
     private void CameraXLook()
     {
-      _cameraXRotation -= _mouseInput.y;
-      if (_cameraXRotation > 90) _cameraXRotation = 90;
-      if (_cameraXRotation < -90) _cameraXRotation = -90;
+      CameraXRotation -= _mouseInput.y;
+      if (CameraXRotation > 90) CameraXRotation = 90;
+      if (CameraXRotation < -90) CameraXRotation = -90;
     }
 
     private void LateUpdate()
@@ -46,8 +47,10 @@ namespace Player
       PlayerYLook();
 
       CameraXLook();
-      Quaternion newRotation = Quaternion.Euler(_cameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
-      _cameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
+      Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
+      CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
+
+      CameraYRotation = _playerTransform.rotation.eulerAngles.y;
     }
   }
 }

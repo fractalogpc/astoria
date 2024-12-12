@@ -93,10 +93,14 @@ namespace Player
 
     #endregion
 
-    private void ToggleNoclip() {
-      if (CurrentCharacterState == CharacterState.Noclip) {
+    private void ToggleNoclip()
+    {
+      if (CurrentCharacterState == CharacterState.Noclip)
+      {
         TransitionToState(CharacterState.Default);
-      } else {
+      }
+      else
+      {
         TransitionToState(CharacterState.Noclip);
       }
     }
@@ -172,17 +176,29 @@ namespace Player
           break;
         case CharacterState.Water:
           break;
+        case CharacterState.Noclip:
+          if (_sprintInput)
+          {
+            _currentMaxSpeed = NoclipRunSpeed;
+          }
+          else
+          {
+            _currentMaxSpeed = NoclipMoveSpeed;
+          }
+
+          _moveInputVector += Vector3.up * (_jumpInput ? 1 : 0) + Vector3.down * (_crouchInput ? 1 : 0);
+          _moveInputVector.Normalize();
+          break;
       }
     }
 
-    private void HandleNoclipMovement() {
-      Vector3 moveDirection = transform.rotation * new Vector3(_moveInput.x, (_jumpInput ? 1 : 0) + (_crouchInput ? -1 : 0), _moveInput.y);
-      Debug.Log(moveDirection);
-      
+    private void HandleNoclipMovement()
+    {
+
       // Orientate the moveDirection vector with the Camera's Y axis
       // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
 
-      Vector3 move = moveDirection * (!_sprintInput ? NoclipMoveSpeed : NoclipRunSpeed) * Time.deltaTime;
+      Vector3 move = _moveInputVector * _currentMaxSpeed * Time.deltaTime;
       transform.position += move;
 
       transform.rotation = PlayerCamera.PlayerYLookQuaternion;
