@@ -525,7 +525,7 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 		Tags { "RenderPipeline"="HDRenderPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
 
 		HLSLINCLUDE
-		#pragma target 4.5
+#pragma target 4.5
 		#pragma exclude_renderers glcore gles gles3 
 
 		#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
@@ -1529,6 +1529,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -8548,6 +8551,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -15551,6 +15557,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -22464,6 +22473,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -29355,6 +29367,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -36313,6 +36328,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -43368,6 +43386,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -50581,6 +50602,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/General Subsurface Lit"
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData

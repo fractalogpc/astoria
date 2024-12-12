@@ -201,42 +201,42 @@ MonoBehaviour:
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   seed: 504
   poissonDisk: {fileID: 570998590550230969, guid: 1e884d56bc6f441a9a9553bc6b29638a, type: 3}
   poissonDiskStrength: 1
@@ -2203,6 +2203,7 @@ GameObject:
   - component: {fileID: 537111335}
   - component: {fileID: 537111334}
   - component: {fileID: 537111333}
+  - component: {fileID: 537111336}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -2288,7 +2289,7 @@ Terrain:
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 30
+  m_DetailObjectDistance: 0
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 1
   m_SplatMapDistance: 1000
@@ -2297,7 +2298,7 @@ Terrain:
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
   m_DrawInstanced: 1
-  m_DrawTreesAndFoliage: 1
+  m_DrawTreesAndFoliage: 0
   m_StaticShadowCaster: 0
   m_IgnoreQualitySettings: 0
   m_ReflectionProbeUsage: 1
@@ -2314,6 +2315,27 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
+--- !u!114 &537111336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537111331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1448045563, guid: b04c77e0938d27643b3f69f2dd39ce77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _autoRefreshTerrainAtRuntime: 1
+  _enableUnityRendererWhenDisabled: 1
+  _delayInitialize: 1
+  _onlyInitializeWithinRenderingDistance: 1
+  _renderingDistanceLimit: 5000
+  _renderTreesWithNatureRenderer: 1
+  _renderDetailsWithNatureRenderer: 1
+  _optimizePatchSize: 1
+  _format: 202200
 --- !u!1 &590899193
 GameObject:
   m_ObjectHideFlags: 0
@@ -2381,7 +2403,39 @@ Transform:
   - {fileID: 1824790549}
   m_Father: {fileID: 2142900725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1027123855
+--- !u!1 &1479564076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1479564077}
+  m_Layer: 0
+  m_Name: Trees
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1479564077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479564076}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 155126014}
+  m_Father: {fileID: 2142900725}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1539762752
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -2437,38 +2491,6 @@ Material:
     - _TerrainSize: {r: 1000, g: 128, b: 1000, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!1 &1479564076
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1479564077}
-  m_Layer: 0
-  m_Name: Trees
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1479564077
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1479564076}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 155126014}
-  m_Father: {fileID: 2142900725}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1710595108
 GameObject:
   m_ObjectHideFlags: 0
@@ -4366,7 +4388,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1027123855}
+  - {fileID: 1539762752}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

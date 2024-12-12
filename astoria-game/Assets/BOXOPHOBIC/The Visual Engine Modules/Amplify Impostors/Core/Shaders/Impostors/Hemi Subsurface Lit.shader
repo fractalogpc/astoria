@@ -242,7 +242,7 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 		ZClip [_ZClip]
 
 		HLSLINCLUDE
-		#pragma target 4.5
+#pragma target 4.5
 		#pragma exclude_renderers glcore gles gles3 
 		#pragma multi_compile_instancing
 		#pragma instancing_options renderinglayer
@@ -481,6 +481,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -4133,6 +4136,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -7644,6 +7650,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -11285,6 +11294,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -14807,6 +14819,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -18348,6 +18363,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 
@@ -22005,6 +22023,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Hemi Subsurface Lit"
 			};      
 			        
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			//#pragma editor_sync_compilation
 

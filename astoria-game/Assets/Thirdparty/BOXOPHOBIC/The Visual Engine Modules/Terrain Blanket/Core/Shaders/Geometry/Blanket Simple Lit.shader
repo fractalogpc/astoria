@@ -686,7 +686,7 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/Blanket Simple Lit"
 		
 
 		CGINCLUDE
-		#pragma target 4.5
+#pragma target 4.5
 
 		float4 FixedTess( float tessValue )
 		{
@@ -921,6 +921,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/Blanket Simple Lit"
 			#pragma shader_feature_local_fragment TVE_EMISSIVE_ELEMENT
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -10750,6 +10753,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/Blanket Simple Lit"
 			#pragma shader_feature_local_fragment TVE_EMISSIVE_ELEMENT
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -20491,6 +20497,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/Blanket Simple Lit"
 			#pragma shader_feature_local_fragment TVE_EMISSIVE_ELEMENT
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
@@ -30060,6 +30069,9 @@ Shader "BOXOPHOBIC/The Visual Engine/Geometry/Blanket Simple Lit"
 			#pragma shader_feature_local_fragment TVE_EMISSIVE_ELEMENT
 			#pragma shader_feature_local_fragment TVE_SUBSURFACE_ELEMENT
 			//SHADER INJECTION POINT BEGIN
+           //Nature Renderer (Instanced Indirect)
+           #include "Assets/Visual Design Cafe/Nature Renderer/Shader Includes/Nature Renderer.templatex"
+           #pragma instancing_options procedural:SetupNatureRenderer forwardadd
 			//SHADER INJECTION POINT END
 			  
 			struct TVEVisualData
