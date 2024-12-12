@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DiffusionProfileReferences:
-  - {fileID: 11400000, guid: 8ff64253f62dd1346a5038293d44fa39, type: 2}
+  - {fileID: 11400000, guid: 2384dbf2c1c420f45a792fbc315fbfb1, type: 2}
   m_MaterialReferences: []
 --- !u!21 &2100000
 Material:
@@ -43,6 +43,7 @@ Material:
   - TVE_PIVOT_OFF
   - TVE_SECOND_MASK_SAMPLE_MAIN_UV
   - TVE_SECOND_SAMPLE_MAIN_UV
+  - TVE_SUBSURFACE
   - TVE_THIRD_MASK_SAMPLE_MAIN_UV
   - TVE_THIRD_SAMPLE_MAIN_UV
   - TVE_TINTING_ELEMENT
@@ -851,7 +852,7 @@ Material:
     - _SubsurfaceDirectValue: 1
     - _SubsurfaceElementMode: 0
     - _SubsurfaceEnd: 1
-    - _SubsurfaceIntensityValue: 0
+    - _SubsurfaceIntensityValue: 1
     - _SubsurfaceMask: 1
     - _SubsurfaceMultiValue: 1
     - _SubsurfaceNormalValue: 0
