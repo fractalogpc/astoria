@@ -242,6 +242,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Noclip"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6a9525a-6aa7-40da-bb2a-3c5cbefc7a50"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -814,6 +823,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SwitchFireMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71eced42-9011-4617-b961-2ff4a740b735"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Noclip"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1992,6 +2012,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_KeyFour = m_Player.FindAction("KeyFour", throwIfNotFound: true);
         m_Player_KeyFive = m_Player.FindAction("KeyFive", throwIfNotFound: true);
         m_Player_KeySix = m_Player.FindAction("KeySix", throwIfNotFound: true);
+        m_Player_Noclip = m_Player.FindAction("Noclip", throwIfNotFound: true);
         // InventoryUI
         m_InventoryUI = asset.FindActionMap("InventoryUI", throwIfNotFound: true);
         m_InventoryUI_Navigate = m_InventoryUI.FindAction("Navigate", throwIfNotFound: true);
@@ -2110,6 +2131,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_KeyFour;
     private readonly InputAction m_Player_KeyFive;
     private readonly InputAction m_Player_KeySix;
+    private readonly InputAction m_Player_Noclip;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -2138,6 +2160,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @KeyFour => m_Wrapper.m_Player_KeyFour;
         public InputAction @KeyFive => m_Wrapper.m_Player_KeyFive;
         public InputAction @KeySix => m_Wrapper.m_Player_KeySix;
+        public InputAction @Noclip => m_Wrapper.m_Player_Noclip;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -2219,6 +2242,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeySix.started += instance.OnKeySix;
             @KeySix.performed += instance.OnKeySix;
             @KeySix.canceled += instance.OnKeySix;
+            @Noclip.started += instance.OnNoclip;
+            @Noclip.performed += instance.OnNoclip;
+            @Noclip.canceled += instance.OnNoclip;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -2295,6 +2321,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeySix.started -= instance.OnKeySix;
             @KeySix.performed -= instance.OnKeySix;
             @KeySix.canceled -= instance.OnKeySix;
+            @Noclip.started -= instance.OnNoclip;
+            @Noclip.performed -= instance.OnNoclip;
+            @Noclip.canceled -= instance.OnNoclip;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -2635,6 +2664,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnKeyFour(InputAction.CallbackContext context);
         void OnKeyFive(InputAction.CallbackContext context);
         void OnKeySix(InputAction.CallbackContext context);
+        void OnNoclip(InputAction.CallbackContext context);
     }
     public interface IInventoryUIActions
     {
