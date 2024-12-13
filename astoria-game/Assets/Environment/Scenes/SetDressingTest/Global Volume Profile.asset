@@ -191,6 +191,55 @@ MonoBehaviour:
   chromaticAbberationSampleCount:
     m_OverrideState: 0
     m_Value: 3
+--- !u!114 &-2542280454828330034
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56b145d2b9ee1ac4f846968484e7485a, type: 3}
+  m_Name: ContactShadows
+  m_EditorClassIdentifier: 
+  active: 1
+  quality:
+    m_OverrideState: 1
+    m_Value: 3
+  enable:
+    m_OverrideState: 0
+    m_Value: 0
+  length:
+    m_OverrideState: 0
+    m_Value: 0.241
+  opacity:
+    m_OverrideState: 0
+    m_Value: 1
+  distanceScaleFactor:
+    m_OverrideState: 0
+    m_Value: 1
+  maxDistance:
+    m_OverrideState: 0
+    m_Value: 50
+  minDistance:
+    m_OverrideState: 0
+    m_Value: 0
+  fadeDistance:
+    m_OverrideState: 0
+    m_Value: 5
+  fadeInDistance:
+    m_OverrideState: 0
+    m_Value: 0
+  rayBias:
+    m_OverrideState: 0
+    m_Value: 0.279
+  thicknessScale:
+    m_OverrideState: 0
+    m_Value: 0.799
+  m_SampleCount:
+    m_OverrideState: 1
+    m_Value: 32
 --- !u!114 &-2196993595927320363
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -694,6 +743,7 @@ MonoBehaviour:
   - {fileID: 7764266964956601013}
   - {fileID: 5250479290273050294}
   - {fileID: -2064404118069504999}
+  - {fileID: -2542280454828330034}
 --- !u!114 &4311325753440797400
 MonoBehaviour:
   m_ObjectHideFlags: 3
