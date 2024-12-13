@@ -13,12 +13,6 @@ public struct RecoilProfile
 	public float RecoilDegreeSecs;
 }
 
-public struct AllowedModes
-{
-	bool SemiAuto;
-	bool FullAuto;
-}
-
 public class GunLogic : CombatWeaponLogic
 {
 	[Header("Refs")]
@@ -33,7 +27,8 @@ public class GunLogic : CombatWeaponLogic
 	[SerializeField] private float _airDensityKgPerM = 1.1f;
 	[SerializeField] private float _dragCoefficient = 0.149f;
 	[Header("Weapon Settings")]
-	public AllowedModes AllowedFireModes;
+	public bool AllowFullAuto;
+	public bool AllowSemiAuto;
 	public FireMode CurrentFireMode;
 	public enum FireMode {
 		SemiAuto,
@@ -64,7 +59,6 @@ public class GunLogic : CombatWeaponLogic
 	}
 
 	protected override void AttackDown() {
-		print("called attack down");
 		_triggerDown = true;
 		if (!CanFire) return;
 		switch (CurrentFireMode) {
