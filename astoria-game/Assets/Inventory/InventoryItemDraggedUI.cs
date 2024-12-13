@@ -136,7 +136,6 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			Mathf.FloorToInt(localPoint.x / inventory.SlotSizeUnits),
 			Mathf.FloorToInt(localPoint.y / inventory.SlotSizeUnits)
 		);
-		print(slotIndex);
 		return slotIndex;
 	}
 }

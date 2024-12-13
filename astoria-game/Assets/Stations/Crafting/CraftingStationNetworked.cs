@@ -73,6 +73,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	}
 	// Attached to events in start
 	private void InputChanged(List<InventoryItem> items) {
+		print($"Can craft anything: {CanCraftAnything()}");
 		_craftButton.interactable = CanCraftAnything();
 	}
 	
@@ -86,7 +87,9 @@ public class CraftingStationNetworked : NetworkBehaviour
 	public bool TryCraft() {
 		List<InventoryItem> ingredients = GetIngredients();
 		foreach (RecipeData recipe in _recipes) {
+			print($"Checking recipe, ingredients: {ingredients}, recipe: {recipe._ingredients}");
 			if (!CheckRecipe(ingredients, recipe)) continue;
+			_ingredientInput.ClearItems();
 			SetOutput(_outputInventory, ItemsListToDatasList(SetListToItemsList(recipe._result)));
 			return true;
 		}
