@@ -3171,7 +3171,6 @@ GameObject:
   - component: {fileID: 8628136263926744832}
   - component: {fileID: 6613076594192004588}
   - component: {fileID: 7069476422261629523}
-  - component: {fileID: 5535410360205921770}
   - component: {fileID: 5077299882305822583}
   m_Layer: 12
   m_Name: Player
@@ -3429,14 +3428,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5535410360205921770}
-        m_TargetAssemblyTypeName: InitializePlayer, Assembly-CSharp
-        m_MethodName: InitializeLocalPlayer
-        m_Mode: 1
+      - m_Target: {fileID: 6964196041773474963}
+        m_TargetAssemblyTypeName: SetLayer, Assembly-CSharp
+        m_MethodName: SetLayers
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 8
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3444,7 +3443,7 @@ MonoBehaviour:
   OnNetworkedPlayerStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5535410360205921770}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InitializePlayer, Assembly-CSharp
         m_MethodName: InitializeNetworkedPlayer
         m_Mode: 1
@@ -3456,23 +3455,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5535410360205921770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6dfb169d892ca946a1ef91236f2cdee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  _playerWorldmodel: {fileID: 2040652133788255361}
-  _playerViewmodel: {fileID: 7164937338993327052}
 --- !u!114 &5077299882305822583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4325,6 +4307,7 @@ GameObject:
   - component: {fileID: 3084466898759909401}
   - component: {fileID: 7656132647285616417}
   - component: {fileID: 8213902068015065991}
+  - component: {fileID: 6964196041773474963}
   m_Layer: 14
   m_Name: Worldmodel
   m_TagString: Untagged
@@ -4399,6 +4382,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 3084466898759909401}
   _movementInput: {x: 0, y: 0}
+--- !u!114 &6964196041773474963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040652133788255361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2021c7cae122248c3ad00ac3fff904ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2096668428476676103
 GameObject:
   m_ObjectHideFlags: 0
