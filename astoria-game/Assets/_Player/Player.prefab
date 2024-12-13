@@ -3020,6 +3020,7 @@ GameObject:
   - component: {fileID: 1033706171325523888}
   - component: {fileID: 8628136263926744832}
   - component: {fileID: 6613076594192004588}
+  - component: {fileID: 7069476422261629523}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -3245,6 +3246,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7069476422261629523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574363177667902295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcba9fed344355148b3e1c048e3316b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  OnLocalPlayerStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2627650646237878555}
+        m_TargetAssemblyTypeName: CombatCore, Assembly-CSharp
+        m_MethodName: InitializeInputs
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnNetworkedPlayerStart:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0

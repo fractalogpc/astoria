@@ -72,10 +72,11 @@ public class InventoryComponent : MonoBehaviour
 			Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
 			CreateInvFromInventoryData(InventoryData);
 		}
-		
+		OnInventoryChange.Invoke(InventoryData.Items);
 	}
 	
 	private void OnDisable() {
+		if (InventoryData == null) return;
 		InventoryData.OnInventoryUpdate -= UpdateInventory;
 	}
 
@@ -208,11 +209,28 @@ public class InventoryComponent : MonoBehaviour
 			return false;
 		}
 		CreateItemPrefab(item, slotIndexBL);
-
-		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
 
+	/// <summary>
+	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
+	/// </summary>
+	/// <param name="item">The InventoryItem to place.</param>
+	/// <param name="positionSS">The position to place at in screen space.</param>
+	/// <returns></returns>
+	public bool TryPlaceItem(InventoryItem item, Vector2Int slotIndexBL) {
+		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
+		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
+		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
+		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
+		bool couldPlace = InventoryData.TryAddItemAtPosition(this, item, index);
+		if (couldPlace) {
+			CreateItemPrefab(item, index);
+			return true;
+		}
+		return false;
+	}
+	
 	/// <summary>
 	/// Attempts to add the items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
 	/// </summary>
@@ -255,8 +273,6 @@ public class InventoryComponent : MonoBehaviour
 			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
-
-		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
 	}
 	
@@ -267,7 +283,6 @@ public class InventoryComponent : MonoBehaviour
 			_inventoryItemPrefabInstances.Remove(itemUIInstance);
 			itemUIScript.RemoveSelfFromInventory();
 		}
-		OnInventoryChange.Invoke(InventoryData.Items);
 	}
 
 	private GameObject CreateItemPrefab(InventoryItem item, Vector2Int slotIndexBL) {
@@ -310,25 +325,7 @@ public class InventoryComponent : MonoBehaviour
 		return new Vector3(UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount), UnityEngine.Random.Range(-jitterAmount, jitterAmount));
 	}
 	
-	/// <summary>
-	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
-	/// </summary>
-	/// <param name="item">The InventoryItem to place.</param>
-	/// <param name="positionSS">The position to place at in screen space.</param>
-	/// <returns></returns>
-	public bool TryPlaceItem(InventoryItem item, Vector2Int slotIndexBL) {
-		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
-		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
-		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
-		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
-		bool couldPlace = InventoryData.TryAddItemAtPosition(this, item, index);
-		if (couldPlace) {
-			CreateItemPrefab(item, index);
-			return true;
-		}
 
-		return false;
-	}
 
 	public bool HighlightSlotsUnderItem(InventoryItem item, Vector2Int slotIndexBL) {
 		List<InventoryContainer> containersItemOverlaps = new();
