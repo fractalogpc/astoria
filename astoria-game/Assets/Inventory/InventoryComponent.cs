@@ -21,6 +21,9 @@ public class InventoryComponent : MonoBehaviour
 
 	public Vector2Int AssignedInventorySize => _assignedInventorySize;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
+	/// <summary>
+	/// Includes a list of the InventoryItems in the inventory.
+	/// </summary>
 	public UnityEvent<List<InventoryItem>> OnInventoryChange;
 
 
@@ -171,6 +174,14 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Get all the item instances in the inventory.
+	/// </summary>
+	/// <returns>A list of all the InventoryItems in the inventory.</returns>
+	public List<InventoryItem> GetItems() {
+		return InventoryData.Items;
+	}
+	
+	/// <summary>
 	/// Finds whether there are count instances or more of the item in the inventory.
 	/// </summary>
 	/// <param name="itemData">The ItemData to match against.</param>
@@ -189,7 +200,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
-	public bool TryAddItemsByData(ItemData itemData) {
+	public bool TryAddItemByData(ItemData itemData) {
 		InventoryItem item = new(itemData);
 		if (!InventoryData.TryAddItem(this, item, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
@@ -211,7 +222,7 @@ public class InventoryComponent : MonoBehaviour
 		int itemsPlaced = 0;
 		if (items.Count == 0) return 0;
 		foreach (ItemData item in items) {
-			if (!TryAddItemsByData(item)) {
+			if (!TryAddItemByData(item)) {
 				Debug.LogWarning($"Could not add item {item.ItemName} to {gameObject.name}.");
 				continue;
 			}
@@ -247,6 +258,16 @@ public class InventoryComponent : MonoBehaviour
 
 		OnInventoryChange.Invoke(InventoryData.Items);
 		return true;
+	}
+	
+	public void ClearItems() {
+		for (int i = _inventoryItemPrefabInstances.Count - 1; i >= 0; i--) {
+			GameObject itemUIInstance = _inventoryItemPrefabInstances[i];
+			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
+			_inventoryItemPrefabInstances.Remove(itemUIInstance);
+			itemUIScript.RemoveSelfFromInventory();
+		}
+		OnInventoryChange.Invoke(InventoryData.Items);
 	}
 
 	private GameObject CreateItemPrefab(InventoryItem item, Vector2Int slotIndexBL) {
