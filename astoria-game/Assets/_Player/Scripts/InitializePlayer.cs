@@ -1,7 +1,7 @@
 using Mirror;
 using UnityEngine;
 
-public class InitalizePlayer : NetworkBehaviour
+public class InitializePlayer : NetworkBehaviour
 {
   [SerializeField] private GameObject _playerWorldmodel;
   [SerializeField] private GameObject _playerViewmodel;
@@ -9,7 +9,7 @@ public class InitalizePlayer : NetworkBehaviour
     SetLayerAllChildren(_playerWorldmodel.transform, LayerMask.NameToLayer("LocalPlayerWorldmodel"));
     SetLayerAllChildren(_playerViewmodel.transform, LayerMask.NameToLayer("LocalPlayerViewmodel"));
   }
-  public void InitalizeNetworkedPlayer() {
+  public void InitializeNetworkedPlayer() {
     Debug.Log($"{gameObject.name} is a networked player. Use this method to disable objects that are not needed for networked players.");
   }
   
