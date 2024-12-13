@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class TogglePlayerInventoryUI : InputHandlerBase
 {
-  private bool _isInventoryOpen = false;
+  public bool IsInventoryOpen { get; private set; }
   [SerializeField] private CanvasGroup _inventoryCanvasGroup;
 
   protected override void InitializeActionMap()
@@ -16,11 +16,11 @@ public class TogglePlayerInventoryUI : InputHandlerBase
     
   private void SetVisibility(bool show)
   {
-    _isInventoryOpen = show;
+    IsInventoryOpen = show;
     _inventoryCanvasGroup.alpha = show ? 1 : 0;
     _inventoryCanvasGroup.blocksRaycasts = show;
     _inventoryCanvasGroup.interactable = show;
-    _isInventoryOpen = show;
+    IsInventoryOpen = show;
     if (show) {
       Cursor.visible = true;
       Cursor.lockState = CursorLockMode.None;

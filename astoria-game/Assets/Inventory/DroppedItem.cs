@@ -9,7 +9,7 @@ public class DroppedItem : Interactable
 
   public override void Interact() {
     // Add the item to the player's inventory.
-    NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemsByData(Item);
+    NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(Item);
     // Destroy the game object.
     Destroy(gameObject);
   }
