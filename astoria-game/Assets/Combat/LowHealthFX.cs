@@ -8,14 +8,14 @@ using UnityEngine.Rendering;
 /// </summary>
 public class LowHealthFX : MonoBehaviour
 {
-    private CombatHealth _health;
+    private NetworkedHealth _health;
     [SerializeField] private Volume _lowHealthEffects;
     [Header("Effect Strength over percentage of health gone")]
     [SerializeField] private AnimationCurve _lowHealthStartCurve;
     
     private void Start() {
         if (_health == null) {
-            _health = GameObject.FindWithTag("Player").GetComponent<CombatHealth>();
+            _health = GameObject.FindWithTag("Player").GetComponent<NetworkedHealth>();
         }
         _health.OnHealthChanged.AddListener(OnHealthChanged);
     }

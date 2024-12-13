@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// If you run into issues with damaging, make sure that the damage is applied on the server.
 /// </summary>
 [RequireComponent(typeof(NetworkIdentity))]
-public class CombatHealth : NetworkBehaviour
+public class NetworkedHealth : NetworkBehaviour
 {
     [SyncVar(hook = nameof(HookHealthChanged))] private int _health = 100;
     [SerializeField] private int _maxHealth = 100;

@@ -125,7 +125,7 @@ public class GunLogic : CombatWeaponLogic
 		Debug.Log($"Hit {hit.collider.name} at {hit.point}");
 		ProjectileHittable hittable = hit.collider.gameObject.transform.GetComponentInChildren<ProjectileHittable>();
 		if (hittable == null) return;
-		hittable.HitWithProjectile();
+		hittable.HitWithProjectile(_damage);
 	}
 
 	private void Update() {

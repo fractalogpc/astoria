@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 5979262334654025993}
   - component: {fileID: 1409892459778545822}
   - component: {fileID: 5766862799214582231}
-  - component: {fileID: 5735882105936502605}
   m_Layer: 0
   m_Name: Bot
   m_TagString: Untagged
@@ -205,19 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnProjectileHit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5735882105936502605}
-        m_TargetAssemblyTypeName: Health, Assembly-CSharp
-        m_MethodName: TakeDamage
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 35
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &5766862799214582231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,17 +222,3 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &5735882105936502605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3760465668120940848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b888aef48034c9408e4f0ba84c6a0a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 100
-  _currentHealth: 0

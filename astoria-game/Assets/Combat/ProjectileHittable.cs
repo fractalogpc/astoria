@@ -4,12 +4,12 @@ using UnityEngine.Events;
 public class ProjectileHittable : MonoBehaviour
 {
     /// <summary>
-    /// Called by GunLogic.
+    /// Called by GunLogic. Contains float damage.
     /// </summary>
-    public UnityEvent OnProjectileHit;
+    public UnityEvent<float> OnProjectileHit;
 
-    public void HitWithProjectile() {
+    public void HitWithProjectile(float damage) {
         Debug.Log($"{gameObject.name} hit with projectile.");
-        OnProjectileHit?.Invoke();
+        OnProjectileHit?.Invoke(damage);
     }
 }
