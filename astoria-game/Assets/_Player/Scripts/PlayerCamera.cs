@@ -15,7 +15,6 @@ namespace Player
     [HideInInspector] public Quaternion PlayerYLookQuaternion = Quaternion.identity;
 
     [HideInInspector] public float CameraXRotation = 0;
-    [HideInInspector] public float CameraYRotation = 0;
     private Vector2 _mouseInput;
 
     protected override void InitializeActionMap()
@@ -49,8 +48,6 @@ namespace Player
       CameraXLook();
       Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
       CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
-
-      CameraYRotation = _playerTransform.rotation.eulerAngles.y;
     }
   }
 }

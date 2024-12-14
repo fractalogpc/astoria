@@ -198,10 +198,10 @@ namespace Player
       // Orientate the moveDirection vector with the Camera's Y axis
       // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
 
-      Vector3 move = _moveInputVector * _currentMaxSpeed * Time.deltaTime;
-      transform.position += move;
+        Vector3 move = _moveInputVector * _currentMaxSpeed * Time.deltaTime;
+        transform.position += move;
 
-      transform.rotation = PlayerCamera.PlayerYLookQuaternion;
+        transform.rotation = PlayerCamera.PlayerYLookQuaternion;
     }
 
     private Quaternion _nextFrameRotation = Quaternion.identity;
