@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public abstract class CombatWeaponLogic : NetworkedInputHandlerBase
 {
+	public WeaponInstance WeaponInstance;
+	
 	protected override void InitializeActionMap() {
 		// if (!isLocalPlayer) {
 		// 	Debug.LogWarning("CombatWeaponLogic: LocalPlayerIndicator always false. This needs to be fixed for multiplayer");

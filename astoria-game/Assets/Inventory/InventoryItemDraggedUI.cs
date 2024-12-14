@@ -83,7 +83,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Used with InventoryEquipableSlot. It doesn't have an InventoryComponent or InventoryItemUI.
+	/// Used with WeaponEquipSlot. It doesn't have an InventoryComponent or InventoryItemUI.
 	/// </summary>
 	/// <param name="item">The item this draggable will hold.</param>
 	public void InitializeWithSlot(InventoryEquipableSlot slot, InventoryItem item) {

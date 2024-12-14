@@ -9,8 +9,9 @@ public class CombatWeaponLogicManager : MonoBehaviour
 {
 	[SerializeField] private Transform _weaponLogicParent;
 	[SerializeField][ReadOnly] private GameObject _currentWeaponLogic;
-	public GameObject AddWeaponLogic(GameObject weaponLogicPrefab) {
-		GameObject newLogic = Instantiate(weaponLogicPrefab, _weaponLogicParent);
+	public GameObject AddWeaponLogic(WeaponInstance instance) {
+		GameObject newLogic = Instantiate(instance.ConstantData.LogicPrefab, _weaponLogicParent);
+		newLogic.GetComponentInChildren<CombatWeaponLogic>().WeaponInstance = instance;
 		newLogic.SetActive(false);
 		return newLogic;
 	}

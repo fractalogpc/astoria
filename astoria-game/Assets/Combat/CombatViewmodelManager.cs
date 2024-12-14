@@ -36,8 +36,9 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// </summary>
 	/// <param name="viewmodelPrefab">The viewmodel prefab to instantiate.</param>
 	/// <returns>The viewmodel instance.</returns>
-	public GameObject AddViewmodel(GameObject viewmodelPrefab) {
-		GameObject viewmodel = Instantiate(viewmodelPrefab, _viewmodelParent);
+	public GameObject AddViewmodel(WeaponInstance instance) {
+		GameObject viewmodel = Instantiate(instance.ConstantData.ViewmodelPrefab, _viewmodelParent);
+		viewmodel.GetComponentInChildren<CombatViewmodel>().WeaponInstance = instance;
 		viewmodel.SetActive(false);
 		return viewmodel;
 	}

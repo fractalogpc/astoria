@@ -16,68 +16,35 @@ using UnityEngine;
 /// </summary>
 
 [RequireComponent(typeof(CombatInventory))]
-public class CombatCore : NetworkedInputHandlerBase
+public class CombatCore : NetworkBehaviour
 {
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
     [SerializeField] private CombatWeaponLogicManager _combatWeaponLogicManager;
-    [SerializeField] private List<CombatWeapon> _weaponInstances = new List<CombatWeapon>();
+    [SerializeField] private List<WeaponInstance> _weaponInstances = new List<WeaponInstance>();
     
-    // These should be handled by the CombatInventory
-    [SerializeField] private WeaponData DebugPrimary;
-    [SerializeField] private WeaponData DebugPistol;
-    [SerializeField] private WeaponData DebugSpecial;
-    
-    private CombatWeapon _primaryWeapon;
-    private CombatWeapon _secondaryWeapon;
-    private CombatWeapon _specialWeapon;
-    
-    protected override void InitializeActionMap() {
-        // Unused so InitializeInputs can be called by LocalPlayerIndicator when ready.
+    /// <summary>
+    /// Use this to create weapon instances. Never call the constructor directly.
+    /// </summary>
+    /// <param name="data">The data to create the instance from.</param>
+    /// <returns>The weapon instance that was created.</returns>
+    public WeaponInstance CreateWeaponInstance(WeaponData data) {
+        WeaponInstance instance = new WeaponInstance(data);
+        GameObject viewmodel = _combatViewmodelManager.AddViewmodel(instance);
+        instance.WeaponViewmodelInstance = viewmodel;
+        GameObject logic = _combatWeaponLogicManager.AddWeaponLogic(instance);
+        instance.WeaponLogicInstance = logic;
+        _weaponInstances.Add(instance);
+        return instance;
     }
-    
-    public void InitializeInputs() {
-        LocalPlayerIndicator localPlayerIndicator = GetComponentInParent<LocalPlayerIndicator>();
-        if (!localPlayerIndicator.IsLocalClientPlayer) {
-            Debug.Log($"{localPlayerIndicator.gameObject.name} CombatCore: Skipping initialization of inputs for network player.");
-            return;
-        }
-        RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipPrimary());
-        RegisterAction(_inputActions.Player.EquipSecondary, ctx => EquipSecondary());
-        RegisterAction(_inputActions.Player.EquipSpecial, ctx => EquipSpecial());
-    }
-
-    private void Start() {
-        if (DebugPrimary != null) _primaryWeapon = RegisterWeaponByData(DebugPrimary);
-        if (DebugPistol != null) _secondaryWeapon = RegisterWeaponByData(DebugPistol);
-        if (DebugSpecial != null) _specialWeapon = RegisterWeaponByData(DebugSpecial);
-    }
-    private void EquipPrimary() {
-        print("Equipping primary weapon.");
-        EquipWeapon(_primaryWeapon);
-    }
-    private void EquipSecondary() {
-        EquipWeapon(_secondaryWeapon);
-    }
-    private void EquipSpecial() {
-        EquipWeapon(_specialWeapon);
-    }
-    
-    public CombatWeapon RegisterWeaponByData(WeaponData data) {
-        GameObject viewmodel = _combatViewmodelManager.AddViewmodel(data.ViewmodelPrefab);
-        GameObject logic = _combatWeaponLogicManager.AddWeaponLogic(data.LogicPrefab);
-        CombatWeapon weapon = new(data, viewmodel, logic);
-        _weaponInstances.Add(weapon);
-        return weapon;
-    }
-    public void RegisterWeapon(CombatWeapon weapon) {
-        _weaponInstances.Add(weapon);
-        _combatViewmodelManager.AddViewmodel(weapon.WeaponViewmodelInstance);
-        _combatWeaponLogicManager.AddWeaponLogic(weapon.WeaponLogicInstance);
-    }
-    public bool EquipWeapon(CombatWeapon weapon) {
-        if (_weaponInstances.Contains(weapon)) {
-            _combatViewmodelManager.SetCurrentViewmodelTo(weapon.WeaponViewmodelInstance);
-            _combatWeaponLogicManager.SetCurrentWeaponLogicTo(weapon.WeaponLogicInstance);
+    /// <summary>
+    /// Equips a weapon instance.
+    /// </summary>
+    /// <param name="weaponInstanceItem">The weapon instance to equip.</param>
+    /// <returns>Whether equipping was successful.</returns>
+    public bool EquipWeapon(WeaponInstance weaponInstanceItem) {
+        if (_weaponInstances.Contains(weaponInstanceItem)) {
+            _combatViewmodelManager.SetCurrentViewmodelTo(weaponInstanceItem.WeaponViewmodelInstance);
+            _combatWeaponLogicManager.SetCurrentWeaponLogicTo(weaponInstanceItem.WeaponLogicInstance);
             return true;
         }
         return false;

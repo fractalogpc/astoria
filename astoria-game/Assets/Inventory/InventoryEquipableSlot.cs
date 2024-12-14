@@ -17,9 +17,9 @@ public class InventoryEquipableSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _itemText;
     [ReadOnly][SerializeField] private ClickableEvents _clickableEvents;
     [ReadOnly][SerializeField] private GameObject _draggablePrefab;
-    private GameObject _draggedInstance;    
+    private GameObject _draggedInstance;
     
-    public bool TryAddToSlot(InventoryItem item) {
+    public virtual bool TryAddToSlot(InventoryItem item) {
         if (HeldItem != null) {
             return false;
         }
@@ -27,13 +27,23 @@ public class InventoryEquipableSlot : MonoBehaviour
         _itemImage.sprite = item.ItemData.ItemIcon;
         _itemImage.color = Color.white;
         _itemText.text = item.ItemData.ItemName;
+        OnSlotChanged.Invoke();
         return true;
+    }
+    
+    public virtual void OnRemove() {
+        if (HeldItem == null) return;
+        InstantiateDraggedItem();
+        _itemImage.sprite = null;
+        _itemImage.color = Color.clear;
+        _itemText.text = "";
+        HeldItem = null;
     }
     
     private void GetReferences() {
         _clickableEvents = GetComponent<ClickableEvents>();
         if (_draggablePrefab == null) {
-            Debug.LogError("InventoryEquipableSlot: Draggable prefab is null! This should be assigned in the script default references.");
+            Debug.LogError("WeaponEquipSlot: Draggable prefab is null! This should be assigned in the script default references.");
         }
     }
 
@@ -47,22 +57,13 @@ public class InventoryEquipableSlot : MonoBehaviour
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
-        _clickableEvents.OnClickDownSelected.AddListener(OnClickedSelected);
+        _clickableEvents.OnClickDownSelected.AddListener(OnRemove);
         _clickableEvents.OnClickUpAnywhere.AddListener(OnClickUpAnywhere);
     }
 
     private void OnDisable() {
-        _clickableEvents.OnClickDownSelected.RemoveListener(OnClickedSelected);
+        _clickableEvents.OnClickDownSelected.RemoveListener(OnRemove);
         _clickableEvents.OnClickUpAnywhere.RemoveListener(OnClickUpAnywhere);
-    }
-
-    private void OnClickedSelected() {
-        if (HeldItem == null) return;
-        InstantiateDraggedItem();
-        _itemImage.sprite = null;
-        _itemImage.color = Color.clear;
-        _itemText.text = "";
-        HeldItem = null;
     }
     
     private void OnClickUpAnywhere() {

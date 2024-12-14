@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class CombatViewmodel : MonoBehaviour
 {
+    public WeaponInstance WeaponInstance;
+    
     [SerializeField] private Animator _animator;
     [SerializeField] private AnimationClip _idleAnimation;
     [SerializeField] private AnimationClip _walkAnimation;
