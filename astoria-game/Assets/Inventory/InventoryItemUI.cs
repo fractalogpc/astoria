@@ -79,7 +79,7 @@ public class InventoryItemUI : MonoBehaviour
 		// Parented to whole canvas
 		_draggedInstance = Instantiate(_inventoryItemDraggedPrefab, _rectTransform.GetComponentInParent<Canvas>().transform);
 		InventoryItemDraggedUI script = _draggedInstance.GetComponent<InventoryItemDraggedUI>();
-		script.Initialize(_parentInventory, Item, this);
+		script.InitializeWithInventory(_parentInventory, Item, this);
 	}
 
 	public void ResetToOriginalPosition() {
