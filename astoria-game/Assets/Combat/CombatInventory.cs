@@ -81,6 +81,7 @@ public class CombatInventory : InputHandlerBase
         switch (slot) {
             case WeaponSlot.PrimarySlot:
                 weaponInstanceItem = _primaryWeaponInstance;
+                _combatCore.
                 _primaryWeaponInstance = null;
                 break;
             case WeaponSlot.SecondarySlot:

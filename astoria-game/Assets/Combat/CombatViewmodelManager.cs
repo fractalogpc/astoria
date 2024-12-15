@@ -34,13 +34,18 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// <summary>
 	/// Instantiates a new viewmodel prefab. The instance starts disabled.
 	/// </summary>
-	/// <param name="viewmodelPrefab">The viewmodel prefab to instantiate.</param>
+	/// <param name="instance">The weapon instance to create a viewmodel for.</param>
 	/// <returns>The viewmodel instance.</returns>
 	public GameObject AddViewmodel(WeaponInstance instance) {
-		GameObject viewmodel = Instantiate(instance.ConstantData.ViewmodelPrefab, _viewmodelParent);
+		GameObject viewmodel = Instantiate(instance.WeaponData.ViewmodelPrefab, _viewmodelParent);
 		viewmodel.GetComponentInChildren<CombatViewmodel>().WeaponInstance = instance;
 		viewmodel.SetActive(false);
 		return viewmodel;
+	}
+	public bool RemoveViewmodel(GameObject viewmodelInstance) {
+		if (!ViewmodelInstanceExists(viewmodelInstance)) return false;
+		Destroy(viewmodelInstance);
+		return true;
 	}
 	private bool ViewmodelInstanceExists(GameObject viewmodelInstance) {
 		foreach (Transform child in _viewmodelParent) {

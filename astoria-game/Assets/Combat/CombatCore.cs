@@ -36,6 +36,13 @@ public class CombatCore : NetworkBehaviour
         _weaponInstances.Add(instance);
         return instance;
     }
+    public bool RemoveWeapon(WeaponInstance weaponInstance) {
+        _combatViewmodelManager.RemoveViewmodel(weaponInstance.WeaponViewmodelInstance);
+        GameObject logic = _combatWeaponLogicManager.AddWeaponLogic(instance);
+        instance.WeaponLogicInstance = logic;
+        _weaponInstances.Add(instance);
+        return instance;
+    }
     /// <summary>
     /// Equips a weapon instance.
     /// </summary>

@@ -7,41 +7,41 @@ using UnityEngine;
 /// </summary>
 public class CombatWeaponLogicManager : MonoBehaviour
 {
-	[SerializeField] private Transform _weaponLogicParent;
-	[SerializeField][ReadOnly] private GameObject _currentWeaponLogic;
-	public GameObject AddWeaponLogic(WeaponInstance instance) {
-		GameObject newLogic = Instantiate(instance.ConstantData.LogicPrefab, _weaponLogicParent);
-		newLogic.GetComponentInChildren<CombatWeaponLogic>().WeaponInstance = instance;
-		newLogic.SetActive(false);
-		return newLogic;
-	}
-	public GameObject GetCurrentWeaponLogic() {
-		return _currentWeaponLogic;
-	}
-	public bool WeaponLogicInstanceExists(GameObject weaponLogicInstance) {
-		foreach (Transform child in _weaponLogicParent) {
-			if (child.gameObject == weaponLogicInstance) {
-				return true;
-			}
-		}
-		return false;
-	}
-	public bool SetCurrentWeaponLogicTo(GameObject weaponLogicInstance) {
-		if (_weaponLogicParent.childCount > 0) {
-			DisableAllWeaponLogic();
-		}
-		if (!WeaponLogicInstanceExists(weaponLogicInstance)) {
-			Debug.LogError($"CombatWeaponLogicManager: Could not find weapon logic {weaponLogicInstance.name}.");
-			return false;
-		}
-		weaponLogicInstance.SetActive(true);
-		_currentWeaponLogic = weaponLogicInstance;
-		return true;
-	}
-	public void DisableAllWeaponLogic() {
-		foreach (Transform child in _weaponLogicParent) {
-			child.gameObject.SetActive(false);
-		}
-	}
-	
+	// [SerializeField] private Transform _weaponLogicParent;
+	// [SerializeField][ReadOnly] private GameObject _currentWeaponLogic;
+	// public GameObject AddWeaponLogic(WeaponInstance instance) {
+	// 	GameObject newLogic = Instantiate(instance.ConstantData.LogicPrefab, _weaponLogicParent);
+	// 	newLogic.GetComponentInChildren<CombatWeaponLogic>().WeaponInstance = instance;
+	// 	newLogic.SetActive(false);
+	// 	return newLogic;
+	// }
+	// public GameObject GetCurrentWeaponLogic() {
+	// 	return _currentWeaponLogic;
+	// }
+	// public bool WeaponLogicInstanceExists(GameObject weaponLogicInstance) {
+	// 	foreach (Transform child in _weaponLogicParent) {
+	// 		if (child.gameObject == weaponLogicInstance) {
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// }
+	// public bool SetCurrentWeaponLogicTo(GameObject weaponLogicInstance) {
+	// 	if (_weaponLogicParent.childCount > 0) {
+	// 		DisableAllWeaponLogic();
+	// 	}
+	// 	if (!WeaponLogicInstanceExists(weaponLogicInstance)) {
+	// 		Debug.LogError($"CombatWeaponLogicManager: Could not find weapon logic {weaponLogicInstance.name}.");
+	// 		return false;
+	// 	}
+	// 	weaponLogicInstance.SetActive(true);
+	// 	_currentWeaponLogic = weaponLogicInstance;
+	// 	return true;
+	// }
+	// public void DisableAllWeaponLogic() {
+	// 	foreach (Transform child in _weaponLogicParent) {
+	// 		child.gameObject.SetActive(false);
+	// 	}
+	// }
+	//
 }

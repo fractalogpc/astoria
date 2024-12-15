@@ -1,18 +1,19 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// A base class that any weapon should inherit from. 
+/// </summary>
 [Serializable]
-public class WeaponInstance
+public class WeaponInstance : ItemInstance
 {
-    public WeaponData ConstantData;
+    public WeaponData WeaponData => (WeaponData) ItemData;
+    public WeaponType WeaponType;
     public GameObject WeaponViewmodelInstance;
-    public GameObject WeaponLogicInstance;
+
+    public WeaponInstance(WeaponData weaponData) : base(weaponData) {
+        WeaponType = weaponData.WeaponType;
+    }
     
-    public WeaponInstance(WeaponData data) {
-        ConstantData = data;
-    }
-    public WeaponInstance(WeaponData data, GameObject viewmodelInstance, GameObject weaponLogicInstance) {
-        WeaponViewmodelInstance = viewmodelInstance;
-        WeaponLogicInstance = weaponLogicInstance;
-    }
+    
 }

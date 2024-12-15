@@ -71,7 +71,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     }
   }
 
-  private void UpdateText(List<InventoryItem> items = null)
+  private void UpdateText(List<ItemInstance> items = null)
   {
     string errorText = "";
     _canCraft = _constructionCore.CanGiveObject(datas[Index], out errorText);

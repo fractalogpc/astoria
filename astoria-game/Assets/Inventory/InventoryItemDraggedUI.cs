@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [AddComponentMenu("")]
 public class InventoryItemDraggedUI : MonoBehaviour
 {
-	public InventoryItem Item { get; private set; }
+	public ItemInstance ItemInstance { get; private set; }
 	private InventoryItemUI _itemUI;
 
 	[SerializeField] private RectTransform _rectTransform;
@@ -51,7 +51,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		if (_currentInventoryAbove != null)
 		{
 			_startingInventory?.ResetAllContainerHighlights();
-			_currentInventoryAbove.HighlightSlotsUnderItem(Item, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
+			_currentInventoryAbove.HighlightSlotsUnderItem(ItemInstance, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
 		if (Input.GetKeyDown(KeyCode.R))
 		{
@@ -61,7 +61,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
 	private void RotateItem()
 	{
-		Item.Rotated = !Item.Rotated;
+		ItemInstance.Rotated = !ItemInstance.Rotated;
 		SetVisualSize();
 	}
 	
@@ -69,14 +69,14 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// Used on inventory components.
 	/// </summary>
 	/// <param name="originalInventory">The inventory that the InventoryUI spawning the object belongs to.</param>
-	/// <param name="item">The item this draggable holds.</param>
+	/// <param name="itemInstance">The item this draggable holds.</param>
 	/// <param name="itemUI">The InventoryUI that this object was spawned by.</param>
-	public void InitializeWithInventory(InventoryComponent originalInventory, InventoryItem item, InventoryItemUI itemUI)
+	public void InitializeWithInventory(InventoryComponent originalInventory, ItemInstance itemInstance, InventoryItemUI itemUI)
 	{
 		_itemUI = itemUI;
-		Item = item;
+		ItemInstance = itemInstance;
 		_startingInventory = originalInventory;
-		_itemIconImage.sprite = Item.ItemData.ItemIcon;
+		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
 		SetVisualSize();
 		_followMouse = true;
 		_canvasGroup.alpha = 0;
@@ -85,11 +85,11 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <summary>
 	/// Used with WeaponEquipSlot. It doesn't have an InventoryComponent or InventoryItemUI.
 	/// </summary>
-	/// <param name="item">The item this draggable will hold.</param>
-	public void InitializeWithSlot(InventoryEquipableSlot slot, InventoryItem item) {
+	/// <param name="itemInstance">The item this draggable will hold.</param>
+	public void InitializeWithSlot(InventoryEquipableSlot slot, ItemInstance itemInstance) {
 		_startingSlot = slot;
-		Item = item;
-		_itemIconImage.sprite = Item.ItemData.ItemIcon;
+		ItemInstance = itemInstance;
+		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
 		SetVisualSize();
 		_followMouse = true;
 		_canvasGroup.alpha = 0;
@@ -98,15 +98,15 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	private void SetVisualSize()
 	{
 		if (_startingInventory != null) {
-			_rectTransform.sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits / 2, Item.Size.y * _startingInventory.SlotSizeUnits / 2);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Item.Size.x * _startingInventory.SlotSizeUnits, Item.Size.y * _startingInventory.SlotSizeUnits);
+			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits, ItemInstance.Size.y * _startingInventory.SlotSizeUnits);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits / 2, ItemInstance.Size.y * _startingInventory.SlotSizeUnits / 2);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits, ItemInstance.Size.y * _startingInventory.SlotSizeUnits);
 		}
 		else {
 			Debug.LogWarning("Make item slot size some kind of global variable, and make sure to refactor everything to use it when you do. Currently 96px.");
-			_rectTransform.sizeDelta = new Vector2(Item.Size.x * 96, Item.Size.y * 96);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(Item.Size.x * 96f / 2f, Item.Size.y * 96f / 2f);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Item.Size.x * 96, Item.Size.y * 96);
+			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * 96, ItemInstance.Size.y * 96);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * 96f / 2f, ItemInstance.Size.y * 96f / 2f);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * 96, ItemInstance.Size.y * 96);
 		}
 	}
 
@@ -132,8 +132,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			// Started from a slot
 			else {
 				Vector2Int slotIndex = GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition);
-				if (!_currentInventoryAbove.TryPlaceItem(Item, slotIndex)) {
-					if (!_startingSlot.TryAddToSlot(Item)) {
+				if (!_currentInventoryAbove.TryPlaceItem(ItemInstance, slotIndex)) {
+					if (!_startingSlot.TryAddToSlot(ItemInstance)) {
 						Debug.LogError("InventoryItemDraggedUI: Could not return item to slot. Check for unexpected draggable or slot logic.");
 					}
 				}
@@ -144,7 +144,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		}
 		// Over an equipable slot
 		if (overSlot) {
-			if (slot.TryAddToSlot(Item))
+			if (slot.TryAddToSlot(ItemInstance))
 			{
 				_itemUI?.RemoveSelfFromInventory();
 				Destroy(gameObject);
@@ -157,7 +157,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		}
 		// Over nothing
 		_startingInventory?.ResetAllContainerHighlights();
-		_startingInventory?.SpawnDroppedItem(Item);
+		_startingInventory?.SpawnDroppedItem(ItemInstance);
 		_itemUI?.RemoveSelfFromInventory();
 		Destroy(gameObject);
 		return false;
@@ -201,7 +201,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionSS)
 	{
 		// Add an offset to get the position of the bottom left grid slot of the item.
-		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / Item.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / Item.Size.y / 2);
+		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / ItemInstance.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / ItemInstance.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
 		Vector2 localPoint = inventoryRect.InverseTransformPoint(positionSS) + new Vector3(inventoryRect.sizeDelta.x / 2, inventoryRect.sizeDelta.y / 2, 0);
 		// print("item anchored pos" + positionSS);
