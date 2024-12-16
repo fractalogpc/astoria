@@ -2533,7 +2533,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1461429624}
+  - {fileID: 388419091}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3013,6 +3013,62 @@ MonoBehaviour:
   maxDistanceFromParent: 0
   sdfClamp: 0
   weightRange: {x: 0, y: 999999}
+--- !u!21 &388419091
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Element
+  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    ElementType: Form
+  disabledShaderPasses:
+  - VolumePass
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _TerrainHeightTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainNormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CategoryElement: 1
+    - _CategoryFade: 1
+    - _ElementIntensity: 1
+    - _ElementLayerMask: 1
+    - _ElementLayerMessage: 0
+    - _ElementLayerWarning: 0
+    - _ElementMessage: 0
+    - _ElementVolumeFadeMode: 0
+    - _ElementVolumeFadeValue: 0.75
+    - _EndElement: 1
+    - _EndFade: 1
+    - _EndRender: 1
+    - _HeightOffsetValue: 0
+    - _IsElementShader: 1
+    - _IsVersion: 2030
+    - _RenderCategory: 1
+    m_Colors:
+    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _TerrainSize: {r: 1000, g: 600, b: 1000, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &440187052
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,14 +3589,6 @@ PrefabInstance:
       propertyPath: sceneId
       value: 1213033093
       objectReference: {fileID: 0}
-    - target: {fileID: 564435167005534436, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
-      propertyPath: m_ProbeSettings.timeSlicing
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 741273306057987160, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 916802654918332166, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3588,10 +3636,6 @@ PrefabInstance:
     - target: {fileID: 3629593839374956622, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_Name
       value: Systems
-      objectReference: {fileID: 0}
-    - target: {fileID: 7313327821601961810, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6701,62 +6745,6 @@ MonoBehaviour:
   maxDistanceFromParent: 0
   sdfClamp: 0
   weightRange: {x: 0, y: 999999}
---- !u!21 &1461429624
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Element
-  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    ElementType: Form
-  disabledShaderPasses:
-  - VolumePass
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _TerrainHeightTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TerrainNormalTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _CategoryElement: 1
-    - _CategoryFade: 1
-    - _ElementIntensity: 1
-    - _ElementLayerMask: 1
-    - _ElementLayerMessage: 0
-    - _ElementLayerWarning: 0
-    - _ElementMessage: 0
-    - _ElementVolumeFadeMode: 0
-    - _ElementVolumeFadeValue: 0.75
-    - _EndElement: 1
-    - _EndFade: 1
-    - _EndRender: 1
-    - _HeightOffsetValue: 0
-    - _IsElementShader: 1
-    - _IsVersion: 2030
-    - _RenderCategory: 1
-    m_Colors:
-    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _TerrainSize: {r: 1000, g: 600, b: 1000, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &1479564076
 GameObject:
   m_ObjectHideFlags: 0
