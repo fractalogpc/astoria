@@ -3501,6 +3501,10 @@ PrefabInstance:
       propertyPath: sceneId
       value: 1213033093
       objectReference: {fileID: 0}
+    - target: {fileID: 741273306057987160, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 916802654918332166, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6735,16 +6739,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stampVersion: 1
   prototype:
-    prototype: {fileID: 1078660707179852, guid: d3c9d0f652fa2454eb70f623ca29ddc4, type: 3}
+    prototype: {fileID: 9097273878455740967, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
     alignToGround: 0
-    density: 0.57
+    density: 2
     dryColor: {r: 1, g: 1, b: 1, a: 1}
     healthyColor: {r: 1, g: 1, b: 1, a: 1}
     holeEdgePadding: 0
-    minWidth: 1
-    maxWidth: 2
-    minHeight: 1
-    maxHeight: 2
+    minWidth: 4
+    maxWidth: 4
+    minHeight: 4
+    maxHeight: 4
     noiseSeed: 0
     noiseSpread: 1
     positionJitter: 0
@@ -8152,62 +8156,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1767715992
-Material:
-  serializedVersion: 8
+--- !u!1001 &1793829646
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Element
-  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    ElementType: Form
-  disabledShaderPasses:
-  - VolumePass
-  m_LockedProperties: 
-  m_SavedProperties:
+  serializedVersion: 2
+  m_Modification:
     serializedVersion: 3
-    m_TexEnvs:
-    - _TerrainHeightTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TerrainNormalTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _CategoryElement: 1
-    - _CategoryFade: 1
-    - _ElementIntensity: 1
-    - _ElementLayerMask: 1
-    - _ElementLayerMessage: 0
-    - _ElementLayerWarning: 0
-    - _ElementMessage: 0
-    - _ElementVolumeFadeMode: 0
-    - _ElementVolumeFadeValue: 0.75
-    - _EndElement: 1
-    - _EndFade: 1
-    - _EndRender: 1
-    - _HeightOffsetValue: 0
-    - _IsElementShader: 1
-    - _IsVersion: 2030
-    - _RenderCategory: 1
-    m_Colors:
-    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _TerrainSize: {r: 1000, g: 128, b: 1000, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 710.5723
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 28.994556
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 419.21106
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789299913110870522, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9097273878455740967, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
+      propertyPath: m_Name
+      value: Wild Grass_vlkhcbxia_Var19
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc3a68da58c7a48449bec4b280b33347, type: 3}
 --- !u!1 &1879300774
 GameObject:
   m_ObjectHideFlags: 0
@@ -8658,6 +8663,62 @@ MonoBehaviour:
   maxDistanceFromParent: 0
   sdfClamp: 0
   weightRange: {x: 0, y: 999999}
+--- !u!21 &2042159520
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Element
+  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    ElementType: Form
+  disabledShaderPasses:
+  - VolumePass
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _TerrainHeightTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainNormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CategoryElement: 1
+    - _CategoryFade: 1
+    - _ElementIntensity: 1
+    - _ElementLayerMask: 1
+    - _ElementLayerMessage: 0
+    - _ElementLayerWarning: 0
+    - _ElementMessage: 0
+    - _ElementVolumeFadeMode: 0
+    - _ElementVolumeFadeValue: 0.75
+    - _EndElement: 1
+    - _EndFade: 1
+    - _EndRender: 1
+    - _HeightOffsetValue: 0
+    - _IsElementShader: 1
+    - _IsVersion: 2030
+    - _RenderCategory: 1
+    m_Colors:
+    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _TerrainSize: {r: 1000, g: 128, b: 1000, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &2060491184
 GameObject:
   m_ObjectHideFlags: 0
@@ -9309,7 +9370,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1767715992}
+  - {fileID: 2042159520}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9538,3 +9599,4 @@ SceneRoots:
   - {fileID: 2060491186}
   - {fileID: 743087104}
   - {fileID: 440187053}
+  - {fileID: 1793829646}
