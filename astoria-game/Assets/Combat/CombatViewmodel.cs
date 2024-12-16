@@ -38,7 +38,7 @@ public class CombatViewmodel : MonoBehaviour
     /// <returns>Duration of triggered animation in seconds.</returns>
     public float SetTriggerFire() {
         _animator.SetTrigger("Fire");
-        return 0.1f;    
+        return _fireAnimation.length;    
     }
     /// <summary>
     /// Fires the trigger of the relevant animation of the attached animator.
@@ -46,7 +46,7 @@ public class CombatViewmodel : MonoBehaviour
     /// <returns>Duration of triggered animation in seconds.</returns>
     public float SetTriggerReloadEmpty() {
         _animator.SetTrigger("ReloadEmpty");
-        return 0.1f;    
+        return _reloadEmptyAnimation.length;    
     }
     /// <summary>
     /// Fires the trigger of the relevant animation of the attached animator.
@@ -54,7 +54,7 @@ public class CombatViewmodel : MonoBehaviour
     /// <returns>Duration of triggered animation in seconds.</returns>
     public float SetTriggerReloadPartial() {
         _animator.SetTrigger("ReloadPartial");
-        return 0.1f;    
+        return _reloadPartialAnimation.length;    
     }
     /// <summary>
     /// Fires the trigger of the relevant animation of the attached animator.
@@ -62,7 +62,7 @@ public class CombatViewmodel : MonoBehaviour
     /// <returns>Duration of triggered animation in seconds.</returns>
     public float SetTriggerHolster() {
         _animator.SetTrigger("Holster");
-        return 0.1f;    
+        return _holsterAnimation.length;    
     }
     /// <summary>
     /// Fires the trigger of the relevant animation of the attached animator.
@@ -70,6 +70,6 @@ public class CombatViewmodel : MonoBehaviour
     /// <returns>Duration of triggered animation in seconds.</returns>
     public float SetTriggerDraw() {
         _animator.SetTrigger("Draw");
-        return 0.1f;    
+        return _drawAnimation.length;    
     }
 }

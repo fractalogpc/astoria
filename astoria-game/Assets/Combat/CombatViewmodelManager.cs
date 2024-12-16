@@ -27,39 +27,34 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayFire() {
-		_currentViewmodel.SetTriggerFire();
-		return 0.1f;    
+		return _currentViewmodel.SetTriggerFire();
 	}
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayReloadEmpty() {
-		_currentViewmodel.SetTriggerReloadEmpty();
-		return 0.1f;    
+		return _currentViewmodel.SetTriggerReloadEmpty(); 
 	}
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayReloadPartial() {
-		_currentViewmodel.SetTriggerReloadPartial();
-		return 0.1f;    
+		return _currentViewmodel.SetTriggerReloadPartial(); 
 	}
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayHolster() {
-		_currentViewmodel.SetTriggerHolster();
-		return 0.1f;    
+		return _currentViewmodel.SetTriggerHolster(); 
 	}
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayDraw() {
-		_currentViewmodel.SetTriggerDraw();
-		return 0.1f;    
+		return _currentViewmodel.SetTriggerDraw(); 
 	}
 }

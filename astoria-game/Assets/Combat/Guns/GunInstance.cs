@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,6 +26,7 @@ public class GunInstance : ItemInstance
 	private CombatViewmodelManager _viewmodelManager;
 	private ProjectileManager _projectileManager;
 	private FireLogic _currentFireLogic;
+	private Coroutine _reloadCoroutine;
 	private bool _isReloading;
 	
 	// This constructor is called when the item is created in the inventory, it is not initialized yet
@@ -73,10 +75,12 @@ public class GunInstance : ItemInstance
 			for (int i = 0; i < WeaponData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
 			}
+			_viewmodelManager.PlayFire();
 			CurrentAmmo--;
 		}
 		else {
 			ShootProjectile(GetRandomSpreadAngle());
+			_viewmodelManager.PlayFire();
 			CurrentAmmo--;
 		}
 	}
@@ -120,34 +124,62 @@ public class GunInstance : ItemInstance
 		if (!Initialized) return;
 		_currentFireLogic.OnFireUp();
 	}
-	public void OnReloadDown() {
-		if (!Initialized) return;
+
+	private IEnumerator ReloadCoroutine() {
+		_isReloading = true;
 		switch (WeaponData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt:
 				// Magazine is empty and chamber is empty
 				if (CurrentAmmo == 0) {
 					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
-					Debug.Log("Add waiting here");
-					return;
+					yield return new WaitForSeconds(_viewmodelManager.PlayReloadEmpty());
+					break;
 				}
 				// One in chamber and magazine is not full
 				if (CurrentAmmo <= WeaponData.MagazineSetting.MagazineCapacity) {
 					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity + 1;
-					Debug.Log("Add waiting here");
-					return;
+					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
+					break;
 				}
 				// One in chamber and magazine is full
-				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) return;
+				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) break;
 				break;
 			case ReloadTypes.MagazineOpenBolt:
 				// Magazine is not full
 				if (CurrentAmmo < WeaponData.MagazineSetting.MagazineCapacity) {
 					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
-					Debug.Log("Add waiting here");
+					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
 				}
 				break;
-			default:
-				throw new NotImplementedException();
+			case ReloadTypes.InternalClosedBolt:
+				// Internal is empty and chamber is empty
+				if (CurrentAmmo == 0) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+					Debug.Log("Add cancelable reloading and chambering here");
+				}
+				// One in chamber and internal is not full
+				if (CurrentAmmo <= WeaponData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity + 1;
+					Debug.Log("Add cancelable reloading here");
+				}
+				// One in chamber and internal is full
+				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) break;
+				break;
+			case ReloadTypes.InternalOpenBolt:	
+				// Magazine is not full
+				if (CurrentAmmo < WeaponData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+					Debug.Log("Add cancelable reloading here");
+				}
+				break;
+		}
+		_isReloading = false;
+	}
+	
+	public void OnReloadDown() {
+		if (!Initialized) return;
+		if (!_isReloading) {
+			_reloadCoroutine = _combatCore.StartCoroutine(ReloadCoroutine());
 		}
 	}
 	public void OnReloadUp() {
