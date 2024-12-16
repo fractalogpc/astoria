@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public class FullAutoLogic : GunLogic
+public class FullAutoLogic : FireLogic
 {
-	public FullAutoLogic(GunInstance gunInstance) : base(gunInstance) {
+	public FullAutoLogic(GunInstance instance) : base(instance) {
 	}
 	
 	public override void Initialize() {
@@ -25,14 +25,6 @@ public class FullAutoLogic : GunLogic
 	}
 
 	public override void OnFireUp() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnReloadDown() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnReloadUp() {
 		throw new NotImplementedException();
 	}
 

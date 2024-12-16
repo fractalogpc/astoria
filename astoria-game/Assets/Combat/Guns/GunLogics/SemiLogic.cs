@@ -3,45 +3,25 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public class SemiLogic : GunLogic
+public class SemiLogic : FireLogic
 {
-	public SemiLogic(GunInstance gunInstance) : base(gunInstance) {
-	}
+	private bool CanFire => Instance.CurrentAmmo > 0;
+	private float _timeSinceLastShot;
 	
+	public SemiLogic(GunInstance instance) : base(instance) {
+	}
 	
 	public override void Initialize() {
-		throw new NotImplementedException();
-	}
-
-	public override void Cleanup() {
-		throw new NotImplementedException();
+		_timeSinceLastShot = 0;
 	}
 
 	public override void Tick() {
-		throw new NotImplementedException();
+		_timeSinceLastShot += Time.deltaTime;
 	}
 
 	public override void OnFireDown() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnFireUp() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnReloadDown() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnReloadUp() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnAimDown() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnAimUp() {
-		throw new NotImplementedException();
+		if (!CanFire) return;
+		if (_timeSinceLastShot < Instance.WeaponData.SemiAutoSetting.CycleTime) return;
+		Instance.Fire();
 	}
 }

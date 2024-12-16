@@ -4,56 +4,60 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class GunLogic
+public abstract class FireLogic
 {
-	public GunInstance GunInstance;
+	public GunInstance Instance;
 
-	protected GunLogic(GunInstance gunInstance) {
-		GunInstance = gunInstance;
+	protected FireLogic(GunInstance instance) {
+		Instance = instance;
 	}
-	
+
 	/// <summary>
 	/// Called when the logic is first switched to.
 	/// </summary>
-	public abstract void Initialize();
-	
+	public virtual void Initialize() {
+			
+	}
+
 	/// <summary>
 	/// Called when the logic is switched away from.
 	/// </summary>
-	public abstract void Cleanup();
-	
+	public virtual void Cleanup() {
+		
+	}
+
 	/// <summary>
 	/// Called every frame if the logic is active & the gun is equipped.
 	/// </summary>
-	public abstract void Tick();
-	
+	public virtual void Tick() {
+		
+	}
+
 	/// <summary>
 	/// Called when the player presses the fire button & the gun is equipped.
 	/// </summary>
-	public abstract void OnFireDown();
-	
+	public virtual void OnFireDown() {
+		
+	}
+
 	/// <summary>
 	/// Called when the player releases the fire button & the gun is equipped.
 	/// </summary>
-	public abstract void OnFireUp();
-	
-	/// <summary>
-	/// Called when the player presses the reload button & the gun is equipped.
-	/// </summary>
-	public abstract void OnReloadDown();
-	
-	/// <summary>
-	/// Called when the player releases the reload button & the gun is equipped.
-	/// </summary>
-	public abstract void OnReloadUp();
-	
+	public virtual void OnFireUp() {
+		
+	}
+
 	/// <summary>
 	/// Called when the player presses the aim button & the gun is equipped.
 	/// </summary>
-	public abstract void OnAimDown();
-	
+	public virtual void OnAimDown() {
+		
+	}
+
 	/// <summary>
 	/// Called when the player releases the aim button & the gun is equipped.
 	/// </summary>
-	public abstract void OnAimUp();
+	public virtual void OnAimUp() {
+		
+	}
 }

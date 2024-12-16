@@ -19,9 +19,12 @@ public class GunInstance : ItemInstance
 	public bool Initialized = false;
 	public GunData WeaponData => (GunData)ItemData;
 	public FireMode CurrentFireMode { get; private set; }
-	
+	public int CurrentAmmo { get; private set; }
+	public bool CanFire => CurrentAmmo > 0 && !_isReloading;
 	private ProjectileManager _projectileManager;
-	private GunLogic _currentLogic;
+	private CombatViewmodelManager _viewmodelManager;
+	private FireLogic _currentFireLogic;
+	private bool _isReloading;
 	
 	// This constructor is called when the item is created in the inventory, it is not initialized yet
 	public GunInstance(GunData gunData) : base(gunData) {
@@ -29,38 +32,22 @@ public class GunInstance : ItemInstance
 	}
 	
 	// Assign any references that need to be attached when first equipped here
-	public void InitializeWeapon() {
+	public void InitializeWeapon(CombatViewmodelManager viewmodelManager) {
 		Initialized = true;
 		_projectileManager = ProjectileManager.Instance;
+		_viewmodelManager = viewmodelManager;
 	}
 	
-	public void OnFireDown() {
+	/// <summary>
+	/// Should only be called by FireLogic and its children
+	/// </summary>
+	public void Fire() {
 		if (!Initialized) return;
-		_currentLogic.OnFireDown();
-	}
-	public void OnFireUp() {
-		if (!Initialized) return;
-		_currentLogic.OnFireUp();
-	}
-	public void OnReloadDown() {
-		if (!Initialized) return;
-		_currentLogic.OnReloadDown();
-	}
-	public void OnReloadUp() {
-		if (!Initialized) return;
-		_currentLogic.OnReloadUp();
-	}
-	public void OnAimDown() {
-		if (!Initialized) return;
-		_currentLogic.OnAimDown();
-	}
-	public void OnAimUp() {
-		if (!Initialized) return;
-		_currentLogic.OnAimUp();
-	}
-	public void Tick() {
-		if (!Initialized) return;
-		_currentLogic.Tick();
+		if (IsShotgun(WeaponData.FireCombination)) {
+			// Shotgun logic
+		} else {
+			// Regular logic
+		}
 	}
 	
 	public void SwitchFireMode() {
@@ -74,32 +61,69 @@ public class GunInstance : ItemInstance
 		}
 	}
 
-	private void Fire() {
+	public void OnInspect() {
+		Debug.Log("Implement OnInspect()");
+	}
+	
+	public void OnFireDown() {
 		if (!Initialized) return;
+		_currentFireLogic.OnFireDown();
+	}
+	public void OnFireUp() {
+		if (!Initialized) return;
+		_currentFireLogic.OnFireUp();
+	}
+	public void OnReloadDown() {
+		if (!Initialized) return;
+		switch (WeaponData.ReloadType) {
+			case ReloadTypes.MagazineClosedBolt:
+				// One in chamber and magazine is full
+				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) return;
+				// One in chamber and magazine is not full
+				if (CurrentAmmo == WeaponData.MagazineSetting.MagazineCapacity) {
+					
+				}
+		}
+	}
+	public void OnReloadUp() {
+		if (!Initialized) return;
+		// _currentFireLogic.OnReloadUp();
+	}
+	public void OnAimDown() {
+		if (!Initialized) return;
+		_currentFireLogic.OnAimDown();
+	}
+	public void OnAimUp() {
+		if (!Initialized) return;
+		_currentFireLogic.OnAimUp();
+	}
+	public void Tick() {
+		if (!Initialized) return;
+		_currentFireLogic.Tick();
 	}
 	
 	private void SetFireMode(FireMode mode) {
 		CurrentFireMode = mode;
-		if (_currentLogic != null) {
-			_currentLogic.Cleanup();
-			_currentLogic = null;
+		if (_currentFireLogic != null) {
+			_currentFireLogic.Cleanup();
+			_currentFireLogic = null;
 		}
 		switch (mode) {
 			case FireMode.Semi:
-				_currentLogic = new SemiLogic(this);
+				_currentFireLogic = new SemiLogic(this);
 				break;
 			case FireMode.Burst:
-				_currentLogic = new BurstLogic(this);
+				_currentFireLogic = new BurstLogic(this);
 				break;
 			case FireMode.Full:
-				_currentLogic = new FullAutoLogic(this);
+				_currentFireLogic = new FullAutoLogic(this);
 				break;
 			default:
 				// This should not happen
 				Debug.LogError("GunInstance: Invalid fire mode");
 				throw new ArgumentOutOfRangeException();
 		}
-		_currentLogic.Initialize();
+		_currentFireLogic.Initialize();
 	}
 
 	private bool ModeAvailable(FireMode mode, FireCombinations combination) {
