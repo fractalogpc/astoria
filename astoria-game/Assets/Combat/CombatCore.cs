@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Mirror;
@@ -39,8 +40,12 @@ public class CombatCore : NetworkedInputHandlerBase
     public void UnequipWeapon() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.Unequip();
-        _combatViewmodelManager.RemoveViewmodel();
+        StartCoroutine(UnequipWeaponCoroutine());
         CurrentGunInstance = null;
+    }
+    private IEnumerator UnequipWeaponCoroutine() {
+        yield return new WaitForSeconds(_combatViewmodelManager.PlayHolster());
+        _combatViewmodelManager.RemoveViewmodel();
     }
 
     private void Update() {
