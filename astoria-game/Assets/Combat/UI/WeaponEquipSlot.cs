@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(ClickableEvents))]
 public class WeaponEquipSlot : InventoryEquipableSlot
@@ -24,6 +25,8 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 		if (!_combatInventory.AddWeaponInstanceToSlot(itemInstance as GunInstance, _slotType)) Debug.LogError("WeaponEquipSlot: Failed to add weapon instance to slot. Do the previous checks work?");
 		_heldItemInstance = itemInstance;
 		_itemImage.sprite = itemInstance.ItemData.ItemIcon;
+		_itemImage.type = Image.Type.Simple;
+		_itemImage.preserveAspect = true;
 		_itemImage.color = Color.white;
 		_itemText.text = itemInstance.ItemData.ItemName;
 		OnItemAdded.Invoke(itemInstance);

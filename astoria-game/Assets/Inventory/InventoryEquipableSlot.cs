@@ -22,6 +22,8 @@ public class InventoryEquipableSlot : MonoBehaviour
         }
         _heldItemInstance = itemInstance;
         _itemImage.sprite = itemInstance.ItemData.ItemIcon;
+        _itemImage.type = Image.Type.Simple;
+        _itemImage.preserveAspect = true;
         _itemImage.color = Color.white;
         _itemText.text = itemInstance.ItemData.ItemName;
         OnItemAdded.Invoke(itemInstance);
