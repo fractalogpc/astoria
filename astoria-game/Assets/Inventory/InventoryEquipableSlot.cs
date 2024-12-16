@@ -1,11 +1,7 @@
-using System;
 using Mirror;
 using TMPro;
-using TMPro.EditorUtilities;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
 [RequireComponent(typeof(ClickableEvents))]

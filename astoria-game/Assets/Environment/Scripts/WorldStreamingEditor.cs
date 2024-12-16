@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 
@@ -73,3 +75,4 @@ public class WorldStreamingEditor : EditorWindow {
     onSquareClicked = callback;
   }
 }
+#endif

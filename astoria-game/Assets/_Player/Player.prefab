@@ -1317,6 +1317,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614bf1a9f382d6942ba3ce85c224612c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _combatCore: {fileID: 0}
+  _defaultWeapon: {fileID: 0}
+  CurrentSlot: 0
+  _primaryWeaponInstance:
+    ConstantData: {fileID: 0}
+    WeaponViewmodelInstance: {fileID: 0}
+    WeaponLogicInstance: {fileID: 0}
+  _secondaryWeaponInstance:
+    ConstantData: {fileID: 0}
+    WeaponViewmodelInstance: {fileID: 0}
+    WeaponLogicInstance: {fileID: 0}
+  _specialWeaponInstance:
+    ConstantData: {fileID: 0}
+    WeaponViewmodelInstance: {fileID: 0}
+    WeaponLogicInstance: {fileID: 0}
 --- !u!114 &2627650646237878555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1335,9 +1350,6 @@ MonoBehaviour:
   _combatViewmodelManager: {fileID: 8665975738431017114}
   _combatWeaponLogicManager: {fileID: 9002593964255495585}
   _weaponInstances: []
-  DebugPrimary: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
-  DebugPistol: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
-  DebugSpecial: {fileID: 0}
 --- !u!114 &9002593964255495585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1468,7 +1480,6 @@ GameObject:
   - component: {fileID: 2539810010592188482}
   - component: {fileID: 7412340955166592288}
   - component: {fileID: 5228839736577099089}
-  - component: {fileID: 7463246553086928685}
   m_Layer: 0
   m_Name: SpecialSlot
   m_TagString: Untagged
@@ -1567,28 +1578,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _isHovering: 0
---- !u!114 &7463246553086928685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678128750896160127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b819dae3a5532426b9367b9c01e8245d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnSlotChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  HeldItem:
-    ItemData: {fileID: 0}
-    Rotated: 0
-  _itemImage: {fileID: 5994715602313754771}
-  _itemText: {fileID: 7825050751794367007}
-  _clickableEvents: {fileID: 5228839736577099089}
-  _draggablePrefab: {fileID: 5725654330234954917, guid: 5fe8f9c411f35474982cb3c334eac697, type: 3}
 --- !u!1 &817617099976499034
 GameObject:
   m_ObjectHideFlags: 0
@@ -3508,7 +3497,6 @@ GameObject:
   - component: {fileID: 6506021278564700864}
   - component: {fileID: 8224924399212225701}
   - component: {fileID: 6125886861440032918}
-  - component: {fileID: 3622148581066405840}
   m_Layer: 0
   m_Name: SecondarySlot
   m_TagString: Untagged
@@ -3607,28 +3595,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _isHovering: 0
---- !u!114 &3622148581066405840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502360742494731316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b819dae3a5532426b9367b9c01e8245d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnSlotChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  HeldItem:
-    ItemData: {fileID: 0}
-    Rotated: 0
-  _itemImage: {fileID: 4341903444788995894}
-  _itemText: {fileID: 3306096167746051860}
-  _clickableEvents: {fileID: 6125886861440032918}
-  _draggablePrefab: {fileID: 5725654330234954917, guid: 5fe8f9c411f35474982cb3c334eac697, type: 3}
 --- !u!1 &1505662312694518414
 GameObject:
   m_ObjectHideFlags: 0
@@ -3923,7 +3889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043dd2f1b246c4f49bd18141863f5680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableDebugging: 1
+  EnableDebugging: 0
   DebugIndex: 3
   HasObject: 0
   ConstructableObjects:
@@ -8020,7 +7986,6 @@ MonoBehaviour:
   CameraTransform: {fileID: 8706593742784918896}
   PlayerYLookQuaternion: {x: 0, y: 0, z: 0, w: 1}
   CameraXRotation: 0
-  CameraYRotation: 0
 --- !u!114 &7114787213708335111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8511,7 +8476,6 @@ GameObject:
   - component: {fileID: 8050593241523189664}
   - component: {fileID: 1365110023121669252}
   - component: {fileID: 8345018331995083548}
-  - component: {fileID: 2982452050864996415}
   m_Layer: 0
   m_Name: PrimarySlot
   m_TagString: Untagged
@@ -8610,28 +8574,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _isHovering: 0
---- !u!114 &2982452050864996415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3776647070610571632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b819dae3a5532426b9367b9c01e8245d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnSlotChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  HeldItem:
-    ItemData: {fileID: 0}
-    Rotated: 0
-  _itemImage: {fileID: 2458323521211992158}
-  _itemText: {fileID: 552022167387579012}
-  _clickableEvents: {fileID: 8345018331995083548}
-  _draggablePrefab: {fileID: 5725654330234954917, guid: 5fe8f9c411f35474982cb3c334eac697, type: 3}
 --- !u!1 &3784259663338776304
 GameObject:
   m_ObjectHideFlags: 0
