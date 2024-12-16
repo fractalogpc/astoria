@@ -10,7 +10,6 @@ using UnityEngine;
 public class CombatInventory : InputHandlerBase
 {
     [SerializeField] private CombatCore _combatCore;
-    [SerializeField] private GunData _defaultGun;
     public enum WeaponSlot
     {
         PrimarySlot,

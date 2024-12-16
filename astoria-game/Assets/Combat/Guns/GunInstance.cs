@@ -14,7 +14,6 @@ public enum FireMode
 /// <summary>
 /// Represents a weapon item. This is a monolithic class, but that should be okay since we don't have many different weapon types.
 /// </summary>
-[Serializable]
 public class GunInstance : ItemInstance
 {
 	public bool Initialized = false;
@@ -39,6 +38,21 @@ public class GunInstance : ItemInstance
 		_combatCore = combatCore;
 		_viewmodelManager = viewmodelManager;
 		_projectileManager = ProjectileManager.Instance;
+		switch (WeaponData.FireCombination) {
+			case FireCombinations.Semi or FireCombinations.ShotgunSemi:
+				SetFireMode(FireMode.Semi);
+				break;
+			case FireCombinations.SemiBurst or FireCombinations.ShotgunSemiBurst:
+				SetFireMode(FireMode.Burst);
+				break;
+			case FireCombinations.SemiFull or FireCombinations.ShotgunSemiFull:
+			case FireCombinations.SemiBurstFull or FireCombinations.ShotgunSemiBurstFull:
+				SetFireMode(FireMode.Full);
+				break;
+			default:
+				Debug.LogError("GunInstance: Did not account for all FireCombinations in initialization");
+				break;
+		}
 	}
 	
 	public void Unequip() {
@@ -68,13 +82,13 @@ public class GunInstance : ItemInstance
 	}
 
 	private void ShootProjectile(float spreadAngle = 0) {
-		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward;
+		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward * WeaponData.InitialVelocityMS;
 		_projectileManager.FireProjectile(
 			WeaponData.Damage, 
 			WeaponData.BulletMassKg, 
 			Camera.main.transform.position,
 			direction, 
-			new ProjectileManager.Aerodynamics(WeaponData.DragCoefficient, WeaponData.BulletDiameterM, WeaponData.AirDensityKgPerM), 
+			new ProjectileManager.Aerodynamics(WeaponData.DragCoefficient, Mathf.Pow(WeaponData.BulletDiameterM / 2, 2) * Mathf.PI, WeaponData.AirDensityKgPerM), 
 			ProjectileCallback	
 		);
 	}

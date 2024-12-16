@@ -15,10 +15,21 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 	[SerializeField] private CombatInventory.WeaponSlot _slotType;
 
 	public override bool TryAddToSlot(ItemInstance itemInstance) {
-		if (_heldItemInstance != null) return false;
-		if (itemInstance.ItemData is not GunData gunData) return false;
-		if (_combatInventory.SlotHasWeapon(_slotType)) return false;
-		if (!_combatInventory.AddWeaponInstanceToSlot(itemInstance as GunInstance, _slotType)) Debug.LogError("WeaponEquipSlot: Failed to add weapon instance to slot.");
+		if (_heldItemInstance != null) {
+			Debug.Log("WeaponEquipSlot: Slot already has an item instance.");
+			return false;
+		}
+
+		if (itemInstance.ItemData is not GunData) {
+			Debug.Log("WeaponEquipSlot: Item instance is not a gun instance.");
+			return false;
+		}
+
+		if (_combatInventory.SlotHasWeapon(_slotType)) {
+			Debug.Log("WeaponEquipSlot: Slot already has a weapon.");
+			return false;
+		}
+		if (!_combatInventory.AddWeaponInstanceToSlot(itemInstance as GunInstance, _slotType)) Debug.LogError("WeaponEquipSlot: Failed to add weapon instance to slot. Do the previous checks work?");
 		_heldItemInstance = itemInstance;
 		_itemImage.sprite = itemInstance.ItemData.ItemIcon;
 		_itemImage.color = Color.white;
