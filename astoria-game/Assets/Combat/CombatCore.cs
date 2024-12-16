@@ -5,48 +5,79 @@ using Mirror;
 using UnityEngine;
 
 /// <summary>
-/// Tightly coupled with CombatInventory and CombatViewmodelAndLogicManager.
-/// This should be attached to the parent of the player's viewmodel/fps arms.
+/// Tightly coupled with CombatViewmodelManager.
 ///
-/// It handles:
-/// Switching between viewmodels.
-/// Left/right sway from the player's movement.
-/// Calling fire animations. (CombatViewmodelAndLogicManager)
-/// Calling fire functions. (CombatWeaponLogic)
+/// This handles:
+/// Holding references to combat scripts
+/// Initializing weapons with references to combat scripts
+/// Sending inputs to weapons
+/// Running coroutines on weapons
 /// </summary>
 
 [RequireComponent(typeof(CombatInventory))]
-public class CombatCore : NetworkBehaviour
+public class CombatCore : NetworkedInputHandlerBase
 {
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
-    [SerializeField] private CombatWeaponLogicManager _combatWeaponLogicManager;
-    [SerializeField] private List<WeaponInstance> _weaponInstances = new List<WeaponInstance>();
+    public GunInstance CurrentGunInstance { get; private set; }
     
-    /// <summary>
-    /// Use this to create weapon instances. Never call the constructor directly.
-    /// </summary>
-    /// <param name="data">The data to create the instance from.</param>
-    /// <returns>The weapon instance that was created.</returns>
-    public WeaponInstance CreateWeaponInstance(WeaponData data) {
-        WeaponInstance instance = new WeaponInstance(data);
-        GameObject viewmodel = _combatViewmodelManager.AddViewmodel(instance);
-        instance.WeaponViewmodelInstance = viewmodel;
-        GameObject logic = _combatWeaponLogicManager.AddWeaponLogic(instance);
-        instance.WeaponLogicInstance = logic;
-        _weaponInstances.Add(instance);
-        return instance;
+    protected override void InitializeActionMap() {
+        RegisterAction(_inputActions.Player.Attack, ctx => OnFireDown(), () => OnFireUp());
+        RegisterAction(_inputActions.Player.Reload, ctx => OnReloadDown(), () => OnReloadUp());
+        RegisterAction(_inputActions.Player.AttackSecondary, ctx => OnAimDown(), () => OnAimUp());
+        RegisterAction(_inputActions.Player.InspectItem, ctx => OnInspect());
+        RegisterAction(_inputActions.Player.SwitchFireMode, ctx => OnSwitchFireMode());
     }
-    /// <summary>
-    /// Equips a weapon instance.
-    /// </summary>
-    /// <param name="weaponInstanceItem">The weapon instance to equip.</param>
-    /// <returns>Whether equipping was successful.</returns>
-    public bool EquipWeapon(WeaponInstance weaponInstanceItem) {
-        if (_weaponInstances.Contains(weaponInstanceItem)) {
-            _combatViewmodelManager.SetCurrentViewmodelTo(weaponInstanceItem.WeaponViewmodelInstance);
-            _combatWeaponLogicManager.SetCurrentWeaponLogicTo(weaponInstanceItem.WeaponLogicInstance);
-            return true;
+    
+    public void EquipWeapon(GunInstance instance) {
+        CurrentGunInstance = instance;
+        if (instance.Initialized == false) {
+            instance.InitializeWeapon(this, _combatViewmodelManager);
         }
-        return false;
+        _combatViewmodelManager.SetViewmodelFor(instance);
+    }
+    
+    public void UnequipWeapon() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.Unequip();
+        _combatViewmodelManager.RemoveViewmodel();
+        CurrentGunInstance = null;
+    }
+
+    private void Update() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.Tick();
+    }
+    
+    public void OnFireDown() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnFireDown();
+    }
+    public void OnFireUp() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnFireUp();
+    }
+    public void OnReloadDown() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnReloadDown();
+    }
+    public void OnReloadUp() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnReloadUp();
+    }
+    public void OnAimDown() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnAimDown();   
+    }
+    public void OnAimUp() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnAimUp();
+    }
+    public void OnInspect() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.OnInspect(); 
+    }
+    public void OnSwitchFireMode() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.SwitchFireMode(); 
     }
 }

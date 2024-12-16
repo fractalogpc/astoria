@@ -78,26 +78,21 @@ public class CraftingStationNetworked : NetworkBehaviour
 		}
 	}
 	// Attached to events in start
-	private void InputChanged(List<InventoryItem> items)
-	{
+	private void InputChanged(List<ItemInstance> items) {
 		print($"Can craft anything: {CanCraftAnything()}");
 		_craftButton.interactable = CanCraftAnything();
 	}
-
-	public bool CanCraftAnything()
-	{
-		List<InventoryItem> ingredients = GetIngredients();
-		foreach (RecipeData recipe in _recipes)
-		{
+	
+	public bool CanCraftAnything() {
+		List<ItemInstance> ingredients = GetIngredients();
+		foreach (RecipeData recipe in _recipes) {
 			if (CheckRecipe(ingredients, recipe)) return true;
 		}
 		return false;
 	}
-	public bool TryCraft()
-	{
-		List<InventoryItem> ingredients = GetIngredients();
-		foreach (RecipeData recipe in _recipes)
-		{
+	public bool TryCraft() {
+		List<ItemInstance> ingredients = GetIngredients();
+		foreach (RecipeData recipe in _recipes) {
 			print($"Checking recipe, ingredients: {ingredients}, recipe: {recipe._ingredients}");
 			if (!CheckRecipe(ingredients, recipe)) continue;
 			_ingredientInput.ClearItems();
@@ -107,9 +102,8 @@ public class CraftingStationNetworked : NetworkBehaviour
 		Debug.LogWarning($"{gameObject.name} CraftingStationNetworked: No recipe found for the given ingredients. Did you check the recipe before crafting?");
 		return false;
 	}
-
-	public bool CheckRecipe(List<InventoryItem> input, RecipeData recipe)
-	{
+	
+	public bool CheckRecipe(List<ItemInstance> input, RecipeData recipe) {
 		return SetListsAreEqual(ItemsListToSetList(input), recipe._ingredients);
 	}
 
@@ -122,12 +116,10 @@ public class CraftingStationNetworked : NetworkBehaviour
 		}
 		return true;
 	}
-
-	private List<ItemSet> ItemsListToSetList(List<InventoryItem> items)
-	{
+	
+	private List<ItemSet> ItemsListToSetList(List<ItemInstance> items) {
 		List<ItemSet> ingredientSets = new();
-		foreach (InventoryItem item in items)
-		{
+		foreach (ItemInstance item in items) {
 			bool found = false;
 			foreach (ItemSet ingredientSet in ingredientSets.Where(ingredientSet => item.ItemData == ingredientSet._item))
 			{
@@ -142,25 +134,20 @@ public class CraftingStationNetworked : NetworkBehaviour
 		}
 		return ingredientSets;
 	}
-
-	private List<InventoryItem> SetListToItemsList(List<ItemSet> sets)
-	{
-		List<InventoryItem> items = new();
-		foreach (ItemSet set in sets)
-		{
-			for (int i = 0; i < set._count; i++)
-			{
-				items.Add(new InventoryItem(set._item));
+	
+	private List<ItemInstance> SetListToItemsList(List<ItemSet> sets) {
+		List<ItemInstance> items = new();
+		foreach (ItemSet set in sets) {
+			for (int i = 0; i < set._count; i++) {
+				items.Add(new ItemInstance(set._item));
 			}
 		}
 		return items;
 	}
-
-	private List<ItemData> ItemsListToDatasList(List<InventoryItem> items)
-	{
+	
+	private List<ItemData> ItemsListToDatasList(List<ItemInstance> items) {
 		List<ItemData> ingredientDatas = new();
-		foreach (InventoryItem item in items)
-		{
+		foreach (ItemInstance item in items) {
 			ingredientDatas.Add(item.ItemData);
 		}
 		return ingredientDatas;
@@ -172,9 +159,8 @@ public class CraftingStationNetworked : NetworkBehaviour
 		print(mainPlayerInventory.InventoryData == null);
 		invComponent.CreateInvFromInventoryData(mainPlayerInventory.InventoryData);
 	}
-
-	private List<InventoryItem> GetIngredients()
-	{
+	
+	private List<ItemInstance> GetIngredients() {
 		return _ingredientInput.GetItems();
 	}
 

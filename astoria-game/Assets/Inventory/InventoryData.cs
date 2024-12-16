@@ -11,11 +11,11 @@ using UnityEngine;
 [AddComponentMenu("")]
 public class InventoryData
 {
-    public List<InventoryItem> Items {
+    public List<ItemInstance> Items {
         get => _items;
         private set => _items = value;
     }
-    [SerializeField] private List<InventoryItem> _items = new List<InventoryItem>();
+    [SerializeField] private List<ItemInstance> _items = new List<ItemInstance>();
     public InventoryContainer[,] Containers { get; }
 
     public int Width => Containers.GetLength(0);
@@ -32,8 +32,8 @@ public class InventoryData
             }
         }
     }
-    public bool UpdateHighlight(InventoryItem item, Vector2Int bottomLeftContainerIndex) {
-        Vector2Int bounds = item.Size;
+    public bool UpdateHighlight(ItemInstance itemInstance, Vector2Int bottomLeftContainerIndex) {
+        Vector2Int bounds = itemInstance.Size;
         // Not at all within grid
         if (!CornersWithinGrid(bottomLeftContainerIndex, Vector2Int.one)) {
             ClearHighlights();
@@ -79,13 +79,13 @@ public class InventoryData
     /// Adds an item to the inventory if possible. Attempts to find a position for the item. Calls OnInventoryUpdate if successful.
     /// </summary>
     /// <param name="caller">The inventory component that is calling this method.</param>
-    /// <param name="item">The item to add.</param>
+    /// <param name="itemInstance">The item to add.</param>
     /// <param name="slotIndex">The slot index the item is placed at.</param>
     /// <returns>Whether the placement was successful.</returns>
-    public bool TryAddItem(InventoryComponent caller, InventoryItem item, out Vector2Int slotIndex) {
+    public bool TryAddItem(InventoryComponent caller, ItemInstance itemInstance, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
-        if (Items.Contains(item)) return false;
-        Vector2Int bounds = item.Size;
+        if (Items.Contains(itemInstance)) return false;
+        Vector2Int bounds = itemInstance.Size;
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
                 // if (Containers[x, y].HeldItem != null) continue;
@@ -97,14 +97,14 @@ public class InventoryData
                 bool successRotated;
                 
                 // Try normally
-                item.Rotated = false;
-                successNormal = TryAddItemAtPosition(caller, item, new Vector2Int(x, y));
+                itemInstance.Rotated = false;
+                successNormal = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successNormal) {
                     return true;
                 }
                 // Try Rotated
-                item.Rotated = true;
-                successRotated = TryAddItemAtPosition(caller, item, new Vector2Int(x, y));
+                itemInstance.Rotated = true;
+                successRotated = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successRotated) {
                     return true;
                 }
@@ -115,20 +115,20 @@ public class InventoryData
     /// <summary>
     /// Attempts to add an item to the inventory at a specific position. Calls OnInventoryUpdate if successful.
     /// </summary>
-    /// <param name="item">The item to add.</param>
+    /// <param name="itemInstance">The item to add.</param>
     /// <param name="slotIndexBL">The slotIndex to add the item at.</param>
     /// <returns>Whether adding the item was successful.</returns>
-    public bool TryAddItemAtPosition(InventoryComponent caller, InventoryItem item, Vector2Int slotIndexBL) {
-        if (Items.Contains(item)) return false;
+    public bool TryAddItemAtPosition(InventoryComponent caller, ItemInstance itemInstance, Vector2Int slotIndexBL) {
+        if (Items.Contains(itemInstance)) return false;
         if (slotIndexBL.x < 0 || slotIndexBL.x >= Width || slotIndexBL.y < 0 || slotIndexBL.y >= Height) return false;
-        Vector2Int bounds = item.Size;
+        Vector2Int bounds = itemInstance.Size;
         if (!CornersWithinGrid(slotIndexBL, bounds) || !IsNotOverlapping(slotIndexBL, bounds)) return false;
         for (int y = slotIndexBL.y; y < slotIndexBL.y + bounds.y; y++) {
             for (int x = slotIndexBL.x; x < slotIndexBL.x + bounds.x; x++) {
-                Containers[x, y].HeldItem = item;
+                Containers[x, y].HeldItemInstance = itemInstance;
             }
         }
-        Items.Add(item);
+        Items.Add(itemInstance);
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
@@ -146,7 +146,7 @@ public class InventoryData
     public bool IsNotOverlapping(Vector2Int slotIndexBL, Vector2Int size) {
         for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
             for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
-                if (Containers[x, y].HeldItem != null) return false;
+                if (Containers[x, y].HeldItemInstance != null) return false;
             }
         }
         return true;
@@ -154,25 +154,25 @@ public class InventoryData
     /// <summary>
     /// Removes an item from the inventory. Calls OnInventoryUpdate if successful.
     /// </summary>
-    /// <param name="item">The item instance to remove.</param>
+    /// <param name="itemInstance">The item instance to remove.</param>
     /// <returns>Whether the item was found and able to be removed.</returns>
-    public bool RemoveItem(InventoryComponent caller, InventoryItem item) {
-        if (!Items.Contains(item)) return false;
-        Vector2Int bottomLeftContainerIndex = GetSlotIndexOf(item);
-        Vector2Int bounds = item.Size;
+    public bool RemoveItem(InventoryComponent caller, ItemInstance itemInstance) {
+        if (!Items.Contains(itemInstance)) return false;
+        Vector2Int bottomLeftContainerIndex = GetSlotIndexOf(itemInstance);
+        Vector2Int bounds = itemInstance.Size;
         for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
             for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
-                Containers[x, y].HeldItem = null;
+                Containers[x, y].HeldItemInstance = null;
             }
         }
-        Items.Remove(item);
+        Items.Remove(itemInstance);
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
-    public Vector2Int GetSlotIndexOf(InventoryItem item) {
+    public Vector2Int GetSlotIndexOf(ItemInstance itemInstance) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                if (Containers[x, y].HeldItem == item) return new Vector2Int(x, y);
+                if (Containers[x, y].HeldItemInstance == itemInstance) return new Vector2Int(x, y);
             }
         }
         return new Vector2Int(-1, -1);

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Item info that is set at design time.
+/// This class represents item data set at runtime. Inherit this class whenever you need new dev-time variables. Remember to also inherit ItemInstance.
 /// </summary>
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
 [System.Serializable]
@@ -23,4 +23,8 @@ public class ItemData : ScriptableObject
             ItemIcon = Resources.Load<Sprite>("DefaultItemAssets/NullImage");
         }
     }
+    
+    public virtual ItemInstance CreateItem() {
+        return new ItemInstance(this);
+    } 
 }
