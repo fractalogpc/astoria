@@ -11,6 +11,7 @@ using UnityEngine;
 /// Holding references to combat scripts
 /// Initializing weapons with references to combat scripts
 /// Sending inputs to weapons
+/// Running coroutines on weapons
 /// </summary>
 
 [RequireComponent(typeof(CombatInventory))]
@@ -30,8 +31,16 @@ public class CombatCore : NetworkedInputHandlerBase
     public void EquipWeapon(GunInstance instance) {
         CurrentGunInstance = instance;
         if (instance.Initialized == false) {
-            instance.InitializeWeapon(_combatViewmodelManager);
+            instance.InitializeWeapon(this, _combatViewmodelManager);
         }
+        _combatViewmodelManager.SetViewmodelFor(instance);
+    }
+    
+    public void UnequipWeapon() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.Unequip();
+        _combatViewmodelManager.RemoveViewmodel();
+        CurrentGunInstance = null;
     }
 
     private void Update() {

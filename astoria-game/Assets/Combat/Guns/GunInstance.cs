@@ -2,6 +2,7 @@ using System;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public enum FireMode
 {
@@ -20,9 +21,10 @@ public class GunInstance : ItemInstance
 	public GunData WeaponData => (GunData)ItemData;
 	public FireMode CurrentFireMode { get; private set; }
 	public int CurrentAmmo { get; private set; }
-	public bool CanFire => CurrentAmmo > 0 && !_isReloading;
-	private ProjectileManager _projectileManager;
+	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
+	private CombatCore _combatCore;
 	private CombatViewmodelManager _viewmodelManager;
+	private ProjectileManager _projectileManager;
 	private FireLogic _currentFireLogic;
 	private bool _isReloading;
 	
@@ -32,10 +34,20 @@ public class GunInstance : ItemInstance
 	}
 	
 	// Assign any references that need to be attached when first equipped here
-	public void InitializeWeapon(CombatViewmodelManager viewmodelManager) {
+	public void InitializeWeapon(CombatCore combatCore, CombatViewmodelManager viewmodelManager) {
 		Initialized = true;
-		_projectileManager = ProjectileManager.Instance;
+		_combatCore = combatCore;
 		_viewmodelManager = viewmodelManager;
+		_projectileManager = ProjectileManager.Instance;
+	}
+	
+	public void Unequip() {
+		_currentFireLogic.Cleanup();
+		Initialized = false;
+		_combatCore = null;
+		_viewmodelManager = null;
+		_projectileManager = null;
+		_currentFireLogic = null;
 	}
 	
 	/// <summary>
@@ -44,10 +56,31 @@ public class GunInstance : ItemInstance
 	public void Fire() {
 		if (!Initialized) return;
 		if (IsShotgun(WeaponData.FireCombination)) {
-			// Shotgun logic
-		} else {
-			// Regular logic
+			for (int i = 0; i < WeaponData.ShotgunSetting.PelletsPerShot; i++) {
+				ShootProjectile(GetRandomSpreadAngle());
+			}
+			CurrentAmmo--;
 		}
+		else {
+			ShootProjectile(GetRandomSpreadAngle());
+			CurrentAmmo--;
+		}
+	}
+
+	private void ShootProjectile(float spreadAngle = 0) {
+		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward;
+		_projectileManager.FireProjectile(
+			WeaponData.Damage, 
+			WeaponData.BulletMassKg, 
+			Camera.main.transform.position,
+			direction, 
+			new ProjectileManager.Aerodynamics(WeaponData.DragCoefficient, WeaponData.BulletDiameterM, WeaponData.AirDensityKgPerM), 
+			ProjectileCallback	
+		);
+	}
+
+	private void ProjectileCallback(RaycastHit hit) {
+		Debug.Log($"hit {hit.collider.gameObject.name} at {hit.point}");
 	}
 	
 	public void SwitchFireMode() {
@@ -77,12 +110,30 @@ public class GunInstance : ItemInstance
 		if (!Initialized) return;
 		switch (WeaponData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt:
+				// Magazine is empty and chamber is empty
+				if (CurrentAmmo == 0) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+					Debug.Log("Add waiting here");
+					return;
+				}
+				// One in chamber and magazine is not full
+				if (CurrentAmmo <= WeaponData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity + 1;
+					Debug.Log("Add waiting here");
+					return;
+				}
 				// One in chamber and magazine is full
 				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) return;
-				// One in chamber and magazine is not full
-				if (CurrentAmmo == WeaponData.MagazineSetting.MagazineCapacity) {
-					
+				break;
+			case ReloadTypes.MagazineOpenBolt:
+				// Magazine is not full
+				if (CurrentAmmo < WeaponData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+					Debug.Log("Add waiting here");
 				}
+				break;
+			default:
+				throw new NotImplementedException();
 		}
 	}
 	public void OnReloadUp() {
@@ -113,7 +164,7 @@ public class GunInstance : ItemInstance
 				_currentFireLogic = new SemiLogic(this);
 				break;
 			case FireMode.Burst:
-				_currentFireLogic = new BurstLogic(this);
+				_currentFireLogic = new BurstLogic(this, _combatCore);
 				break;
 			case FireMode.Full:
 				_currentFireLogic = new FullAutoLogic(this);
@@ -126,6 +177,15 @@ public class GunInstance : ItemInstance
 		_currentFireLogic.Initialize();
 	}
 
+	private float GetRandomSpreadAngle() {
+		float angle = CalculateSpreadAngle(WeaponData.AccuracySetting.PatternSpread, WeaponData.AccuracySetting.EffectiveRange);
+		return Random.Range(-angle, angle);
+	}
+	
+	private float CalculateSpreadAngle(float spreadDiameter, float distance) {
+		return Mathf.Atan2(spreadDiameter / 2f, distance) * Mathf.Rad2Deg;
+	}
+	
 	private bool ModeAvailable(FireMode mode, FireCombinations combination) {
 		return combination switch {
 			FireCombinations.Semi or FireCombinations.ShotgunSemi => mode == FireMode.Semi,

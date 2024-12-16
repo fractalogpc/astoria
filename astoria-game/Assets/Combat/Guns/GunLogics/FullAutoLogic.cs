@@ -5,34 +5,29 @@ using UnityEngine;
 
 public class FullAutoLogic : FireLogic
 {
+	private float _timeSinceLastShot;
+	private bool _triggerDown;
+	
 	public FullAutoLogic(GunInstance instance) : base(instance) {
 	}
 	
 	public override void Initialize() {
-		throw new NotImplementedException();
-	}
-
-	public override void Cleanup() {
-		throw new NotImplementedException();
+		_timeSinceLastShot = 0;
+		_triggerDown = false;
 	}
 
 	public override void Tick() {
-		throw new NotImplementedException();
+		if (!Instance.HasAmmo) return;
+		if (!_triggerDown) return;
+		if (_timeSinceLastShot < RPMToSeconds(Instance.WeaponData.FullAutoSetting.RoundsPerMinute)) return;
+		Instance.Fire();
 	}
 
 	public override void OnFireDown() {
-		throw new NotImplementedException();
+		_triggerDown = true;
 	}
 
 	public override void OnFireUp() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnAimDown() {
-		throw new NotImplementedException();
-	}
-
-	public override void OnAimUp() {
-		throw new NotImplementedException();
+		_triggerDown = false;
 	}
 }

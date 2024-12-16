@@ -11,13 +11,14 @@ using Image = UnityEngine.UI.Image;
 [RequireComponent(typeof(ClickableEvents))]
 public class InventoryEquipableSlot : MonoBehaviour
 {
-    public UnityEvent OnSlotChanged;
     [ReadOnly] public ItemInstance _heldItemInstance;
-    [SerializeField] private Image _itemImage;
-    [SerializeField] private TextMeshProUGUI _itemText;
-    [ReadOnly][SerializeField] private ClickableEvents _clickableEvents;
-    [ReadOnly][SerializeField] private GameObject _draggablePrefab;
-    private GameObject _draggedInstance;
+    [SerializeField] protected Image _itemImage;
+    [SerializeField] protected TextMeshProUGUI _itemText;
+    [ReadOnly][SerializeField] protected ClickableEvents _clickableEvents;
+    [ReadOnly][SerializeField] protected GameObject _draggablePrefab;
+    protected GameObject _draggedInstance;
+    public UnityEvent<ItemInstance> OnItemAdded;
+    public UnityEvent<ItemInstance> OnItemRemoved;
     
     public virtual bool TryAddToSlot(ItemInstance itemInstance) {
         if (_heldItemInstance != null) {
@@ -27,16 +28,17 @@ public class InventoryEquipableSlot : MonoBehaviour
         _itemImage.sprite = itemInstance.ItemData.ItemIcon;
         _itemImage.color = Color.white;
         _itemText.text = itemInstance.ItemData.ItemName;
-        OnSlotChanged.Invoke();
+        OnItemAdded.Invoke(itemInstance);
         return true;
     }
     
     public virtual void OnRemove() {
         if (_heldItemInstance == null) return;
-        InstantiateDraggedItem();
+        InstantiateDraggedItem(_heldItemInstance);
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
+        OnItemRemoved.Invoke(_heldItemInstance);
         _heldItemInstance = null;
     }
     
@@ -72,10 +74,10 @@ public class InventoryEquipableSlot : MonoBehaviour
         _draggedInstance = null;
     }
     
-    private void InstantiateDraggedItem() {
+    protected void InstantiateDraggedItem(ItemInstance itemInstance) {
         // Parented to whole canvas
         _draggedInstance = Instantiate(_draggablePrefab, transform.GetComponentInParent<Canvas>().transform);
         InventoryItemDraggedUI script = _draggedInstance.GetComponent<InventoryItemDraggedUI>();
-        script.InitializeWithSlot(this, _heldItemInstance);
+        script.InitializeWithSlot(this, itemInstance);
     }
 }

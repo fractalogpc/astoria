@@ -8,56 +8,17 @@ public class CombatViewmodelManager : NetworkBehaviour
 	[SerializeField] private Transform _viewmodelParent;
 	[SerializeField][ReadOnly] private CombatViewmodel _currentViewmodel;
 
-	/// <summary>
-	/// Sets the current viewmodel to the specified viewmodel. The viewmodel must be a child of the _viewmodelParent.
-	/// </summary>
-	/// <param name="viewmodelInstance">The viewmodel instance to set to.</param>
-	/// <returns>Whether setting the viewmodel was successful.</returns>
-	public bool SetCurrentViewmodelTo(GameObject viewmodelInstance)
-	{
-		if (_viewmodelParent.childCount > 0)
-		{
-			DisableAllViewmodels();
+	public void SetViewmodelFor(GunInstance gunInstance) {
+		if (_currentViewmodel != null) {
+			Destroy(_currentViewmodel.gameObject);
 		}
-		if (!ViewmodelInstanceExists(viewmodelInstance))
-		{
-			Debug.LogError($"CombatViewmodelManager: Could not find viewmodel {viewmodelInstance.name}.");
-			return false;
-		}
-		viewmodelInstance.SetActive(true);
-		_currentViewmodel = viewmodelInstance.GetComponent<CombatViewmodel>();
-		return true;
+		_currentViewmodel = Instantiate(gunInstance.WeaponData.ViewmodelPrefab, _viewmodelParent).GetComponent<CombatViewmodel>();
 	}
-	public GameObject GetCurrentViewmodel() {
-		return _currentViewmodel.gameObject;
-	}
-	/// <summary>
-	/// Instantiates a new viewmodel prefab. The instance starts disabled.
-	/// </summary>
-	/// <param name="instance">The weapon instance to create a viewmodel for.</param>
-	/// <returns>The viewmodel instance.</returns>
-	public GameObject AddViewmodelOf(GunInstance instance) {
-		GameObject viewmodel = Instantiate(instance.WeaponData.ViewmodelPrefab, _viewmodelParent);
-		viewmodel.GetComponentInChildren<CombatViewmodel>()._gunInstance = instance;
-		viewmodel.SetActive(false);
-		return viewmodel;
-	}
-	public bool RemoveViewmodel(GameObject viewmodelInstance) {
-		if (!ViewmodelInstanceExists(viewmodelInstance)) return false;
-		Destroy(viewmodelInstance);
-		return true;
-	}
-	private bool ViewmodelInstanceExists(GameObject viewmodelInstance) {
-		foreach (Transform child in _viewmodelParent) {
-			if (child.gameObject == viewmodelInstance) {
-				return true;
-			}
-		}
-		return false;
-	}
-	private void DisableAllViewmodels() {
-		foreach (Transform child in _viewmodelParent) {
-			child.gameObject.SetActive(false);
+	
+	public void RemoveViewmodel() {
+		if (_currentViewmodel != null) {
+			Destroy(_currentViewmodel.gameObject);
+			_currentViewmodel = null;
 		}
 	}
 	

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public abstract class FireLogic
 {
 	public GunInstance Instance;
-
+	
 	protected FireLogic(GunInstance instance) {
 		Instance = instance;
 	}
@@ -59,5 +59,9 @@ public abstract class FireLogic
 	/// </summary>
 	public virtual void OnAimUp() {
 		
+	}
+	
+	protected float RPMToSeconds(float rpm) {
+		return 60f / rpm;
 	}
 }

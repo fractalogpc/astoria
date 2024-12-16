@@ -58,6 +58,18 @@ public class CombatInventory : InputHandlerBase
                 throw new ArgumentOutOfRangeException();
         }
     }
+    public bool SlotHasWeapon(WeaponSlot slot) {
+        switch (slot) {
+            case WeaponSlot.PrimarySlot:
+                return _primaryGunInstance != null;
+            case WeaponSlot.SecondarySlot:
+                return _secondaryGunInstance != null;
+            case WeaponSlot.SpecialSlot:
+                return _specialGunInstance != null;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
     public bool AddWeaponInstanceToSlot(GunInstance instance, WeaponSlot slot) {
         switch (slot) {
             case WeaponSlot.PrimarySlot:
@@ -69,6 +81,7 @@ public class CombatInventory : InputHandlerBase
                 _secondaryGunInstance = instance;
                 break;
             case WeaponSlot.SpecialSlot:
+                if (_specialGunInstance != null) return false;
                 _specialGunInstance = instance;
                 break;
             default:
@@ -80,14 +93,23 @@ public class CombatInventory : InputHandlerBase
         GunInstance gunInstanceItem;
         switch (slot) {
             case WeaponSlot.PrimarySlot:
+                if (_primaryGunInstance == _combatCore.CurrentGunInstance) {
+                    _combatCore.UnequipWeapon();
+                }
                 gunInstanceItem = _primaryGunInstance;
                 _primaryGunInstance = null;
                 break;
             case WeaponSlot.SecondarySlot:
+                if (_secondaryGunInstance == _combatCore.CurrentGunInstance) {
+                    _combatCore.UnequipWeapon();
+                }
                 gunInstanceItem = _secondaryGunInstance;
                 _secondaryGunInstance = null;
                 break;
             case WeaponSlot.SpecialSlot:
+                if (_specialGunInstance == _combatCore.CurrentGunInstance) {
+                    _combatCore.UnequipWeapon();
+                }
                 gunInstanceItem = _specialGunInstance;
                 _specialGunInstance = null;
                 break;

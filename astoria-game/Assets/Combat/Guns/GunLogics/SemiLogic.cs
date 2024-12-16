@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class SemiLogic : FireLogic
 {
-	private bool CanFire => Instance.CurrentAmmo > 0;
 	private float _timeSinceLastShot;
 	
 	public SemiLogic(GunInstance instance) : base(instance) {
@@ -20,7 +19,7 @@ public class SemiLogic : FireLogic
 	}
 
 	public override void OnFireDown() {
-		if (!CanFire) return;
+		if (!Instance.HasAmmo) return;
 		if (_timeSinceLastShot < Instance.WeaponData.SemiAutoSetting.CycleTime) return;
 		Instance.Fire();
 	}
