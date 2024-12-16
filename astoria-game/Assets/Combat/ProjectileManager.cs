@@ -60,6 +60,10 @@ public class ProjectileManager : Singleton<ProjectileManager>
             Callback = callback;    
         }
         public RaycastHit TickProjectile(float deltaTime) {
+            // Handle collision
+            Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
+            Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
+            
             // Calculate drag force direction
             Vector3 dragForceDirection = -Velocity.normalized;
             // Calculate drag force magnitude
@@ -72,10 +76,6 @@ public class ProjectileManager : Singleton<ProjectileManager>
 
             // Update position based on new velocity
             Position += Velocity * deltaTime;
-            
-            // Handle collision
-            Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
-            Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
             
             TimeToLive -= deltaTime;
             
