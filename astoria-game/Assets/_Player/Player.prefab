@@ -1281,7 +1281,6 @@ GameObject:
   - component: {fileID: 9088220939750902593}
   - component: {fileID: 5301573614924863385}
   - component: {fileID: 2627650646237878555}
-  - component: {fileID: 9002593964255495585}
   - component: {fileID: 2956634426805501697}
   m_Layer: 0
   m_Name: CombatSystem
@@ -1317,6 +1316,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614bf1a9f382d6942ba3ce85c224612c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _combatCore: {fileID: 0}
+  _defaultGun: {fileID: 0}
+  CurrentSlot: 0
+  _primaryGunInstance:
+    ItemData: {fileID: 0}
+    Rotated: 0
+    CurrentFireMode: 0
+    Initialized: 0
+    OnFire:
+      m_PersistentCalls:
+        m_Calls: []
+  _secondaryGunInstance:
+    ItemData: {fileID: 0}
+    Rotated: 0
+    CurrentFireMode: 0
+    Initialized: 0
+    OnFire:
+      m_PersistentCalls:
+        m_Calls: []
+  _specialGunInstance:
+    ItemData: {fileID: 0}
+    Rotated: 0
+    CurrentFireMode: 0
+    Initialized: 0
+    OnFire:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!114 &2627650646237878555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1333,25 +1359,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   _combatViewmodelManager: {fileID: 8665975738431017114}
-  _combatWeaponLogicManager: {fileID: 9002593964255495585}
-  _weaponInstances: []
-  DebugPrimary: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
-  DebugPistol: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
-  DebugSpecial: {fileID: 0}
---- !u!114 &9002593964255495585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642439937972844160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1093072ecc664ab7bf05f9740111261e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _weaponLogicParent: {fileID: 9088220939750902593}
-  _currentWeaponLogic: {fileID: 0}
 --- !u!114 &2956634426805501697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1582,7 +1589,7 @@ MonoBehaviour:
   OnSlotChanged:
     m_PersistentCalls:
       m_Calls: []
-  HeldItem:
+  _heldItemInstance:
     ItemData: {fileID: 0}
     Rotated: 0
   _itemImage: {fileID: 5994715602313754771}
@@ -3622,7 +3629,7 @@ MonoBehaviour:
   OnSlotChanged:
     m_PersistentCalls:
       m_Calls: []
-  HeldItem:
+  _heldItemInstance:
     ItemData: {fileID: 0}
     Rotated: 0
   _itemImage: {fileID: 4341903444788995894}
@@ -8625,7 +8632,7 @@ MonoBehaviour:
   OnSlotChanged:
     m_PersistentCalls:
       m_Calls: []
-  HeldItem:
+  _heldItemInstance:
     ItemData: {fileID: 0}
     Rotated: 0
   _itemImage: {fileID: 2458323521211992158}

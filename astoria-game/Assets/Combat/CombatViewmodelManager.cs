@@ -1,7 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
 /// <summary>
-/// Manages and switches between different viewmodels. Also acts as an interface for calling each one's CombatViewmodel.
+/// Manages viewmodels. Also acts as an interface for calling each one's animations.
 /// </summary>
 public class CombatViewmodelManager : NetworkBehaviour
 {
@@ -12,7 +12,7 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// Sets the current viewmodel to the specified viewmodel. The viewmodel must be a child of the _viewmodelParent.
 	/// </summary>
 	/// <param name="viewmodelInstance">The viewmodel instance to set to.</param>
-	/// <returns>Whether or not setting the viewmodel was successful.</returns>
+	/// <returns>Whether setting the viewmodel was successful.</returns>
 	public bool SetCurrentViewmodelTo(GameObject viewmodelInstance)
 	{
 		if (_viewmodelParent.childCount > 0)
@@ -36,9 +36,9 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// </summary>
 	/// <param name="instance">The weapon instance to create a viewmodel for.</param>
 	/// <returns>The viewmodel instance.</returns>
-	public GameObject AddViewmodel(WeaponInstance instance) {
+	public GameObject AddViewmodelOf(GunInstance instance) {
 		GameObject viewmodel = Instantiate(instance.WeaponData.ViewmodelPrefab, _viewmodelParent);
-		viewmodel.GetComponentInChildren<CombatViewmodel>().WeaponInstance = instance;
+		viewmodel.GetComponentInChildren<CombatViewmodel>()._gunInstance = instance;
 		viewmodel.SetActive(false);
 		return viewmodel;
 	}

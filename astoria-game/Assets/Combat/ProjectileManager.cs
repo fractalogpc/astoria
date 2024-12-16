@@ -85,7 +85,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
     public void FireProjectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics, ProjectileHitHandler hitCallback) {
         _projectilesToTick.Add(new Projectile(ProjectileLifetime, hitCallback, damage, mass, startPosition, startVelocity, aerodynamics));
         if (_projectilesToTick.Count > 800) {
-            Debug.Log($"GunLogic: Holds {_projectilesToTick.Count} projectiles. This could be a performance issue. Remind matthew to multithread this.");
+            Debug.Log($"ProjectileManager: Holds {_projectilesToTick.Count} projectiles. This could be a performance issue. Remind matthew to multithread this.");
         }
     }
     private void FixedUpdate() {

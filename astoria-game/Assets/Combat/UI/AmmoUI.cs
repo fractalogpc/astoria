@@ -35,13 +35,13 @@
 //     }
 //     if (slot._weaponInstance.TryGetComponent<MagazineWeapon>(out MagazineWeapon mw)) {
 //       switch (mw._fireType) {
-//         case MagazineWeapon.FireType.SemiAuto:
+//         case MagazineWeapon.FireTypes.SemiAuto:
 //           _weaponTypeText.text = "SINGLE";
 //           break;
-//         case MagazineWeapon.FireType.Burst:
+//         case MagazineWeapon.FireTypes.Burst:
 //           _weaponTypeText.text = "BURST";
 //           break;
-//         case MagazineWeapon.FireType.FullAuto:
+//         case MagazineWeapon.FireTypes.FullAuto:
 //           _weaponTypeText.text = "AUTO";
 //           break;
 //         default:

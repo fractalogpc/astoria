@@ -10,7 +10,7 @@ using UnityEngine;
 public class CombatInventory : InputHandlerBase
 {
     [SerializeField] private CombatCore _combatCore;
-    [SerializeField] private WeaponData _defaultWeapon;
+    [SerializeField] private GunData _defaultGun;
     public enum WeaponSlot
     {
         PrimarySlot,
@@ -18,16 +18,16 @@ public class CombatInventory : InputHandlerBase
         SpecialSlot,
     }
     [ReadOnly] public WeaponSlot CurrentSlot;
-    public WeaponInstance CurrentWeaponInstanceItem => CurrentSlot switch
+    public GunInstance CurrentGunInstanceItem => CurrentSlot switch
     {
-        WeaponSlot.PrimarySlot => _primaryWeaponInstance,
-        WeaponSlot.SecondarySlot => _secondaryWeaponInstance,
-        WeaponSlot.SpecialSlot => _specialWeaponInstance,
+        WeaponSlot.PrimarySlot => _primaryGunInstance,
+        WeaponSlot.SecondarySlot => _secondaryGunInstance,
+        WeaponSlot.SpecialSlot => _specialGunInstance,
         _ => throw new ArgumentOutOfRangeException()
     };
-    [ReadOnly] public WeaponInstance _primaryWeaponInstance;
-    [ReadOnly] public WeaponInstance _secondaryWeaponInstance;
-    [ReadOnly] public WeaponInstance _specialWeaponInstance;
+    [ReadOnly] public GunInstance _primaryGunInstance;
+    [ReadOnly] public GunInstance _secondaryGunInstance;
+    [ReadOnly] public GunInstance _specialGunInstance;
     
     protected override void InitializeActionMap() {
         RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipSlot(WeaponSlot.PrimarySlot));
@@ -43,59 +43,58 @@ public class CombatInventory : InputHandlerBase
         CurrentSlot = slot;
         switch (slot) {
             case WeaponSlot.PrimarySlot:
-                if (_primaryWeaponInstance == null) return;
-                _combatCore.EquipWeapon(_primaryWeaponInstance);
+                if (_primaryGunInstance == null) return;
+                _combatCore.EquipWeapon(_primaryGunInstance);
                 break;
             case WeaponSlot.SecondarySlot:
-                if (_secondaryWeaponInstance == null) return;
-                _combatCore.EquipWeapon(_secondaryWeaponInstance);
+                if (_secondaryGunInstance == null) return;
+                _combatCore.EquipWeapon(_secondaryGunInstance);
                 break;
             case WeaponSlot.SpecialSlot:
-                if (_specialWeaponInstance == null) return;
-                _combatCore.EquipWeapon(_specialWeaponInstance);
+                if (_specialGunInstance == null) return;
+                _combatCore.EquipWeapon(_specialGunInstance);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
-    public bool AddWeaponInstanceToSlot(WeaponInstance instance, WeaponSlot slot) {
+    public bool AddWeaponInstanceToSlot(GunInstance instance, WeaponSlot slot) {
         switch (slot) {
             case WeaponSlot.PrimarySlot:
-                if (_primaryWeaponInstance != null) return false;
-                _primaryWeaponInstance = instance;
+                if (_primaryGunInstance != null) return false;
+                _primaryGunInstance = instance;
                 break;
             case WeaponSlot.SecondarySlot:
-                if (_secondaryWeaponInstance != null) return false;
-                _secondaryWeaponInstance = instance;
+                if (_secondaryGunInstance != null) return false;
+                _secondaryGunInstance = instance;
                 break;
             case WeaponSlot.SpecialSlot:
-                _specialWeaponInstance = instance;
+                _specialGunInstance = instance;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
         return true;
     }
-    public WeaponInstance RemoveWeaponFromSlot(WeaponSlot slot) {
-        WeaponInstance weaponInstanceItem;
+    public GunInstance RemoveWeaponFromSlot(WeaponSlot slot) {
+        GunInstance gunInstanceItem;
         switch (slot) {
             case WeaponSlot.PrimarySlot:
-                weaponInstanceItem = _primaryWeaponInstance;
-                _combatCore.
-                _primaryWeaponInstance = null;
+                gunInstanceItem = _primaryGunInstance;
+                _primaryGunInstance = null;
                 break;
             case WeaponSlot.SecondarySlot:
-                weaponInstanceItem = _secondaryWeaponInstance;
-                _secondaryWeaponInstance = null;
+                gunInstanceItem = _secondaryGunInstance;
+                _secondaryGunInstance = null;
                 break;
             case WeaponSlot.SpecialSlot:
-                weaponInstanceItem = _specialWeaponInstance;
-                _specialWeaponInstance = null;
+                gunInstanceItem = _specialGunInstance;
+                _specialGunInstance = null;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        return weaponInstanceItem;
+        return gunInstanceItem;
     }
 
 

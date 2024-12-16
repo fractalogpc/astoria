@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class ProjectileHittable : MonoBehaviour
 {
     /// <summary>
-    /// Called by GunLogic. Contains float damage.
+    /// Called by CurrentLogic. Contains float damage.
     /// </summary>
     public UnityEvent<float> OnProjectileHit;
 

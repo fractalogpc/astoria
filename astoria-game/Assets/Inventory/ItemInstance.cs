@@ -4,7 +4,6 @@ using UnityEngine;
 /// <summary>
 /// This class represents an item. Inherit this class whenever you extend ItemData to account for the new runtime variables.
 /// </summary>
-[AddComponentMenu("")]
 [Serializable]
 public class ItemInstance
 {
