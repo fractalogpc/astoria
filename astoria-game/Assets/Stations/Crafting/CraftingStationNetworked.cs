@@ -50,62 +50,28 @@ public class CraftingStationNetworked : NetworkBehaviour
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-	private void Start()
-	{
+	private void Start() {
 		_interactable.OnInteract.AddListener(OnInteract);
 		_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
 		_craftButton.onClick.AddListener(OnCraftButtonClicked);
 	}
 
-	private void OnDisable()
-	{
+	private void OnDisable() {
 		_interactable.OnInteract.RemoveListener(OnInteract);
 	}
 
 	/// <summary>
 	/// Should be called by a Interactor event.
 	/// </summary>
-	public void OnInteract()
-	{
+	public void OnInteract() {
 		
 	}
 
 	// Attached to events in start
-	private void OnCraftButtonClicked()
-	{
-		if (CanCraftAnything())
-		{
-			TryCraft();
-		}
+	private void OnCraftButtonClicked() {
 	}
-	// Attached to events in start
-	private void InputChanged(List<ItemInstance> items) {
-		print($"Can craft anything: {CanCraftAnything()}");
-		_craftButton.interactable = CanCraftAnything();
-	}
-	
-	public bool CanCraftAnything() {
-		List<ItemInstance> ingredients = GetIngredients();
-		foreach (RecipeData recipe in _recipes) {
-			if (CheckRecipe(ingredients, recipe)) return true;
-		}
-		return false;
-	}
-	public bool TryCraft() {
-		List<ItemInstance> ingredients = GetIngredients();
-		foreach (RecipeData recipe in _recipes) {
-			print($"Checking recipe, ingredients: {ingredients}, recipe: {recipe._ingredients}");
-			if (!CheckRecipe(ingredients, recipe)) continue;
-			// TODO: add item to inventory, remove ingredients from inventory
-			return true;
-		}
-		Debug.LogWarning($"{gameObject.name} CraftingStationNetworked: No recipe found for the given ingredients. Did you check the recipe before crafting?");
-		return false;
-	}
-	
-	public bool CheckRecipe(List<ItemInstance> input, RecipeData recipe) {
-		return SetListsAreEqual(ItemsListToSetList(input), recipe._ingredients);
-	}
+
+
 
 	private bool SetListsAreEqual(List<ItemSet> list1, List<ItemSet> list2)
 	{
@@ -151,27 +117,6 @@ public class CraftingStationNetworked : NetworkBehaviour
 			ingredientDatas.Add(item.ItemData);
 		}
 		return ingredientDatas;
-	}
-
-	private void SyncToPlayerInventory(InventoryComponent invComponent)
-	{
-		InventoryComponent mainPlayerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
-		print(mainPlayerInventory.InventoryData == null);
-		invComponent.CreateInvFromInventoryData(mainPlayerInventory.InventoryData);
-	}
-	
-	private List<ItemInstance> GetIngredients() {
-		return _playerInventory.GetItems();
-	}
-
-	private bool SetOutput(InventoryComponent component, List<ItemData> itemsToOutput)
-	{
-		if (component.TryAddItemsByData(itemsToOutput) > 0)
-		{
-			Debug.LogWarning($"{gameObject.name} CraftingStationNetworked failed to set output items into inventory.");
-			component.ClearItems();
-		}
-		return true;
 	}
 
 }
