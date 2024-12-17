@@ -65,7 +65,7 @@ public class ReflectionProbeFollow : MonoBehaviour
     }
     
     if (_timeSinceLastUpdate >= _updateInterval) {
-      Debug.Log("Updating reflection probe");
+      // Debug.Log("Updating reflection probe");
       _timeSinceLastUpdate = 0;
 
       if (_toUpdatePrimary) {
