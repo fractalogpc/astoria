@@ -44,6 +44,11 @@ public class InputReader : Singleton<InputReader>, IStartExecution {
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Enable();
         break;
+      case InputMap.ConsoleUI:
+        InputActions.Player.Disable();
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Disable();
+        break;
       case InputMap.Null:
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Disable();
@@ -65,4 +70,5 @@ public enum InputMap {
   GenericUI = 0,
   Player = 1,
   InventoryUI = 2,
+  ConsoleUI = 3
 }

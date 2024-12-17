@@ -251,6 +251,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""16132fce-9380-476c-8db7-5b90654bf5e5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -834,6 +843,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Noclip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e13784aa-a357-4ac1-8f25-a7f637cb3c54"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Console"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1921,6 +1941,45 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""ConsoleUI"",
+            ""id"": ""8a0dfed7-8b40-4b34-876d-48eeac8d9b33"",
+            ""actions"": [
+                {
+                    ""name"": ""CloseConsole"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1b1fae2-d325-46d6-b9d3-69b9f79013c3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2d6a381f-5261-47b3-b279-9b2a0b23ef59"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""CloseConsole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e11e1ff-2f3c-469d-a3e6-6d94e89f1538"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""CloseConsole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -2013,6 +2072,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_KeyFive = m_Player.FindAction("KeyFive", throwIfNotFound: true);
         m_Player_KeySix = m_Player.FindAction("KeySix", throwIfNotFound: true);
         m_Player_Noclip = m_Player.FindAction("Noclip", throwIfNotFound: true);
+        m_Player_Console = m_Player.FindAction("Console", throwIfNotFound: true);
         // InventoryUI
         m_InventoryUI = asset.FindActionMap("InventoryUI", throwIfNotFound: true);
         m_InventoryUI_Navigate = m_InventoryUI.FindAction("Navigate", throwIfNotFound: true);
@@ -2039,6 +2099,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_GenericUI_TrackedDevicePosition = m_GenericUI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_GenericUI_TrackedDeviceOrientation = m_GenericUI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_GenericUI_CloseUI = m_GenericUI.FindAction("CloseUI", throwIfNotFound: true);
+        // ConsoleUI
+        m_ConsoleUI = asset.FindActionMap("ConsoleUI", throwIfNotFound: true);
+        m_ConsoleUI_CloseConsole = m_ConsoleUI.FindAction("CloseConsole", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -2046,6 +2109,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInputActions.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_InventoryUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.InventoryUI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_GenericUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.GenericUI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_ConsoleUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.ConsoleUI.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -2132,6 +2196,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_KeyFive;
     private readonly InputAction m_Player_KeySix;
     private readonly InputAction m_Player_Noclip;
+    private readonly InputAction m_Player_Console;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -2161,6 +2226,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @KeyFive => m_Wrapper.m_Player_KeyFive;
         public InputAction @KeySix => m_Wrapper.m_Player_KeySix;
         public InputAction @Noclip => m_Wrapper.m_Player_Noclip;
+        public InputAction @Console => m_Wrapper.m_Player_Console;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -2245,6 +2311,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Noclip.started += instance.OnNoclip;
             @Noclip.performed += instance.OnNoclip;
             @Noclip.canceled += instance.OnNoclip;
+            @Console.started += instance.OnConsole;
+            @Console.performed += instance.OnConsole;
+            @Console.canceled += instance.OnConsole;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -2324,6 +2393,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Noclip.started -= instance.OnNoclip;
             @Noclip.performed -= instance.OnNoclip;
             @Noclip.canceled -= instance.OnNoclip;
+            @Console.started -= instance.OnConsole;
+            @Console.performed -= instance.OnConsole;
+            @Console.canceled -= instance.OnConsole;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -2593,6 +2665,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public GenericUIActions @GenericUI => new GenericUIActions(this);
+
+    // ConsoleUI
+    private readonly InputActionMap m_ConsoleUI;
+    private List<IConsoleUIActions> m_ConsoleUIActionsCallbackInterfaces = new List<IConsoleUIActions>();
+    private readonly InputAction m_ConsoleUI_CloseConsole;
+    public struct ConsoleUIActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public ConsoleUIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CloseConsole => m_Wrapper.m_ConsoleUI_CloseConsole;
+        public InputActionMap Get() { return m_Wrapper.m_ConsoleUI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ConsoleUIActions set) { return set.Get(); }
+        public void AddCallbacks(IConsoleUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ConsoleUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ConsoleUIActionsCallbackInterfaces.Add(instance);
+            @CloseConsole.started += instance.OnCloseConsole;
+            @CloseConsole.performed += instance.OnCloseConsole;
+            @CloseConsole.canceled += instance.OnCloseConsole;
+        }
+
+        private void UnregisterCallbacks(IConsoleUIActions instance)
+        {
+            @CloseConsole.started -= instance.OnCloseConsole;
+            @CloseConsole.performed -= instance.OnCloseConsole;
+            @CloseConsole.canceled -= instance.OnCloseConsole;
+        }
+
+        public void RemoveCallbacks(IConsoleUIActions instance)
+        {
+            if (m_Wrapper.m_ConsoleUIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IConsoleUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ConsoleUIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ConsoleUIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public ConsoleUIActions @ConsoleUI => new ConsoleUIActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -2665,6 +2783,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnKeyFive(InputAction.CallbackContext context);
         void OnKeySix(InputAction.CallbackContext context);
         void OnNoclip(InputAction.CallbackContext context);
+        void OnConsole(InputAction.CallbackContext context);
     }
     public interface IInventoryUIActions
     {
@@ -2693,5 +2812,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnCloseUI(InputAction.CallbackContext context);
+    }
+    public interface IConsoleUIActions
+    {
+        void OnCloseConsole(InputAction.CallbackContext context);
     }
 }
