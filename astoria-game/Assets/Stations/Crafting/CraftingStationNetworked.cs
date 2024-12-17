@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using System;
 using System.Linq;
+using TMPro;
 using UnityEngine.UI;
 
 /*
@@ -33,9 +34,10 @@ public class CraftingStationNetworked : NetworkBehaviour
 {
 	public List<RecipeData> _recipes;
 	[SerializeField] private Interactable _interactable;
-	[SerializeField] private InventoryComponent _playerInvRepresentation;
-	[SerializeField] private InventoryComponent _ingredientInput;
-	[SerializeField] private InventoryComponent _outputInventory;
+	[SerializeField][ReadOnly] private InventoryComponent _playerInventory;
+	[SerializeField] private TextMeshProUGUI _itemName;
+	[SerializeField] private Image _itemImage;
+	[SerializeField] private TextMeshProUGUI _descriptionText;
 	[SerializeField] private Button _craftButton;
 
 	/// <summary>
@@ -51,7 +53,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	private void Start()
 	{
 		_interactable.OnInteract.AddListener(OnInteract);
-		_ingredientInput.OnInventoryChange.AddListener(InputChanged);
+		_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
 		_craftButton.onClick.AddListener(OnCraftButtonClicked);
 	}
 
@@ -65,8 +67,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	/// </summary>
 	public void OnInteract()
 	{
-		SyncToPlayerInventory(_playerInvRepresentation);
-		// _craftButton.interactable = CanCraftAnything();
+		
 	}
 
 	// Attached to events in start
@@ -95,8 +96,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 		foreach (RecipeData recipe in _recipes) {
 			print($"Checking recipe, ingredients: {ingredients}, recipe: {recipe._ingredients}");
 			if (!CheckRecipe(ingredients, recipe)) continue;
-			_ingredientInput.ClearItems();
-			SetOutput(_outputInventory, ItemsListToDatasList(SetListToItemsList(recipe._result)));
+			// TODO: add item to inventory, remove ingredients from inventory
 			return true;
 		}
 		Debug.LogWarning($"{gameObject.name} CraftingStationNetworked: No recipe found for the given ingredients. Did you check the recipe before crafting?");
@@ -161,7 +161,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	}
 	
 	private List<ItemInstance> GetIngredients() {
-		return _ingredientInput.GetItems();
+		return _playerInventory.GetItems();
 	}
 
 	private bool SetOutput(InventoryComponent component, List<ItemData> itemsToOutput)
