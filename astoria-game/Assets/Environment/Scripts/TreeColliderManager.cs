@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TreeColliderManager : MonoBehaviour
 {
@@ -27,7 +28,10 @@ public class TreeColliderManager : MonoBehaviour
   private Dictionary<Vector3, GameObject> _activeColliders = new Dictionary<Vector3, GameObject>();
   private List<GameObject> _unusedColliders = new List<GameObject>();
 
+  public static TreeColliderManager Instance { get; private set; }
+
   private void Start() {
+    Instance = this;
     _treeInstances = _terrainData.treeInstances;
     CreateGrid();
   }
@@ -41,7 +45,7 @@ public class TreeColliderManager : MonoBehaviour
 
       float gridCellSize = _terrainData.size.x / _gridDivisions;
 
-      if (Mathf.max(Mathf.abs(diff.x), Mathf.abs(diff.y)) >= gridCellSize / 2f) continue;
+      if (Mathf.Max(Mathf.Abs(diff.x), Mathf.Abs(diff.y)) >= gridCellSize / 2f) continue;
 
       for (int j = 0; j < gridCell.colliders.Length; j++) {
         if (gridCell.disabledColliders[j]) continue;
@@ -65,7 +69,7 @@ public class TreeColliderManager : MonoBehaviour
 
       float gridCellSize = _terrainData.size.x / _gridDivisions;
 
-      if (Mathf.max(Mathf.abs(diff.x), Mathf.abs(diff.y)) >= gridCellSize / 2f) continue;
+      if (Mathf.Max(Mathf.Abs(diff.x), Mathf.Abs(diff.y)) >= gridCellSize / 2f) continue;
 
       for (int j = 0; j < gridCell.colliders.Length; j++) {
         if (!gridCell.disabledColliders[j]) continue;
@@ -150,7 +154,7 @@ public class TreeColliderManager : MonoBehaviour
           Vector2 diff = treePosition2D - gridCell.centerPosition;
           float gridCellSize = terrainSize.x / _gridDivisions;
 
-          if (Mathf.max(Mathf.abs(diff.x), Mathf.abs(diff.y)) < gridCellSize / 2f) {
+          if (Mathf.Max(Mathf.Abs(diff.x), Mathf.Abs(diff.y)) < gridCellSize / 2f) {
             treeInstancesInCell.Add(_treeInstances[k]);
           }
         }
@@ -159,10 +163,10 @@ public class TreeColliderManager : MonoBehaviour
         gridCell.disabledColliders = new bool[treeInstancesInCell.Count];
 
         for (int k = 0; k < gridCell.colliders.Length; k++) {
-          gridCell.colliders[k] = treeInstancesInCell[k].position * terrainSize + terrainPosition;
+          gridCell.colliders[k] = Vector3.Scale(treeInstancesInCell[k].position, terrainSize) + terrainPosition;
         }
 
-        grid[i * _gridDivisions + j] = gridCell;
+        _grid[i * _gridDivisions + j] = gridCell;
       }
     }
   }

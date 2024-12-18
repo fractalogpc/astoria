@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Mirror;
 
 public class PlayerInteractor : InputHandlerBase, IStartExecution
 {
@@ -9,6 +10,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   [SerializeField] private LayerMask _treeLayerMask;
 
   [SerializeField] private TreeChopping _treeChopping;
+  [SerializeField] private ItemData _treeItemData;
 
   private Camera _camera;
 
@@ -35,7 +37,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
       _treeChopping.InteractTree(treeHit.point);
 
       // Give the player resources
-      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(new ItemData { id = 1, amount = 1 });
+      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(_treeItemData);
     }
   }
 }
