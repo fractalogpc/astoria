@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 public class PlayerInteractor : InputHandlerBase, IStartExecution
 {
   [SerializeField] private float _interactDistance = 4f;
+  [SerializeField] private LayerMask _treeLayerMask;
+
+  [SerializeField] private TreeChopping _treeChopping;
 
   private Camera _camera;
 
@@ -17,6 +20,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
 
   public void InitializeStart() {
     _camera = Camera.main;
+    _treeChopping = TreeChopping.Instance;
   }
 
   private void Interact() {
@@ -24,6 +28,10 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
     if (Physics.Raycast(ray, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInChildren<Interactable>();
       interactable?.Interact();
+    }
+
+    if (Physics.Raycast(ray, out RaycastHit treeHit, _interactDistance, _treeLayerMask)) {
+      _treeChopping.InteractTree(treeHit.point);
     }
   }
 }
