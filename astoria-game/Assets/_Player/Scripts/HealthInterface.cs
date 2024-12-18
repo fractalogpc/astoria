@@ -43,7 +43,8 @@ public class HealthInterface : NetworkBehaviour
 
   private float _regenTimer = 0;
 
-  private void OnValidate() {
+  protected override void OnValidate() {
+    base.OnValidate();
     _currentHealth = _maxHealth;
   }
 
