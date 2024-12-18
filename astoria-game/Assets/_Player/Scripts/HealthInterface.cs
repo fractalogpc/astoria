@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,7 +15,7 @@ public class OnDamageEvent : UnityEvent<Vector3> {}
 public class OnHealEvent : UnityEvent {}
 [Serializable]
 public class OnHealthZeroEvent : UnityEvent {}
-public class HealthInterface : MonoBehaviour
+public class HealthInterface : NetworkBehaviour
 {
 
   public float CurrentHealth {
@@ -77,8 +78,6 @@ public class HealthInterface : MonoBehaviour
 
   public void Damage(float damagePoints, Vector3 hitPosition) {
     _onDamage?.Invoke(hitPosition);
-    
-    if (_isPlayer) return;
     
     if (_currentHealth - damagePoints <= 0) {
       _onHealthZero?.Invoke();
