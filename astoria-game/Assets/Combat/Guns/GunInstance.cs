@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Mirror;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -99,6 +100,10 @@ public class GunInstance : ItemInstance
 
 	private void ProjectileCallback(RaycastHit hit) {
 		Debug.Log($"hit {hit.collider.gameObject.name} at {hit.point}");
+		HealthInterface healthInterface = hit.collider.gameObject.GetComponentInChildren<HealthInterface>();
+		if (healthInterface != null) {
+			healthInterface.Damage(WeaponData.Damage, hit.point);
+		}
 	}
 	
 	public void SwitchFireMode() {
