@@ -60,8 +60,11 @@ public class TreeChopping : MonoBehaviour
         _treeInstances = newTreeInstances;
         _terrainData.SetTreeInstances(newTreeInstances, false);
 
-        _terrainCollider.enabled = false;
-        _terrainCollider.enabled = true;
+        // _terrainCollider.enabled = false;
+        // _terrainCollider.enabled = true;
+
+        // Update tree collider
+        TreeColliderManager.Instance.DisableCollider(treePosition);
 
         // Instantiate a tree prefab at the tree position
         Instantiate(_treePrefab, treePosition, Quaternion.identity);
@@ -96,8 +99,11 @@ public class TreeChopping : MonoBehaviour
         _treeInstances = newTreeInstances;
         _terrainData.SetTreeInstances(newTreeInstances, false);
 
-        _terrainCollider.enabled = false;
-        _terrainCollider.enabled = true;
+        // _terrainCollider.enabled = false;
+        // _terrainCollider.enabled = true;
+
+        // Update tree collider
+        TreeColliderManager.Instance.EnableCollider(treePosition);
 
         return;
       }
