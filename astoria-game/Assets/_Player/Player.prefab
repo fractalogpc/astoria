@@ -3723,6 +3723,7 @@ GameObject:
   - component: {fileID: 5077299882305822583}
   - component: {fileID: 5795585357237766305}
   - component: {fileID: 7651286900178554149}
+  - component: {fileID: 1790292005347456770}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -4073,6 +4074,24 @@ MonoBehaviour:
     m_Bits: 65536
   _treeChopping: {fileID: 0}
   _treeItemData: {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
+--- !u!114 &1790292005347456770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574363177667902295}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae338ecbb3614bbdae90a7ae3270443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outerRadius: 30
+  innerRadius: 30
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 65544
+  bot: {fileID: 3760465668120940848, guid: a9e1452b740434ac49ecc481319b728a, type: 3}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
