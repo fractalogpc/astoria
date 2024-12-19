@@ -2393,6 +2393,62 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   lightOverride: {fileID: 156801712}
+--- !u!21 &181040353
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Element
+  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    ElementType: Form
+  disabledShaderPasses:
+  - VolumePass
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _TerrainHeightTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainNormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CategoryElement: 1
+    - _CategoryFade: 1
+    - _ElementIntensity: 1
+    - _ElementLayerMask: 1
+    - _ElementLayerMessage: 0
+    - _ElementLayerWarning: 0
+    - _ElementMessage: 0
+    - _ElementVolumeFadeMode: 0
+    - _ElementVolumeFadeValue: 0.75
+    - _EndElement: 1
+    - _EndFade: 1
+    - _EndRender: 1
+    - _HeightOffsetValue: 0
+    - _IsElementShader: 1
+    - _IsVersion: 2030
+    - _RenderCategory: 1
+    m_Colors:
+    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _TerrainSize: {r: 1000, g: 600, b: 1000, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &195721680
 GameObject:
   m_ObjectHideFlags: 0
@@ -2573,7 +2629,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 461020594}
+  - {fileID: 181040353}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3097,62 +3153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &461020594
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Element
-  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    ElementType: Form
-  disabledShaderPasses:
-  - VolumePass
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _TerrainHeightTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TerrainNormalTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _CategoryElement: 1
-    - _CategoryFade: 1
-    - _ElementIntensity: 1
-    - _ElementLayerMask: 1
-    - _ElementLayerMessage: 0
-    - _ElementLayerWarning: 0
-    - _ElementMessage: 0
-    - _ElementVolumeFadeMode: 0
-    - _ElementVolumeFadeValue: 0.75
-    - _EndElement: 1
-    - _EndFade: 1
-    - _EndRender: 1
-    - _HeightOffsetValue: 0
-    - _IsElementShader: 1
-    - _IsVersion: 2030
-    - _RenderCategory: 1
-    m_Colors:
-    - _TerrainPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _TerrainSize: {r: 1000, g: 600, b: 1000, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &525294218
 GameObject:
   m_ObjectHideFlags: 0
@@ -4104,6 +4104,37 @@ MonoBehaviour:
     otherTextureWeight: 1
     textureFilters: []
   ignoreOcclusion: 0
+--- !u!1 &787349579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 787349580}
+  m_Layer: 0
+  m_Name: Tree Falling Objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &787349580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787349579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1479564077}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &812236716
 GameObject:
   m_ObjectHideFlags: 0
@@ -7112,6 +7143,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 155126014}
+  - {fileID: 787349580}
   m_Father: {fileID: 2142900725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1516040666
@@ -7758,9 +7790,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _terrainData: {fileID: 15600000, guid: d4ed3b2a4a16b6b47be6a184add9cba3, type: 2}
-  _terrainCollider: {fileID: 0}
+  _treeParent: {fileID: 787349580}
   _treeSearchRadius: 1.5
-  _treePrefab: {fileID: 1466960570830871581, guid: 5b38d09366c737846b56711fd46a7dac, type: 3}
+  _treePrefabs:
+  - {fileID: 1466960570830871581, guid: 5b38d09366c737846b56711fd46a7dac, type: 3}
+  - {fileID: 373422227704654650, guid: 6cf16e81baf22eb4db17257f25412cd0, type: 3}
+  - {fileID: 4667486293402130132, guid: 49113c352fa14cf42870a732a955bf1d, type: 3}
+  - {fileID: 2275148164409449891, guid: 0df25496aa3db914aba37388c210bc92, type: 3}
+  - {fileID: 5530928839789964935, guid: 7147a0bacd5d6b74d89dda673b955ea6, type: 3}
+  - {fileID: 6057943475895152557, guid: 7d9f3ca732879bd499b6aef86156a23d, type: 3}
+  - {fileID: 1632174277690965477, guid: a5c79ff2f1848784faf7cdff31e10615, type: 3}
 --- !u!114 &1541469105
 MonoBehaviour:
   m_ObjectHideFlags: 0

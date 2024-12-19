@@ -5,9 +5,9 @@ public class TreeChopping : MonoBehaviour
 {
 
   [SerializeField] private TerrainData _terrainData;
-  [SerializeField] private TerrainCollider _terrainCollider;
+  [SerializeField] private Transform _treeParent;
   [SerializeField] private float _treeSearchRadius = 1f;
-  [SerializeField] private GameObject _treePrefab;
+  [SerializeField] private GameObject[] _treePrefabs;
 
   private TreeInstance[] _treeInstances;
 
@@ -72,7 +72,7 @@ public class TreeChopping : MonoBehaviour
         TreeColliderManager.Instance.DisableCollider(treePosition);
 
         // Instantiate a tree prefab at the tree position
-        Instantiate(_treePrefab, treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0));
+        Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
         return;
       }
     }
