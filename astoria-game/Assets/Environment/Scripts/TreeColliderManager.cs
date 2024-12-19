@@ -19,6 +19,7 @@ public class TreeColliderManager : MonoBehaviour
   // Must contain reference to all tree instances on its terrain
   [SerializeField] private TerrainData _terrainData;
   [SerializeField] private GameObject _colliderPrefab;
+  [SerializeField] private Transform _colliderParent;
 
   [SerializeField] private float _activationRadius = 100f;
   [SerializeField] private int _gridDivisions = 10;
@@ -93,7 +94,7 @@ public class TreeColliderManager : MonoBehaviour
             collider.transform.position = gridCell.colliders[j];
             _activeColliders.Add(gridCell.colliders[j], collider);
           } else {
-            GameObject collider = Instantiate(_colliderPrefab, gridCell.colliders[j], Quaternion.identity);
+            GameObject collider = Instantiate(_colliderPrefab, gridCell.colliders[j], Quaternion.identity, _colliderParent);
             _activeColliders.Add(gridCell.colliders[j], collider);
           }
 
@@ -113,7 +114,7 @@ public class TreeColliderManager : MonoBehaviour
       Vector2 gridCellPosition = gridCell.centerPosition;
 
       if (Vector2.Distance(new Vector2(playerPosition.x, playerPosition.z), gridCellPosition) < _activationRadius) {
-        if (!gridCell.active) {
+        if (!gridCell.active) { 
           _grid[i].active = true;
           for (int j = 0; j < gridCell.colliders.Length; j++) {
             if (gridCell.disabledColliders[j]) continue;
@@ -125,7 +126,7 @@ public class TreeColliderManager : MonoBehaviour
               collider.transform.position = gridCell.colliders[j];
               _activeColliders.Add(gridCell.colliders[j], collider);
             } else {
-              GameObject collider = Instantiate(_colliderPrefab, gridCell.colliders[j], Quaternion.identity);
+              GameObject collider = Instantiate(_colliderPrefab, gridCell.colliders[j], Quaternion.identity, _colliderParent);
               _activeColliders.Add(gridCell.colliders[j], collider);
             }
           }
