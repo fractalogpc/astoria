@@ -14,10 +14,8 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
 
   private Camera _camera;
 
-  protected override void InitializeActionMap() {
-    _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
-    
-    RegisterAction(_inputActions.Player.Interact, ctx => Interact());
+  protected override void InitializeActionMap() {    
+    RegisterAction(_inputActions.Player.Interact, _ => Interact());
   }
 
   public void InitializeStart() {

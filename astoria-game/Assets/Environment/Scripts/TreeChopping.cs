@@ -34,31 +34,36 @@ public class TreeChopping : MonoBehaviour
       if (Vector2.Distance(treePosition2D, position2D) < _treeSearchRadius) {
         Debug.Log("Found tree at " + treePosition);
         // Remove the tree instance
-        // TreeInstance _newInstance = new TreeInstance();
-        // _newInstance.prototypeIndex = _treeInstances[i].prototypeIndex;
-        // _newInstance.position = _treeInstances[i].position;
-        // _newInstance.widthScale = _treeInstances[i].widthScale;
-        // _newInstance.heightScale = 0;
-        // _newInstance.color = _treeInstances[i].color;
-        // _newInstance.lightmapColor = _treeInstances[i].lightmapColor;
-        // _newInstance.rotation = _treeInstances[i].rotation;
-        // _terrainData.SetTreeInstance(i, _newInstance);
+        TreeInstance _newInstance = new TreeInstance();
+        _newInstance.prototypeIndex = _treeInstances[i].prototypeIndex;
+        _newInstance.position = _treeInstances[i].position;
+        _newInstance.widthScale = _treeInstances[i].widthScale;
+        _newInstance.heightScale = 0;
+        _newInstance.color = _treeInstances[i].color;
+        _newInstance.lightmapColor = _treeInstances[i].lightmapColor;
+        _newInstance.rotation = _treeInstances[i].rotation;
+        _terrainData.SetTreeInstance(i, _newInstance);
 
-        // Create new list of tree instances without the chopped tree
-        TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length - 1];
-        int j = 0;
-        for (int k = 0; k < _treeInstances.Length; k++) {
-          if (k != i) {
-            newTreeInstances[j] = _treeInstances[k];
-            j++;
-          }
-        }
+        // Below is alternative way to do it, more expensive theoretically because it sets whole array.
+        // Above is rendering change only and better if not using terrain colliders.
+        // Terrain tree colliders are expensive to update and should not be used.
+        // See TreeColliderManager.
 
-        _removedTreeInstances.Add(_treeInstances[i]);
+        // // Create new list of tree instances without the chopped tree
+        // TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length - 1];
+        // int j = 0;
+        // for (int k = 0; k < _treeInstances.Length; k++) {
+        //   if (k != i) {
+        //     newTreeInstances[j] = _treeInstances[k];
+        //     j++;
+        //   }
+        // }
 
-        // Set the new tree instances
-        _treeInstances = newTreeInstances;
-        _terrainData.SetTreeInstances(newTreeInstances, false);
+        // _removedTreeInstances.Add(_treeInstances[i]);
+
+        // // Set the new tree instances
+        // _treeInstances = newTreeInstances;
+        // _terrainData.SetTreeInstances(newTreeInstances, false);
 
         // _terrainCollider.enabled = false;
         // _terrainCollider.enabled = true;
@@ -85,19 +90,27 @@ public class TreeChopping : MonoBehaviour
         Debug.Log("Found tree at " + treePosition);
         // Regrow the tree instance
         TreeInstance _newInstance = _removedTreeInstances[i];
+        _newInstance.prototypeIndex = _removedTreeInstances[i].prototypeIndex;
+        _newInstance.position = _removedTreeInstances[i].position;
+        _newInstance.widthScale = _removedTreeInstances[i].widthScale;
+        _newInstance.heightScale = _removedTreeInstances[i].heightScale;
+        _newInstance.color = _removedTreeInstances[i].color;
+        _newInstance.lightmapColor = _removedTreeInstances[i].lightmapColor;
+        _newInstance.rotation = _removedTreeInstances[i].rotation;
+        _terrainData.SetTreeInstance(i, _newInstance);
 
-        // Create new list of tree instances with the regrown tree
-        TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length + 1];
-        for (int j = 0; j < _treeInstances.Length; j++) {
-          newTreeInstances[j] = _treeInstances[j];
-        }
-        newTreeInstances[_treeInstances.Length] = _newInstance;
+        // // Create new list of tree instances with the regrown tree
+        // TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length + 1];
+        // for (int j = 0; j < _treeInstances.Length; j++) {
+        //   newTreeInstances[j] = _treeInstances[j];
+        // }
+        // newTreeInstances[_treeInstances.Length] = _newInstance;
 
-        _removedTreeInstances.RemoveAt(i);
+        // _removedTreeInstances.RemoveAt(i);
 
-        // Set the new tree instances
-        _treeInstances = newTreeInstances;
-        _terrainData.SetTreeInstances(newTreeInstances, false);
+        // // Set the new tree instances
+        // _treeInstances = newTreeInstances;
+        // _terrainData.SetTreeInstances(newTreeInstances, false);
 
         // _terrainCollider.enabled = false;
         // _terrainCollider.enabled = true;
