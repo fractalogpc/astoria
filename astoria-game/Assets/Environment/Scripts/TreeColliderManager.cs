@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 
 public class TreeColliderManager : MonoBehaviour
 {
@@ -28,12 +30,19 @@ public class TreeColliderManager : MonoBehaviour
   private Dictionary<Vector3, GameObject> _activeColliders = new Dictionary<Vector3, GameObject>();
   private List<GameObject> _unusedColliders = new List<GameObject>();
 
+  private Transform _localPlayer;
+
   public static TreeColliderManager Instance { get; private set; }
 
-  private void Start() {
+  private IEnumerator Start() {
     Instance = this;
     _treeInstances = _terrainData.treeInstances;
     CreateGrid();
+
+    while (_localPlayer == null) {
+      yield return null;
+      _localPlayer = NetworkClient.localPlayer?.transform;
+    }
   }
 
   public void DisableCollider(Vector3 position) {
@@ -51,6 +60,7 @@ public class TreeColliderManager : MonoBehaviour
         if (gridCell.disabledColliders[j]) continue;
         if (gridCell.colliders[j] == position) {
           gridCell.disabledColliders[j] = true;
+          if (!gridCell.active) break;
           _activeColliders[position].SetActive(false);
           _unusedColliders.Add(_activeColliders[position]);
           _activeColliders.Remove(position);
@@ -94,8 +104,9 @@ public class TreeColliderManager : MonoBehaviour
   }
 
   private void Update() {
+    if (_localPlayer == null) return;
     // Attach this to local player reference
-    Vector3 playerPosition = transform.position;
+    Vector3 playerPosition = _localPlayer.position;
 
     for (int i = 0; i < _grid.Length; i++) {
       ColliderGrid gridCell = _grid[i];
@@ -103,7 +114,7 @@ public class TreeColliderManager : MonoBehaviour
 
       if (Vector2.Distance(new Vector2(playerPosition.x, playerPosition.z), gridCellPosition) < _activationRadius) {
         if (!gridCell.active) {
-          gridCell.active = true;
+          _grid[i].active = true;
           for (int j = 0; j < gridCell.colliders.Length; j++) {
             if (gridCell.disabledColliders[j]) continue;
             
@@ -121,7 +132,7 @@ public class TreeColliderManager : MonoBehaviour
         }
       } else {
         if (gridCell.active) {
-          gridCell.active = false;
+          _grid[i].active = false;
 
           for (int j = 0; j < gridCell.colliders.Length; j++) {
             if (gridCell.disabledColliders[j]) continue;
