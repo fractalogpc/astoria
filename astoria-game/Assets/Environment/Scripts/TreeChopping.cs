@@ -72,7 +72,7 @@ public class TreeChopping : MonoBehaviour
         TreeColliderManager.Instance.DisableCollider(treePosition);
 
         // Instantiate a tree prefab at the tree position
-        Instantiate(_treePrefab, treePosition, Quaternion.identity);
+        Instantiate(_treePrefab, treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0));
         return;
       }
     }
