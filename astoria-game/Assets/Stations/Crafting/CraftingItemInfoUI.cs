@@ -30,7 +30,7 @@ public class CraftingItemInfoUI : MonoBehaviour
 		RemoveAllChildrenOfList();
 		foreach (ItemSet ingredient in data._ingredientSets) {
 			CraftingIngredientUI ingredientUI = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<CraftingIngredientUI>();
-			ingredientUI.SetItem(ingredient._item, ingredient._count);
+			ingredientUI.SetItem(ingredient._item, ingredient._itemCount);
 		}
 	}
 

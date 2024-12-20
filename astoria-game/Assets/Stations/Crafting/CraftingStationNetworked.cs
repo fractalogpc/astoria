@@ -15,11 +15,11 @@ using UnityEngine.UI;
 public class ItemSet
 {
 	public ItemData _item;
-	public int _count;
+	public int _itemCount;
 
 	public bool Equals(ItemSet otherSet) {
 		if (_item != otherSet._item) return false;
-		if (_count != otherSet._count) return false;
+		if (_itemCount != otherSet._itemCount) return false;
 		return true;
 	}
 }
@@ -105,19 +105,19 @@ public class CraftingStationNetworked : NetworkBehaviour
 		ItemInfoUI.SetRecipe(recipe);
 	}
 	
-	public bool Craft(RecipeData recipe, int count) {
-		if (!CanCraftRecipe(recipe, count)) return false;
+	public bool Craft(RecipeData recipe, int recipeCount) {
+		if (!CanCraftRecipe(recipe, recipeCount)) return false;
 		for (int i = 0; i < recipe._ingredientSets.Count; i++) {
 			ItemSet set = recipe._ingredientSets[i];
-			set._count *= count;
-			for (int j = 0; j < set._count; j++) {
+			int itemsNeeded = set._itemCount * recipeCount;
+			for (int j = 0; j < itemsNeeded; j++) {
 				_playerInventory.TryRemoveItemByData(set._item);
 			}
 		}
 		for (int i = 0; i < recipe._resultSets.Count; i++) {
 			ItemSet set = recipe._resultSets[i];
-			set._count *= count;
-			for (int j = 0; j < set._count; j++) {
+			int outputItems = set._itemCount * recipeCount;
+			for (int j = 0; j < outputItems; j++) {
 				_playerInventory.TryAddItemByData(set._item);
 			}
 		}
@@ -130,19 +130,23 @@ public class CraftingStationNetworked : NetworkBehaviour
 		return CanCraftRecipe(_selectedRecipe, _craftCount);
 	}
 	
-	public bool CanCraftRecipe(RecipeData recipe, int count) {
-		Debug.Log("This has a logic issue. Remind Matthew to document this for OGPC requirement!");
-		List<ItemInstance> availableItems = _playerInventory.GetItems();
+	public bool CanCraftRecipe(RecipeData recipe, int recipeCount) {
+		List<ItemInstance> ingredients = new(_playerInventory.GetItems());
 		
-		foreach (ItemSet set in recipe._ingredientSets) {
-			int countLeft = set._count *= count;
-			for (int j = availableItems.Count - 1; j > 0; j--) {
-				if (set._item != availableItems[j].ItemData) return false;
-				availableItems.RemoveAt(j);
-				countLeft--;
-				if (countLeft == 0) break;
+		foreach (ItemSet ingredient in recipe._ingredientSets) {
+			int ingredientCountLeft = ingredient._itemCount * recipeCount;
+			for (int j = ingredients.Count - 1; j >= 0; j--) {
+				if (ingredient._item != ingredients[j].ItemData) continue;
+				ingredients.RemoveAt(j);
+				ingredientCountLeft--;
+				if (ingredientCountLeft == 0) break;
+			}
+			if (ingredientCountLeft < 0) {
+				print($"can't craft {recipe._resultSets[0]._item.ItemName}");
+				return false;
 			}
 		}
+		print($"can craft {recipe._resultSets[0]._item.ItemName}");
 		return true;
 	}
 	
@@ -160,12 +164,12 @@ public class CraftingStationNetworked : NetworkBehaviour
 		foreach (ItemInstance item in items) {
 			bool found = false;
 			foreach (ItemSet ingredientSet in ingredientSets.Where(ingredientSet => item.ItemData == ingredientSet._item)) {
-				ingredientSet._count += 1;
+				ingredientSet._itemCount += 1;
 				found = true;
 				break;
 			}
 
-			if (!found) ingredientSets.Add(new ItemSet { _item = item.ItemData, _count = 1 });
+			if (!found) ingredientSets.Add(new ItemSet { _item = item.ItemData, _itemCount = 1 });
 		}
 
 		return ingredientSets;
@@ -174,7 +178,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	private List<ItemInstance> SetListToItemsList(List<ItemSet> sets) {
 		List<ItemInstance> items = new();
 		foreach (ItemSet set in sets) {
-			for (int i = 0; i < set._count; i++) {
+			for (int i = 0; i < set._itemCount; i++) {
 				items.Add(new ItemInstance(set._item));
 			}
 		}

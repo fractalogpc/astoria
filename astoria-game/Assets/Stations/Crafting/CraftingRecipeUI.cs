@@ -37,9 +37,9 @@ public class CraftingRecipeUI : MonoBehaviour
 		if (_craftingStation.CanCraftRecipe(_recipe, 1)) {
 			_recipeIconCanvasGroup.alpha = 1;
 			_selectRecipeButton.interactable = true;
-			print($"can craft {_recipe._resultSets[0]._item.ItemName}");
-		} else {
-			print($"can't craft {_recipe._resultSets[0]._item.ItemName}");
+			
+		} 
+		else {
 			_recipeIconCanvasGroup.alpha = _alphaWhenDisabled;
 			_selectRecipeButton.interactable = false;
 		}
