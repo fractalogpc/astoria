@@ -28,10 +28,10 @@ public class CraftingRecipeUI : MonoBehaviour
 		_craftingStation = craftingStation;
 		_recipe = recipe;
 		_callback = onRecipeSelectedCallback;
-		UpdateRecipe();
+		UpdateInteractivity();
 	}
 
-	public void UpdateRecipe() {
+	public void UpdateInteractivity() {
 		Debug.Log("Can change this to be a specific icon in the recipe data later.");
 		_recipeIcon.sprite = _recipe._resultSets[0]._item.ItemIcon;
 		if (_craftingStation.CanCraftRecipe(_recipe, 1)) {

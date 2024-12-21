@@ -34,7 +34,7 @@ public class CraftingRecipeGridUI : MonoBehaviour
 	public void UpdateRecipeGrid() {
 		for (int i = 0; i < _recipeGridParent.childCount; i++) {
 			CraftingRecipeUI recipeUI = _recipeGridParent.GetChild(i).GetComponent<CraftingRecipeUI>();
-			recipeUI.UpdateRecipe();
+			recipeUI.UpdateInteractivity();
 		}
 	}
 }

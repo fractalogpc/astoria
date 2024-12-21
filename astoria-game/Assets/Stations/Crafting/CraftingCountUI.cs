@@ -11,8 +11,6 @@ public class CraftingCountUI : MonoBehaviour
     [SerializeField] private Button _increaseButton;
     [SerializeField] private Button _decreaseButton;
     [SerializeField] private TextMeshProUGUI _countText;
-
-    private int _currentCount = 1;
     
     private void Start() {
         _increaseButton.onClick.AddListener(OnIncrease);
@@ -31,24 +29,31 @@ public class CraftingCountUI : MonoBehaviour
     }
     
     public void OnIncrease() {
-        _currentCount++;
-        UpdateCount();
-        if (!_craftingStation.CanCraftSelectedRecipe()) {
-            _currentCount--;
-            UpdateCount();
+        // The button shouldn't be interactable if this is the case, but just in case.
+        if (!_craftingStation.CanCraftRecipe(_craftingStation.SelectedRecipe, _craftingStation.SelectedCraftCount + 1)) {
+            return;
         }
+        _craftingStation.SetCraftCount(_craftingStation.SelectedCraftCount + 1);
+        UpdateUI();
     }
     
     public void OnDecrease() {
-        _currentCount--;
-        if (_currentCount < 1) {
-            _currentCount = 1;
+        if (_craftingStation.SelectedCraftCount <= 1) {
+            return;
         }
-        UpdateCount();
+        _craftingStation.SetCraftCount(_craftingStation.SelectedCraftCount - 1);
+        UpdateUI();
     }
     
-    private void UpdateCount() {
-        _countText.text = _currentCount.ToString();
-        _craftingStation.SetCraftCount(_currentCount);
+    public void UpdateUI() {
+        if (_craftingStation.SelectedRecipe == null) {
+            _increaseButton.interactable = false;
+            _decreaseButton.interactable = false;
+            _countText.text = "0";
+            return;
+        }
+        _decreaseButton.interactable = _craftingStation.SelectedCraftCount <= 1 ? false : true;
+        _increaseButton.interactable = _craftingStation.CanCraftRecipe(_craftingStation.SelectedRecipe, _craftingStation.SelectedCraftCount + 1) ? true : false;
+        _countText.text = _craftingStation.SelectedCraftCount.ToString();
     }
 }

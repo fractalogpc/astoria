@@ -39,8 +39,8 @@ public class CraftingStationNetworked : NetworkBehaviour
 	[SerializeField] private Interactable _interactable;
 	[SerializeField] private Button _craftButton;
 
-	[SerializeField][ReadOnly] private RecipeData _selectedRecipe;
-	[SerializeField][ReadOnly] private int _craftCount = 1;
+	[ReadOnly] public RecipeData SelectedRecipe { get; private set; }
+	[ReadOnly] public int SelectedCraftCount { get; private set; }
 	
 	/// <summary>
 	/// Add your validation code here after the base.OnValidate(); call.
@@ -74,35 +74,37 @@ public class CraftingStationNetworked : NetworkBehaviour
 		RecipeGridUI.Initialize(this);
 		CraftCountUI.Initialize(this);
 		// Just in case
-		_selectedRecipe = null;
+		SelectedRecipe = null;
 		ItemInfoUI.ResetInfo();
 		RecipeGridUI.UpdateRecipeGrid();
 	}
 	
 	public void OnPlayerInventoryChanged(List<ItemInstance> items) {
 		RecipeGridUI.UpdateRecipeGrid();
-		if (_selectedRecipe == null) return;
-		if (!CanCraftRecipe(_selectedRecipe, 1)) {
-			_selectedRecipe = null;
+		if (SelectedRecipe == null) return;
+		if (!CanCraftRecipe(SelectedRecipe, 1)) {
+			SelectedRecipe = null;
 			ItemInfoUI.ResetInfo();
 		}
 	}
 
 	public void OnCraftButtonClicked() {
-		if (_selectedRecipe == null) return;
-		Craft(_selectedRecipe, _craftCount);
+		if (SelectedRecipe == null) return;
+		Craft(SelectedRecipe, SelectedCraftCount);
+		CraftCountUI.UpdateUI();
 	}
 
 	public void SetCraftCount(int count) {
-		if (_selectedRecipe == null) return;
-		_craftCount = count;
-		if (_craftCount < 1) _craftCount = 1;
+		if (SelectedRecipe == null) return;
+		SelectedCraftCount = count;
+		if (SelectedCraftCount < 1) SelectedCraftCount = 1;
 	}
 	
 	public void SelectRecipe(RecipeData recipe) {
-		_selectedRecipe = recipe;
-		_craftCount = 1;
+		SelectedRecipe = recipe;
+		SelectedCraftCount = 1;
 		ItemInfoUI.SetRecipe(recipe);
+		CraftCountUI.UpdateUI();
 	}
 	
 	public bool Craft(RecipeData recipe, int recipeCount) {
@@ -124,74 +126,72 @@ public class CraftingStationNetworked : NetworkBehaviour
 		return true;
 	}
 	
-	public bool CanCraftSelectedRecipe() {
-		
-		if (_selectedRecipe == null) return false;
-		return CanCraftRecipe(_selectedRecipe, _craftCount);
-	}
-	
 	public bool CanCraftRecipe(RecipeData recipe, int recipeCount) {
-		List<ItemInstance> ingredients = new(_playerInventory.GetItems());
+		// This is fine because GetItems returns a copy of the items list
+		List<ItemInstance> playerItemsCopy = _playerInventory.GetItems();
 		
-		foreach (ItemSet ingredient in recipe._ingredientSets) {
-			int ingredientCountLeft = ingredient._itemCount * recipeCount;
-			for (int j = ingredients.Count - 1; j >= 0; j--) {
-				if (ingredient._item != ingredients[j].ItemData) continue;
-				ingredients.RemoveAt(j);
+		// For every ingredient set in the recipe
+		foreach (ItemSet ingredientSet in recipe._ingredientSets) {
+			int ingredientCountLeft = ingredientSet._itemCount * recipeCount;
+			
+			// Scan through player items to find the ingredients
+			foreach (ItemInstance item in playerItemsCopy) {
+				if (item.ItemData != ingredientSet._item) continue;
 				ingredientCountLeft--;
 				if (ingredientCountLeft == 0) break;
 			}
-			if (ingredientCountLeft < 0) {
-				print($"can't craft {recipe._resultSets[0]._item.ItemName}");
+
+			if (ingredientCountLeft > 0) {
+				// print($"Could not craft {recipeCount} of {recipe._resultSets[0]._item.ItemName} because of not enough {ingredientSet._item.ItemName}");
 				return false;
 			}
 		}
-		print($"can craft {recipe._resultSets[0]._item.ItemName}");
+		// print($"Can craft {recipeCount} of {recipe._resultSets[0]._item.ItemName}");
 		return true;
 	}
 	
-	private bool SetListsAreEqual(List<ItemSet> list1, List<ItemSet> list2) {
-		if (list1.Count != list2.Count) return false;
-		for (int i = 0; i < list1.Count; i++) {
-			if (!list1[i].Equals(list2[i])) return false;
-		}
-
-		return true;
-	}
-
-	private List<ItemSet> ItemsListToSetList(List<ItemInstance> items) {
-		List<ItemSet> ingredientSets = new();
-		foreach (ItemInstance item in items) {
-			bool found = false;
-			foreach (ItemSet ingredientSet in ingredientSets.Where(ingredientSet => item.ItemData == ingredientSet._item)) {
-				ingredientSet._itemCount += 1;
-				found = true;
-				break;
-			}
-
-			if (!found) ingredientSets.Add(new ItemSet { _item = item.ItemData, _itemCount = 1 });
-		}
-
-		return ingredientSets;
-	}
-
-	private List<ItemInstance> SetListToItemsList(List<ItemSet> sets) {
-		List<ItemInstance> items = new();
-		foreach (ItemSet set in sets) {
-			for (int i = 0; i < set._itemCount; i++) {
-				items.Add(new ItemInstance(set._item));
-			}
-		}
-
-		return items;
-	}
-
-	private List<ItemData> ItemsListToDatasList(List<ItemInstance> items) {
-		List<ItemData> ingredientDatas = new();
-		foreach (ItemInstance item in items) {
-			ingredientDatas.Add(item.ItemData);
-		}
-
-		return ingredientDatas;
-	}
+	// private bool SetListsAreEqual(List<ItemSet> list1, List<ItemSet> list2) {
+	// 	if (list1.Count != list2.Count) return false;
+	// 	for (int i = 0; i < list1.Count; i++) {
+	// 		if (!list1[i].Equals(list2[i])) return false;
+	// 	}
+	//
+	// 	return true;
+	// }
+	//
+	// private List<ItemSet> ItemsListToSetList(List<ItemInstance> items) {
+	// 	List<ItemSet> ingredientSets = new();
+	// 	foreach (ItemInstance item in items) {
+	// 		bool found = false;
+	// 		foreach (ItemSet ingredientSet in ingredientSets.Where(ingredientSet => item.ItemData == ingredientSet._item)) {
+	// 			ingredientSet._itemCount += 1;
+	// 			found = true;
+	// 			break;
+	// 		}
+	//
+	// 		if (!found) ingredientSets.Add(new ItemSet { _item = item.ItemData, _itemCount = 1 });
+	// 	}
+	//
+	// 	return ingredientSets;
+	// }
+	//
+	// private List<ItemInstance> SetListToItemsList(List<ItemSet> sets) {
+	// 	List<ItemInstance> items = new();
+	// 	foreach (ItemSet set in sets) {
+	// 		for (int i = 0; i < set._itemCount; i++) {
+	// 			items.Add(new ItemInstance(set._item));
+	// 		}
+	// 	}
+	//
+	// 	return items;
+	// }
+	//
+	// private List<ItemData> ItemsListToDatasList(List<ItemInstance> items) {
+	// 	List<ItemData> ingredientDatas = new();
+	// 	foreach (ItemInstance item in items) {
+	// 		ingredientDatas.Add(item.ItemData);
+	// 	}
+	//
+	// 	return ingredientDatas;
+	// }
 }
