@@ -24,7 +24,7 @@ public class CombatWeaponInfoUI : MonoBehaviour
   private void OnNewWeaponEquipped(GunInstance weapon) {
     _infoFade.FadeIn(true);
     _weaponNameText.text = weapon.WeaponData.ItemName;
-    UpdateAmmoCount();
+    UpdateAmmoCount(weapon.CurrentAmmo, weapon.GetMaxAmmo());
   }
   private void UpdateAmmoCount(int oldAmmo = 0, int newAmmo = 0) {
     int maxAmmo = _playerCombatCore.CurrentGunInstance.GetMaxAmmo();
