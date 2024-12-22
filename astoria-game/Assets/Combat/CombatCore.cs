@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.PlayerLoop;
 
 /// <summary>
 /// Tightly coupled with CombatViewmodelManager.
@@ -18,8 +20,19 @@ using UnityEngine;
 [RequireComponent(typeof(CombatInventory))]
 public class CombatCore : NetworkedInputHandlerBase
 {
+    [SerializeField] private InventoryComponent _playerInventory;
     [SerializeField] private CombatViewmodelManager _combatViewmodelManager;
     public GunInstance CurrentGunInstance { get; private set; }
+    
+    /// <summary>
+    /// Fires when the equipped weapon changes. The parameter is the new weapon.
+    /// </summary>
+    public UnityEvent<GunInstance> OnEquipWeapon;
+    
+    /// <summary>
+    /// Fires when the ammo of the equipped weapon changes. The first parameter is the current ammo, the second is the max ammo.
+    /// </summary>
+    public UnityEvent<int, int> OnAmmoChanged;
     
     protected override void InitializeActionMap() {
         RegisterAction(_inputActions.Player.Attack, ctx => OnFireDown(), () => OnFireUp());
@@ -32,13 +45,25 @@ public class CombatCore : NetworkedInputHandlerBase
     public void EquipWeapon(GunInstance instance) {
         CurrentGunInstance = instance;
         if (instance.Initialized == false) {
-            instance.InitializeWeapon(this, _combatViewmodelManager);
+            instance.InitializeWeapon(this, _combatViewmodelManager, _playerInventory);
         }
         _combatViewmodelManager.SetViewmodelFor(instance);
+        instance.AmmoChanged += OnInstanceAmmoChanged;
+        OnEquipWeapon.Invoke(CurrentGunInstance);
+    }
+
+    private void OnDisable() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
+    }
+    
+    private void OnInstanceAmmoChanged(int old, int current) {
+        OnAmmoChanged?.Invoke(old, current);
     }
     
     public void UnequipWeapon() {
         if (CurrentGunInstance == null) return;
+        CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
         CurrentGunInstance.Unequip();
         StartCoroutine(UnequipWeaponCoroutine());
         CurrentGunInstance = null;

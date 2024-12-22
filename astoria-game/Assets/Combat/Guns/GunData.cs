@@ -8,6 +8,9 @@ public class GunData : ItemData
 	[Header("Viewmodel")]
 	public GameObject ViewmodelPrefab;
 	
+	[Header("Ammo Item")]
+	public ItemData AmmoItem;
+
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;
 	public RecoilSettings RecoilSetting;
