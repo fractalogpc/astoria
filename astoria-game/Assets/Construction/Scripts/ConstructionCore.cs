@@ -18,6 +18,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   [Header("Construction Data")]
   [SerializeField] private ConstructableObjectData[] ConstructableObjects;
+  public ConstructableObjectData[] ConstructableObjectsPublic => ConstructableObjects;
 
   [Header("General settings")]
   [SerializeField] private float _minBuildDistance = 1f;
@@ -521,6 +522,17 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     return true;
   }
 
+  public bool TryRemoveObject() {
+    if (_currentStructureData == null) return false;
+
+    _currentStructureData = null;
+    TryDestroyHeldObject();
+    TryDestroyTempObject();
+    HasObject = false;
+
+    return true;
+  }
+
   public bool CanGiveObject(ConstructableObjectData data, out string errorText)
   {
     errorText = "";
@@ -551,4 +563,5 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
     return true;
   }
+
 }

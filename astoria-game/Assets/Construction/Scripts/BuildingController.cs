@@ -10,11 +10,12 @@ public class BuildingController : MonoBehaviour, IStartExecution
     public GameObject prefabParentContent;
     public GameObject StructureObjectPrefab;
 
-    public ConstructableObjectData[] constructableObjectDatas;
 
     public void InitializeStart()
     {
-        foreach (ConstructableObjectData data in constructableObjectDatas)
+        togglePlayerBuildingUI.OnBuildingUIOpen.AddListener(OnBuildingUIOpen);
+
+        foreach (ConstructableObjectData data in constructionCore.ConstructableObjectsPublic)
         {
             GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
             prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
@@ -22,5 +23,10 @@ public class BuildingController : MonoBehaviour, IStartExecution
             Button button = prefab.GetComponent<Button>();
             button.onClick.AddListener(() => { if (constructionCore.TryGiveObject(data)) togglePlayerBuildingUI.SetVisibility(false); });
         }
+    }
+
+    private void OnBuildingUIOpen()
+    {
+        constructionCore.TryRemoveObject();
     }
 }
