@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputReader : Singleton<InputReader>, IStartExecution
 {
@@ -39,30 +40,42 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.InventoryUI.Disable();
         InputActions.GenericUI.Enable();
         InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Disable();
         break;
       case InputMap.Player:
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Disable();
         InputActions.Player.Enable();
         InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Disable();
         break;
       case InputMap.InventoryUI:
         InputActions.Player.Disable();
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Enable();
         InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Disable();
         break;
       case InputMap.ConsoleUI:
         InputActions.Player.Disable();
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Disable();
         InputActions.ConsoleUI.Enable();
+        InputActions.BuildingUI.Disable();
+        break;
+      case InputMap.BuildingUI:
+        InputActions.Player.Disable();
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Disable();
+        InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Enable();
         break;
       case InputMap.Null:
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Disable();
         InputActions.Player.Disable();
         InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Disable();
         break;
       default:
         throw new ArgumentOutOfRangeException(nameof(newInputMap), newInputMap, null);
@@ -81,5 +94,6 @@ public enum InputMap
   GenericUI = 0,
   Player = 1,
   InventoryUI = 2,
-  ConsoleUI = 3
+  ConsoleUI = 3,
+  BuildingUI = 4
 }

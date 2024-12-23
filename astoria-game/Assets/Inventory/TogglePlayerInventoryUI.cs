@@ -11,7 +11,7 @@ public class TogglePlayerInventoryUI : InputHandlerBase
   protected override void InitializeActionMap()
   {
     RegisterAction(_inputActions.Player.OpenInventory, ctx => SetVisibility(true));
-    RegisterAction(_inputActions.InventoryUI.CloseInventory, ctx => SetVisibility(false));
+    RegisterAction(_inputActions.InventoryUI.CloseMenu, ctx => SetVisibility(false));
   }
     
   private void SetVisibility(bool show)

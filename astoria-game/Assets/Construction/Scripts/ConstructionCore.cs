@@ -506,9 +506,9 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   /// Tries to give the player an object to place
   /// </summary>
   /// <param name="data">The object data to give the player</param>
-  public void TryGiveObject(ConstructableObjectData data)
+  public bool TryGiveObject(ConstructableObjectData data)
   {
-    if (_currentStructureData != null) return;
+    if (_currentStructureData != null) return false;
 
     _isDeleting = false;
     TryUnhighlightObject();
@@ -517,6 +517,8 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     HasObject = true;
 
     CreateHeldObject();
+
+    return true;
   }
 
   public bool CanGiveObject(ConstructableObjectData data, out string errorText)
