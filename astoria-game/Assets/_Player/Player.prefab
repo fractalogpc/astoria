@@ -6042,6 +6042,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2095317f118e3419267f0d97a8fe99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnBuildingUIOpen:
+    m_PersistentCalls:
+      m_Calls: []
   _inventoryCanvasGroup: {fileID: 1222717324559627723}
 --- !u!114 &2574421876848557191
 MonoBehaviour:
@@ -6059,13 +6062,6 @@ MonoBehaviour:
   togglePlayerBuildingUI: {fileID: 7753506192576928618}
   prefabParentContent: {fileID: 6847233402077956102}
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
-  constructableObjectDatas:
-  - {fileID: 11400000, guid: beb7ff24859f6804e85c9f737d4e011b, type: 2}
-  - {fileID: 11400000, guid: 8cbbd0ed7a3b26c44b3629448c8e5bf4, type: 2}
-  - {fileID: 11400000, guid: 294795282748d584fbb45fecf3ef6428, type: 2}
-  - {fileID: 11400000, guid: d1f157cb5300808479e04898d449f22c, type: 2}
-  - {fileID: 11400000, guid: 44385c227f38f17429ec3aa9ed0699e4, type: 2}
-  - {fileID: 11400000, guid: 08efd39c0c1253947b9bccc0ffee903e, type: 2}
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -8499,7 +8495,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 50000
   field of view: 60
   orthographic: 0
   orthographic size: 5
