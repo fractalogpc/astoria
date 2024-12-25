@@ -5,7 +5,7 @@ using Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ConstructionCore : InputHandlerBase, IStartExecution
+public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
 {
   public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
 
@@ -40,7 +40,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private GameObject _baseHighlightedObject; // This is the gameObject with the collider and the renderer on it
   private GameObject _highlightedObject; // This is the head parent of the baseHighlightedObject
   private Material _highlightedObjectMaterial;
-  private Camera _stashedCamera;
+  public Camera PlayerCamera;
 
   private PlayerCamera _playerLook;
 
@@ -114,8 +114,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
 
   public void InitializeStart()
   {
-    _stashedCamera = Camera.main;
-    _playerLook = _stashedCamera.GetComponent<PlayerCamera>();
+    _playerLook = PlayerCamera.GetComponent<PlayerCamera>();
   }
 
   private void Update()
@@ -132,14 +131,14 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private void PlaceTemporaryObject()
   {
     Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-    Ray ray = _stashedCamera.ScreenPointToRay(screenCenter); // This is probably fine, but might cause issues?
+    Ray ray = PlayerCamera.ScreenPointToRay(screenCenter); // This is probably fine, but might cause issues?
 
     // heightOffset doesn't work with props
     if (_currentStructureData.Type != ConstructableObjectData.ConstructableType.Prop)
     {
       // Shift the ray based on heightOffset
       float heightOffset = _currentStructureData.HeightOffset;
-      Vector3 adjustedOrigin = ray.origin - _stashedCamera.transform.up * heightOffset;
+      Vector3 adjustedOrigin = ray.origin - PlayerCamera.transform.up * heightOffset;
       ray.origin = adjustedOrigin;
     }
 
@@ -150,7 +149,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
       TryCreateTemporaryObject();
 
       // Rotate the temp object to face the player
-      Vector3 directionTowardsCamera = _stashedCamera.transform.position - hit.point;
+      Vector3 directionTowardsCamera = PlayerCamera.transform.position - hit.point;
       directionTowardsCamera.y = 0;
       Quaternion offsetRotation = Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(_currentStructureData.RotationOffset);
 
@@ -215,7 +214,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private bool TryRaycast(Ray ray, out RaycastHit hit)
   {
     // Get the current 'player' position
-    Vector2 currPositionVector2 = new Vector2(_stashedCamera.transform.position.x, _stashedCamera.transform.position.z);
+    Vector2 currPositionVector2 = new Vector2(PlayerCamera.transform.position.x, PlayerCamera.transform.position.z);
 
     // Default test distance to max build distance
     float testDistance = _maxBuildDistance;
@@ -247,7 +246,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
       }
     }
 
-    Vector3 cameraForward = _stashedCamera.transform.forward;
+    Vector3 cameraForward = PlayerCamera.transform.forward;
     if (Mathf.Approximately(cameraForward.y, 1.0f) || Mathf.Approximately(cameraForward.y, -1.0f))
     {
       // If the camera y is close enough to 1 or -1, don't allow building
@@ -256,7 +255,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
     }
     cameraForward.y = 0;
     cameraForward = cameraForward.normalized * testDistance;
-    Vector3 downRayOrigin = _stashedCamera.transform.position + cameraForward;
+    Vector3 downRayOrigin = PlayerCamera.transform.position + cameraForward;
     // If the raycast didn't hit anything, try a raycast from the camera to the ground
     if (Physics.Raycast(downRayOrigin, Vector3.down, out hit, 100f, _groundLayer))
     {
@@ -276,7 +275,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
         Destroy(c);
       }
 
-      _heldObject.transform.parent = _stashedCamera.transform;
+      _heldObject.transform.parent = PlayerCamera.transform;
       _heldObject.transform.localPosition = _currentStructureData.HeldOffsetPosition;
       _heldObject.transform.localRotation = Quaternion.Euler(_currentStructureData.HeldOffsetRotation);
     }
@@ -308,7 +307,7 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   }
 
   private void TryHighlightObject() {
-    Ray ray = _stashedCamera.ScreenPointToRay(Input.mousePosition);
+    Ray ray = PlayerCamera.ScreenPointToRay(Input.mousePosition);
     RaycastHit hit;
     if (Physics.Raycast(ray, out hit, 100f, _constructionLayer)) {
       if (_baseHighlightedObject != hit.collider.gameObject) {
@@ -458,16 +457,19 @@ public class ConstructionCore : InputHandlerBase, IStartExecution
   private void PlacePermanentObject() {
     // Logic for placing an object (setting a parent, etc) goes here
     
-    GameObject permanentObject = Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation);
+    // GameObject permanentObject = 
     // if (_currentStructureData.CarveNavmesh) {
     //   NavMeshObstacle obstacle = permanentObject.AddComponent<NavMeshObstacle>();
     //   obstacle.carving = true;
     //   obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
     // }
     // If the object is a prop, call the OnPlaced method
-    if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
-      permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
-    }
+    NetworkServer.Spawn(Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation));
+
+    // if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
+    //   permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
+    // }
+
 
     TryDestroyTempObject();
   }

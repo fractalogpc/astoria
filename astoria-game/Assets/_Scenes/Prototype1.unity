@@ -2404,8 +2404,8 @@ MonoBehaviour:
   customMaterial: {fileID: 0}
   terrainData: {fileID: 1541469100}
   terrainMask: -1
-  debugData: <b><size=10><color=#ff7663>The element is outside the base distance
-    bounds</color></size></b>
+  debugData: <size=10><color=#ffdb78>The element is only partially inside the base
+    distance bounds</color></size>
   materialData:
     shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
     shaderName: BOXOPHOBIC/The Visual Engine/Elements/Form Surface (Terrain)
@@ -3114,62 +3114,6 @@ MonoBehaviour:
   maxDistanceFromParent: 0
   sdfClamp: 0
   weightRange: {x: 0, y: 999999}
---- !u!21 &412690534
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Element
-  m_Shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    ElementType: Form
-  disabledShaderPasses:
-  - VolumePass
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _TerrainHeightTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TerrainNormalTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _CategoryElement: 1
-    - _CategoryFade: 1
-    - _ElementIntensity: 1
-    - _ElementLayerMask: 1
-    - _ElementLayerMessage: 0
-    - _ElementLayerWarning: 0
-    - _ElementMessage: 0
-    - _ElementVolumeFadeMode: 0
-    - _ElementVolumeFadeValue: 0.75
-    - _EndElement: 1
-    - _EndFade: 1
-    - _EndRender: 1
-    - _HeightOffsetValue: 0
-    - _IsElementShader: 1
-    - _IsVersion: 2030
-    - _RenderCategory: 1
-    m_Colors:
-    - _TerrainPosition: {r: 14620, g: 0, b: 11317, a: 0}
-    - _TerrainSize: {r: 1000, g: 600, b: 1000, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &412703061
 GameObject:
   m_ObjectHideFlags: 0
@@ -3839,6 +3783,66 @@ PrefabInstance:
       propertyPath: m_Name
       value: Systems
       objectReference: {fileID: 0}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: spawnPrefabs.Array.size
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1574363177667902295, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 3585124357948749797, guid: f9ce944642e0bdc4f871ff3745a9626a, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[4]'
+      value: 
+      objectReference: {fileID: 4437520378327574113, guid: e1bfe85f5f804bc4595698fb83358e0b, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[5]'
+      value: 
+      objectReference: {fileID: 5723640200214887294, guid: af155e496ba59c345823bab37c690402, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[6]'
+      value: 
+      objectReference: {fileID: 3444807135043443425, guid: d2a6dd13b6f373e4eb1ce16d410678ee, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[7]'
+      value: 
+      objectReference: {fileID: 2522056896638217523, guid: 696857833277a2043928d42b0b58cd45, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[8]'
+      value: 
+      objectReference: {fileID: 4149885942643869310, guid: 823e0a86369559342971025b8d74d528, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[9]'
+      value: 
+      objectReference: {fileID: 6887075782289690670, guid: d1d4cc936983c9a4a92a0697281e3aef, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[10]'
+      value: 
+      objectReference: {fileID: 6830636541982284207, guid: c8d1c502f89b21d43a4e3c0682132eaa, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[11]'
+      value: 
+      objectReference: {fileID: 4182996458392046472, guid: feb81aa1cc864ab4abe1124ef574cfc3, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[12]'
+      value: 
+      objectReference: {fileID: 6430214815245279071, guid: a061af1dd643daf49947b98cb619ff14, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[13]'
+      value: 
+      objectReference: {fileID: 8072159536918346169, guid: 889185a809d1e044f87df79b0905673a, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[14]'
+      value: 
+      objectReference: {fileID: 4568782367682809396, guid: 06f0d92957f41014c9f19abd00cf7b81, type: 3}
+    - target: {fileID: 8791993407557026920, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
+      propertyPath: 'spawnPrefabs.Array.data[15]'
+      value: 
+      objectReference: {fileID: 555848342096472085, guid: eb355c98114f6474f802644391ba2a82, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
