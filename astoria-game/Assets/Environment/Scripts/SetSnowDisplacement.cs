@@ -134,11 +134,11 @@ public class SetSnowDisplacement : MonoBehaviour
   public void DisplacePoint(Vector3 point) {
     // Find snow position at the point
     // Raycast down to terrain
-    RaycastHit hit;
-    if (!Physics.Raycast(point + Vector3.up * 100.0f, Vector3.down, out hit, 200.0f, LayerMask.GetMask("Ground"))) {
-      return;
-    }
-    if (point.y > _snowPlane.position.y + hit.point.y) {
+    // RaycastHit hit;
+    // if (!Physics.Raycast(point + Vector3.up * 100.0f, Vector3.down, out hit, 200.0f, LayerMask.GetMask("Ground"))) {
+    //   return;
+    // }
+    if (point.y > _snowPlane.position.y/* + hit.point.y*/) {
       return;
     }
     Vector2 uv = new Vector2(
