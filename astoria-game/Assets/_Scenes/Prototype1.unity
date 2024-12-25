@@ -2404,8 +2404,8 @@ MonoBehaviour:
   customMaterial: {fileID: 0}
   terrainData: {fileID: 1541469100}
   terrainMask: -1
-  debugData: <size=10><color=#ffdb78>The element is only partially inside the base
-    distance bounds</color></size>
+  debugData: <b><size=10><color=#ff7663>The element is outside the base distance
+    bounds</color></size></b>
   materialData:
     shader: {fileID: 4800000, guid: 32980ad591cc3b54a96bc6d2601d067e, type: 3}
     shaderName: BOXOPHOBIC/The Visual Engine/Elements/Form Surface (Terrain)
@@ -2533,7 +2533,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 412690534}
+  - {fileID: 2100000, guid: 34572f40eebc0fe458dfa28c96beb7eb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9070,7 +9070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d813856876a4ac94682b202e4240ce4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  styledBanner: 0
+  styledBanner: 1
   quickCat: 1
   motionControl: 0.5
   seasonControl: 2
@@ -9089,7 +9089,7 @@ MonoBehaviour:
     tintingColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   globalAtmoData:
     drynessIntensity: 0
-    overlayIntensity: 0
+    overlayIntensity: 1
     wetnessIntensity: 0
     raindropsIntensity: 0
   globalFadeData:
