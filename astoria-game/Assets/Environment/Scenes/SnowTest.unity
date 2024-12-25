@@ -167,7 +167,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116741347}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -612,7 +612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0efd3e31363d18846bf2831c442f7394, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0efd3e31363d18846bf2831c442f7394, type: 3}
       propertyPath: m_LocalPosition.z
@@ -759,10 +759,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textureSize: 256
+  _texelsPerVertex: 4
   displacementScale: 10
   snowMaterial: {fileID: 2100000, guid: 417c0919ae370ec4397c6ce014ebd3b9, type: 2}
   _snowPlane: {fileID: 1474752918}
-  _displacementMagnitude: 0.25
+  _displacementMagnitude: 0.15
+  _displacementRadius: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

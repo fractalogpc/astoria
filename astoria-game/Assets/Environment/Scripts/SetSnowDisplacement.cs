@@ -15,6 +15,7 @@ public class SetSnowDisplacement : MonoBehaviour
   [SerializeField] private Transform _snowPlane;
   [SerializeField] private float _displacementMagnitude;
   private Vector2 center;
+  [SerializeField] private float _displacementRadius = 1.0f;
 
   public static SetSnowDisplacement Instance { get; private set; }
 
@@ -48,34 +49,37 @@ public class SetSnowDisplacement : MonoBehaviour
 
     bool updateTexture = false;
 
-    if (xDistance > displacementScale / textureSize) {
-      center.x += displacementScale / textureSize;
+    int texelsToUpdate = _texelsPerVertex;
+    float metersPerTexel = displacementScale / textureSize;
+
+    if (xDistance > metersPerTexel * texelsToUpdate) {
+      center.x += metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture to the left
       Color[] colors = displacementTexture.GetPixels();
-      
+
       for (int x = 0; x < textureSize; x++) {
         for (int y = 0; y < textureSize; y++) {
-          if (x == textureSize - 1) {
+          if (x >= textureSize - texelsToUpdate) {
             colors[x + y * textureSize] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
           } else {
-            colors[x + y * textureSize] = colors[x + 1 + y * textureSize];
+            colors[x + y * textureSize] = colors[x + texelsToUpdate + y * textureSize];
           }
         }
       }
 
       displacementTexture.SetPixels(colors);
       updateTexture = true;
-    } else if (xDistance < -displacementScale / textureSize) {
-      center.x -= displacementScale / textureSize;
+    } else if (xDistance < -metersPerTexel * texelsToUpdate) {
+      center.x -= metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture to the right
       Color[] colors = displacementTexture.GetPixels();
 
       for (int x = textureSize - 1; x >= 0; x--) {
         for (int y = 0; y < textureSize; y++) {
-          if (x == 0) {
+          if (x < texelsToUpdate) {
             colors[x + y * textureSize] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
           } else {
-            colors[x + y * textureSize] = colors[x - 1 + y * textureSize];
+            colors[x + y * textureSize] = colors[x - texelsToUpdate + y * textureSize];
           }
         }
       }
@@ -84,34 +88,34 @@ public class SetSnowDisplacement : MonoBehaviour
       updateTexture = true;
     }
 
-    if (zDistance > displacementScale / textureSize) {
-      center.y += displacementScale / textureSize;
+    if (zDistance > metersPerTexel * texelsToUpdate) {
+      center.y += metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture down
       Color[] colors = displacementTexture.GetPixels();
 
       for (int x = 0; x < textureSize; x++) {
         for (int y = 0; y < textureSize; y++) {
-          if (y == textureSize - 1) {
+          if (y >= textureSize - texelsToUpdate) {
             colors[x + y * textureSize] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
           } else {
-            colors[x + y * textureSize] = colors[x + (y + 1) * textureSize];
+            colors[x + y * textureSize] = colors[x + (y + texelsToUpdate) * textureSize];
           }
         }
       }
       
       displacementTexture.SetPixels(colors);
       updateTexture = true;
-    } else if (zDistance < -displacementScale / textureSize) {
-      center.y -= displacementScale / textureSize;
+    } else if (zDistance < -metersPerTexel * texelsToUpdate) {
+      center.y -= metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture up
       Color[] colors = displacementTexture.GetPixels();
       
       for (int x = 0; x < textureSize; x++) {
         for (int y = textureSize - 1; y >= 0; y--) {
-          if (y == 0) {
+          if (y < texelsToUpdate) {
             colors[x + y * textureSize] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
           } else {
-            colors[x + y * textureSize] = colors[x + (y - 1) * textureSize];
+            colors[x + y * textureSize] = colors[x + (y - texelsToUpdate) * textureSize];
           }
         }
       }
@@ -122,25 +126,40 @@ public class SetSnowDisplacement : MonoBehaviour
 
     if (updateTexture) {
       displacementTexture.Apply();
-      _snowPlane.position = new Vector3(center.x, 0.5f, center.y);
+      _snowPlane.position = new Vector3(center.x, _snowPlane.position.y, center.y);
       snowMaterial.SetVector("_Center", new Vector4(center.x, center.y, 0.0f, 0.0f));
     }
   }
-
   public void DisplacePoint(Vector3 point) {
+    if (point.y > _snowPlane.position.y) {
+      return;
+    }
     Vector2 uv = new Vector2(
-      (point.x - _localPlayer.position.x) / displacementScale + 0.5f,
-      (point.z - _localPlayer.position.z) / displacementScale + 0.5f
+      (point.x - center.x) / displacementScale + 0.5f,
+      (point.z - center.y) / displacementScale + 0.5f
     );
     if (uv.x < 0.0f || uv.x > 1.0f || uv.y < 0.0f || uv.y > 1.0f) {
       return;
     }
-    Debug.Log(uv);
-    displacementTexture.SetPixel(
-      (int)(uv.x * textureSize),
-      (int)(uv.y * textureSize),
-      new Color(_displacementMagnitude, 0.0f, 0.0f, 0.0f)
-    );
+
+    int pixelRadius = Mathf.CeilToInt(_displacementRadius * textureSize / displacementScale);
+    int centerX = (int)(uv.x * textureSize);
+    int centerY = (int)(uv.y * textureSize);
+
+    for (int x = -pixelRadius; x <= pixelRadius; x++) {
+      for (int y = -pixelRadius; y <= pixelRadius; y++) {
+        int pixelX = centerX + x;
+        int pixelY = centerY + y;
+        if (pixelX >= 0 && pixelX < textureSize && pixelY >= 0 && pixelY < textureSize) {
+          float distance = Mathf.Sqrt(x * x + y * y) / pixelRadius;
+          if (distance <= 1.0f) {
+            float displacement = _displacementMagnitude * (1.0f - distance);
+            Color currentColor = displacementTexture.GetPixel(pixelX, pixelY);
+            displacementTexture.SetPixel(pixelX, pixelY, new Color(Mathf.Max(currentColor.r, displacement), 0.0f, 0.0f, 0.0f));
+          }
+        }
+      }
+    }
 
     displacementTexture.Apply();
   }
