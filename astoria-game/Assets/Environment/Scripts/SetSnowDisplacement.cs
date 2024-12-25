@@ -3,39 +3,45 @@ using UnityEngine;
 public class SetSnowDisplacement : MonoBehaviour
 {
 
-  private ComputeBuffer _snowDisplacementBuffer;
-  private Vector4[] _snowDisplacement;
-  [SerializeField] private Material _snowMaterial;
-  [SerializeField] private int _positionsCount = 1000;
+  public int textureSize = 256;
+  public float displacementScale = 1.0f;
 
-  private int _lastPositionUpdated = -1;
+  private Texture2D displacementTexture;
+  [SerializeField] private Material snowMaterial;
+  [SerializeField] private Transform playerTransform;
 
   public static SetSnowDisplacement Instance { get; private set; }
 
-  public void DisplacePoint(Vector3 position) {
-    _lastPositionUpdated = (_lastPositionUpdated + 1) % _positionsCount;
-    _snowDisplacement[_lastPositionUpdated].x = position.x;
-    _snowDisplacement[_lastPositionUpdated].y = position.y;
-    _snowDisplacement[_lastPositionUpdated].z = position.z;
-    _snowDisplacement[_lastPositionUpdated].w = 1.0f;
-    _snowDisplacementBuffer.SetData(_snowDisplacement);
-  }
-
   private void Start() {
     Instance = this;
-
-    _snowDisplacementBuffer = new ComputeBuffer(_positionsCount, sizeof(float) * 4);
-    _snowDisplacement = new Vector4[_positionsCount];
-    for (int i = 0; i < _positionsCount; i++){
-      _snowDisplacement[i] = new Vector4(0, 0, 0, 0);
+    displacementTexture = new Texture2D(textureSize, textureSize, TextureFormat.RFloat, false);
+    Color[] colors = new Color[textureSize * textureSize];
+    for (int i = 0; i < colors.Length; i++) {
+      colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
-    _snowDisplacementBuffer.SetData(_snowDisplacement);
-    _snowMaterial.SetInt("_PositionsCount", _positionsCount);
-    _snowMaterial.SetBuffer("_SnowDisplacementBuffer", _snowDisplacementBuffer);
+    displacementTexture.SetPixels(colors);
+    displacementTexture.Apply();
+    snowMaterial.SetTexture("_SnowDisplacementTexture", displacementTexture);
+    snowMaterial.SetFloat("_SnowDisplacementTextureSize", displacementScale);
+    snowMaterial.SetVector("_Center", new Vector4(playerTransform.position.x, playerTransform.position.z, 0.0f, 0.0f));
   }
 
-  private void OnDisable() {
-    _snowDisplacementBuffer.Release();
+  public void DisplacePoint(Vector3 point) {
+    Vector2 uv = new Vector2(
+      (point.x - playerTransform.position.x) / displacementScale + 0.5f,
+      (point.z - playerTransform.position.z) / displacementScale + 0.5f
+    );
+    if (uv.x < 0.0f || uv.x > 1.0f || uv.y < 0.0f || uv.y > 1.0f) {
+      return;
+    }
+    Debug.Log(uv);
+    displacementTexture.SetPixel(
+      (int)(uv.x * textureSize),
+      (int)(uv.y * textureSize),
+      new Color(0.5f, 0.0f, 0.0f, 0.0f)
+    );
+
+    displacementTexture.Apply();
   }
 
 }
