@@ -167,7 +167,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116741347}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -223,7 +223,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -581,6 +581,11 @@ MonoBehaviour:
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
   m_ObsoleteContactShadows: 0
+--- !u!4 &1474752918 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0efd3e31363d18846bf2831c442f7394, type: 3}
+  m_PrefabInstance: {fileID: 1619408325}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1619408325
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -753,10 +758,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3600afaf76525634bb5c3b7842a6bfc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureSize: 256
+  textureSize: 64
   displacementScale: 10
   snowMaterial: {fileID: 2100000, guid: 417c0919ae370ec4397c6ce014ebd3b9, type: 2}
-  playerTransform: {fileID: 1646641447}
+  _snowPlane: {fileID: 1474752918}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
