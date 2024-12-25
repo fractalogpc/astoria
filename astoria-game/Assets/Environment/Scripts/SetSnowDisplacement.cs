@@ -6,12 +6,14 @@ public class SetSnowDisplacement : MonoBehaviour
 {
 
   public int textureSize = 256;
+  [SerializeField] private int _texelsPerVertex = 4;
   public float displacementScale = 1.0f;
 
   private Texture2D displacementTexture;
   [SerializeField] private Material snowMaterial;
   private Transform _localPlayer;
   [SerializeField] private Transform _snowPlane;
+  [SerializeField] private float _displacementMagnitude;
   private Vector2 center;
 
   public static SetSnowDisplacement Instance { get; private set; }
@@ -137,7 +139,7 @@ public class SetSnowDisplacement : MonoBehaviour
     displacementTexture.SetPixel(
       (int)(uv.x * textureSize),
       (int)(uv.y * textureSize),
-      new Color(0.5f, 0.0f, 0.0f, 0.0f)
+      new Color(_displacementMagnitude, 0.0f, 0.0f, 0.0f)
     );
 
     displacementTexture.Apply();
