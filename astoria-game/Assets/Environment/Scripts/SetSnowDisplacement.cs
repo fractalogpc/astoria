@@ -20,17 +20,18 @@ public class SetSnowDisplacement : MonoBehaviour
   public static SetSnowDisplacement Instance { get; private set; }
 
   private IEnumerator Start() {
+    _snowPlane.GetComponent<MeshFilter>().mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000.0f);
     Instance = this;
     displacementTexture = new Texture2D(textureSize, textureSize, TextureFormat.RFloat, false);
-    Color[] colors = new Color[textureSize * textureSize];
+    Color32[] colors = new Color32[textureSize * textureSize];
     for (int i = 0; i < colors.Length; i++) {
       colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
-    displacementTexture.SetPixels(colors);
+    displacementTexture.SetPixels32(colors);
     displacementTexture.Apply();
     snowMaterial.SetTexture("_SnowDisplacementTexture", displacementTexture);
     snowMaterial.SetFloat("_SnowDisplacementTextureSize", displacementScale);
-    center = new Vector2(0, 0);
+    center = new Vector2(_snowPlane.position.x, _snowPlane.position.z);
     snowMaterial.SetVector("_Center", new Vector4(center.x, center.y, 0.0f, 0.0f));
     while (_localPlayer == null) {
       yield return null;
@@ -55,7 +56,7 @@ public class SetSnowDisplacement : MonoBehaviour
     if (xDistance > metersPerTexel * texelsToUpdate) {
       center.x += metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture to the left
-      Color[] colors = displacementTexture.GetPixels();
+      Color32[] colors = displacementTexture.GetPixels32();
 
       for (int x = 0; x < textureSize; x++) {
         for (int y = 0; y < textureSize; y++) {
@@ -67,12 +68,12 @@ public class SetSnowDisplacement : MonoBehaviour
         }
       }
 
-      displacementTexture.SetPixels(colors);
+      displacementTexture.SetPixels32(colors);
       updateTexture = true;
     } else if (xDistance < -metersPerTexel * texelsToUpdate) {
       center.x -= metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture to the right
-      Color[] colors = displacementTexture.GetPixels();
+      Color32[] colors = displacementTexture.GetPixels32();
 
       for (int x = textureSize - 1; x >= 0; x--) {
         for (int y = 0; y < textureSize; y++) {
@@ -84,14 +85,14 @@ public class SetSnowDisplacement : MonoBehaviour
         }
       }
       
-      displacementTexture.SetPixels(colors);
+      displacementTexture.SetPixels32(colors);
       updateTexture = true;
     }
 
     if (zDistance > metersPerTexel * texelsToUpdate) {
       center.y += metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture down
-      Color[] colors = displacementTexture.GetPixels();
+      Color32[] colors = displacementTexture.GetPixels32();
 
       for (int x = 0; x < textureSize; x++) {
         for (int y = 0; y < textureSize; y++) {
@@ -103,12 +104,12 @@ public class SetSnowDisplacement : MonoBehaviour
         }
       }
       
-      displacementTexture.SetPixels(colors);
+      displacementTexture.SetPixels32(colors);
       updateTexture = true;
     } else if (zDistance < -metersPerTexel * texelsToUpdate) {
       center.y -= metersPerTexel * texelsToUpdate;
       // Shift all pixels in the texture up
-      Color[] colors = displacementTexture.GetPixels();
+      Color32[] colors = displacementTexture.GetPixels32();
       
       for (int x = 0; x < textureSize; x++) {
         for (int y = textureSize - 1; y >= 0; y--) {
@@ -120,7 +121,7 @@ public class SetSnowDisplacement : MonoBehaviour
         }
       }
 
-      displacementTexture.SetPixels(colors);
+      displacementTexture.SetPixels32(colors);
       updateTexture = true;
     }
 
@@ -131,7 +132,13 @@ public class SetSnowDisplacement : MonoBehaviour
     }
   }
   public void DisplacePoint(Vector3 point) {
-    if (point.y > _snowPlane.position.y) {
+    // Find snow position at the point
+    // Raycast down to terrain
+    RaycastHit hit;
+    if (!Physics.Raycast(point + Vector3.up * 100.0f, Vector3.down, out hit, 200.0f, LayerMask.GetMask("Ground"))) {
+      return;
+    }
+    if (point.y > _snowPlane.position.y + hit.point.y) {
       return;
     }
     Vector2 uv = new Vector2(
