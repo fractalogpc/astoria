@@ -19,7 +19,11 @@ public class LocalPlayerIndicator : NetworkBehaviour
 	private void Start() {
 		if (isLocalPlayer) {
 			OnLocalPlayerStart?.Invoke();
+			Debug.Log($"{gameObject.name} is the local player. Running OnLocalPlayerStart.");
 		}
-		Debug.Log($"{gameObject.name} LocalPlayerIndicator = {isLocalPlayer}");
+		else {
+			OnNetworkedPlayerStart?.Invoke();
+			Debug.Log($"{gameObject.name} is a networked player. Running OnNetworkedPlayerStart.");
+		}
 	}
 }

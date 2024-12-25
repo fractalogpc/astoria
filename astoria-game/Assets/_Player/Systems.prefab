@@ -335,11 +335,7 @@ MonoBehaviour:
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        DatamoshTexture: {fileID: 8400000, guid: b534d1bf7955ed640851bd57be4c0c64, type: 2}
-        MotionVectorTexture: {fileID: 8400000, guid: 91ab48bbe7688104780fb323362b1d18, type: 2}
-        DatamoshIntensity: 0.1
-        CaptureInterval: 0.1
-        DatamoshMaterial: {fileID: -876546973899608171, guid: 8a0b3ab39e3d93d449d54e82bd1ae584, type: 3}
+        fullscreenDatamoshMaterial: {fileID: 0}
 --- !u!1 &4085262054262924380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1060,9 @@ MonoBehaviour:
   playerPrefab: {fileID: 1574363177667902295, guid: 4fdd44271c5061b468c8ead30d245582, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 3760465668120940848, guid: a9e1452b740434ac49ecc481319b728a, type: 3}
+  - {fileID: 5197208939192662860, guid: ea82bd2d23cd46541a870be7d9f74eca, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2

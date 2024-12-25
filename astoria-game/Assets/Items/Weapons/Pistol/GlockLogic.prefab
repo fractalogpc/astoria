@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 754057648204598019}
-  - component: {fileID: 5597721874376248080}
   - component: {fileID: 7558892523565115691}
   - component: {fileID: 721945864746496926}
   m_Layer: 0
@@ -34,51 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5597721874376248080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6135642899301322287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d484d640dc243a58e96706aa3de4561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  _projectileManager: {fileID: 0}
-  _samplesPerFixedUpdate: 5
-  _damage: 35
-  _initialVelocityMS: 400
-  _bulletMassKg: 0.007
-  _bulletDiameterM: 0.009
-  _airDensityKgPerM: 1.1
-  _dragCoefficient: 0.169
-  CurrentFireMode: 1
-  _minCycleTimeSemiAuto: 0.03
-  _cycleTimeFullAuto: 0.02
-  _recoilForce: 0
-  _magazineCapacity: 26
-  _currentAmmo: 26
-  _openBolt: 0
-  OnFire:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 721945864746496926}
-        m_TargetAssemblyTypeName: WeaponFX, Assembly-CSharp
-        m_MethodName: PlayFireFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &7558892523565115691
 MonoBehaviour:
   m_ObjectHideFlags: 0
