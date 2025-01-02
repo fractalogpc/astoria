@@ -45,9 +45,21 @@ public class TimeOfDay
 	/// </summary>
 	public bool IsNight => GameHour < 6 || GameHour >= 18;
 
+	/// <summary>
+	/// The current day of the game. If the game starts at Day 0, this will be 0 on the first day.
+	/// </summary>
 	public int GameDay => Mathf.FloorToInt(_secsElapsed / _dayLength) + (_zeroStart ? 0 : 1);
+	/// <summary>
+	/// The current hour of the game. 0-23.
+	/// </summary>
 	public int GameHour => Mathf.FloorToInt(_secsElapsed / ((float)_dayLength / 24)) % 24;
+	/// <summary>
+	/// The current minute of the game. 0-59.
+	/// </summary>
 	public int GameMinute => Mathf.FloorToInt(_secsElapsed / ((float)_dayLength / 1440)) % 60;
+	/// <summary>
+	/// The current second of the game. 0-59.
+	/// </summary>
 	public int GameSecond => Mathf.FloorToInt(_secsElapsed / ((float)_dayLength / 86400)) % 60;
 
 	public TimeOfDay(float startTime, int dayLength, bool zeroStart = false) {
@@ -101,7 +113,7 @@ public class TimeCycleCore : NetworkBehaviour
 	[Tooltip("If the game starts at Day 0, 00:00:00, or Day 1, 00:00:00.")] [SerializeField]
 	private bool _daysStartAtZero = false;
 	
-	public TimeOfDay _timeOfDay;
+	public TimeOfDay TimeOfDay;
 
 	// Yet to be implemented
 	public UnityEvent OnDayChanged;
@@ -117,12 +129,12 @@ public class TimeCycleCore : NetworkBehaviour
 
 	private void Start() {
 		_networkTime = NetworkTime.time;
-		_timeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
+		TimeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
 	}
 
 	private void Update() {
 		_networkTime = NetworkTime.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24);
-		_timeOfDay.SetTime((float)_networkTime);
+		TimeOfDay.SetTime((float)_networkTime);
 	}
 
 	private void Singleton() {

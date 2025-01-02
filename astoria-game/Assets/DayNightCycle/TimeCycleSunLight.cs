@@ -18,7 +18,7 @@ public class TimeCycleSunLight : MonoBehaviour
 	}
 
 	private void Update() {
-		if (_timeCycleCore._timeOfDay.DayLength == 0) return;
-		_directionalLight.transform.rotation = Quaternion.Euler(_timeCycleCore._timeOfDay.SecsElapsed / _timeCycleCore._timeOfDay.DayLength * 360 - 90, -90f, 0);
+		if (_timeCycleCore.TimeOfDay.DayLength == 0) return;
+		_directionalLight.transform.rotation = Quaternion.Euler(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength * 360 - 90, -90f, 0);
 	}
 }
