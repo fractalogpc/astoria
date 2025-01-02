@@ -21,4 +21,8 @@ public class ItemInstance
 				: ItemData.ItemSize;
 		}
 	}
+	
+	public void OnSelected() {
+		
+	}
 }

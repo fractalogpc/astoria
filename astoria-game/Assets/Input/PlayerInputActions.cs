@@ -217,7 +217,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KeyFour"",
+                    ""name"": ""EquipSlotFour"",
                     ""type"": ""Button"",
                     ""id"": ""9b835421-84b4-4865-9c5a-f04f76724b4c"",
                     ""expectedControlType"": """",
@@ -226,7 +226,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KeyFive"",
+                    ""name"": ""EquipSlotFive"",
                     ""type"": ""Button"",
                     ""id"": ""59ea8a06-39dc-4bde-89a9-3fe0cfe0253e"",
                     ""expectedControlType"": """",
@@ -235,9 +235,45 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KeySix"",
+                    ""name"": ""EquipSlotSix"",
                     ""type"": ""Button"",
                     ""id"": ""4935949b-f812-4de3-9054-06abb0675139"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipSlotSeven"",
+                    ""type"": ""Button"",
+                    ""id"": ""40da00da-4a6a-4f52-bc88-a459d3861b12"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipSlotEight"",
+                    ""type"": ""Button"",
+                    ""id"": ""c10c61df-a28c-476d-aef3-39a3cdc49622"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipSlotNine"",
+                    ""type"": ""Button"",
+                    ""id"": ""a58dd658-f723-49bd-9ead-01862583c44d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipSlotTen"",
+                    ""type"": ""Button"",
+                    ""id"": ""2a6ac251-fda7-4254-9877-8ab8e89a2bd2"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -754,7 +790,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""KeyFour"",
+                    ""action"": ""EquipSlotFour"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -765,7 +801,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""KeyFive"",
+                    ""action"": ""EquipSlotFive"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -776,7 +812,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""KeySix"",
+                    ""action"": ""EquipSlotSix"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -854,6 +890,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fef97567-72e8-46c7-89ab-32b1253073f7"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EquipSlotSeven"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56fcdec0-6933-4364-b755-9d5867537232"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EquipSlotEight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9e7326b1-6ea3-48fe-9113-5eacc58d4a56"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EquipSlotNine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9130970-45c6-442c-8807-099425d90dc1"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EquipSlotTen"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2626,9 +2706,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_EquipPrimary = m_Player.FindAction("EquipPrimary", throwIfNotFound: true);
         m_Player_EquipSecondary = m_Player.FindAction("EquipSecondary", throwIfNotFound: true);
         m_Player_EquipSpecial = m_Player.FindAction("EquipSpecial", throwIfNotFound: true);
-        m_Player_KeyFour = m_Player.FindAction("KeyFour", throwIfNotFound: true);
-        m_Player_KeyFive = m_Player.FindAction("KeyFive", throwIfNotFound: true);
-        m_Player_KeySix = m_Player.FindAction("KeySix", throwIfNotFound: true);
+        m_Player_EquipSlotFour = m_Player.FindAction("EquipSlotFour", throwIfNotFound: true);
+        m_Player_EquipSlotFive = m_Player.FindAction("EquipSlotFive", throwIfNotFound: true);
+        m_Player_EquipSlotSix = m_Player.FindAction("EquipSlotSix", throwIfNotFound: true);
+        m_Player_EquipSlotSeven = m_Player.FindAction("EquipSlotSeven", throwIfNotFound: true);
+        m_Player_EquipSlotEight = m_Player.FindAction("EquipSlotEight", throwIfNotFound: true);
+        m_Player_EquipSlotNine = m_Player.FindAction("EquipSlotNine", throwIfNotFound: true);
+        m_Player_EquipSlotTen = m_Player.FindAction("EquipSlotTen", throwIfNotFound: true);
         m_Player_Noclip = m_Player.FindAction("Noclip", throwIfNotFound: true);
         m_Player_Console = m_Player.FindAction("Console", throwIfNotFound: true);
         // InventoryUI
@@ -2764,9 +2848,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_EquipPrimary;
     private readonly InputAction m_Player_EquipSecondary;
     private readonly InputAction m_Player_EquipSpecial;
-    private readonly InputAction m_Player_KeyFour;
-    private readonly InputAction m_Player_KeyFive;
-    private readonly InputAction m_Player_KeySix;
+    private readonly InputAction m_Player_EquipSlotFour;
+    private readonly InputAction m_Player_EquipSlotFive;
+    private readonly InputAction m_Player_EquipSlotSix;
+    private readonly InputAction m_Player_EquipSlotSeven;
+    private readonly InputAction m_Player_EquipSlotEight;
+    private readonly InputAction m_Player_EquipSlotNine;
+    private readonly InputAction m_Player_EquipSlotTen;
     private readonly InputAction m_Player_Noclip;
     private readonly InputAction m_Player_Console;
     public struct PlayerActions
@@ -2794,9 +2882,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @EquipPrimary => m_Wrapper.m_Player_EquipPrimary;
         public InputAction @EquipSecondary => m_Wrapper.m_Player_EquipSecondary;
         public InputAction @EquipSpecial => m_Wrapper.m_Player_EquipSpecial;
-        public InputAction @KeyFour => m_Wrapper.m_Player_KeyFour;
-        public InputAction @KeyFive => m_Wrapper.m_Player_KeyFive;
-        public InputAction @KeySix => m_Wrapper.m_Player_KeySix;
+        public InputAction @EquipSlotFour => m_Wrapper.m_Player_EquipSlotFour;
+        public InputAction @EquipSlotFive => m_Wrapper.m_Player_EquipSlotFive;
+        public InputAction @EquipSlotSix => m_Wrapper.m_Player_EquipSlotSix;
+        public InputAction @EquipSlotSeven => m_Wrapper.m_Player_EquipSlotSeven;
+        public InputAction @EquipSlotEight => m_Wrapper.m_Player_EquipSlotEight;
+        public InputAction @EquipSlotNine => m_Wrapper.m_Player_EquipSlotNine;
+        public InputAction @EquipSlotTen => m_Wrapper.m_Player_EquipSlotTen;
         public InputAction @Noclip => m_Wrapper.m_Player_Noclip;
         public InputAction @Console => m_Wrapper.m_Player_Console;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -2871,15 +2963,27 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @EquipSpecial.started += instance.OnEquipSpecial;
             @EquipSpecial.performed += instance.OnEquipSpecial;
             @EquipSpecial.canceled += instance.OnEquipSpecial;
-            @KeyFour.started += instance.OnKeyFour;
-            @KeyFour.performed += instance.OnKeyFour;
-            @KeyFour.canceled += instance.OnKeyFour;
-            @KeyFive.started += instance.OnKeyFive;
-            @KeyFive.performed += instance.OnKeyFive;
-            @KeyFive.canceled += instance.OnKeyFive;
-            @KeySix.started += instance.OnKeySix;
-            @KeySix.performed += instance.OnKeySix;
-            @KeySix.canceled += instance.OnKeySix;
+            @EquipSlotFour.started += instance.OnEquipSlotFour;
+            @EquipSlotFour.performed += instance.OnEquipSlotFour;
+            @EquipSlotFour.canceled += instance.OnEquipSlotFour;
+            @EquipSlotFive.started += instance.OnEquipSlotFive;
+            @EquipSlotFive.performed += instance.OnEquipSlotFive;
+            @EquipSlotFive.canceled += instance.OnEquipSlotFive;
+            @EquipSlotSix.started += instance.OnEquipSlotSix;
+            @EquipSlotSix.performed += instance.OnEquipSlotSix;
+            @EquipSlotSix.canceled += instance.OnEquipSlotSix;
+            @EquipSlotSeven.started += instance.OnEquipSlotSeven;
+            @EquipSlotSeven.performed += instance.OnEquipSlotSeven;
+            @EquipSlotSeven.canceled += instance.OnEquipSlotSeven;
+            @EquipSlotEight.started += instance.OnEquipSlotEight;
+            @EquipSlotEight.performed += instance.OnEquipSlotEight;
+            @EquipSlotEight.canceled += instance.OnEquipSlotEight;
+            @EquipSlotNine.started += instance.OnEquipSlotNine;
+            @EquipSlotNine.performed += instance.OnEquipSlotNine;
+            @EquipSlotNine.canceled += instance.OnEquipSlotNine;
+            @EquipSlotTen.started += instance.OnEquipSlotTen;
+            @EquipSlotTen.performed += instance.OnEquipSlotTen;
+            @EquipSlotTen.canceled += instance.OnEquipSlotTen;
             @Noclip.started += instance.OnNoclip;
             @Noclip.performed += instance.OnNoclip;
             @Noclip.canceled += instance.OnNoclip;
@@ -2953,15 +3057,27 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @EquipSpecial.started -= instance.OnEquipSpecial;
             @EquipSpecial.performed -= instance.OnEquipSpecial;
             @EquipSpecial.canceled -= instance.OnEquipSpecial;
-            @KeyFour.started -= instance.OnKeyFour;
-            @KeyFour.performed -= instance.OnKeyFour;
-            @KeyFour.canceled -= instance.OnKeyFour;
-            @KeyFive.started -= instance.OnKeyFive;
-            @KeyFive.performed -= instance.OnKeyFive;
-            @KeyFive.canceled -= instance.OnKeyFive;
-            @KeySix.started -= instance.OnKeySix;
-            @KeySix.performed -= instance.OnKeySix;
-            @KeySix.canceled -= instance.OnKeySix;
+            @EquipSlotFour.started -= instance.OnEquipSlotFour;
+            @EquipSlotFour.performed -= instance.OnEquipSlotFour;
+            @EquipSlotFour.canceled -= instance.OnEquipSlotFour;
+            @EquipSlotFive.started -= instance.OnEquipSlotFive;
+            @EquipSlotFive.performed -= instance.OnEquipSlotFive;
+            @EquipSlotFive.canceled -= instance.OnEquipSlotFive;
+            @EquipSlotSix.started -= instance.OnEquipSlotSix;
+            @EquipSlotSix.performed -= instance.OnEquipSlotSix;
+            @EquipSlotSix.canceled -= instance.OnEquipSlotSix;
+            @EquipSlotSeven.started -= instance.OnEquipSlotSeven;
+            @EquipSlotSeven.performed -= instance.OnEquipSlotSeven;
+            @EquipSlotSeven.canceled -= instance.OnEquipSlotSeven;
+            @EquipSlotEight.started -= instance.OnEquipSlotEight;
+            @EquipSlotEight.performed -= instance.OnEquipSlotEight;
+            @EquipSlotEight.canceled -= instance.OnEquipSlotEight;
+            @EquipSlotNine.started -= instance.OnEquipSlotNine;
+            @EquipSlotNine.performed -= instance.OnEquipSlotNine;
+            @EquipSlotNine.canceled -= instance.OnEquipSlotNine;
+            @EquipSlotTen.started -= instance.OnEquipSlotTen;
+            @EquipSlotTen.performed -= instance.OnEquipSlotTen;
+            @EquipSlotTen.canceled -= instance.OnEquipSlotTen;
             @Noclip.started -= instance.OnNoclip;
             @Noclip.performed -= instance.OnNoclip;
             @Noclip.canceled -= instance.OnNoclip;
@@ -3477,9 +3593,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnEquipPrimary(InputAction.CallbackContext context);
         void OnEquipSecondary(InputAction.CallbackContext context);
         void OnEquipSpecial(InputAction.CallbackContext context);
-        void OnKeyFour(InputAction.CallbackContext context);
-        void OnKeyFive(InputAction.CallbackContext context);
-        void OnKeySix(InputAction.CallbackContext context);
+        void OnEquipSlotFour(InputAction.CallbackContext context);
+        void OnEquipSlotFive(InputAction.CallbackContext context);
+        void OnEquipSlotSix(InputAction.CallbackContext context);
+        void OnEquipSlotSeven(InputAction.CallbackContext context);
+        void OnEquipSlotEight(InputAction.CallbackContext context);
+        void OnEquipSlotNine(InputAction.CallbackContext context);
+        void OnEquipSlotTen(InputAction.CallbackContext context);
         void OnNoclip(InputAction.CallbackContext context);
         void OnConsole(InputAction.CallbackContext context);
     }

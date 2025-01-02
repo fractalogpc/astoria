@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Handles calling CombatCore with the main 3 weapon slots.
 /// </summary>
-public class CombatInventory : InputHandlerBase
+public class CombatInventory : MonoBehaviour
 {
     [SerializeField] private CombatCore _combatCore;
     public enum WeaponSlot
@@ -28,17 +28,11 @@ public class CombatInventory : InputHandlerBase
     [ReadOnly] public GunInstance _secondaryGunInstance;
     [ReadOnly] public GunInstance _specialGunInstance;
     
-    protected override void InitializeActionMap() {
-        RegisterAction(_inputActions.Player.EquipPrimary, ctx => EquipSlot(WeaponSlot.PrimarySlot));
-        RegisterAction(_inputActions.Player.EquipSecondary, ctx => EquipSlot(WeaponSlot.SecondarySlot));
-        RegisterAction(_inputActions.Player.EquipSpecial, ctx => EquipSlot(WeaponSlot.SpecialSlot));
-    }
-    
     /// <summary>
     /// Equips the weapon instance in the specified slot.
     /// </summary>
     /// <param name="slot">The specified slot.</param>
-    private void EquipSlot(WeaponSlot slot) {
+    public void EquipSlot(WeaponSlot slot) {
         CurrentSlot = slot;
         switch (slot) {
             case WeaponSlot.PrimarySlot:

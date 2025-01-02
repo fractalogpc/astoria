@@ -16,8 +16,7 @@ public class LocalPlayerIndicator : NetworkBehaviour
 	public UnityEvent OnNetworkedPlayerStart;
 
 
-	[SerializeField]
-	public MonoBehaviour[] scriptsToDisableOnPlayer;
+	[SerializeField] public MonoBehaviour[] DisableForNetworkedPlayer;
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 	private void Start() {
@@ -27,17 +26,17 @@ public class LocalPlayerIndicator : NetworkBehaviour
 		}
 		else {
 			OnNetworkedPlayerStart?.Invoke();
-			Debug.Log($"{gameObject.name} is a networked player. Running OnNetworkedPlayerStart.");
+			Debug.Log($"{gameObject.name} is a networked player. Running OnNetworkedPlayerStart. Disabling scripts.");
+			DisableScriptsForNetworkedPlayer();
 		}
 	}
 
-	public void DisableScriptsOnPlayer() {
-		scriptsToDisableOnPlayer = GetComponents<MonoBehaviour>();
-		foreach (MonoBehaviour script in scriptsToDisableOnPlayer) {
+	public void DisableScriptsForNetworkedPlayer() {
+		DisableForNetworkedPlayer = GetComponents<MonoBehaviour>();
+		foreach (MonoBehaviour script in DisableForNetworkedPlayer) {
 			if (script == this) continue;
 			if (script.GetType() == typeof(NetworkTransformReliable)) continue;
 			if (script.GetType() == typeof(NetworkIdentity)) continue;
-			if (script.GetType() == typeof(Collider)) continue;
 			script.enabled = false;
 		}
 	}
