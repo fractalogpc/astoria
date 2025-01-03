@@ -3,28 +3,33 @@ using UnityEngine;
 
 public class CustomNetworkManager : NetworkManager
 {
-  private void OnApplicationQuit()
-  {
-    CleanupNetwork();
-  }
-
-  private void OnDestroy()
-  {
-    CleanupNetwork();
-  }
-
-  private void CleanupNetwork()
-  {
-    if (NetworkServer.active)
+    // Override OnApplicationQuit to handle cleanup
+    public override void OnApplicationQuit()
     {
-      Debug.Log("Shutting down NetworkServer...");
-      NetworkServer.Shutdown();
+        base.OnApplicationQuit();  // Ensure the base behavior runs
+        CleanupNetwork();          // Your custom cleanup code
     }
 
-    if (NetworkClient.isConnected)
+    // Override OnDestroy to handle cleanup
+    public override void OnDestroy()
     {
-      Debug.Log("Disconnecting NetworkClient...");
-      NetworkClient.Disconnect();
+        base.OnDestroy();         // Ensure the base behavior runs
+        CleanupNetwork();          // Your custom cleanup code
     }
-  }
+
+    // Custom cleanup method
+    private void CleanupNetwork()
+    {
+        if (NetworkServer.active)
+        {
+            Debug.Log("Shutting down NetworkServer...");
+            NetworkServer.Shutdown();
+        }
+
+        if (NetworkClient.isConnected)
+        {
+            Debug.Log("Disconnecting NetworkClient...");
+            NetworkClient.Disconnect();
+        }
+    }
 }
