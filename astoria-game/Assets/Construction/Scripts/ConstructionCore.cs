@@ -14,6 +14,9 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
 
   #region Variables
 
+  [Header("References")]
+  [SerializeField] private InventoryComponent _playerInventory;
+  
   public bool HasObject; // If the player is currently holding an object
 
   [Header("Construction Data")]
@@ -464,6 +467,11 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
     //   obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
     // }
     // If the object is a prop, call the OnPlaced method
+    foreach (ConstructionObjectCost cost in _currentStructureData.Cost) {
+      if (!_playerInventory.TryRemoveItemByData(cost.Item, cost.Amount)) {
+        Debug.LogError("ConstructionCore: Failed to remove cost item from player inventory after check!");
+      }
+    }
     NetworkServer.Spawn(Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation));
 
     // if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
@@ -512,6 +520,7 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
   public bool TryGiveObject(ConstructableObjectData data)
   {
     if (_currentStructureData != null) return false;
+    if (!data.MeetsCost(_playerInventory.GetItems())) return false;
 
     _isDeleting = false;
     TryUnhighlightObject();

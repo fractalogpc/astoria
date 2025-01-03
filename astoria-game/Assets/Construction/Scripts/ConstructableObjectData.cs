@@ -26,6 +26,28 @@ public class ConstructableObjectData : ItemData
   public Vector3 HeldOffsetRotation = Vector3.zero;
 
   public bool CarveNavmesh = true;
+
+  // Copied & adapted from CraftingStationNetworked.cs
+  public bool MeetsCost(List<ItemInstance> playerItems) {
+    // For every ingredient set in the recipe
+    foreach (var costSet in Cost) {
+      int ingredientCountLeft = costSet.Amount;
+			
+      // Scan through player items to find the ingredients
+      foreach (ItemInstance item in playerItems) {
+        if (item.ItemData != costSet.Item) continue;
+        ingredientCountLeft--;
+        if (ingredientCountLeft == 0) break;
+      }
+
+      if (ingredientCountLeft > 0) {
+        // print($"Could not craft {recipeCount} of {recipe._resultSets[0]._item.ItemName} because of not enough {ingredientSet._item.ItemName}");
+        return false;
+      }
+    }
+    // print($"Can craft {recipeCount} of {recipe._resultSets[0]._item.ItemName}");
+    return true;
+  }
 }
 
 [System.Serializable]

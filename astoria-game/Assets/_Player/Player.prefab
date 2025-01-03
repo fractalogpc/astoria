@@ -1591,6 +1591,9 @@ MonoBehaviour:
   OnEquipWeapon:
     m_PersistentCalls:
       m_Calls: []
+  OnUnequipWeapon:
+    m_PersistentCalls:
+      m_Calls: []
   OnAmmoChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2284,6 +2287,12 @@ MonoBehaviour:
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _pulseCurve:
+    serializedVersion: 2
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -4533,6 +4542,7 @@ MonoBehaviour:
   syncInterval: 0
   EnableDebugging: 0
   DebugIndex: 3
+  _playerInventory: {fileID: 6580231562744375249}
   HasObject: 0
   ConstructableObjects:
   - {fileID: 11400000, guid: beb7ff24859f6804e85c9f737d4e011b, type: 2}
@@ -9386,6 +9396,12 @@ MonoBehaviour:
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _pulseCurve:
+    serializedVersion: 2
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -19456,6 +19472,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _pulseCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _fadeDuration: 0.1
 --- !u!225 &883683114197481520
 CanvasGroup:
@@ -20228,8 +20250,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.47233322
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
