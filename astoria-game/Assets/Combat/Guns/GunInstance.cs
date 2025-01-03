@@ -78,7 +78,21 @@ public class GunInstance : ItemInstance
 				break;
 		}
 	}
+
+	public override void OnSelected() {
+		base.OnSelected();
+		if (_combatCore == null) {
+			Debug.Log("Try to find a better way to initialize GunInstances when Selected than making CombatCore a singleton");
+			_combatCore = CombatCore.Instance;
+		}
+		_combatCore.EquipWeapon(this);
+	}
 	
+	public override void OnDeselected() {
+		base.OnDeselected();
+		_combatCore.UnequipWeapon();
+	}
+
 	public void Unequip() {
 		_currentFireLogic.Cleanup();
 		Initialized = false;

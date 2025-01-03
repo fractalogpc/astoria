@@ -18,6 +18,18 @@ public class FadeElementInOut : MonoBehaviour
     if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
   }
 
+  public void Hide() {
+    _canvasGroup.alpha = 0;
+    _canvasGroup.interactable = false;
+    _canvasGroup.blocksRaycasts = false;
+  }
+  
+  public void Show() {
+    _canvasGroup.alpha = 1;
+    _canvasGroup.interactable = true;
+    _canvasGroup.blocksRaycasts = true;
+  }
+  
   public void FadeIn(bool resetAlpha = false) {
     _canvasGroup.interactable = true;
     _canvasGroup.blocksRaycasts = true;
