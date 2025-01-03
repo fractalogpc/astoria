@@ -9,10 +9,11 @@ public class HighlightEffect : MonoBehaviour
 	[SerializeField] private ClickableEvents _clickableEvents;
 	[SerializeField] private float _highlightAlpha = 0.5f;
 	[SerializeField] private AnimationCurve _fadeCurve;
+	[SerializeField] private AnimationCurve _pulseCurve;
 	[SerializeField] private float _fadeDuration = 0.1f;
-
+	
 	private Coroutine _fadeCoroutine;
-
+	
 	private void Start() {
 		_overlayCanvasGroup.alpha = 0;
 		_overlayCanvasGroup.blocksRaycasts = false;
@@ -40,6 +41,20 @@ public class HighlightEffect : MonoBehaviour
 		_fadeCoroutine = StartCoroutine(FadeTo(0));
 	}
 
+	public void Pulse() {
+		_fadeCoroutine = StartCoroutine(PulseCoroutine());
+	}
+	
+	private IEnumerator PulseCoroutine() {
+		float elapsedTime = 0;
+		while (elapsedTime < _fadeDuration) {
+			elapsedTime += Time.deltaTime;
+			_overlayCanvasGroup.alpha = _pulseCurve.Evaluate(elapsedTime / _fadeDuration);
+			yield return null;
+		}
+		_overlayCanvasGroup.alpha = 0;
+	}
+	
 	private IEnumerator FadeTo(float targetAlpha) {
 		float elapsedTime = 0;
 		float startAlpha = _overlayCanvasGroup.alpha;

@@ -22,7 +22,11 @@ public class ItemInstance
 		}
 	}
 	
-	public void OnSelected() {
-		
+	public virtual void OnSelected() {
+		Debug.Log("Item selected: " + ItemData.ItemName);
+	}
+	
+	public virtual void OnDeselected() {
+		Debug.Log("Item deselected: " + ItemData.ItemName);
 	}
 }

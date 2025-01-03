@@ -17,7 +17,6 @@ using UnityEngine.PlayerLoop;
 /// Running coroutines on weapons
 /// </summary>
 
-[RequireComponent(typeof(CombatInventory))]
 public class CombatCore : NetworkedInputHandlerBase
 {
     [SerializeField] private InventoryComponent _playerInventory;
@@ -30,9 +29,43 @@ public class CombatCore : NetworkedInputHandlerBase
     public UnityEvent<GunInstance> OnEquipWeapon;
     
     /// <summary>
+    /// Fires when the equipped weapon is unequipped.
+    /// </summary>
+    public UnityEvent OnUnequipWeapon;
+    
+    /// <summary>
     /// Fires when the ammo of the equipped weapon changes. The first parameter is the current ammo, the second is the max ammo.
     /// </summary>
     public UnityEvent<int, int> OnAmmoChanged;
+    
+    public static CombatCore Instance { get; private set; }
+
+    private void Start() {
+        if (Instance != null) {
+            Debug.LogError($"Removing CombatCore on {gameObject.name}. Multiple CombatCore instances are not allowed.");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
+
+    public void EquipWeapon(GunInstance instance) {
+        CurrentGunInstance = instance;
+        if (instance.Initialized == false) {
+            instance.InitializeWeapon(this, _combatViewmodelManager, _playerInventory);
+        }
+        _combatViewmodelManager.SetViewmodelFor(instance);
+        instance.AmmoChanged += OnInstanceAmmoChanged;
+        OnEquipWeapon?.Invoke(CurrentGunInstance);
+    }
+    public void UnequipWeapon() {
+        if (CurrentGunInstance == null) return;
+        CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
+        CurrentGunInstance.Unequip();
+        StartCoroutine(UnequipWeaponCoroutine());
+        CurrentGunInstance = null;
+        OnUnequipWeapon?.Invoke();
+    }
     
     protected override void InitializeActionMap() {
         RegisterAction(_inputActions.Player.Attack, ctx => OnFireDown(), () => OnFireUp());
@@ -42,16 +75,6 @@ public class CombatCore : NetworkedInputHandlerBase
         RegisterAction(_inputActions.Player.SwitchFireMode, ctx => OnSwitchFireMode());
     }
     
-    public void EquipWeapon(GunInstance instance) {
-        CurrentGunInstance = instance;
-        if (instance.Initialized == false) {
-            instance.InitializeWeapon(this, _combatViewmodelManager, _playerInventory);
-        }
-        _combatViewmodelManager.SetViewmodelFor(instance);
-        instance.AmmoChanged += OnInstanceAmmoChanged;
-        OnEquipWeapon.Invoke(CurrentGunInstance);
-    }
-
     private void OnDisable() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
@@ -61,13 +84,6 @@ public class CombatCore : NetworkedInputHandlerBase
         OnAmmoChanged?.Invoke(old, current);
     }
     
-    public void UnequipWeapon() {
-        if (CurrentGunInstance == null) return;
-        CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
-        CurrentGunInstance.Unequip();
-        StartCoroutine(UnequipWeaponCoroutine());
-        CurrentGunInstance = null;
-    }
     private IEnumerator UnequipWeaponCoroutine() {
         yield return new WaitForSeconds(_combatViewmodelManager.PlayHolster());
         _combatViewmodelManager.RemoveViewmodel();
@@ -78,35 +94,35 @@ public class CombatCore : NetworkedInputHandlerBase
         CurrentGunInstance.Tick();
     }
     
-    public void OnFireDown() {
+    private void OnFireDown() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnFireDown();
     }
-    public void OnFireUp() {
+    private void OnFireUp() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnFireUp();
     }
-    public void OnReloadDown() {
+    private void OnReloadDown() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnReloadDown();
     }
-    public void OnReloadUp() {
+    private void OnReloadUp() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnReloadUp();
     }
-    public void OnAimDown() {
+    private void OnAimDown() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnAimDown();   
     }
-    public void OnAimUp() {
+    private void OnAimUp() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnAimUp();
     }
-    public void OnInspect() {
+    private void OnInspect() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.OnInspect(); 
     }
-    public void OnSwitchFireMode() {
+    private void OnSwitchFireMode() {
         if (CurrentGunInstance == null) return;
         CurrentGunInstance.SwitchFireMode(); 
     }

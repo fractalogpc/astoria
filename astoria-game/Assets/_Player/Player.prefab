@@ -1547,7 +1547,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9088220939750902593}
-  - component: {fileID: 5301573614924863385}
   - component: {fileID: 2627650646237878555}
   - component: {fileID: 2956634426805501697}
   m_Layer: 0
@@ -1572,20 +1571,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4723388315618955371}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5301573614924863385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642439937972844160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 614bf1a9f382d6942ba3ce85c224612c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _combatCore: {fileID: 2627650646237878555}
-  CurrentSlot: 0
 --- !u!114 &2627650646237878555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1846,8 +1831,6 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
-  _combatInventory: {fileID: 5301573614924863385}
-  _slotType: 2
 --- !u!1 &733520445041575720
 GameObject:
   m_ObjectHideFlags: 0
@@ -4156,8 +4139,6 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
-  _combatInventory: {fileID: 5301573614924863385}
-  _slotType: 1
 --- !u!1 &1505662312694518414
 GameObject:
   m_ObjectHideFlags: 0
@@ -10804,8 +10785,6 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
-  _combatInventory: {fileID: 5301573614924863385}
-  _slotType: 0
 --- !u!1 &3784259663338776304
 GameObject:
   m_ObjectHideFlags: 0
@@ -13660,6 +13639,7 @@ GameObject:
   - component: {fileID: 2486426382620431927}
   - component: {fileID: 7678719317327432420}
   - component: {fileID: 8360468966696711857}
+  - component: {fileID: 3311992704387869064}
   m_Layer: 5
   m_Name: Weapon Info
   m_TagString: Untagged
@@ -13768,6 +13748,22 @@ MonoBehaviour:
   _OnFadeComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3311992704387869064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121394488974407519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d13ee61495449144aa45f155db00abac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _infoFade: {fileID: 8360468966696711857}
+  _playerCombatCore: {fileID: 2627650646237878555}
+  _weaponNameText: {fileID: 5290570914586930000}
+  _ammoText: {fileID: 3243648900356047227}
 --- !u!1 &5165082176971897002
 GameObject:
   m_ObjectHideFlags: 0

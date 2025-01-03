@@ -22,34 +22,43 @@ public class InventoryHotbarSlot : MonoBehaviour
     
     public void Select() {
         Selected = true;
-        _highlightEffect.FadeIn();
+        _highlightEffect.Pulse();
+        if (_attachedSlot._heldItemInstance == null) return;
+        _attachedSlot._heldItemInstance.OnSelected();
     }
 
     public void Deselect() {
         Selected = false;
-        _highlightEffect.FadeOut();
+        if (_attachedSlot._heldItemInstance == null) return;
+        _attachedSlot._heldItemInstance.OnDeselected();
     }
     
     public void AttachSlot(InventoryEquipableSlot slot) {
         if (_attachedSlot != null) {
             _attachedSlot.OnItemAdded.RemoveListener(UpdateSlotState);
-            _attachedSlot.OnItemRemoved.RemoveListener(UpdateSlotState);
+            _attachedSlot.OnItemRemoved.RemoveListener(RemoveItem);
         }
         _attachedSlot = slot;
         _attachedSlot.OnItemAdded.AddListener(UpdateSlotState);
-        _attachedSlot.OnItemRemoved.AddListener(UpdateSlotState);
+        _attachedSlot.OnItemRemoved.AddListener(RemoveItem);
         UpdateSlotState(_attachedSlot._heldItemInstance);
     }
     
     private void UpdateSlotState(ItemInstance item) {
         if (_attachedSlot._heldItemInstance == null) {
-            _itemImage.sprite = null;
-            _itemImage.color = Color.clear;
-            _highlightEffect.FadeOut();
-            return;
+            RemoveItem();
         }
+        else {
+            ShowItem();
+        }
+    }
+    private void ShowItem() {
         _itemImage.color = Color.white;
         _itemImage.sprite = _attachedSlot._heldItemInstance.ItemData.ItemIcon;
+    }
+    private void RemoveItem(ItemInstance item = null) {
+        _itemImage.sprite = null;
+        _itemImage.color = Color.clear;
     }
     
     
