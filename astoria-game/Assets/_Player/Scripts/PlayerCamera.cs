@@ -17,6 +17,9 @@ namespace Player
     [HideInInspector] public float CameraXRotation = 0;
     private Vector2 _mouseInput;
 
+    // Maximum vertical look angle (just below 90°)
+    private const float MaxVerticalAngle = 89f;
+
     protected override void InitializeActionMap()
     {
       _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
@@ -37,6 +40,8 @@ namespace Player
       CameraXRotation -= _mouseInput.y;
       if (CameraXRotation > 90) CameraXRotation = 90;
       if (CameraXRotation < -90) CameraXRotation = -90;
+
+      CameraXRotation = Mathf.Clamp(CameraXRotation, -MaxVerticalAngle, MaxVerticalAngle);
     }
 
     private void LateUpdate()
