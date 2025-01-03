@@ -53,23 +53,26 @@ public class GameStateHandler : NetworkBehaviour
   /// <summary>
   /// Changes the game state. Only the server can invoke this.
   /// </summary>
-  [Server]
-  public void ChangeState(GameState newState)
-  {
-    if (currentState == newState)
-      return;
+[Server]
+public void ChangeState(GameState newState)
+{
+  if (currentState == newState)
+    return;
 
-    // Invoke OnStateExit for the current state
-    if (onStateExitActions.ContainsKey(currentState))
-      onStateExitActions[currentState]?.Invoke();
+  // Invoke OnStateExit for the current state
+  if (onStateExitActions.ContainsKey(currentState))
+    onStateExitActions[currentState]?.Invoke();
 
-    // Change the state
-    currentState = newState;
+  // Change the state
+  currentState = newState;
 
-    // Invoke OnStateEnter for the new state
-    if (onStateEnterActions.ContainsKey(newState))
-      onStateEnterActions[newState]?.Invoke();
-  }
+  Debug.Log($"<color=red>Server:</color> State changed to <b>{newState}</b>");
+
+  // Invoke OnStateEnter for the new state
+  if (onStateEnterActions.ContainsKey(newState))
+    onStateEnterActions[newState]?.Invoke();
+}
+
 
   /// <summary>
   /// Called whenever the SyncVar `currentState` changes.
