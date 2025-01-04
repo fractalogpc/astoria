@@ -51,6 +51,7 @@ Material:
   m_ValidKeywords:
   - TVE_CUTOUT_ELEMENT
   - TVE_CUTOUT_SHADOW
+  - TVE_DITHER
   - TVE_DITHER_SHADOW
   - TVE_DRYNESS_ELEMENT
   - TVE_IMPOSTOR_MASK_PACKED
@@ -273,8 +274,8 @@ Material:
     - _DitherCategory: 1
     - _DitherConstantValue: 0
     - _DitherDistanceMaxValue: 50
-    - _DitherDistanceMinValue: 20
-    - _DitherDistanceValue: 0
+    - _DitherDistanceMinValue: 0
+    - _DitherDistanceValue: 0.5
     - _DitherEnd: 1
     - _DitherGlancingAngleValue: 1
     - _DitherGlancingValue: 0
@@ -358,7 +359,7 @@ Material:
     - _ImpostorMaskPackedInfo: 0
     - _ImpostorMaskShadingInfo: 0
     - _ImpostorMetallicValue: 0
-    - _ImpostorOcclusionValue: 1
+    - _ImpostorOcclusionValue: 0
     - _ImpostorSize: 0.51040405
     - _ImpostorSmoothnessValue: 1
     - _InteractionInteractionEnd: 1
