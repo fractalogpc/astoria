@@ -32,7 +32,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
 
     // TODO: This is temporary, figure out how we actually want to do it. Probably through melee combat system.
     if (Physics.Raycast(ray, out RaycastHit treeHit, _interactDistance, _treeLayerMask)) {
-      _treeChopping.InteractTree(treeHit.point);
+      _treeChopping.InteractTree(treeHit.point, new Vector2(ray.direction.x, ray.direction.z));
 
       // Give the player resources
       NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(_treeItemData);
