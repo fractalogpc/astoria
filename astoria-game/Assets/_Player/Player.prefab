@@ -20322,8 +20322,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.47233322
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -22492,6 +22492,7 @@ GameObject:
   - component: {fileID: 2762591534737170510}
   - component: {fileID: 3936860985544067287}
   - component: {fileID: 7412876528073951704}
+  - component: {fileID: 8942259086596984092}
   m_Layer: 0
   m_Name: Effects
   m_TagString: Untagged
@@ -22595,6 +22596,21 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8942259086596984092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8932846636545529079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e091570c7958f94a8471f7201181c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rain: {fileID: 3936860985544067287}
+  player: {fileID: 2040652133788255361}
+  rainToggle: 0
 --- !u!1 &8959388073841344366
 GameObject:
   m_ObjectHideFlags: 0
