@@ -20,7 +20,7 @@ public class TreeChopping : MonoBehaviour
     _treeInstances = _terrainData.treeInstances;
   }
 
-  public void InteractTree(Vector3 position) {
+  public void InteractTree(Vector3 position, Vector2 direction) {
     Debug.Log("Chopping tree at " + position);
 
     // Find the tree instance at the given position
@@ -72,7 +72,10 @@ public class TreeChopping : MonoBehaviour
         TreeColliderManager.Instance.DisableCollider(treePosition);
 
         // Instantiate a tree prefab at the tree position
-        Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
+        GameObject instantiatedTree = Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
+
+        instantiatedTree.GetComponent<Rigidbody>().AddForce(new Vector3(direction.x, 0, direction.y) * 1000, ForceMode.Impulse);
+
         return;
       }
     }
