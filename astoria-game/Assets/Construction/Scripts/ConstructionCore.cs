@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mirror;
 using Player;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
@@ -50,6 +51,13 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
   private bool _canPlace; // If the currrently held object can be placed
   [SerializeField] private bool _isRotating;
   [SerializeField] private bool _isDeleting;
+
+  #endregion
+
+  #region Events
+
+  public UnityEvent<Vector3> OnObjectPlaced;
+  public UnityEvent<Vector3> OnObjectRemoved;
 
   #endregion
 
@@ -370,6 +378,8 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
       _highlightedObjectMaterial = null;
       _baseHighlightedObject = null;
 
+      OnObjectRemoved?.Invoke(_highlightedObject.transform.position);
+
       _isDeleting = false;
       TryGiveObject(objectType);
     }
@@ -476,6 +486,8 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
       }
     }
     NetworkServer.Spawn(Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation));
+
+    OnObjectPlaced?.Invoke(_tempObject.transform.position);
 
     // if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
     //   permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
