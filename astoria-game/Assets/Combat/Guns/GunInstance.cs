@@ -20,15 +20,15 @@ public enum FireMode
 public class GunInstance : ItemInstance
 {
 	public bool Initialized = false;
-	public GunData WeaponData => (GunData)ItemData;
+	public new GunData ItemData => (GunData)base.ItemData;
 	public FireMode CurrentFireMode { get; private set; }
 	public int CurrentAmmo { get; private set; }
 	public int GetMaxAmmo() {
-		switch (WeaponData.ReloadType) {
+		switch (ItemData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt or ReloadTypes.MagazineOpenBolt:
-				return WeaponData.MagazineSetting.MagazineCapacity;
+				return ItemData.MagazineSetting.MagazineCapacity;
 			case ReloadTypes.InternalClosedBolt or ReloadTypes.InternalOpenBolt:
-				return WeaponData.InternalSetting.InternalCapacity;
+				return ItemData.InternalSetting.InternalCapacity;
 			default:
 				Debug.LogError("GunInstance: Did not account for all ReloadTypes in GetMaxAmmo()");
 				return 0;
@@ -52,7 +52,7 @@ public class GunInstance : ItemInstance
 	
 	// This constructor is called when the item is created in the inventory, it is not initialized yet
 	public GunInstance(GunData gunData) : base(gunData) {
-		ItemData = gunData;
+		base.ItemData = gunData;
 	}
 	
 	// Assign any references that need to be attached when first equipped here
@@ -62,7 +62,7 @@ public class GunInstance : ItemInstance
 		_viewmodelManager = viewmodelManager;
 		_playerInventory = playerInventory;
 		_projectileManager = ProjectileManager.Instance;
-		switch (WeaponData.FireCombination) {
+		switch (ItemData.FireCombination) {
 			case FireCombinations.Semi or FireCombinations.ShotgunSemi:
 				SetFireMode(FireMode.Semi);
 				break;
@@ -107,8 +107,8 @@ public class GunInstance : ItemInstance
 	/// </summary>
 	public void Fire() {
 		if (!Initialized) return;
-		if (IsShotgun(WeaponData.FireCombination)) {
-			for (int i = 0; i < WeaponData.ShotgunSetting.PelletsPerShot; i++) {
+		if (IsShotgun(ItemData.FireCombination)) {
+			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
 			}
 			_viewmodelManager.PlayFire();
@@ -122,13 +122,13 @@ public class GunInstance : ItemInstance
 	}
 
 	private void ShootProjectile(float spreadAngle = 0) {
-		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward * WeaponData.InitialVelocityMS;
+		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward * ItemData.InitialVelocityMS;
 		_projectileManager.FireProjectile(
-			WeaponData.Damage, 
-			WeaponData.BulletMassKg, 
+			ItemData.Damage, 
+			ItemData.BulletMassKg, 
 			Camera.main.transform.position,
 			direction, 
-			new ProjectileManager.Aerodynamics(WeaponData.DragCoefficient, Mathf.Pow(WeaponData.BulletDiameterM / 2, 2) * Mathf.PI, WeaponData.AirDensityKgPerM), 
+			new ProjectileManager.Aerodynamics(ItemData.DragCoefficient, Mathf.Pow(ItemData.BulletDiameterM / 2, 2) * Mathf.PI, ItemData.AirDensityKgPerM), 
 			ProjectileCallback	
 		);
 	}
@@ -137,12 +137,12 @@ public class GunInstance : ItemInstance
 		Debug.Log($"hit {hit.collider.gameObject.name} at {hit.point}");
 		HealthInterface healthInterface = hit.collider.gameObject.GetComponentInChildren<HealthInterface>();
 		if (healthInterface != null) {
-			healthInterface.Damage(WeaponData.Damage, hit.point);
+			healthInterface.Damage(ItemData.Damage, hit.point);
 		}
 	}
 	
 	public void SwitchFireMode() {
-		FireCombinations fireCombination = WeaponData.FireCombination;
+		FireCombinations fireCombination = ItemData.FireCombination;
 		// Iterate through the fire modes until we find the next available one
 		for (int i = 0; i < Enum.GetValues(typeof(FireMode)).Length; i++) {
 			FireMode nextMode = (FireMode)(((int)CurrentFireMode + i) % Enum.GetValues(typeof(FireMode)).Length);
@@ -171,33 +171,33 @@ public class GunInstance : ItemInstance
 			_isReloading = false;
 			yield break;
 		}
-		switch (WeaponData.ReloadType) {
+		switch (ItemData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt:
 				// One in chamber and magazine is full
-				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) break;
+				if (CurrentAmmo > ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is empty and chamber is empty
 				if (CurrentAmmo == 0) {
 					yield return new WaitForSeconds(_viewmodelManager.PlayReloadEmpty());
-					if (AmmoInInventory() < WeaponData.MagazineSetting.MagazineCapacity) {
+					if (AmmoInInventory() < ItemData.MagazineSetting.MagazineCapacity) {
 						SetCurrentAmmoTo(AmmoInInventory());
 						RemoveAmmoFromInventory(CurrentAmmo);
 					}
 					else {
-						SetCurrentAmmoTo(WeaponData.MagazineSetting.MagazineCapacity);
-						RemoveAmmoFromInventory(WeaponData.MagazineSetting.MagazineCapacity);
+						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity);
+						RemoveAmmoFromInventory(ItemData.MagazineSetting.MagazineCapacity);
 					}
 					break;
 				}
 				// One in chamber and magazine is not full
-				if (CurrentAmmo <= WeaponData.MagazineSetting.MagazineCapacity) {
+				if (CurrentAmmo <= ItemData.MagazineSetting.MagazineCapacity) {
 					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
-					int ammoNeeded = WeaponData.MagazineSetting.MagazineCapacity + 1 - CurrentAmmo;
+					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity + 1 - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
 						SetCurrentAmmoTo(CurrentAmmo + AmmoInInventory());
 						RemoveAmmoFromInventory(AmmoInInventory());
 					}
 					else {
-						SetCurrentAmmoTo(WeaponData.MagazineSetting.MagazineCapacity + 1);
+						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity + 1);
 						RemoveAmmoFromInventory(ammoNeeded);
 					}
 					break;
@@ -205,17 +205,17 @@ public class GunInstance : ItemInstance
 				break;
 			case ReloadTypes.MagazineOpenBolt:
 				// magazine is full
-				if (CurrentAmmo >= WeaponData.MagazineSetting.MagazineCapacity) break;
+				if (CurrentAmmo >= ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is not full
-				if (CurrentAmmo < WeaponData.MagazineSetting.MagazineCapacity) {
+				if (CurrentAmmo < ItemData.MagazineSetting.MagazineCapacity) {
 					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
-					int ammoNeeded = WeaponData.MagazineSetting.MagazineCapacity - CurrentAmmo;
+					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
 						SetCurrentAmmoTo(CurrentAmmo + AmmoInInventory());
 						RemoveAmmoFromInventory(AmmoInInventory());
 					}
 					else {
-						SetCurrentAmmoTo(WeaponData.MagazineSetting.MagazineCapacity);
+						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity);
 						RemoveAmmoFromInventory(ammoNeeded);
 					}
 				}
@@ -223,21 +223,21 @@ public class GunInstance : ItemInstance
 			case ReloadTypes.InternalClosedBolt:
 				// Internal is empty and chamber is empty
 				if (CurrentAmmo == 0) {
-					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+					CurrentAmmo = ItemData.MagazineSetting.MagazineCapacity;
 					Debug.Log("Add cancelable reloading and chambering here");
 				}
 				// One in chamber and internal is not full
-				if (CurrentAmmo <= WeaponData.MagazineSetting.MagazineCapacity) {
-					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity + 1;
+				if (CurrentAmmo <= ItemData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = ItemData.MagazineSetting.MagazineCapacity + 1;
 					Debug.Log("Add cancelable reloading here");
 				}
 				// One in chamber and internal is full
-				if (CurrentAmmo > WeaponData.MagazineSetting.MagazineCapacity) break;
+				if (CurrentAmmo > ItemData.MagazineSetting.MagazineCapacity) break;
 				break;
 			case ReloadTypes.InternalOpenBolt:	
 				// Magazine is not full
-				if (CurrentAmmo < WeaponData.MagazineSetting.MagazineCapacity) {
-					CurrentAmmo = WeaponData.MagazineSetting.MagazineCapacity;
+				if (CurrentAmmo < ItemData.MagazineSetting.MagazineCapacity) {
+					CurrentAmmo = ItemData.MagazineSetting.MagazineCapacity;
 					Debug.Log("Add cancelable reloading here");
 				}
 				break;
@@ -269,11 +269,11 @@ public class GunInstance : ItemInstance
 	}
 	
 	private int AmmoInInventory() {
-		return _playerInventory.GetItemsOfType(WeaponData.AmmoItem).Count;
+		return _playerInventory.GetItemsOfType(ItemData.AmmoItem).Count;
 	}
 	
 	private bool RemoveAmmoFromInventory(int amount) {
-		return _playerInventory.TryRemoveItemByData(WeaponData.AmmoItem, amount);
+		return _playerInventory.TryRemoveItemByData(ItemData.AmmoItem, amount);
 	}
 	
 	private void SetFireMode(FireMode mode) {
@@ -301,7 +301,7 @@ public class GunInstance : ItemInstance
 	}
 
 	private float GetRandomSpreadAngle() {
-		float angle = CalculateSpreadAngle(WeaponData.AccuracySetting.PatternSpread, WeaponData.AccuracySetting.EffectiveRange);
+		float angle = CalculateSpreadAngle(ItemData.AccuracySetting.PatternSpread, ItemData.AccuracySetting.EffectiveRange);
 		return Random.Range(-angle, angle);
 	}
 	

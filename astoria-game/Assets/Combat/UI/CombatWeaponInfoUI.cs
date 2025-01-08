@@ -26,7 +26,7 @@ public class CombatWeaponInfoUI : MonoBehaviour
 
   private void OnNewWeaponEquipped(GunInstance weapon) {
     _infoFade.FadeIn(true);
-    _weaponNameText.text = weapon.WeaponData.ItemName;
+    _weaponNameText.text = weapon.ItemData.ItemName;
     UpdateAmmoCount(weapon.CurrentAmmo, weapon.CurrentAmmo);
   }
   private void OnWeaponUnequipped() {

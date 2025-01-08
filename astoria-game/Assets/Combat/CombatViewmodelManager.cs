@@ -12,7 +12,7 @@ public class CombatViewmodelManager : NetworkBehaviour
 		if (_currentViewmodel != null) {
 			Destroy(_currentViewmodel.gameObject);
 		}
-		_currentViewmodel = Instantiate(gunInstance.WeaponData.ViewmodelPrefab, _viewmodelParent).GetComponent<CombatViewmodel>();
+		_currentViewmodel = Instantiate(gunInstance.ItemData.ViewmodelPrefab, _viewmodelParent).GetComponent<CombatViewmodel>();
 	}
 	
 	public void RemoveViewmodel() {

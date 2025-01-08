@@ -32,7 +32,7 @@ public class BurstLogic : FireLogic
 	}
 
 	public override void OnFireDown() {
-		if (Instance.HasAmmo && !_firing && _timeSinceLastBurst > Instance.WeaponData.BurstSetting.CycleTime) {
+		if (Instance.HasAmmo && !_firing && _timeSinceLastBurst > Instance.ItemData.BurstSetting.CycleTime) {
 			_burstRoutine = _coroutineRunner.StartCoroutine(BurstCoroutine());
 		}
 	}
@@ -40,11 +40,11 @@ public class BurstLogic : FireLogic
 	private IEnumerator BurstCoroutine() {
 		_firing = true;
 		int shotsFired = 0;
-		while (shotsFired < Instance.WeaponData.BurstSetting.ShotsPerBurst) {
+		while (shotsFired < Instance.ItemData.BurstSetting.ShotsPerBurst) {
 			if (!Instance.HasAmmo) break;
 			Instance.Fire();
 			shotsFired++;
-			yield return new WaitForSeconds(RPMToSeconds(Instance.WeaponData.BurstSetting.RoundsPerMinute));
+			yield return new WaitForSeconds(RPMToSeconds(Instance.ItemData.BurstSetting.RoundsPerMinute));
 		}
 		_firing = false;
 	}
