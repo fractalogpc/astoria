@@ -1,21 +1,41 @@
 using UnityEngine;
+using Construction;
 
-public class NEWConstructionCore : MonoBehaviour
+public class NEWConstructionCore : InputHandlerBase
 {
-    public bool SelectData(ConstructionData data) {
-        if (!ValidateData(data)) return false;
 
-        
-
-        return false;
+    protected override void InitializeActionMap() {
+        RegisterAction(_inputActions.Player.Place, _ => { OnPlace(); });
     }
 
-    private bool ValidateData(ConstructionData data) {
-        if (data == null) {
-            Debug.LogError("ConstructionData is null");
-            return false;
-        }
+    private ConstructionData _selectedData;
+
+    public bool SelectData(ConstructionData data) {
+        if (!ConstructionCoreLogic.ValidateData(data)) return false;
+
+
 
         return true;
+    }
+
+    private void OnPlace() {
+        if (_selectedData == null) {
+            Debug.LogError("No data selected");
+            return;
+        }
+    }
+
+}
+
+namespace Construction {
+    public static class ConstructionCoreLogic {
+        public static bool ValidateData(ConstructionData data) {
+            if (data == null) {
+                Debug.LogError("ConstructionData is null");
+                return false;
+            }
+
+            return true;
+        }
     }
 }
