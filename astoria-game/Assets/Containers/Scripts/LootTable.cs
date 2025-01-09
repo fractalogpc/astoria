@@ -11,12 +11,12 @@ public class LootTable
 	
 	public int MinItems {
 		get {
-			return LootPools.Sum(pool => pool.MinItems);
+			return LootPools.Sum(pool => pool.MinDraw);
 		}
 	}
 	public int MaxItems {
 		get {
-			return LootPools.Sum(pool => pool.MaxItems);
+			return LootPools.Sum(pool => pool.MaxDraw);
 		}
 	}
 	
@@ -28,11 +28,11 @@ public class LootPool
 	public List<ItemWeight> LootItems;
 	public int TotalWeight {
 		get {
-			return LootItems.Sum(element => element.SelectionWeight);
+			return LootItems.Sum(element => element.Weight);
 		}
 	}
-	public int MinItems;
-	public int MaxItems;
+	public int MinDraw;
+	public int MaxDraw;
 	public bool DrawOnlyOnce;
 	[SerializeField][ReadOnly] private bool _drawnBefore;
 	
@@ -42,5 +42,5 @@ public class LootPool
 public class ItemWeight
 {
 	public ItemData Item;
-	public int SelectionWeight;
+	public int Weight;
 }

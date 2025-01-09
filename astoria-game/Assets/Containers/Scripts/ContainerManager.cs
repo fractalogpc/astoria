@@ -17,7 +17,19 @@ public class ContainerManager : InputHandlerBase
 
 	private InventoryComponent _playerInventory;
 
-	public void Interact() {
+	public void Close() {
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
+		InputReader.Instance.SwitchInputMap(InputMap.Player);
+		_fadeCanvas.FadeOut();
+		OnClose?.Invoke();
+	}
+	
+	protected override void InitializeActionMap() {
+		RegisterAction(_inputActions.GenericUI.CloseUI, ctx => Close());
+	}
+
+	protected virtual void Interact() {
 		if (_playerInventory == null) {
 			_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
 			if (_playerInventory == null) {
@@ -33,19 +45,7 @@ public class ContainerManager : InputHandlerBase
 		_fadeCanvas.FadeIn();
 		OnOpen?.Invoke();
 	}
-
-	public void Close() {
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-		InputReader.Instance.SwitchInputMap(InputMap.Player);
-		_fadeCanvas.FadeOut();
-		OnClose?.Invoke();
-	}
 	
-	protected override void InitializeActionMap() {
-		RegisterAction(_inputActions.GenericUI.CloseUI, ctx => Close());
-	}
-
 	private void Start() {
 		Interactable interactable = GetComponent<Interactable>();
 		if (interactable != null) {
