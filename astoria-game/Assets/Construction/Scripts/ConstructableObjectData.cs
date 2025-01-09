@@ -41,11 +41,11 @@ public class ConstructableObjectData : ItemData
       }
 
       if (ingredientCountLeft > 0) {
-        // print($"Could not craft {recipeCount} of {recipe._resultSets[0]._item.ItemName} because of not enough {ingredientSet._item.ItemName}");
+        // print($"Could not craft {recipeCount} of {recipe._resultSetList[0]._item.ItemName} because of not enough {ingredientSet._item.ItemName}");
         return false;
       }
     }
-    // print($"Can craft {recipeCount} of {recipe._resultSets[0]._item.ItemName}");
+    // print($"Can craft {recipeCount} of {recipe._resultSetList[0]._item.ItemName}");
     return true;
   }
 }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using System;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
@@ -10,19 +9,6 @@ using UnityEngine.UI;
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
 	API Reference: https://mirror-networking.com/docs/api/Mirror.NetworkBehaviour.html
 */
-
-[Serializable]
-public class ItemSet
-{
-	public ItemData _item;
-	public int _itemCount;
-
-	public bool Equals(ItemSet otherSet) {
-		if (_item != otherSet._item) return false;
-		if (_itemCount != otherSet._itemCount) return false;
-		return true;
-	}
-}
 
 /// <summary>
 /// This class is used to create a crafting station that can be interacted with by a player.
@@ -107,91 +93,24 @@ public class CraftingStationNetworked : NetworkBehaviour
 		CraftCountUI.UpdateUI();
 	}
 	
-	public bool Craft(RecipeData recipe, int recipeCount) {
-		if (!CanCraftRecipe(recipe, recipeCount)) return false;
-		for (int i = 0; i < recipe._ingredientSets.Count; i++) {
-			ItemSet set = recipe._ingredientSets[i];
-			int itemsNeeded = set._itemCount * recipeCount;
-			for (int j = 0; j < itemsNeeded; j++) {
-				_playerInventory.TryRemoveItemByData(set._item);
+	public bool Craft(RecipeData recipe, int craftCount) {
+		if (!CanCraftRecipe(recipe, craftCount)) return false;
+		foreach (ItemSet ingredientSet in recipe._ingredientSetList.ItemSets) {
+			int itemsNeeded = ingredientSet.ItemCount * craftCount;
+			for (int i = 0; i < itemsNeeded; i++) {
+				_playerInventory.TryRemoveItemByData(ingredientSet.ItemData);
 			}
 		}
-		for (int i = 0; i < recipe._resultSets.Count; i++) {
-			ItemSet set = recipe._resultSets[i];
-			int outputItems = set._itemCount * recipeCount;
+		foreach (ItemSet resultSet in recipe._resultSetList.ItemSets) {
+			int outputItems = resultSet.ItemCount * craftCount;
 			for (int j = 0; j < outputItems; j++) {
-				_playerInventory.TryAddItemByData(set._item);
+				_playerInventory.TryAddItemByData(resultSet.ItemData);
 			}
 		}
 		return true;
 	}
 	
-	public bool CanCraftRecipe(RecipeData recipe, int recipeCount) {
-		// This is fine because GetItems returns a copy of the items list
-		List<ItemInstance> playerItemsCopy = _playerInventory.GetItems();
-		
-		// For every ingredient set in the recipe
-		foreach (ItemSet ingredientSet in recipe._ingredientSets) {
-			int ingredientCountLeft = ingredientSet._itemCount * recipeCount;
-			
-			// Scan through player items to find the ingredients
-			foreach (ItemInstance item in playerItemsCopy) {
-				if (item.ItemData != ingredientSet._item) continue;
-				ingredientCountLeft--;
-				if (ingredientCountLeft == 0) break;
-			}
-
-			if (ingredientCountLeft > 0) {
-				// print($"Could not craft {recipeCount} of {recipe._resultSets[0]._item.ItemName} because of not enough {ingredientSet._item.ItemName}");
-				return false;
-			}
-		}
-		// print($"Can craft {recipeCount} of {recipe._resultSets[0]._item.ItemName}");
-		return true;
+	public bool CanCraftRecipe(RecipeData recipe, int craftCount) {
+		return recipe._ingredientSetList.ContainedWithin(_playerInventory.GetItems(), craftCount);
 	}
-	
-	// private bool SetListsAreEqual(List<ItemSet> list1, List<ItemSet> list2) {
-	// 	if (list1.Count != list2.Count) return false;
-	// 	for (int i = 0; i < list1.Count; i++) {
-	// 		if (!list1[i].Equals(list2[i])) return false;
-	// 	}
-	//
-	// 	return true;
-	// }
-	//
-	// private List<ItemSet> ItemsListToSetList(List<ItemInstance> items) {
-	// 	List<ItemSet> ingredientSets = new();
-	// 	foreach (ItemInstance item in items) {
-	// 		bool found = false;
-	// 		foreach (ItemSet ingredientSet in ingredientSets.Where(ingredientSet => item.ItemData == ingredientSet._item)) {
-	// 			ingredientSet._itemCount += 1;
-	// 			found = true;
-	// 			break;
-	// 		}
-	//
-	// 		if (!found) ingredientSets.Add(new ItemSet { _item = item.ItemData, _itemCount = 1 });
-	// 	}
-	//
-	// 	return ingredientSets;
-	// }
-	//
-	// private List<ItemInstance> SetListToItemsList(List<ItemSet> sets) {
-	// 	List<ItemInstance> items = new();
-	// 	foreach (ItemSet set in sets) {
-	// 		for (int i = 0; i < set._itemCount; i++) {
-	// 			items.Add(new ItemInstance(set._item));
-	// 		}
-	// 	}
-	//
-	// 	return items;
-	// }
-	//
-	// private List<ItemData> ItemsListToDatasList(List<ItemInstance> items) {
-	// 	List<ItemData> ingredientDatas = new();
-	// 	foreach (ItemInstance item in items) {
-	// 		ingredientDatas.Add(item.ItemData);
-	// 	}
-	//
-	// 	return ingredientDatas;
-	// }
 }

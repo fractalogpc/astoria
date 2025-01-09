@@ -26,11 +26,11 @@ public class CraftingItemInfoUI : MonoBehaviour
 			return;
 		}
 
-		SetItemInfo(data._resultSets[0]._item);
+		SetItemInfo(data._resultSetList.ItemSets[0].ItemData);
 		RemoveAllChildrenOfList();
-		foreach (ItemSet ingredient in data._ingredientSets) {
+		foreach (ItemSet ingredient in data._ingredientSetList.ItemSets) {
 			CraftingIngredientUI ingredientUI = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<CraftingIngredientUI>();
-			ingredientUI.SetItem(ingredient._item, ingredient._itemCount * _craftingStation.SelectedCraftCount);
+			ingredientUI.SetItem(ingredient.ItemData, ingredient.ItemCount * _craftingStation.SelectedCraftCount);
 		}
 	}
 
