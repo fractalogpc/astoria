@@ -21803,6 +21803,8 @@ GameObject:
   - component: {fileID: 7219834299494805427}
   - component: {fileID: 1067542946476250200}
   - component: {fileID: 2071311132571573651}
+  - component: {fileID: 2811328391282275818}
+  - component: {fileID: 163261713906757862}
   m_Layer: 5
   m_Name: Game Canvas
   m_TagString: Untagged
@@ -21922,6 +21924,90 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2811328391282275818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8658901789698088293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ff891348ff0e4428568029a933cf29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 2071311132571573651}
+  _easingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _inDuration: 0.1
+  _outDuration: 0.1
+  _OnFadeComplete:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &163261713906757862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8658901789698088293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 110ec6c499964f8478bfbdfe10ec8efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnMouseUnlocked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2811328391282275818}
+        m_TargetAssemblyTypeName: FadeElementInOut, Assembly-CSharp
+        m_MethodName: FadeOut
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnMouseLocked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2811328391282275818}
+        m_TargetAssemblyTypeName: FadeElementInOut, Assembly-CSharp
+        m_MethodName: FadeIn
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8680772503642036713
 GameObject:
   m_ObjectHideFlags: 0
