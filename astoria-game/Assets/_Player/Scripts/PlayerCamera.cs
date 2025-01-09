@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VisualDesignCafe.Rendering.Instancing;
 
 namespace Player
 {
@@ -25,6 +26,15 @@ namespace Player
       _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
 
       RegisterAction(_inputActions.Player.Look, ctx => _mouseInput = ctx.ReadValue<Vector2>(), () => _mouseInput = Vector2.zero);
+    }
+
+    private void Update() {
+      if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible) {
+        canLook = false;
+      }
+      else {
+        canLook = true;
+      }
     }
 
     // Ok, this is really weird. Basically the PlayerController updates its Y rotation on a FixedUpdate loop, but this script updates the X rotation on a Update Loop.
