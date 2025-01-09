@@ -24,16 +24,14 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   }
 
   private void Interact() {
-    Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
-    if (Physics.Raycast(ray, out RaycastHit hit, _interactDistance)) {
+    if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInChildren<Interactable>();
       interactable?.Interact();
     }
 
     // TODO: This is temporary, figure out how we actually want to do it. Probably through melee combat system.
-    if (Physics.Raycast(ray, out RaycastHit treeHit, _interactDistance, _treeLayerMask)) {
-      _treeChopping.InteractTree(treeHit.point, new Vector2(ray.direction.x, ray.direction.z));
-
+    if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit treeHit, _interactDistance, _treeLayerMask)) {
+      _treeChopping.InteractTree(treeHit.point, _camera.transform.forward);
       // Give the player resources
       NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(_treeItemData);
     }

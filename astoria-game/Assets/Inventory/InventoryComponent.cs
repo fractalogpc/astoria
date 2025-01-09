@@ -87,6 +87,7 @@ public class InventoryComponent : MonoBehaviour
 				_assignedInventorySize.y * SlotSizeUnits);
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
+		_colliderImage.color = new Color(0, 0, 0, 0.1f);
 	}
 
 	/// <summary>

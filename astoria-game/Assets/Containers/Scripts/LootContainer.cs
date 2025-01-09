@@ -9,7 +9,5 @@ public class LootContainer : ContainerManager
 	[Header("Loot Table")]
 	public LootTable LootTable;
 	
-	public override void Interact() {
-		base.Interact();
-	}
+	
 }

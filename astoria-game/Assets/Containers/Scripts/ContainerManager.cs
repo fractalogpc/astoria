@@ -2,8 +2,10 @@ using System;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
-public class ContainerManager : Interactable
+[RequireComponent(typeof(Interactable))]
+public class ContainerManager : InputHandlerBase
 {
 	public UnityEvent OnOpen;
 	public UnityEvent OnClose;
@@ -14,10 +16,8 @@ public class ContainerManager : Interactable
 	[SerializeField] private InventoryComponent _playerInvDisplay;
 
 	private InventoryComponent _playerInventory;
-	private bool _isOpen;
-	
-	public override void Interact() {
-		base.Interact();
+
+	public void Interact() {
 		if (_playerInventory == null) {
 			_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
 			if (_playerInventory == null) {
@@ -27,18 +27,29 @@ public class ContainerManager : Interactable
 		}
 		if (_playerInvDisplay.InventoryData == null) _playerInvDisplay.CreateInvFromInventoryData(_playerInventory.InventoryData);
 		
-		if (_isOpen) {
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-			_fadeCanvas.FadeOut();
-			_isOpen = false;
-			OnClose?.Invoke();
-		} else {
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
-			_fadeCanvas.FadeIn();
-			_isOpen = true;
-			OnOpen?.Invoke();
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		InputReader.Instance.SwitchInputMap(InputMap.GenericUI);
+		_fadeCanvas.FadeIn();
+		OnOpen?.Invoke();
+	}
+
+	public void Close() {
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
+		InputReader.Instance.SwitchInputMap(InputMap.Player);
+		_fadeCanvas.FadeOut();
+		OnClose?.Invoke();
+	}
+	
+	protected override void InitializeActionMap() {
+		RegisterAction(_inputActions.GenericUI.CloseUI, ctx => Close());
+	}
+
+	private void Start() {
+		Interactable interactable = GetComponent<Interactable>();
+		if (interactable != null) {
+			interactable.OnInteract.AddListener(Interact);
 		}
 	}
 }
