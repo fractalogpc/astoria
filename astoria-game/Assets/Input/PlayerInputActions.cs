@@ -296,6 +296,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Place"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4144246-2cf2-4375-af10-aee91e2742b9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -934,6 +943,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""EquipSlotTen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""feddbb00-960f-4e29-9aa2-0291c5e08c3e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Place"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2715,6 +2735,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_EquipSlotTen = m_Player.FindAction("EquipSlotTen", throwIfNotFound: true);
         m_Player_Noclip = m_Player.FindAction("Noclip", throwIfNotFound: true);
         m_Player_Console = m_Player.FindAction("Console", throwIfNotFound: true);
+        m_Player_Place = m_Player.FindAction("Place", throwIfNotFound: true);
         // InventoryUI
         m_InventoryUI = asset.FindActionMap("InventoryUI", throwIfNotFound: true);
         m_InventoryUI_Navigate = m_InventoryUI.FindAction("Navigate", throwIfNotFound: true);
@@ -2857,6 +2878,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_EquipSlotTen;
     private readonly InputAction m_Player_Noclip;
     private readonly InputAction m_Player_Console;
+    private readonly InputAction m_Player_Place;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -2891,6 +2913,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @EquipSlotTen => m_Wrapper.m_Player_EquipSlotTen;
         public InputAction @Noclip => m_Wrapper.m_Player_Noclip;
         public InputAction @Console => m_Wrapper.m_Player_Console;
+        public InputAction @Place => m_Wrapper.m_Player_Place;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -2990,6 +3013,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Console.started += instance.OnConsole;
             @Console.performed += instance.OnConsole;
             @Console.canceled += instance.OnConsole;
+            @Place.started += instance.OnPlace;
+            @Place.performed += instance.OnPlace;
+            @Place.canceled += instance.OnPlace;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -3084,6 +3110,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Console.started -= instance.OnConsole;
             @Console.performed -= instance.OnConsole;
             @Console.canceled -= instance.OnConsole;
+            @Place.started -= instance.OnPlace;
+            @Place.performed -= instance.OnPlace;
+            @Place.canceled -= instance.OnPlace;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -3602,6 +3631,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnEquipSlotTen(InputAction.CallbackContext context);
         void OnNoclip(InputAction.CallbackContext context);
         void OnConsole(InputAction.CallbackContext context);
+        void OnPlace(InputAction.CallbackContext context);
     }
     public interface IInventoryUIActions
     {
