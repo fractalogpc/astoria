@@ -1,32 +1,36 @@
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using Construction;
+using System.Collections.Generic;
 
 public class BuildingController : MonoBehaviour, IStartExecution
 {
-    public ConstructionCore constructionCore;
+    public NEWConstructionCore constructionCore;
     public TogglePlayerBuildingUI togglePlayerBuildingUI;
 
     public GameObject prefabParentContent;
     public GameObject StructureObjectPrefab;
+
+    public ConstructionData[] ConstructableObjects;
 
 
     public void InitializeStart()
     {
         togglePlayerBuildingUI.OnBuildingUIOpen.AddListener(OnBuildingUIOpen);
 
-        foreach (ConstructableObjectData data in constructionCore.ConstructableObjectsPublic)
+        foreach (ConstructionData data in ConstructableObjects)
         {
             GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
             prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
 
             Button button = prefab.GetComponent<Button>();
-            button.onClick.AddListener(() => { if (constructionCore.TryGiveObject(data)) togglePlayerBuildingUI.SetVisibility(false); });
+            button.onClick.AddListener(() => { constructionCore.SelectData(data); });
         }
     }
 
     private void OnBuildingUIOpen()
     {
-        constructionCore.TryRemoveObject();
+        constructionCore.DeselectData();
     }
 }
