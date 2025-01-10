@@ -21,7 +21,9 @@ Material:
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
+  - TVE_MOTION_BASE_BENDING
   - TVE_MOTION_PUSH_BENDING
+  - TVE_MOTION_TINY_FLUTTER
   - TVE_MOTION_WIND_OPTIMIZED
   - TVE_OVERLAY
   - TVE_OVERLAY_ELEMENT
@@ -79,9 +81,8 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
-  - MOTIONVECTORS
-  - TransparentBackfaceDebugDisplay
   - TransparentDepthPrepass
+  - TransparentBackfaceDebugDisplay
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -694,7 +695,7 @@ Material:
     - _MetallicRemapMin: 0
     - _Mode: 0
     - _MotionBaseDelayValue: 0
-    - _MotionBaseIntensityValue: 0
+    - _MotionBaseIntensityValue: 1
     - _MotionBaseMaskMode: 3
     - _MotionBaseNoiseValue: 0.5
     - _MotionBasePhaseValue: 0
@@ -721,7 +722,7 @@ Material:
     - _MotionSmallSpeedValue: 5
     - _MotionSmallTillingValue: 5
     - _MotionTillingValue: 5
-    - _MotionTinyIntensityValue: 0
+    - _MotionTinyIntensityValue: 0.1
     - _MotionTinyMaskMode: 2
     - _MotionTinySpeedValue: 20
     - _MotionTinyTillingValue: 20
@@ -1036,7 +1037,7 @@ Material:
     - _MotionHighlightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MotionPushMaskRemap: {r: 0, g: 1, b: 0, a: 0}
     - _MotionSmallMaskRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _MotionTinyMaskRemap: {r: 0, g: 1, b: 0, a: 0}
+    - _MotionTinyMaskRemap: {r: 0, g: 0, b: 0, a: 0}
     - _NormalMeshRemap: {r: 0, g: 1, b: 0, a: 0}
     - _NormalProjRemap: {r: 0, g: 1, b: 0, a: 0}
     - _NormalSphereOffsetValue: {r: 0, g: 0, b: 0, a: 0}
