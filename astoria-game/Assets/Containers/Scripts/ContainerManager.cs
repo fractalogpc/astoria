@@ -10,12 +10,12 @@ public class ContainerManager : InputHandlerBase
 	public UnityEvent OnOpen;
 	public UnityEvent OnClose;
 	
-	[SerializeField] private FadeElementInOut _fadeCanvas;
+	[SerializeField] protected FadeElementInOut _fadeCanvas;
 	[Header("Inventories")]
-	[SerializeField] private InventoryComponent _containerInventory;
-	[SerializeField] private InventoryComponent _playerInvDisplay;
+	[SerializeField] protected InventoryComponent _containerInventory;
+	[SerializeField] protected InventoryComponent _playerInvDisplay;
 
-	private InventoryComponent _playerInventory;
+	protected InventoryComponent _playerInventory;
 
 	public void Close() {
 		Cursor.lockState = CursorLockMode.Locked;
@@ -46,7 +46,7 @@ public class ContainerManager : InputHandlerBase
 		OnOpen?.Invoke();
 	}
 	
-	private void Start() {
+	protected virtual void Start() {
 		Interactable interactable = GetComponent<Interactable>();
 		if (interactable != null) {
 			interactable.OnInteract.AddListener(Interact);

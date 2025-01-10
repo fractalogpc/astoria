@@ -26,5 +26,17 @@ public class ItemData : ScriptableObject
     
     public virtual ItemInstance CreateItem() {
         return new ItemInstance(this);
-    } 
+    }
+
+    public bool Equals(ItemData other) {
+        if (other == null) return false;
+        if (other.ItemName != ItemName) return false;
+        if (other.ItemDescription != ItemDescription) return false;
+        if (other.ItemIcon != ItemIcon) return false;
+        if (other.ItemBGColor != ItemBGColor) return false;
+        if (other.ItemSize != ItemSize) return false;
+        if (other.IsStackable != IsStackable) return false;
+        if (other.DroppedItemPrefab != DroppedItemPrefab) return false;
+        return true;
+    }
 }

@@ -2,16 +2,30 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class LootContainer : ContainerManager
 {
 	[Header("Loot Table")]
 	public LootTable LootTable;
 
-	protected override void Interact() {
-		base.Interact();
-		// Add items to container from loot table
+	public void GenerateLoot() {
+		List<ItemData> loot = LootTable.GenerateLoot();
+		foreach (ItemData item in loot) {
+			if (_containerInventory.TryAddItemByData(item)) {
+				Debug.Log("Added " + item.ItemName + " to container.");
+			}
+			else {
+				Debug.Log("Failed to add " + item.ItemName + " to container. Either the container is full or the item is not stackable.");
+			}
+		}
 	}
-	
+
+	private void OnValidate() {
+		LootTable.ValidateInput();
+	}
+
+	protected override void Start() {
+		base.Start();
+		LootTable.ValidateInput();
+		GenerateLoot();
+	}
 }
