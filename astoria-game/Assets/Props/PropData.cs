@@ -2,5 +2,5 @@ using UnityEngine;
 
 public class PropData : ItemData
 {
-    public GameObject PlaceablePrefab;
+    public ConstructionData ConstructionData;
 }
