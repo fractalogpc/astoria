@@ -5,4 +5,8 @@ using UnityEngine;
 public class PropData : ItemData
 {
     public ConstructionData ConstructionData;
+
+    public override ItemInstance CreateItem() {
+        return new PropInstance(this);
+    }
 }

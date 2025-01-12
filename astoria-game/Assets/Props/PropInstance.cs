@@ -13,7 +13,7 @@ public class PropInstance : ItemInstance
     private NEWConstructionCore _constructionCore;
     
     public override void OnSelected() {
-        base.OnSelected();
+        Debug.Log("Called construction core Selected prop instance");
         _constructionCore.SelectData(ItemData.ConstructionData);
     }
     public override void OnDeselected() {
