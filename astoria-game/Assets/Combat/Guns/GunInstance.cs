@@ -17,7 +17,7 @@ public enum FireMode
 /// <summary>
 /// Represents a weapon item. This is a monolithic class, but that should be okay since we don't have many different weapon types.
 /// </summary>
-public class GunInstance : ItemInstance
+public class GunInstance : ViewmodelItemInstance
 {
 	public bool Initialized = false;
 	public new GunData ItemData => (GunData)base.ItemData;
@@ -52,7 +52,6 @@ public class GunInstance : ItemInstance
 	
 	// This constructor is called when the item is created in the inventory, it is not initialized yet
 	public GunInstance(GunData gunData) : base(gunData) {
-		base.ItemData = gunData;
 	}
 	
 	// Assign any references that need to be attached when first equipped here

@@ -76,7 +76,7 @@ public class CombatCore : NetworkedInputHandlerBase
 	}
 
 	private IEnumerator UnequipWeaponCoroutine() {
-		yield return new WaitForSeconds(_combatViewmodelManager.PlayHolster());
+		yield return new WaitForSeconds(_combatViewmodelManager.PlayUnequip());
 		_combatViewmodelManager.RemoveViewmodel();
 	}
 

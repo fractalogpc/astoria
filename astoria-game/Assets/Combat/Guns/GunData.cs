@@ -3,11 +3,8 @@ using UnityEngine;
 
 // TODO: Make a custom editor that changes the exposed fields based on the weapon type
 [CreateAssetMenu(fileName = "GunData", menuName = "Scriptable Objects/GunData")]
-public class GunData : ItemData
+public class GunData : ViewmodelItemData
 {
-	[Header("Viewmodel")]
-	public GameObject ViewmodelPrefab;
-	
 	[Header("Ammo Item")]
 	public ItemData AmmoItem;
 

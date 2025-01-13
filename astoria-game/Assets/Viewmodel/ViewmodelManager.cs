@@ -1,16 +1,16 @@
 ﻿using Mirror;
 using UnityEngine;
 
-public class ViewmodelManager : MonoBehaviour
+public class ViewmodelManager : NetworkBehaviour
 {
-	[SerializeField] private Transform _viewmodelParent;
-	[SerializeField][ReadOnly] private Viewmodel _currentViewmodel;
+	[SerializeField] protected Transform _viewmodelParent;
+	[SerializeField][ReadOnly] protected Viewmodel _currentViewmodel;
 	
-	public void SetViewmodelFor(ItemInstance ) {
+	public void SetViewmodelFor(ViewmodelItemInstance itemInstance) {
 		if (_currentViewmodel != null) {
 			Destroy(_currentViewmodel.gameObject);
 		}
-		_currentViewmodel = Instantiate(gunInstance.ItemData.ViewmodelPrefab, _viewmodelParent).GetComponent<CombatViewmodel>();
+		_currentViewmodel = Instantiate(itemInstance.ItemData.ViewmodelPrefab, _viewmodelParent).GetComponent<Viewmodel>();
 	}
 	
 	public void RemoveViewmodel() {
@@ -24,35 +24,14 @@ public class ViewmodelManager : MonoBehaviour
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayFire() {
-		return _currentViewmodel.SetTriggerFire();
+	public float PlayUnequip() {
+		return _currentViewmodel.SetTriggerUnequip(); 
 	}
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
 	/// </summary>
 	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayReloadEmpty() {
-		return _currentViewmodel.SetTriggerReloadEmpty(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayReloadPartial() {
-		return _currentViewmodel.SetTriggerReloadPartial(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayHolster() {
-		return _currentViewmodel.SetTriggerHolster(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayDraw() {
-		return _currentViewmodel.SetTriggerDraw(); 
+	public float PlayEquip() {
+		return _currentViewmodel.SetTriggerEquip(); 
 	}
 }
