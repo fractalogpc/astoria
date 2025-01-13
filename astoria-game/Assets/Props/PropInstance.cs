@@ -30,7 +30,7 @@ public class PropInstance : ItemInstance
 
     public override void OnItemDestruction() {
         base.OnItemDestruction();
-        _constructionCore.DeselectData();
+        // _constructionCore.DeselectData();
         _constructionCore.OnObjectPlaced.RemoveListener(OnConstructionCorePlace);
     }
 
