@@ -15,6 +15,7 @@ public class TimeCycleSunLight : MonoBehaviour
 
 	[SerializeField] private float _fullMoonIntensity = 1f;
 	[SerializeField] private float _newMoonIntensity = 0.5f;
+	[SerializeField] private float _moonPhaseOffset = 0.5f;
 
 	private TimeCycleCore _timeCycleCore;
 	
@@ -28,8 +29,8 @@ public class TimeCycleSunLight : MonoBehaviour
 		_moonLight.transform.rotation = Quaternion.Euler(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength * 360 + 90, -90f, 0);
 
 		// Calculate moon phase
-		float moonPhase = _timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength % 29.5f / 29.5f;
-		_moonLightData.moonPhase = moonPhase;
+		float moonPhase = (_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength % 29.5f / 29.5f + _moonPhaseOffset) % 1;
+		_moonLightData.moonPhase = moonPhase
 		_moonLight.intensity = Mathf.Lerp(_newMoonIntensity, _fullMoonIntensity, (moonPhase > 0.5f ? 1 - moonPhase : moonPhase) * 2);
 	}
 }
