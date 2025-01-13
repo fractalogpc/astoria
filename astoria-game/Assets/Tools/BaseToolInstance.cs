@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class BaseToolInstance : ViewmodelItemInstance
 {
-	private ToolCore _toolCore;
-	private ViewmodelManager _viewmodelManager;
+	protected ToolCore _toolCore;
+	protected ViewmodelManager _viewmodelManager;
 	
 	public BaseToolInstance(ItemData itemData) : base(itemData) {
 	}
 
-	public void Initialize(ToolCore toolCore, ViewmodelManager viewmodelManager) {
+	public virtual void Initialize(ToolCore toolCore, ViewmodelManager viewmodelManager) {
 		this._toolCore = toolCore;
 		this._viewmodelManager = viewmodelManager;
 	}
