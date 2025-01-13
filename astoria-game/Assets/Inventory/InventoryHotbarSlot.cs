@@ -24,44 +24,39 @@ public class InventoryHotbarSlot : MonoBehaviour
         Selected = true;
         _highlightEffect.Pulse();
         if (_attachedSlot._heldItemInstance == null) return;
-        _attachedSlot._heldItemInstance.OnSelected();
+        _attachedSlot._heldItemInstance.OnHotbarSelected(this);
     }
 
     public void Deselect() {
         Selected = false;
         if (_attachedSlot._heldItemInstance == null) return;
-        _attachedSlot._heldItemInstance.OnDeselected();
+        _attachedSlot._heldItemInstance.OnHotbarDeselected(this);
     }
     
     public void AttachSlot(InventoryEquipableSlot slot) {
         if (_attachedSlot != null) {
             _attachedSlot.OnItemAdded.RemoveListener(UpdateSlotState);
-            _attachedSlot.OnItemRemoved.RemoveListener(RemoveItem);
+            _attachedSlot.OnItemRemoved.RemoveListener(RemoveIcon);
         }
         _attachedSlot = slot;
         _attachedSlot.OnItemAdded.AddListener(UpdateSlotState);
-        _attachedSlot.OnItemRemoved.AddListener(RemoveItem);
+        _attachedSlot.OnItemRemoved.AddListener(RemoveIcon);
         UpdateSlotState(_attachedSlot._heldItemInstance);
     }
-    
-    private void UpdateSlotState(ItemInstance item) {
-        if (_attachedSlot._heldItemInstance == null) {
-            RemoveItem();
-        }
-        else {
-            ShowItem();
-        }
-    }
-    private void ShowItem() {
-        _itemImage.color = Color.white;
-        _itemImage.sprite = _attachedSlot._heldItemInstance.ItemData.ItemIcon;
-    }
-    private void RemoveItem(ItemInstance item = null) {
+    private void RemoveIcon(ItemInstance item = null) {
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
     }
-    
-    
-    
-    
+    private void UpdateSlotState(ItemInstance item) {
+        if (_attachedSlot._heldItemInstance == null) {
+            RemoveIcon();
+        }
+        else {
+            ShowIcon();
+        }
+    }
+    private void ShowIcon() {
+        _itemImage.color = Color.white;
+        _itemImage.sprite = _attachedSlot._heldItemInstance.ItemData.ItemIcon;
+    }
 }

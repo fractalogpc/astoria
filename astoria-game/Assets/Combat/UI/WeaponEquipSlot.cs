@@ -23,7 +23,7 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 		return true;
 	}
 
-	public override void OnRemove() {
+	public override void OnPickup() {
 		if (_heldItemInstance == null) return;
 		InstantiateDraggedItem(_heldItemInstance);
 		_itemImage.sprite = null;

@@ -8,16 +8,34 @@ public class PropInstance : ItemInstance
     {
         ItemData = propData;
         _constructionCore = NetworkClient.localPlayer.gameObject.GetComponentInChildren<NEWConstructionCore>();
+        _constructionCore.OnObjectPlaced.AddListener(OnConstructionCorePlace);
     }
     
     private NEWConstructionCore _constructionCore;
+    private bool _selected = false;
+    private InventoryHotbarSlot _hotbarSlot = null;
     
-    public override void OnSelected() {
-        Debug.Log("Called construction core Selected prop instance");
+    public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
+        base.OnHotbarSelected(hotbarSlot);
+        _hotbarSlot = hotbarSlot;
+        _selected = true;
         _constructionCore.SelectData(ItemData.ConstructionData);
     }
-    public override void OnDeselected() {
-        base.OnDeselected();
+    public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
+        base.OnHotbarDeselected(hotbarSlot);
+        _hotbarSlot = null;
+        _selected = false;
         _constructionCore.DeselectData();
+    }
+
+    public override void OnItemDestruction() {
+        base.OnItemDestruction();
+        _constructionCore.DeselectData();
+        _constructionCore.OnObjectPlaced.RemoveListener(OnConstructionCorePlace);
+    }
+
+    private void OnConstructionCorePlace(ConstructionData constructionData) {
+        if (!_selected || !constructionData == ItemData.ConstructionData) return;
+        _hotbarSlot.AttachedSlot.RemoveItem();
     }
 }

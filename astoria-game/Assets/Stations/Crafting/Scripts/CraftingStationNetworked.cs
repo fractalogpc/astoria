@@ -98,13 +98,13 @@ public class CraftingStationNetworked : NetworkBehaviour
 		foreach (ItemSet ingredientSet in recipe._ingredientSetList.ItemSets) {
 			int itemsNeeded = ingredientSet.ItemCount * craftCount;
 			for (int i = 0; i < itemsNeeded; i++) {
-				_playerInventory.TryRemoveItemByData(ingredientSet.ItemData);
+				_playerInventory.RemoveItemByData(ingredientSet.ItemData);
 			}
 		}
 		foreach (ItemSet resultSet in recipe._resultSetList.ItemSets) {
 			int outputItems = resultSet.ItemCount * craftCount;
 			for (int j = 0; j < outputItems; j++) {
-				_playerInventory.TryAddItemByData(resultSet.ItemData);
+				_playerInventory.AddItemByData(resultSet.ItemData);
 			}
 		}
 		return true;

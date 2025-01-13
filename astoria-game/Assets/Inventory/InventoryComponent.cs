@@ -105,7 +105,7 @@ public class InventoryComponent : MonoBehaviour
 			items.Add(itemData.CreateItem());
 		}
 
-		int notPlaced = TryAddItemsByData(itemDatas);
+		int notPlaced = AddItemsByData(itemDatas);
 		if (notPlaced > 0) {
 			Debug.LogWarning($"Could not place all items in inventory of {gameObject.name}. Some items may be too large or the inventory too small.");
 			return notPlaced;
@@ -194,7 +194,13 @@ public class InventoryComponent : MonoBehaviour
 		if (matchingItemInstances.Count < count) return false;
 		return true;
 	}
-
+	public bool AddItem(ItemInstance itemInstance) {
+		if (!InventoryData.TryAddItem(this, itemInstance, out Vector2Int slotIndexBL)) {
+			return false;
+		}
+		CreateItemPrefab(itemInstance, slotIndexBL);
+		return true;
+	}
 	/// <summary>
 	/// Attempts to add count items to the inventory. If items are non-rectangular, this does not pack items very well.
 	/// Use this when interacting with the inventory from non-inventory systems.
@@ -202,7 +208,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
-	public bool TryAddItemByData(ItemData itemData) {
+	public bool AddItemByData(ItemData itemData) {
 		ItemInstance itemInstance = itemData.CreateItem();
 		if (!InventoryData.TryAddItem(this, itemInstance, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
@@ -219,7 +225,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemInstance">The InventoryItem to place.</param>
 	/// <param name="positionSS">The position to place at in screen space.</param>
 	/// <returns></returns>
-	public bool TryPlaceItem(ItemInstance itemInstance, Vector2Int slotIndexBL) {
+	public bool PlaceItem(ItemInstance itemInstance, Vector2Int slotIndexBL) {
 		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
 		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
 		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
@@ -237,11 +243,11 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="items">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <returns>The amount of items left over.</returns>
-	public int TryAddItemsByData(List<ItemData> items) {
+	public int AddItemsByData(List<ItemData> items) {
 		int itemsPlaced = 0;
 		if (items.Count == 0) return 0;
 		foreach (ItemData item in items) {
-			if (!TryAddItemByData(item)) {
+			if (!AddItemByData(item)) {
 				Debug.LogWarning($"Could not add item {item.ItemName} to {gameObject.name}.");
 				continue;
 			}
@@ -258,12 +264,12 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to check against.</param>
 	/// <param name="count">The count of items to remove.</param>
 	/// <returns>Whether the count of matching items could be removed.</returns>
-	public bool TryRemoveItemByData(ItemData itemData, int count = 1) {
+	public bool RemoveItemByData(ItemData itemData, int count = 1) {
 		List<GameObject> itemInstancesToRemove = new();
 		foreach (GameObject itemUIInstance in _inventoryItemPrefabInstances) {
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
 			if (itemInstancesToRemove.Count == count) break;
-			if (itemUIScript._itemInstance.ItemData == itemData) itemInstancesToRemove.Add(itemUIInstance);
+			if (itemUIScript.ItemInstance.ItemData == itemData) itemInstancesToRemove.Add(itemUIInstance);
 		}
 
 		Debug.Log($"Found {itemInstancesToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
@@ -274,6 +280,14 @@ public class InventoryComponent : MonoBehaviour
 			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
 			itemUIScript.RemoveSelfFromInventory();
 		}
+		return true;
+	}
+
+	public bool RemoveItem(ItemInstance item) {
+		InventoryItemUI itemUIScript = _inventoryItemPrefabInstances.Find(itemUI => itemUI.GetComponent<InventoryItemUI>().ItemInstance == item).GetComponent<InventoryItemUI>();
+		if (itemUIScript == null) return false;
+		_inventoryItemPrefabInstances.Remove(itemUIScript.gameObject);
+		itemUIScript.RemoveSelfFromInventory();
 		return true;
 	}
 	
@@ -319,7 +333,7 @@ public class InventoryComponent : MonoBehaviour
 		dropped.transform.position = localPlayer.transform.position + Vector3.up * 2f;
 		dropped.GetComponentInChildren<Rigidbody>().AddForce(Vector3.down * 0.5f + localPlayer.transform.forward * 2.5f + RandomJitter(0.1f), ForceMode.Impulse);
 		dropped.GetComponentInChildren<Rigidbody>().AddTorque(localPlayer.transform.right * 0.5f + RandomJitter(0.1f), ForceMode.Impulse);
-		dropped.GetComponent<DroppedItem>().Item = itemInstance.ItemData;
+		dropped.GetComponent<DroppedItem>().Item = itemInstance;
 	}
 
 	private Vector3 RandomJitter(float jitterAmount) {

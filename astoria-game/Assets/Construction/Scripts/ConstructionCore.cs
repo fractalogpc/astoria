@@ -480,7 +480,7 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
     if (BackgroundInfo._infBuild) {
     } else {
       foreach (ConstructionObjectCost cost in _currentStructureData.Cost) {
-        if (!_playerInventory.TryRemoveItemByData(cost.Item, cost.Amount)) {
+        if (!_playerInventory.RemoveItemByData(cost.Item, cost.Amount)) {
           Debug.LogError("ConstructionCore: Failed to remove cost item from player inventory after check!");
         }
       }

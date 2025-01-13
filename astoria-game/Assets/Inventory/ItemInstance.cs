@@ -26,11 +26,15 @@ public class ItemInstance
 		}
 	}
 	
-	public virtual void OnSelected() {
+	public virtual void OnItemDestruction() {
+		Debug.Log("Item destroyed: " + ItemData.ItemName);
+	}
+	
+	public virtual void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
 		Debug.Log("Item selected: " + ItemData.ItemName);
 	}
 	
-	public virtual void OnDeselected() {
+	public virtual void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
 		Debug.Log("Item deselected: " + ItemData.ItemName);
 	}
 }

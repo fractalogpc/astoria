@@ -10,7 +10,7 @@ public class LootContainer : ContainerManager
 	public void GenerateLoot() {
 		List<ItemData> loot = LootTable.GenerateLoot();
 		foreach (ItemData item in loot) {
-			if (_containerInventory.TryAddItemByData(item)) {
+			if (_containerInventory.AddItemByData(item)) {
 				Debug.Log("Added " + item.ItemName + " to container.");
 			}
 			else {

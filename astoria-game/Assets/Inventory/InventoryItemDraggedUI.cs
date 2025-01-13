@@ -24,55 +24,47 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
 	private bool _followMouse;
 
-	private void OnValidate()
-	{
+	private void OnValidate() {
 		_rectTransform = GetComponent<RectTransform>();
 		_rectTransform.anchorMin = Vector2.zero;
 	}
 
 
-	private void Start()
-	{
+	private void Start() {
 		_canvasGraphicRaycaster = _rectTransform.GetComponentInParent<GraphicRaycaster>();
 		print($"graphic raycaster for {gameObject.name} is on {_canvasGraphicRaycaster.gameObject.name}");
 	}
 
-	private void Update()
-	{
-		if (!_followMouse)
-		{
+	private void Update() {
+		if (!_followMouse) {
 			_canvasGroup.alpha = 0;
 			return;
 		}
+
 		// Only works if the canvas is set to Overlay, and rectTransform is under the canvas.
 		_canvasGroup.alpha = 1;
 		_rectTransform.anchoredPosition = Input.mousePosition;
 		GetInventoryUIHoveredOver(out _currentInventoryAbove);
-		if (_currentInventoryAbove != null)
-		{
+		if (_currentInventoryAbove != null) {
 			_startingInventory?.ResetAllContainerHighlights();
 			_currentInventoryAbove.HighlightSlotsUnderItem(ItemInstance, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			RotateItem();
-		}
+
+		if (Input.GetKeyDown(KeyCode.R)) RotateItem();
 	}
 
-	private void RotateItem()
-	{
+	private void RotateItem() {
 		ItemInstance.Rotated = !ItemInstance.Rotated;
 		SetVisualSize();
 	}
-	
+
 	/// <summary>
 	/// Used on inventory components.
 	/// </summary>
 	/// <param name="originalInventory">The inventory that the InventoryUI spawning the object belongs to.</param>
 	/// <param name="itemInstance">The item this draggable holds.</param>
 	/// <param name="itemUI">The InventoryUI that this object was spawned by.</param>
-	public void InitializeWithInventory(InventoryComponent originalInventory, ItemInstance itemInstance, InventoryItemUI itemUI)
-	{
+	public void InitializeWithInventory(InventoryComponent originalInventory, ItemInstance itemInstance, InventoryItemUI itemUI) {
 		_itemUI = itemUI;
 		ItemInstance = itemInstance;
 		_startingInventory = originalInventory;
@@ -95,8 +87,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		_canvasGroup.alpha = 0;
 	}
 
-	private void SetVisualSize()
-	{
+	private void SetVisualSize() {
 		if (_startingInventory != null) {
 			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits, ItemInstance.Size.y * _startingInventory.SlotSizeUnits);
 			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits / 2, ItemInstance.Size.y * _startingInventory.SlotSizeUnits / 2);
@@ -111,18 +102,16 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 
 	// Look, I know its messy, but trust me, it makes sense. God help me if there are other kinds of slots though.
-	
+
 	/// <summary>
 	/// Called when the mouse is let go of.
 	/// </summary>
 	/// <returns>Returns whether the item was successfully transferred.</returns>
-	public bool OnLetGoOfDraggedItem()
-	{
+	public bool OnLetGoOfDraggedItem() {
 		bool overSlot = GetEquipableSlotHoveredOver(out InventoryEquipableSlot slot);
-		
+
 		// Over another inventory
-		if (_currentInventoryAbove != null)
-		{
+		if (_currentInventoryAbove != null) {
 			_startingInventory?.ResetAllContainerHighlights();
 			_currentInventoryAbove.ResetAllContainerHighlights();
 			// Started from an inventory
@@ -132,29 +121,29 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			// Started from a slot
 			else {
 				Vector2Int slotIndex = GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition);
-				if (!_currentInventoryAbove.TryPlaceItem(ItemInstance, slotIndex)) {
-					if (!_startingSlot.TryAddToSlot(ItemInstance)) {
+				if (!_currentInventoryAbove.PlaceItem(ItemInstance, slotIndex))
+					if (!_startingSlot.TryAddToSlot(ItemInstance))
 						Debug.LogError("InventoryItemDraggedUI: Could not return item to slot. Check for unexpected draggable or slot logic.");
-					}
-				}
 			}
-			
+
 			Destroy(gameObject);
 			return true;
 		}
+
 		// Over an equipable slot
 		if (overSlot) {
-			if (slot.TryAddToSlot(ItemInstance))
-			{
+			if (slot.TryAddToSlot(ItemInstance)) {
 				_itemUI?.RemoveSelfFromInventory();
 				Destroy(gameObject);
 				return true;
 			}
+
 			_startingInventory?.ResetAllContainerHighlights();
 			_itemUI?.ResetToOriginalPosition();
 			Destroy(gameObject);
 			return false;
 		}
+
 		// Over nothing
 		_startingInventory?.ResetAllContainerHighlights();
 		_startingInventory?.SpawnDroppedItem(ItemInstance);
@@ -164,42 +153,37 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 
 
-	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory)
-	{
-		List<RaycastResult> raycastHits = new List<RaycastResult>();
+	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory) {
+		List<RaycastResult> raycastHits = new();
 		_pointerEventData.position = Input.mousePosition;
 		_canvasGraphicRaycaster.Raycast(_pointerEventData, raycastHits);
-		foreach (RaycastResult hit in raycastHits)
-		{
-			if (hit.gameObject.TryGetComponent(out InventoryComponent inventoryUI))
-			{
+		foreach (RaycastResult hit in raycastHits) {
+			if (hit.gameObject.TryGetComponent(out InventoryComponent inventoryUI)) {
 				inventory = inventoryUI;
 				return true;
 			}
 		}
+
 		inventory = null;
 		return false;
 	}
-	
-	private bool GetEquipableSlotHoveredOver(out InventoryEquipableSlot equipableSlot)
-	{
-		List<RaycastResult> raycastHits = new List<RaycastResult>();
+
+	private bool GetEquipableSlotHoveredOver(out InventoryEquipableSlot equipableSlot) {
+		List<RaycastResult> raycastHits = new();
 		_pointerEventData.position = Input.mousePosition;
 		_canvasGraphicRaycaster.Raycast(_pointerEventData, raycastHits);
-		foreach (RaycastResult hit in raycastHits)
-		{
-			if (hit.gameObject.TryGetComponent(out InventoryEquipableSlot equipableSlotScript))
-			{
+		foreach (RaycastResult hit in raycastHits) {
+			if (hit.gameObject.TryGetComponent(out InventoryEquipableSlot equipableSlotScript)) {
 				equipableSlot = equipableSlotScript;
 				return true;
 			}
 		}
+
 		equipableSlot = null;
 		return false;
 	}
 
-	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionSS)
-	{
+	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionSS) {
 		// Add an offset to get the position of the bottom left grid slot of the item.
 		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / ItemInstance.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / ItemInstance.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
@@ -208,7 +192,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		// print("item transform.position" + _rectTransform.position);
 		// print("mouse pos" + Input.mousePosition);
 		// print("Inventory TransformPoint: " + localPoint);
-		Vector2Int slotIndex = new Vector2Int(
+		Vector2Int slotIndex = new(
 			Mathf.FloorToInt(localPoint.x / inventory.SlotSizeUnits),
 			Mathf.FloorToInt(localPoint.y / inventory.SlotSizeUnits)
 		);

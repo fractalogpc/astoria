@@ -79,8 +79,8 @@ public class GunInstance : ItemInstance
 		}
 	}
 
-	public override void OnSelected() {
-		base.OnSelected();
+	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
+		base.OnHotbarSelected(hotbarSlot);
 		if (_combatCore == null) {
 			Debug.Log("Try to find a better way to initialize GunInstances when Selected than making CombatCore a singleton");
 			_combatCore = CombatCore.Instance;
@@ -88,8 +88,8 @@ public class GunInstance : ItemInstance
 		_combatCore.EquipWeapon(this);
 	}
 	
-	public override void OnDeselected() {
-		base.OnDeselected();
+	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
+		base.OnHotbarDeselected(hotbarSlot);
 		_combatCore.UnequipWeapon();
 	}
 
@@ -273,7 +273,7 @@ public class GunInstance : ItemInstance
 	}
 	
 	private bool RemoveAmmoFromInventory(int amount) {
-		return _playerInventory.TryRemoveItemByData(ItemData.AmmoItem, amount);
+		return _playerInventory.RemoveItemByData(ItemData.AmmoItem, amount);
 	}
 	
 	private void SetFireMode(FireMode mode) {

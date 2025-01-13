@@ -33,7 +33,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
     if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit treeHit, _interactDistance, _treeLayerMask)) {
       _treeChopping.InteractTree(treeHit.point, _camera.transform.forward);
       // Give the player resources
-      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryAddItemByData(_treeItemData);
+      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().AddItemByData(_treeItemData);
     }
   }
 }

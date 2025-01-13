@@ -30,13 +30,23 @@ public class InventoryEquipableSlot : MonoBehaviour
         return true;
     }
     
-    public virtual void OnRemove() {
+    public virtual void OnPickup() {
         if (_heldItemInstance == null) return;
         InstantiateDraggedItem(_heldItemInstance);
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
         OnItemRemoved.Invoke(_heldItemInstance);
+        _heldItemInstance = null;
+    }
+    
+    public virtual void RemoveItem() {
+        if (_heldItemInstance == null) return;
+        _itemImage.sprite = null;
+        _itemImage.color = Color.clear;
+        _itemText.text = "";
+        OnItemRemoved.Invoke(_heldItemInstance);
+        _heldItemInstance.OnItemDestruction();
         _heldItemInstance = null;
     }
     
@@ -57,12 +67,12 @@ public class InventoryEquipableSlot : MonoBehaviour
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
-        _clickableEvents.OnClickDownSelected.AddListener(OnRemove);
+        _clickableEvents.OnClickDownSelected.AddListener(OnPickup);
         _clickableEvents.OnClickUpAnywhere.AddListener(OnClickUpAnywhere);
     }
 
     private void OnDisable() {
-        _clickableEvents.OnClickDownSelected.RemoveListener(OnRemove);
+        _clickableEvents.OnClickDownSelected.RemoveListener(OnPickup);
         _clickableEvents.OnClickUpAnywhere.RemoveListener(OnClickUpAnywhere);
     }
     

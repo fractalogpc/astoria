@@ -67,7 +67,7 @@ public class CrafterController : MonoBehaviour, IStartExecution
     _constructionCore.TryGiveObject(datas[Index]);
 
     foreach (var item in datas[Index].Cost) {
-      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().TryRemoveItemByData(item.Item, item.Amount);
+      NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().RemoveItemByData(item.Item, item.Amount);
     }
   }
 
