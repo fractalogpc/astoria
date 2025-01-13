@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9952a4747483ad044bf0965d86879446, type: 3}
   m_Name: PistolRecipe
   m_EditorClassIdentifier: 
-  _ingredientSets:
-  - _item: {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
-    _itemCount: 2
-  - _item: {fileID: 11400000, guid: 54383770298ba214f85e076cec96a5af, type: 2}
-    _itemCount: 2
-  _resultSets:
-  - _item: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
-    _itemCount: 1
+  _ingredientSetList:
+    ItemSets:
+    - ItemData: {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
+      ItemCount: 2
+  _resultSetList:
+    ItemSets:
+    - ItemData: {fileID: 11400000, guid: f25c56c36d5ac3440859263b1d4cf5b4, type: 2}
+      ItemCount: 10
+    - ItemData: {fileID: 11400000, guid: ca371a91ec5f3d648a2acb7b44cfd2f1, type: 2}
+      ItemCount: 1

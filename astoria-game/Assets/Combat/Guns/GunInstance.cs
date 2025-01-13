@@ -81,10 +81,6 @@ public class GunInstance : ItemInstance
 
 	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
 		base.OnHotbarSelected(hotbarSlot);
-		if (_combatCore == null) {
-			Debug.Log("Try to find a better way to initialize GunInstances when Selected than making CombatCore a singleton");
-			_combatCore = CombatCore.Instance;
-		}
 		_combatCore.EquipWeapon(this);
 	}
 	

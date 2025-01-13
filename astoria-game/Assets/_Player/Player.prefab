@@ -1834,6 +1834,7 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
+  _combatCore: {fileID: 2627650646237878555}
 --- !u!1 &733520445041575720
 GameObject:
   m_ObjectHideFlags: 0
@@ -4148,6 +4149,7 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
+  _combatCore: {fileID: 2627650646237878555}
 --- !u!1 &1505662312694518414
 GameObject:
   m_ObjectHideFlags: 0
@@ -9899,7 +9901,7 @@ Camera:
   m_ShutterSpeed: 0.008333334
   m_Aperture: 2.8
   m_FocusDistance: 10
-  m_FocalLength: 20.78461
+  m_FocalLength: 17.922762
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -9912,9 +9914,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
-  field of view: 48.34965
+  field of view: 55
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -10878,6 +10880,7 @@ MonoBehaviour:
   OnItemRemoved:
     m_PersistentCalls:
       m_Calls: []
+  _combatCore: {fileID: 2627650646237878555}
 --- !u!1 &3784259663338776304
 GameObject:
   m_ObjectHideFlags: 0
@@ -13732,6 +13735,7 @@ GameObject:
   - component: {fileID: 2486426382620431927}
   - component: {fileID: 7678719317327432420}
   - component: {fileID: 8360468966696711857}
+  - component: {fileID: 1271293628330112348}
   m_Layer: 5
   m_Name: Weapon Info
   m_TagString: Untagged
@@ -13840,6 +13844,22 @@ MonoBehaviour:
   _OnFadeComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1271293628330112348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121394488974407519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d13ee61495449144aa45f155db00abac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _infoFade: {fileID: 8360468966696711857}
+  _playerCombatCore: {fileID: 2627650646237878555}
+  _weaponNameText: {fileID: 5290570914586930000}
+  _ammoText: {fileID: 3243648900356047227}
 --- !u!1 &5165082176971897002
 GameObject:
   m_ObjectHideFlags: 0
