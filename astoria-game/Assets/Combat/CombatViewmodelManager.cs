@@ -3,24 +3,9 @@ using UnityEngine;
 /// <summary>
 /// Manages viewmodels. Also acts as an interface for calling each one's animations.
 /// </summary>
-public class CombatViewmodelManager : NetworkBehaviour
+public class CombatViewmodelManager : ViewmodelManager
 {
-	[SerializeField] private Transform _viewmodelParent;
-	[SerializeField][ReadOnly] private CombatViewmodel _currentViewmodel;
-
-	public void SetViewmodelFor(GunInstance gunInstance) {
-		if (_currentViewmodel != null) {
-			Destroy(_currentViewmodel.gameObject);
-		}
-		_currentViewmodel = Instantiate(gunInstance.ItemData.ViewmodelPrefab, _viewmodelParent).GetComponent<CombatViewmodel>();
-	}
-	
-	public void RemoveViewmodel() {
-		if (_currentViewmodel != null) {
-			Destroy(_currentViewmodel.gameObject);
-			_currentViewmodel = null;
-		}
-	}
+	private new CombatViewmodel _currentViewmodel => (CombatViewmodel)base._currentViewmodel;
 	
 	/// <summary>
 	/// Calls the activation function of the relevant animation of the current viewmodel.
@@ -42,19 +27,5 @@ public class CombatViewmodelManager : NetworkBehaviour
 	/// <returns>Duration of triggered animation in seconds.</returns>
 	public float PlayReloadPartial() {
 		return _currentViewmodel.SetTriggerReloadPartial(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayHolster() {
-		return _currentViewmodel.SetTriggerHolster(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayDraw() {
-		return _currentViewmodel.SetTriggerDraw(); 
 	}
 }

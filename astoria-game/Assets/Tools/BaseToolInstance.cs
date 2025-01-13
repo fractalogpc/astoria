@@ -1,18 +1,44 @@
 using UnityEngine;
 
-public class BaseToolInstance : ItemInstance
+public class BaseToolInstance : ViewmodelItemInstance
 {
 	private ToolCore _toolCore;
-	private CombatViewmodel _viewmodelManager;
+	private ViewmodelManager _viewmodelManager;
 	
 	public BaseToolInstance(ItemData itemData) : base(itemData) {
 	}
 
-	public void Initialize(ToolCore toolCore, CombatViewmodel viewmodelManager) {
-		
+	public void Initialize(ToolCore toolCore, ViewmodelManager viewmodelManager) {
+		this._toolCore = toolCore;
+		this._viewmodelManager = viewmodelManager;
 	}
 	
-	
-	
-	
+	public virtual void OnEquip() {
+		
+	}
+	public virtual void OnUnequip() {
+		
+	}
+
+	public virtual void OnTick() {
+		
+	}
+	public virtual void OnUseDown() {
+		
+	}
+	public virtual void OnUseUp() {
+		
+	}
+	public virtual void OnUseHold() {
+		
+	}
+	public virtual void OnAltUseDown() {
+		
+	}
+	public virtual void OnAltUseUp() {
+		
+	}
+	public virtual void OnAltUseHold() {
+		
+	}
 }
