@@ -30,7 +30,7 @@ public class TimeCycleSunLight : MonoBehaviour
 
 		// Calculate moon phase
 		float moonPhase = (_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength % 29.5f / 29.5f + _moonPhaseOffset) % 1;
-		_moonLightData.moonPhase = moonPhase
+		_moonLightData.moonPhase = moonPhase;
 		_moonLight.intensity = Mathf.Lerp(_newMoonIntensity, _fullMoonIntensity, (moonPhase > 0.5f ? 1 - moonPhase : moonPhase) * 2);
 	}
 }
