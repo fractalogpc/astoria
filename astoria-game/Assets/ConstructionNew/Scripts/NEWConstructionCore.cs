@@ -1,12 +1,16 @@
 using UnityEngine;
 using Construction;
 using UnityEngine.Events;
+using System;
 
 public class NEWConstructionCore : InputHandlerBase
 {
+
+    public static NEWConstructionCore Instance;
+
     public ConstructionData DebugData;
     [Header("Placement Settings")]
-    [SerializeField] private float _maxBuildDistance = 10f;
+    public BuildingSettings Settings;
 
     [Header("References")]
     [SerializeField] private Transform _cameraTransform;
@@ -141,5 +145,10 @@ namespace Construction {
 
             return position;
         }
+    }
+
+    [Serializable]
+    public class BuildingSettings {
+        public float MaxBuildDistance = 10f;
     }
 }
