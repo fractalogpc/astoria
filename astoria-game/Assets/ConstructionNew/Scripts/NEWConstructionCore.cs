@@ -2,6 +2,7 @@ using UnityEngine;
 using Construction;
 using UnityEngine.Events;
 using System;
+using Palmmedia.ReportGenerator.Core;
 
 public class NEWConstructionCore : InputHandlerBase
 {
@@ -10,7 +11,9 @@ public class NEWConstructionCore : InputHandlerBase
     public enum ConstructionState
     {
         None,
-        Placing
+        Placing,
+        Rotating,
+        Deleting
     }
 
     public static NEWConstructionCore Instance;
@@ -36,13 +39,27 @@ public class NEWConstructionCore : InputHandlerBase
     private ConstructionData _selectedData;
 
     private GameObject _previewObject;
-    private Renderer[] _previewObjectRenderers;
+    private PreviewObject _previewObjectScript;
 
-    private Vector3 _worldSpaceCursorPosition;
+    private Vector3 _fixedCursorPosition = Vector3.zero;
 
     protected override void InitializeActionMap()
     {
-        RegisterAction(_inputActions.Player.Place, _ => { OnPlace(); });
+        RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
+    }
+
+    private void Start()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogError("Multiple instances of NEWConstructionCore detected");
+        }
+
+        SetConstructionState(ConstructionState.None);
     }
 
     private void Update()
@@ -58,16 +75,36 @@ public class NEWConstructionCore : InputHandlerBase
         switch (State)
         {
             case ConstructionState.Placing:
+                bool pass1 = ConstructionCoreLogic.ValidatePlacementPositionPass1(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition(), out _fixedCursorPosition);
 
-                _worldSpaceCursorPosition = ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition());
+                _previewObject.transform.position = UpdatePreviewObjectPosition();
+                _previewObject.transform.rotation = UpdatePreviewObjectRotation();
 
-                UpdatePreviewObject();
+                bool pass2 = pass1 ? ConstructionCoreLogic.ValidatePlacementPositionPass2(_previewObjectScript) : false;
+
+                Material mat = pass2 ? _previewValidMaterial : _previewInvalidMaterial;
+
+                _previewObjectScript.SetMaterial(mat);
+
                 break;
         }
     }
 
-    private void UpdatePreviewObject() {
-        _previewObject.transform.position = _worldSpaceCursorPosition;
+    private Vector3 UpdatePreviewObjectPosition()
+    {
+        Vector3 position = _fixedCursorPosition;
+        position += _selectedData.PositionOffset;
+
+        return position;
+    }
+
+    private Quaternion UpdatePreviewObjectRotation()
+    {
+        Vector3 directionTowardsCamera = _cameraTransform.transform.position - _previewObject.transform.position;
+        directionTowardsCamera.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(_selectedData.RotationOffset);
+
+        return rotation;
     }
 
     public bool SelectData(ConstructionData data)
@@ -76,67 +113,61 @@ public class NEWConstructionCore : InputHandlerBase
 
         if (_selectedData != null && _selectedData != data)
         {
-            DeselectData();
+            SetConstructionState(ConstructionState.None);
         }
 
         _selectedData = data;
 
         _previewObject = CreatePreviewObject();
 
+        SetConstructionState(ConstructionState.Placing);
+
         OnDataSelected?.Invoke(_selectedData);
 
         return true;
     }
 
-    public bool DeselectData()
+    private bool OnClick()
     {
-        if (_selectedData == null)
+
+        switch (State)
         {
-            Debug.LogError("No data selected");
-            return false;
+            case ConstructionState.Placing:
+
+                CreateObject();
+
+                SetConstructionState(ConstructionState.None);
+
+                OnObjectPlaced?.Invoke(_selectedData);
+
+                SetConstructionState(ConstructionState.None);
+
+                return true;
         }
 
-        _selectedData = null;
-
-        CleanupPreviewObject();
-
-        return true;
-    }
-
-    private bool OnPlace()
-    {
-        if (_selectedData == null)
-        {
-            Debug.LogError("No data selected");
-            return false;
-        }
-
-        CreateObject();
-
-        OnObjectPlaced?.Invoke(_selectedData);
-
-        DeselectData();
-
-        return true;
+        return false;
     }
 
     private GameObject CreatePreviewObject()
     {
-        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab, _worldSpaceCursorPosition, Quaternion.identity);
+        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab, _fixedCursorPosition, Quaternion.identity);
 
-        _previewObjectRenderers = localPreviewObject.GetComponentsInChildren<Renderer>();
+        _previewObjectScript = localPreviewObject.GetComponent<PreviewObject>();
 
-        foreach (Renderer renderer in _previewObjectRenderers)
+        if (_previewObjectScript == null)
         {
-            renderer.material = _previewValidMaterial;
+            Debug.LogError("PreviewObject script not found on preview object");
+            return null;
         }
+
+        _previewObjectScript.SetMaterial(_previewValidMaterial);
 
         return localPreviewObject;
     }
 
     private GameObject CreateObject()
     {
-        Vector3 placedPosition = _worldSpaceCursorPosition + _selectedData.PositionOffset;
+        Vector3 placedPosition = _fixedCursorPosition + _selectedData.PositionOffset;
         Quaternion placedRotation = Quaternion.Euler(_selectedData.RotationOffset);
 
         GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
@@ -152,6 +183,30 @@ public class NEWConstructionCore : InputHandlerBase
         }
 
         _previewObject = null;
+        _previewObjectScript = null;
+        _fixedCursorPosition = Vector3.zero;
+    }
+
+    public void SetConstructionState(ConstructionState state)
+    {
+
+        // Cleanup previous state
+        switch (State)
+        {
+            case ConstructionState.Placing:
+                CleanupPreviewObject();
+                break;
+        }
+
+        State = state;
+
+        // Initialize new state
+        switch (State)
+        {
+            case ConstructionState.None:
+                _fixedCursorPosition = Vector3.zero;
+                break;
+        }
     }
 }
 
@@ -193,11 +248,30 @@ namespace Construction
             return Vector3.zero;
         }
 
-        public static Vector3 ValidatePlacementPosition(Vector3 origin, Vector3 position)
+        // Corrects and validates the position of the object
+        public static bool ValidatePlacementPositionPass1(Vector3 origin, Vector3 initPosition, out Vector3 finalPosition)
         {
+            finalPosition = initPosition;
 
+            // Check if the distance between the origin and the initPosition is within the acceptable distance
+            float distance = Vector3.Distance(origin, initPosition);
+            if (distance > NEWConstructionCore.Instance.Settings.MaxBuildDistance || distance < NEWConstructionCore.Instance.Settings.MinBuildDistance)
+            {
+                return false;
+            }
+            return true;
+        }
 
-            return position;
+        // Validates the position without moving the object
+        public static bool ValidatePlacementPositionPass2(PreviewObject previewObjectScript)
+        {
+            // Check if the object is colliding with anything
+            if (previewObjectScript.IsColliding(NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 
@@ -206,5 +280,7 @@ namespace Construction
     {
         public float MaxBuildDistance = 10f;
         public float MinBuildDistance = 2f;
+
+        public LayerMask PlacementLayerMask;
     }
 }
