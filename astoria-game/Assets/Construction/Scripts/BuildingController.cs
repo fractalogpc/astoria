@@ -32,6 +32,6 @@ public class BuildingController : MonoBehaviour, IStartExecution
 
     private void OnBuildingUIOpen()
     {
-        constructionCore.DeselectData();
+        constructionCore.SetConstructionState(NEWConstructionCore.ConstructionState.None);
     }
 }

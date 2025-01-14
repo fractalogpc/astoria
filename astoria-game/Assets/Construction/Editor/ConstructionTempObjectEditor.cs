@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ConstructionTempObject))]
-public class ConstructionTempObjectEditor : Editor
+[CustomEditor(typeof(PreviewObject))]
+public class PreviewObjectEditor : Editor
 {
-  private ConstructionTempObject targetObject;
+  private PreviewObject targetObject;
   private Transform targetTransform;
   private int selectedBoxIndex = -1; // Track the selected box index
 
   private void OnEnable()
   {
-    targetObject = (ConstructionTempObject)target;
+    targetObject = (PreviewObject)target;
     targetTransform = targetObject.transform;
   }
 
@@ -120,7 +120,7 @@ public class ConstructionTempObjectEditor : Editor
   private void AddBox()
   {
     Undo.RecordObject(targetObject, "Add Box");
-    targetObject.boxes.Add(new ConstructionTempObject.BoxData());
+    targetObject.boxes.Add(new PreviewObject.BoxData());
     EditorUtility.SetDirty(targetObject);
   }
 
@@ -134,8 +134,8 @@ public class ConstructionTempObjectEditor : Editor
   private void DuplicateBox(int index)
   {
     Undo.RecordObject(targetObject, "Duplicate Box");
-    ConstructionTempObject.BoxData boxToDuplicate = targetObject.boxes[index];
-    targetObject.boxes.Add(new ConstructionTempObject.BoxData
+    PreviewObject.BoxData boxToDuplicate = targetObject.boxes[index];
+    targetObject.boxes.Add(new PreviewObject.BoxData
     {
       position = boxToDuplicate.position + Vector3.right * 0.5f, // Offset the duplicate slightly
       size = boxToDuplicate.size,
@@ -167,7 +167,7 @@ public class ConstructionTempObjectEditor : Editor
 
       for (int i = 0; i < targetObject.boxes.Count; i++)
       {
-        ConstructionTempObject.BoxData box = targetObject.boxes[i];
+        PreviewObject.BoxData box = targetObject.boxes[i];
         Vector3 worldPosition = targetTransform.TransformPoint(box.position);
         Vector3 halfSize = box.size / 2;
 

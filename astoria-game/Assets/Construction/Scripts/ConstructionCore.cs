@@ -166,12 +166,12 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
 
       if (_isRotating)
       {
-        _tempObject.GetComponent<ConstructionTempObject>().xRotation += Input.GetAxis("Mouse X") * 2; // Rotation speed
-        _tempObject.GetComponent<ConstructionTempObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
+        _tempObject.GetComponent<PreviewObject>().xRotation += Input.GetAxis("Mouse X") * 2; // Rotation speed
+        _tempObject.GetComponent<PreviewObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
       }
       else
       {
-        _tempObject.GetComponent<ConstructionTempObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
+        _tempObject.GetComponent<PreviewObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
       }
 
 
@@ -188,12 +188,12 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
           // Else treat it as a normal structure
           if (CanPlaceStructure())
           {
-            _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_validMaterial);
+            _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
             _canPlace = true;
           }
           else
           {
-            _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_invalidMaterial);
+            _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
             _canPlace = false;
           }
 
@@ -204,12 +204,12 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
         // If the current structure is not a wall, check if it can be placed
         if (CanPlaceStructure())
         {
-          _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_validMaterial);
+          _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
           _canPlace = true;
         }
         else
         {
-          _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_invalidMaterial);
+          _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
           _canPlace = false;
         }
       }
@@ -447,14 +447,14 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
     float angle = Vector3.Angle(otherWallDirection, tempWallDirection);
     if (angle > _wallAngleTolarence) {
       if (CanPlaceStructure(ignoreTransform: wallScript.transform)) {
-        _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_validMaterial);
+        _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
         _canPlace = true;
       } else {
-        _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_invalidMaterial);
+        _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
         _canPlace = false;
       }
     } else {
-      _tempObject.GetComponent<ConstructionTempObject>().SetMaterial(_invalidMaterial);
+      _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
       _canPlace = false;
     }
 
@@ -464,7 +464,7 @@ public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
   private bool CanPlaceStructure(LayerMask? layer = null, Transform ignoreTransform = null) {
     // If the structure is a wall, don't check for other walls
     LayerMask effectiveLayer = layer ?? (_constructionLayer | LayerMask.GetMask("Default")); // Not great practice but works
-    return !_tempObject.GetComponent<ConstructionTempObject>().IsColliding(effectiveLayer, ignoreTransform);
+    return !_tempObject.GetComponent<PreviewObject>().IsColliding(effectiveLayer, ignoreTransform);
   }
 
   private void PlacePermanentObject() {
