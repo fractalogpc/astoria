@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class ConstructionTempObject : MonoBehaviour
+public class PreviewObject : MonoBehaviour
 {
 
   public ConstructableObjectData data;

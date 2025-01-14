@@ -25,7 +25,7 @@ public class PropInstance : ItemInstance
         base.OnHotbarDeselected(hotbarSlot);
         _hotbarSlot = null;
         _selected = false;
-        _constructionCore.DeselectData();
+        _constructionCore.SetConstructionState(NEWConstructionCore.ConstructionState.None);
     }
 
     public override void OnItemDestruction() {
