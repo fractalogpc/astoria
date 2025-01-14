@@ -16,14 +16,21 @@ public class TimeCycleSunLight : MonoBehaviour
 	[SerializeField] private float _fullMoonIntensity = 1f;
 	[SerializeField] private float _newMoonIntensity = 0.5f;
 	[SerializeField] private float _moonPhaseOffset = 0.5f;
+	[SerializeField] private int _framesPerUpdate = 5;
 
 	private TimeCycleCore _timeCycleCore;
-	
+	private int _frameCount = 0;
+
 	private void Start() {
 		_timeCycleCore = TimeCycleCore.Instance;
 	}
 
 	private void Update() {
+		_frameCount++;
+		
+		if (_frameCount < _framesPerUpdate) return;
+		_frameCount = 0;
+
 		if (_timeCycleCore.TimeOfDay.DayLength == 0) return;
 		_sunLight.transform.rotation = Quaternion.Euler(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength * 360 - 90, -90f, 0);
 		_moonLight.transform.rotation = Quaternion.Euler(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength * 360 + 90, -90f, 0);
