@@ -15,7 +15,7 @@ public class TimeCycleDisplay : MonoBehaviour
 		_dayText.text = "";
 		_clockText.text = "";
 		while (_timeCycleCore == null) {
-			_timeCycleCore = FindObjectOfType<TimeCycleCore>();
+			_timeCycleCore = FindFirstObjectByType<TimeCycleCore>();
 			yield return null;
 		}
 		_initialized = true;

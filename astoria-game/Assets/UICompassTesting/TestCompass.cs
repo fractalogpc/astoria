@@ -8,7 +8,7 @@ public class TestCompass : MonoBehaviour
     public bool keyItem;
 
     private void OnEnable() {
-        CompassDisplay compassDisplay = FindObjectOfType<CompassDisplay>();
+        CompassDisplay compassDisplay = FindFirstObjectByType<CompassDisplay>();
         if (compassDisplay == null) {
             Debug.LogError("CompassDisplay not found in scene.");
             return;

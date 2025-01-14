@@ -18,7 +18,7 @@ public class EditorUpdate
   {
     if (!Application.isPlaying)
     {
-      foreach (var worldStreaming in GameObject.FindObjectsOfType<WorldStreaming>())
+      foreach (var worldStreaming in GameObject.FindObjectsByType<WorldStreaming>(FindObjectsSortMode.None))
       {
         worldStreaming.EditorUpdate();
       }
@@ -179,7 +179,6 @@ public class WorldStreaming : MonoBehaviour
 
       if (initializeTileWithMaterial)
       {
-        terrainGO.GetComponent<Terrain>().materialType = Terrain.MaterialType.Custom;
         terrainGO.GetComponent<Terrain>().materialTemplate = terrainMaterial;
       }
 
@@ -208,7 +207,6 @@ public class WorldStreaming : MonoBehaviour
 
       if (initializeTileWithMaterial)
       {
-        terrainGO.GetComponent<Terrain>().materialType = Terrain.MaterialType.Custom;
         terrainGO.GetComponent<Terrain>().materialTemplate = terrainMaterial;
       }
 

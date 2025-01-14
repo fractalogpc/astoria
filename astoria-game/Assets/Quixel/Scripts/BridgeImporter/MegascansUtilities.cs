@@ -336,14 +336,16 @@ namespace Quixel {
         }
 #endif
         */
+        [Obsolete]
         public static void AddDefineIfNecessary (string _define, BuildTargetGroup _buildTargetGroup) {
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup (_buildTargetGroup);
+            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(_buildTargetGroup);
 
             if (defines == null) { defines = _define; } else if (defines.Length == 0) { defines = _define; } else { if (defines.IndexOf (_define, 0) < 0) { defines += ";" + _define; } }
 
             PlayerSettings.SetScriptingDefineSymbolsForGroup (_buildTargetGroup, defines);
         }
 
+        [Obsolete]
         public static void RemoveDefineIfNecessary (string _define, BuildTargetGroup _buildTargetGroup) {
             var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup (_buildTargetGroup);
 
