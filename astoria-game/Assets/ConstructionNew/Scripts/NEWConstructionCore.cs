@@ -1,12 +1,30 @@
 using UnityEngine;
 using Construction;
 using UnityEngine.Events;
+using System;
 
 public class NEWConstructionCore : InputHandlerBase
 {
+
+    [Serializable]
+    public enum ConstructionState
+    {
+        None,
+        Placing
+    }
+
+    public static NEWConstructionCore Instance;
+
     public ConstructionData DebugData;
+
+    [Header("Construction State")]
+    public ConstructionState State;
+
     [Header("Placement Settings")]
-    [SerializeField] private float _maxBuildDistance = 10f;
+    public BuildingSettings Settings;
+
+    [SerializeField] private Material _previewValidMaterial;
+    [SerializeField] private Material _previewInvalidMaterial;
 
     [Header("References")]
     [SerializeField] private Transform _cameraTransform;
@@ -18,32 +36,46 @@ public class NEWConstructionCore : InputHandlerBase
     private ConstructionData _selectedData;
 
     private GameObject _previewObject;
+    private Renderer[] _previewObjectRenderers;
 
     private Vector3 _worldSpaceCursorPosition;
 
-    protected override void InitializeActionMap() {
+    protected override void InitializeActionMap()
+    {
         RegisterAction(_inputActions.Player.Place, _ => { OnPlace(); });
     }
 
-    private void Update() {
+    private void Update()
+    {
 
-        if (DebugData != null) {
+        if (DebugData != null)
+        {
             SelectData(DebugData);
 
             DebugData = null;
         }
 
-        if (_selectedData == null) return;
+        switch (State)
+        {
+            case ConstructionState.Placing:
 
-        _worldSpaceCursorPosition = ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition());
+                _worldSpaceCursorPosition = ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition());
 
+                UpdatePreviewObject();
+                break;
+        }
+    }
+
+    private void UpdatePreviewObject() {
         _previewObject.transform.position = _worldSpaceCursorPosition;
     }
 
-    public bool SelectData(ConstructionData data) {
+    public bool SelectData(ConstructionData data)
+    {
         if (!ConstructionCoreLogic.ValidateData(data)) return false;
 
-        if (_selectedData != null && _selectedData != data) {
+        if (_selectedData != null && _selectedData != data)
+        {
             DeselectData();
         }
 
@@ -56,8 +88,10 @@ public class NEWConstructionCore : InputHandlerBase
         return true;
     }
 
-    public bool DeselectData() {
-        if (_selectedData == null) {
+    public bool DeselectData()
+    {
+        if (_selectedData == null)
+        {
             Debug.LogError("No data selected");
             return false;
         }
@@ -69,8 +103,10 @@ public class NEWConstructionCore : InputHandlerBase
         return true;
     }
 
-    private bool OnPlace() {
-        if (_selectedData == null) {
+    private bool OnPlace()
+    {
+        if (_selectedData == null)
+        {
             Debug.LogError("No data selected");
             return false;
         }
@@ -78,27 +114,40 @@ public class NEWConstructionCore : InputHandlerBase
         CreateObject();
 
         OnObjectPlaced?.Invoke(_selectedData);
-    
+
         DeselectData();
 
         return true;
     }
 
-    private GameObject CreatePreviewObject() {
-        GameObject previewObject = Instantiate(_selectedData.PreviewPrefab, _worldSpaceCursorPosition, Quaternion.identity);
+    private GameObject CreatePreviewObject()
+    {
+        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab, _worldSpaceCursorPosition, Quaternion.identity);
 
-        return previewObject;
+        _previewObjectRenderers = localPreviewObject.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in _previewObjectRenderers)
+        {
+            renderer.material = _previewValidMaterial;
+        }
+
+        return localPreviewObject;
     }
 
-    private void CreateObject() {
+    private GameObject CreateObject()
+    {
         Vector3 placedPosition = _worldSpaceCursorPosition + _selectedData.PositionOffset;
         Quaternion placedRotation = Quaternion.Euler(_selectedData.RotationOffset);
 
         GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
+
+        return placedObject;
     }
 
-    private void CleanupPreviewObject() {
-        if (_previewObject != null) {
+    private void CleanupPreviewObject()
+    {
+        if (_previewObject != null)
+        {
             Destroy(_previewObject);
         }
 
@@ -106,10 +155,14 @@ public class NEWConstructionCore : InputHandlerBase
     }
 }
 
-namespace Construction {
-    public static class ConstructionCoreLogic {
-        public static bool ValidateData(ConstructionData data) {
-            if (data == null) {
+namespace Construction
+{
+    public static class ConstructionCoreLogic
+    {
+        public static bool ValidateData(ConstructionData data)
+        {
+            if (data == null)
+            {
                 Debug.LogError("ConstructionData is null");
                 return false;
             }
@@ -117,8 +170,10 @@ namespace Construction {
             return true;
         }
 
-        public static bool ValidatePosition(Vector3 position) {
-            if (position == null) {
+        public static bool ValidatePosition(Vector3 position)
+        {
+            if (position == null)
+            {
                 Debug.LogError("Position is null");
                 return false;
             }
@@ -126,20 +181,30 @@ namespace Construction {
             return true;
         }
 
-        public static Vector3 GetWorldSpaceCursorPosition() {
+        public static Vector3 GetWorldSpaceCursorPosition()
+        {
             Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
             Ray ray = Camera.main.ScreenPointToRay(centerOfScreen);
-            if (Physics.Raycast(ray, out RaycastHit hit)) {
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
                 return hit.point;
             }
 
             return Vector3.zero;
         }
 
-        public static Vector3 ValidatePlacementPosition(Vector3 origin, Vector3 position) {
-            
+        public static Vector3 ValidatePlacementPosition(Vector3 origin, Vector3 position)
+        {
+
 
             return position;
         }
+    }
+
+    [Serializable]
+    public class BuildingSettings
+    {
+        public float MaxBuildDistance = 10f;
+        public float MinBuildDistance = 2f;
     }
 }

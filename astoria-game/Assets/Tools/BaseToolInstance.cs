@@ -3,7 +3,7 @@ using UnityEngine;
 public class BaseToolInstance : ViewmodelItemInstance
 {
 	protected ToolCore _toolCore;
-	protected ViewmodelManager _viewmodelManager;
+	protected new ViewmodelManager _viewmodelManager;
 	
 	public BaseToolInstance(ItemData itemData) : base(itemData) {
 	}

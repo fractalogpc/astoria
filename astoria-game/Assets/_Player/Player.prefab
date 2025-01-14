@@ -4858,7 +4858,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugData: {fileID: 0}
-  _maxBuildDistance: 10
+  Settings:
+    MaxBuildDistance: 10
+    MinBuildDistance: 2
+  _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
+  _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
   _cameraTransform: {fileID: 8706593742784918896}
   OnDataSelected:
     m_PersistentCalls:
@@ -8540,7 +8544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8227020351119092859
 Transform:
   m_ObjectHideFlags: 0
