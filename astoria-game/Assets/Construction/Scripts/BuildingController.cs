@@ -26,6 +26,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
 
             Button button = prefab.GetComponent<Button>();
             button.onClick.AddListener(() => { constructionCore.SelectData(data); });
+            button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
         }
     }
 
