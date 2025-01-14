@@ -102,13 +102,15 @@ public class TimeOfDay
 	}
 }
 
-// Mirror has it's own NetworkTime.time for syncing time across the network,
+// Mirror has its own NetworkTime.time for syncing time across the network,
 // But we want to have a synced time of day for our day night cycle and other things
 [RequireComponent(typeof(NetworkIdentity))]
 public class TimeCycleCore : NetworkBehaviour
 {
 	private double _networkTime;
+	[Tooltip("The hour that the game starts at. 6:00 is sunrise, and 18:00 is sunset. Follows 24-hour format.")]
 	[SerializeField][Range(0, 24)] private float _startGameHour;
+	[Tooltip("How long one in-game day lasts, in real-time minutes.")]
 	[SerializeField] private float _dayCycleInMinutes = 0.5f;
 	[Tooltip("If the game starts at Day 0, 00:00:00, or Day 1, 00:00:00.")] [SerializeField]
 	private bool _daysStartAtZero = false;
