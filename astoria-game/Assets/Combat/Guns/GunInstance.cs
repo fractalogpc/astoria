@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
-using Mirror;
-using Mirror.BouncyCastle.Asn1;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public enum FireMode

@@ -2,7 +2,6 @@ using UnityEngine;
 using Construction;
 using UnityEngine.Events;
 using System;
-using Palmmedia.ReportGenerator.Core;
 
 public class NEWConstructionCore : InputHandlerBase
 {
