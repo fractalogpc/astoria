@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7724588458372411583}
   - component: {fileID: 8086434869199460027}
   - component: {fileID: 339768004933880402}
-  - component: {fileID: 40376524734460500}
+  - component: {fileID: 5121213407581867137}
   m_Layer: 7
   m_Name: Crafting Station Preview
   m_TagString: Untagged
@@ -87,24 +87,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &40376524734460500
-BoxCollider:
+--- !u!114 &5121213407581867137
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5197208939192662860}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.4870002, y: 1.0862502, z: 0.908197}
-  m_Center: {x: 0, y: 0.5431251, z: 0.041528106}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48985a38910876b4eb20c08ec73ccb29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 0}
+  xRotation: 0
+  boxes:
+  - position: {x: 0, y: 0.5, z: 0}
+    size: {x: 2.24, y: 1, z: 1}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    isExpanded: 1
+  - position: {x: 0, y: 1.05, z: 0.03}
+    size: {x: 2.5, y: 0.1, z: 0.94}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    isExpanded: 1
+  heightOffset: 0
