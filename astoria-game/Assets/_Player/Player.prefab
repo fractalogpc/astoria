@@ -4861,7 +4861,8 @@ MonoBehaviour:
   State: 0
   Settings:
     MaxBuildDistance: 4
-    MinBuildDistance: 0.1
+    MinBuildDistance: 0.01
+    RotationStep: 1
     PlacementLayerMask:
       serializedVersion: 2
       m_Bits: 69953
@@ -4874,6 +4875,7 @@ MonoBehaviour:
   OnObjectPlaced:
     m_PersistentCalls:
       m_Calls: []
+  _previewObjectScript: {fileID: 0}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -13208,7 +13210,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 42.71309
+  m_Intensity: 101.4995
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

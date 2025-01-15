@@ -2,6 +2,7 @@ using UnityEngine;
 using Construction;
 using UnityEngine.Events;
 using System;
+using Palmmedia.ReportGenerator.Core;
 
 public class NEWConstructionCore : InputHandlerBase
 {
@@ -38,7 +39,7 @@ public class NEWConstructionCore : InputHandlerBase
     private ConstructionData _selectedData;
 
     private GameObject _previewObject;
-    private PreviewObject _previewObjectScript;
+    public PreviewObject _previewObjectScript;
 
     private Vector3 _fixedCursorPosition = Vector3.zero;
 
@@ -74,14 +75,46 @@ public class NEWConstructionCore : InputHandlerBase
         switch (State)
         {
             case ConstructionState.Placing:
-                bool pass1 = ConstructionCoreLogic.ValidatePlacementPositionPass1(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition(), out _fixedCursorPosition);
+                _fixedCursorPosition = Vector3.zero;
+
+                bool validPosition = false;
+
+                Vector3 testDirection = _cameraTransform.forward;
+
+                // Test initial position
+                if (ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, testDirection, out _fixedCursorPosition)) {
+                    validPosition = true;
+                }
+
+                int steps = 0;
+                while (!validPosition && Vector3.Distance(testDirection.normalized, Vector3.down) > 0.1f || steps > 100)
+                {
+                    Vector3 testCursorPosition;
+                    if (ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, testDirection, out testCursorPosition)) {
+                        _fixedCursorPosition = testCursorPosition;
+                        validPosition = true;
+                    }
+                    else
+                    {
+                        // Rotate the direction and test again
+                        Vector3 rotationAxis = Vector3.Cross(testDirection, Vector3.down);
+                        Quaternion rotation = Quaternion.AngleAxis(Settings.RotationStep, rotationAxis);
+                        testDirection = rotation * testDirection;
+                    }
+                    steps++;
+                }
+
+                // If the position is not valid, set position to default
+                if (!validPosition)
+                {
+                    Physics.Raycast(_cameraTransform.position, testDirection, out RaycastHit hit);
+                    _fixedCursorPosition = hit.point;
+                }
 
                 _previewObject.transform.position = UpdatePreviewObjectPosition();
                 _previewObject.transform.rotation = UpdatePreviewObjectRotation();
 
-                bool pass2 = pass1 ? ConstructionCoreLogic.ValidatePlacementPositionPass2(_previewObjectScript) : false;
-
-                Material mat = pass2 ? _previewValidMaterial : _previewInvalidMaterial;
+                Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
 
                 _previewObjectScript.SetMaterial(mat);
 
@@ -248,28 +281,30 @@ namespace Construction
         }
 
         // Corrects and validates the position of the object
-        public static bool ValidatePlacementPositionPass1(Vector3 origin, Vector3 initPosition, out Vector3 finalPosition)
+        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, out Vector3 finalPosition)
         {
-            finalPosition = initPosition;
+            finalPosition = Vector3.zero;
 
-            // Check if the distance between the origin and the initPosition is within the acceptable distance
-            float distance = Vector3.Distance(origin, initPosition);
+            // Check if the raycast hits anything
+            if (!Physics.Raycast(origin, rotation, out RaycastHit hit, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            {
+                return false;
+            }
+
+            // Check if the distance is within the limits
+            float distance = Vector3.Distance(origin, hit.point);
             if (distance > NEWConstructionCore.Instance.Settings.MaxBuildDistance || distance < NEWConstructionCore.Instance.Settings.MinBuildDistance)
             {
                 return false;
             }
-            return true;
-        }
 
-        // Validates the position without moving the object
-        public static bool ValidatePlacementPositionPass2(PreviewObject previewObjectScript)
-        {
-            // Check if the object is colliding with anything
-            if (previewObjectScript.IsColliding(NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            // Check if the object is not colliding with anything
+            if (NEWConstructionCore.Instance._previewObjectScript.IsColliding(NEWConstructionCore.Instance.Settings.PlacementLayerMask))
             {
                 return false;
             }
 
+            finalPosition = hit.point;
             return true;
         }
     }
@@ -279,6 +314,7 @@ namespace Construction
     {
         public float MaxBuildDistance = 10f;
         public float MinBuildDistance = 2f;
+        public float RotationStep = 1f;
 
         public LayerMask PlacementLayerMask;
     }
