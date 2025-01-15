@@ -64,20 +64,36 @@ public class WorldStreaming : MonoBehaviour
   private Dictionary<Vector2Int, Terrain> loadedTerrains = new Dictionary<Vector2Int, Terrain>();
   private Dictionary<Vector2Int, GameObject> gameObjectSectors = new Dictionary<Vector2Int, GameObject>();
 
+  private bool initialized = false;
+
 #if UNITY_EDITOR
-  public void EditorUpdate()
-  {
+  public void EditorUpdate() {
+    if (!initialized) {
+      FetchExisting();
+      initialized = true;
+    }
+    
     LoadClickedSquares();
   }
 #endif
 
-  public void CreateSectorObjects()
-  {
+  // Load terrains and sectors to dictionaries based on scene whenever the script is loaded
+  public void FetchExisting() {
+    foreach (var terrain in terrainParent.GetComponentsInChildren<Terrain>())
+    {
+      Vector2Int tilePos = new Vector2Int(
+        Mathf.FloorToInt(terrain.transform.position.x / tileWidth),
+        Mathf.FloorToInt(terrain.transform.position.z / tileHeight)
+      );
+      loadedTerrains[tilePos] = terrain;
+    }
+  }
+
+  public void CreateSectorObjects() {
     Start();
   }
 
-  private void Start()
-  {
+  private void Start() {
     // Assemble game object sectors
     for (int x = 0; x < gridWidth; x++)
     {
@@ -97,16 +113,16 @@ public class WorldStreaming : MonoBehaviour
     }
   }
 
-  private void Update()
-  {
+  private void Update() {
     if (Application.isPlaying)
     {
       HandlePlayMode();
     }
   }
 
-  private void HandlePlayMode()
-  {
+  private void HandlePlayMode() {
+    if (player == null) return;
+
     Vector2Int playerGridPos = new Vector2Int(
       Mathf.FloorToInt(player.position.x / gridWidth),
       Mathf.FloorToInt(player.position.z / gridHeight)
@@ -151,10 +167,10 @@ public class WorldStreaming : MonoBehaviour
     }
   }
 
-  private void LoadTerrain(Vector2Int tilePos)
-  {
-    // Implement your terrain loading logic here
-    // For example, load terrain data from disk and instantiate it
+  private void LoadTerrain(Vector2Int tilePos) {
+    if (terrainParent.Find($"Terrain_{tilePos.x}_{tilePos.y}") != null) {
+      return;
+    }
     string terrainPath = $"Terrains/Terrain_{tilePos.x}_{tilePos.y}";
     TerrainData terrainData = Resources.Load<TerrainData>(terrainPath);
     GameObject terrainPrefab = Resources.Load<GameObject>("TerrainPrefab");
@@ -169,6 +185,7 @@ public class WorldStreaming : MonoBehaviour
       Debug.LogWarning("Terrain prefab not found in resources.");
       return;
     }
+    terrainGO.name = $"Terrain_{tilePos.x}_{tilePos.y}";
     if (terrainData != null)
     {
       // Set the terrain data
@@ -228,20 +245,20 @@ public class WorldStreaming : MonoBehaviour
     }
   }
 
-  private void UnloadTerrain(Vector2Int tilePos)
-  {
-    if (loadedTerrains.TryGetValue(tilePos, out Terrain terrain))
-    {
-      if (Application.isPlaying)
-      {
-        Destroy(terrain.gameObject);
-      }
-      else
-      {
-        DestroyImmediate(terrain.gameObject);
-      }
-      loadedTerrains.Remove(tilePos);
+  private void UnloadTerrain(Vector2Int tilePos) {
+    // print("Unloading terrain at " + tilePos);
+    if (terrainParent.Find($"Terrain_{tilePos.x}_{tilePos.y}") == null) {
+      return;
     }
+
+    GameObject terrain = terrainParent.Find($"Terrain_{tilePos.x}_{tilePos.y}").gameObject;
+    if (Application.isPlaying) {
+      Destroy(terrain);
+    } else {
+      DestroyImmediate(terrain);
+    }
+    
+    loadedTerrains.Remove(tilePos);
 
     // Unload sector game object
     if (gameObjectSectors.TryGetValue(tilePos, out GameObject sector))
@@ -251,8 +268,7 @@ public class WorldStreaming : MonoBehaviour
   }
 
 #if UNITY_EDITOR
-  private void LoadClickedSquares()
-  {
+  private void LoadClickedSquares() {
     bool[] squares = WorldStreamingEditor.GetClickedSquares();
 
     if (squares == null)
