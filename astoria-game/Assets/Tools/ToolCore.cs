@@ -18,6 +18,7 @@ public class ToolCore : InputHandlerBase
 		CurrentTool.OnEquip();
 	}
 	public void UnequipTool() {
+		_viewmodelManager.PlayUnequip();
 		CurrentTool.OnUnequip();
 		CurrentTool = null;
 	}
@@ -44,28 +45,35 @@ public class ToolCore : InputHandlerBase
 	}
 
 	private void OnUseDown() {
+		if (CurrentTool == null) return;
 		_useDown = true;
 		CurrentTool.OnUseDown();
 	}
 	private void OnUseUp() {
+		if (CurrentTool == null) return;
 		_useDown = false;
 		CurrentTool.OnUseUp();
 	}
 	private void OnUseHold() {
+		if (CurrentTool == null) return;
 		CurrentTool.OnUseHold();
 	}
 	private void OnAltUseDown() {
+		if (CurrentTool == null) return;
 		_altUseDown = true;
 		CurrentTool.OnAltUseDown();
 	}
 	private void OnAltUseUp() {
+		if (CurrentTool == null) return;
 		_altUseDown = false;
 		CurrentTool.OnAltUseUp();
 	}
 	private void OnAltUseHold() {
+		if (CurrentTool == null) return;
 		CurrentTool.OnAltUseHold();
 	}
 	private void OnTick() {
+		if (CurrentTool == null) return;
 		CurrentTool.OnTick();
 	}
 }

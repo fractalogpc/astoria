@@ -36,7 +36,7 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
 	private CombatCore _combatCore;
-	private new CombatViewmodelManager _viewmodelManager;
+	private new ViewmodelManager _viewmodelManager;
 	private InventoryComponent _playerInventory;
 	private ProjectileManager _projectileManager;
 	private FireLogic _currentFireLogic;
@@ -51,7 +51,7 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	
 	// Assign any references that need to be attached when first equipped here
-	public void InitializeWeapon(CombatCore combatCore, CombatViewmodelManager viewmodelManager, InventoryComponent playerInventory) {
+	public void InitializeWeapon(CombatCore combatCore, ViewmodelManager viewmodelManager, InventoryComponent playerInventory) {
 		Initialized = true;
 		_combatCore = combatCore;
 		_viewmodelManager = viewmodelManager;

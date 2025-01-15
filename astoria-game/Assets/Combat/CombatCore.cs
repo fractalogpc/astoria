@@ -19,7 +19,7 @@ using UnityEngine.PlayerLoop;
 public class CombatCore : NetworkedInputHandlerBase
 {
 	[SerializeField] private InventoryComponent _playerInventory;
-	[SerializeField] private CombatViewmodelManager _combatViewmodelManager;
+	[SerializeField] private ViewmodelManager _viewmodelManager;
 	public GunInstance CurrentGunInstance { get; private set; }
 
 	/// <summary>
@@ -39,8 +39,8 @@ public class CombatCore : NetworkedInputHandlerBase
 
 	public void EquipWeapon(GunInstance instance) {
 		CurrentGunInstance = instance;
-		if (instance.Initialized == false) instance.InitializeWeapon(this, _combatViewmodelManager, _playerInventory);
-		_combatViewmodelManager.SetViewmodelFor(instance);
+		if (instance.Initialized == false) instance.InitializeWeapon(this, _viewmodelManager, _playerInventory);
+		_viewmodelManager.SetViewmodelFor(instance);
 		instance.AmmoChanged += OnInstanceAmmoChanged;
 		OnEquipWeapon?.Invoke(CurrentGunInstance);
 	}
@@ -55,7 +55,7 @@ public class CombatCore : NetworkedInputHandlerBase
 	}
 
 	public void InitializeWeapon(GunInstance instance) {
-		instance.InitializeWeapon(this, _combatViewmodelManager, _playerInventory);
+		instance.InitializeWeapon(this, _viewmodelManager, _playerInventory);
 	}
 
 	protected override void InitializeActionMap() {
@@ -76,8 +76,8 @@ public class CombatCore : NetworkedInputHandlerBase
 	}
 
 	private IEnumerator UnequipWeaponCoroutine() {
-		yield return new WaitForSeconds(_combatViewmodelManager.PlayUnequip());
-		_combatViewmodelManager.RemoveViewmodel();
+		yield return new WaitForSeconds(_viewmodelManager.PlayUnequip());
+		_viewmodelManager.RemoveViewmodel();
 	}
 
 	private void Update() {

@@ -4,10 +4,6 @@ public class AxeInstance : BaseToolInstance
 {
 	public AxeInstance(ItemData itemData) : base(itemData) {
 	}
-
-	public override void Initialize(ToolCore toolCore, ViewmodelManager viewmodelManager) {
-		base.Initialize(toolCore, viewmodelManager);
-	}
 	
 	public override void OnEquip() {
 		base.OnEquip();
@@ -21,6 +17,7 @@ public class AxeInstance : BaseToolInstance
 	}
 	public override void OnUseDown() {
 		base.OnUseDown();
+		_viewmodelManager.PlayToolUse();
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
@@ -30,6 +27,7 @@ public class AxeInstance : BaseToolInstance
 	}
 	public override void OnAltUseDown() {
 		base.OnAltUseDown();
+		_viewmodelManager.PlayUseSecondary();
 	}
 	public override void OnAltUseUp() {
 		base.OnAltUseUp();

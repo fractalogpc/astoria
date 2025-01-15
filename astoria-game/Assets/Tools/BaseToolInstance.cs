@@ -6,13 +6,22 @@ public class BaseToolInstance : ViewmodelItemInstance
 	protected new ViewmodelManager _viewmodelManager;
 	
 	public BaseToolInstance(ItemData itemData) : base(itemData) {
+		_toolCore = ToolCore.Instance;
 	}
 
 	public virtual void Initialize(ToolCore toolCore, ViewmodelManager viewmodelManager) {
-		this._toolCore = toolCore;
-		this._viewmodelManager = viewmodelManager;
+		_viewmodelManager = viewmodelManager;
 	}
-	
+
+	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
+		base.OnHotbarSelected(hotbarSlot);
+		_toolCore.EquipTool(this);
+	}
+	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
+		base.OnHotbarDeselected(hotbarSlot);
+		_toolCore.UnequipTool();
+	}
+
 	public virtual void OnEquip() {
 		
 	}
