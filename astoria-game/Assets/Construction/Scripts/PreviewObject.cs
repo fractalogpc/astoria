@@ -5,7 +5,7 @@ using UnityEngine;
 public class PreviewObject : MonoBehaviour
 {
 
-  public ConstructableObjectData data;
+  public ConstructableObjectData Data;
 
   [System.Serializable]
   public class BoxData
@@ -26,6 +26,8 @@ public class PreviewObject : MonoBehaviour
   {
     transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, xRotation, 0));
   }
+
+  // Check if the preview object is colliding with any other objects in its current position and rotation
   public bool IsColliding(LayerMask layer = default, Transform ignoreTransform = null)
   {
     foreach (BoxData box in boxes)
@@ -47,6 +49,33 @@ public class PreviewObject : MonoBehaviour
     }
     return false; // No collisions
   }
+
+  // Check if the preview object is colliding with any other objects in a specific position and rotation
+  public bool IsColliding(Vector3 position, Quaternion rotation, LayerMask layer = default, Transform ignoreTransform = null)
+  {
+    foreach (BoxData box in boxes)
+    {
+      // Compute the box's world position based on the custom position and rotation
+      Vector3 worldPosition = position + rotation * box.position;
+
+      // Adjust world extents based on transform's lossy scale to ensure matching physics size
+      Vector3 scaledExtents = Vector3.Scale(box.size / 2f, transform.lossyScale);
+
+      // Compute the box's world rotation based on the custom rotation
+      Quaternion worldRotation = rotation * box.rotation;
+
+      // Perform the overlap box check with the corrected extents and world rotation
+      Collider[] hits = Physics.OverlapBox(worldPosition, scaledExtents, worldRotation, layer);
+
+      foreach (Collider hit in hits)
+      {
+        if (hit.transform == transform || hit.transform == ignoreTransform) continue;
+        return true; // Collision detected
+      }
+    }
+    return false; // No collisions
+  }
+
 
   public void SetMaterial(Material material)
   {
@@ -75,7 +104,7 @@ public class PreviewObject : MonoBehaviour
 
       // Set up the Gizmos matrix with combined position, rotation, and scale
       Gizmos.matrix = Matrix4x4.TRS(worldPosition, combinedRotation, Vector3.one);
-      
+
       // Draw the wireframe cube to represent the box
       Gizmos.DrawWireCube(Vector3.zero, scaledExtents * 2f);
     }
