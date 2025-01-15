@@ -3,6 +3,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Rigidbody))]
 public class DroppedItem : Interactable
 {
 
