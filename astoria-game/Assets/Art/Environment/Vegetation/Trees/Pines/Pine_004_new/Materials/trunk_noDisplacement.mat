@@ -19,7 +19,8 @@ Material:
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
-  - TVE_MOTION_WIND_OPTIMIZED
+  - TVE_MOTION_BASE_BENDING
+  - TVE_MOTION_WIND_ADVANCED
   - TVE_OVERLAY
   - TVE_OVERLAY_ELEMENT
   - TVE_OVERLAY_MASK_SAMPLE_MAIN_UV
@@ -52,11 +53,10 @@ Material:
   disabledShaderPasses:
   - ForwardEmissiveForDeferred
   - TransparentBackfaceDebugDisplay
-  - MOTIONVECTORS
+  - RayTracingPrepass
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  - RayTracingPrepass
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -644,13 +644,13 @@ Material:
     - _MetallicRemapMax: 0
     - _MetallicRemapMin: 0
     - _Mode: 0
-    - _MotionBaseDelayValue: 0
-    - _MotionBaseIntensityValue: 0
-    - _MotionBaseMaskMode: 3
+    - _MotionBaseDelayValue: 0.5
+    - _MotionBaseIntensityValue: 0.2
+    - _MotionBaseMaskMode: 4
     - _MotionBaseNoiseValue: 0.5
     - _MotionBasePhaseValue: 0
-    - _MotionBasePivotValue: 0.8
-    - _MotionBaseSpeedValue: 5
+    - _MotionBasePivotValue: 1
+    - _MotionBaseSpeedValue: 1
     - _MotionBaseTillingValue: 5
     - _MotionDistValue: 100
     - _MotionFrontValue: 0.5
@@ -682,7 +682,7 @@ Material:
     - _MotionWindCategory: 1
     - _MotionWindElementMode: 0
     - _MotionWindEnd: 1
-    - _MotionWindMode: 1
+    - _MotionWindMode: 2
     - _MotionWindOffInfo: 0
     - _MotionWindOptimizedInfo: 0
     - _NORMALMAPSPACE: 0
@@ -977,7 +977,7 @@ Material:
     - _emissive_power_value: 1
     - _global_push_layer_value: 0
     - _global_wind_layer_value: 0
-    - _motion_base_mask_mode: 0
+    - _motion_base_mask_mode: 1
     - _motion_push_mask_mode: 0
     - _motion_small_mask_mode: 0
     - _motion_tiny_mask_mode: 0
@@ -1083,7 +1083,7 @@ Material:
     - _emissive_vert_mode: {r: 1, g: 0, b: 0, a: 0}
     - _gradient_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _main_coord_value: {r: 1, g: 1, b: 0, a: 0}
-    - _motion_base_proc_mode: {r: 0, g: 0, b: 0, a: 0}
+    - _motion_base_proc_mode: {r: 1, g: 0, b: 0, a: 0}
     - _motion_base_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _motion_highlight_color: {r: 1, g: 1, b: 1, a: 1}
     - _motion_push_proc_mode: {r: 0, g: 0, b: 0, a: 0}
