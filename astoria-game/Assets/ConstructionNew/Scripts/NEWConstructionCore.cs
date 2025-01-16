@@ -25,6 +25,7 @@ public class NEWConstructionCore : InputHandlerBase
     [Header("Placement Settings")]
     public BuildingSettings Settings;
 
+    [SerializeField] private float _previewObjectLerpSpeed = 10f;
     [SerializeField] private Material _previewValidMaterial;
     [SerializeField] private Material _previewInvalidMaterial;
 
@@ -38,9 +39,8 @@ public class NEWConstructionCore : InputHandlerBase
     private ConstructionData _selectedData;
 
     private GameObject _previewObject;
-    private PreviewObject _previewObjectScript;
-
-    private Vector3 _fixedCursorPosition = Vector3.zero;
+    public PreviewObject _previewObjectScript;
+    private Vector3 _previewObjectPosition;
 
     protected override void InitializeActionMap()
     {
@@ -74,14 +74,43 @@ public class NEWConstructionCore : InputHandlerBase
         switch (State)
         {
             case ConstructionState.Placing:
-                bool pass1 = ConstructionCoreLogic.ValidatePlacementPositionPass1(_cameraTransform.position, ConstructionCoreLogic.GetWorldSpaceCursorPosition(), out _fixedCursorPosition);
+                Vector3 position;
+                Quaternion rotation;
 
-                _previewObject.transform.position = UpdatePreviewObjectPosition();
-                _previewObject.transform.rotation = UpdatePreviewObjectRotation();
+                bool validPosition = false;
 
-                bool pass2 = pass1 ? ConstructionCoreLogic.ValidatePlacementPositionPass2(_previewObjectScript) : false;
+                Vector3 testDirection = _cameraTransform .forward;
 
-                Material mat = pass2 ? _previewValidMaterial : _previewInvalidMaterial;
+                // Test initial position
+                if (ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, testDirection, _selectedData.Offset, out position, out rotation)) {
+                    validPosition = true;
+                }
+
+                int steps = 0;
+                while (!validPosition && Vector3.Distance(testDirection.normalized, Vector3.down) > 0.1f || steps > 100)
+                {
+                    Vector3 testPosition;
+                    Quaternion testRotation;
+                    if (ConstructionCoreLogic.ValidatePlacementPosition(_cameraTransform.position, testDirection, _selectedData.Offset, out testPosition, out testRotation)) {
+                        position = testPosition;
+                        rotation = testRotation;
+                        validPosition = true;
+
+                    }
+                    else
+                    {
+                        // Rotate the direction and test again
+                        Vector3 rotationAxis = Vector3.Cross(testDirection, Vector3.down);
+                        Quaternion stepRotation = Quaternion.AngleAxis(Settings.RotationStep, rotationAxis);
+                        testDirection = stepRotation * testDirection;
+                    }
+                    steps++;
+                }
+
+                // If none of the positions are valid, position and rotation are set by the initial test
+                RenderPreviewObject(position, rotation);
+
+                Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
 
                 _previewObjectScript.SetMaterial(mat);
 
@@ -89,21 +118,13 @@ public class NEWConstructionCore : InputHandlerBase
         }
     }
 
-    private Vector3 UpdatePreviewObjectPosition()
-    {
-        Vector3 position = _fixedCursorPosition;
-        position += _selectedData.PositionOffset;
+    private void RenderPreviewObject(Vector3 position, Quaternion rotation) {
+        _previewObjectPosition = Vector3.Lerp(_previewObjectPosition, position, Time.deltaTime * _previewObjectLerpSpeed);
 
-        return position;
-    }
+        _previewObject.transform.position = _previewObjectPosition;
+        _previewObject.transform.rotation = rotation;
 
-    private Quaternion UpdatePreviewObjectRotation()
-    {
-        Vector3 directionTowardsCamera = _cameraTransform.transform.position - _previewObject.transform.position;
-        directionTowardsCamera.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(_selectedData.RotationOffset);
-
-        return rotation;
+        _previewObjectPosition = _previewObject.transform.position;
     }
 
     public bool SelectData(ConstructionData data)
@@ -149,7 +170,7 @@ public class NEWConstructionCore : InputHandlerBase
 
     private GameObject CreatePreviewObject()
     {
-        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab, _fixedCursorPosition, Quaternion.identity);
+        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab);
 
         _previewObjectScript = localPreviewObject.GetComponent<PreviewObject>();
 
@@ -166,8 +187,8 @@ public class NEWConstructionCore : InputHandlerBase
 
     private GameObject CreateObject()
     {
-        Vector3 placedPosition = _fixedCursorPosition + _selectedData.PositionOffset;
-        Quaternion placedRotation = Quaternion.Euler(_selectedData.RotationOffset);
+        Vector3 placedPosition = _previewObject.transform.position;
+        Quaternion placedRotation = _previewObject.transform.rotation;
 
         GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
 
@@ -183,7 +204,6 @@ public class NEWConstructionCore : InputHandlerBase
 
         _previewObject = null;
         _previewObjectScript = null;
-        _fixedCursorPosition = Vector3.zero;
     }
 
     public void SetConstructionState(ConstructionState state)
@@ -203,7 +223,6 @@ public class NEWConstructionCore : InputHandlerBase
         switch (State)
         {
             case ConstructionState.None:
-                _fixedCursorPosition = Vector3.zero;
                 break;
         }
     }
@@ -248,29 +267,45 @@ namespace Construction
         }
 
         // Corrects and validates the position of the object
-        public static bool ValidatePlacementPositionPass1(Vector3 origin, Vector3 initPosition, out Vector3 finalPosition)
+        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionOffset offset, out Vector3 finalPosition, out Quaternion finalRotation)
         {
-            finalPosition = initPosition;
+            finalPosition = Vector3.zero;
+            finalRotation = Quaternion.identity;
 
-            // Check if the distance between the origin and the initPosition is within the acceptable distance
-            float distance = Vector3.Distance(origin, initPosition);
+            // Check if the raycast hits anything
+            if (!Physics.Raycast(origin, rotation, out RaycastHit hit, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            {
+                return false;
+            }
+
+            Vector3 newPosition = hit.point + offset.PositionOffset;
+
+            // Check if the distance is within the limits
+            float distance = Vector3.Distance(origin, newPosition);
             if (distance > NEWConstructionCore.Instance.Settings.MaxBuildDistance || distance < NEWConstructionCore.Instance.Settings.MinBuildDistance)
             {
                 return false;
             }
-            return true;
-        }
 
-        // Validates the position without moving the object
-        public static bool ValidatePlacementPositionPass2(PreviewObject previewObjectScript)
-        {
-            // Check if the object is colliding with anything
-            if (previewObjectScript.IsColliding(NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            // Calculate the new rotation of the object
+            Quaternion newRotation = GetRotationTowardsCamera(newPosition, origin, offset.RotationOffset);
+
+            // Check if the object is not colliding with anything
+            if (NEWConstructionCore.Instance._previewObjectScript.IsColliding(newPosition, newRotation, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
             {
                 return false;
             }
 
+            finalPosition = newPosition;
+            finalRotation = newRotation;
             return true;
+        }
+    
+        public static Quaternion GetRotationTowardsCamera(Vector3 origin, Vector3 target, Vector3 rotationOffset = default)
+        {
+            Vector3 directionTowardsCamera = origin - target;
+            directionTowardsCamera.y = 0;
+            return Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(rotationOffset);
         }
     }
 
@@ -279,6 +314,7 @@ namespace Construction
     {
         public float MaxBuildDistance = 10f;
         public float MinBuildDistance = 2f;
+        public float RotationStep = 1f;
 
         public LayerMask PlacementLayerMask;
     }

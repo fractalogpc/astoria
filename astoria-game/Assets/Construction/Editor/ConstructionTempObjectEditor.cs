@@ -23,14 +23,14 @@ public class PreviewObjectEditor : Editor
     targetObject.heightOffset = EditorGUILayout.Slider("Offset", targetObject.heightOffset, 0f, 10f); // Adjust range as needed
 
     // Button to sync HeightOffset to ScriptableObject
-    if (GUILayout.Button("Sync HeightOffset to ScriptableObject") && targetObject.data != null)
+    if (GUILayout.Button("Sync HeightOffset to ScriptableObject") && targetObject.Data != null)
     {
       SyncHeightOffset();
     }
 
     // Button to sync Position and Rotation to ScriptableObject
     if (Application.isPlaying) {
-      if (GUILayout.Button("Sync Position and Rotation to ScriptableObject") && targetObject.data != null)
+      if (GUILayout.Button("Sync Position and Rotation to ScriptableObject") && targetObject.Data != null)
       {
         SyncPositionAndRotation();
       }
@@ -48,7 +48,7 @@ public class PreviewObjectEditor : Editor
     {
       EditorGUILayout.Space();
 
-      // Foldout to toggle visibility of box data
+      // Foldout to toggle visibility of box Data
       targetObject.boxes[i].isExpanded = EditorGUILayout.Foldout(targetObject.boxes[i].isExpanded, $"Box {i + 1}", true, EditorStyles.foldout);
 
       if (targetObject.boxes[i].isExpanded)
@@ -91,10 +91,10 @@ public class PreviewObjectEditor : Editor
 
   private void SyncHeightOffset()
   {
-    if (targetObject.data != null)
+    if (targetObject.Data != null)
     {
-      targetObject.data.HeightOffset = targetObject.heightOffset;
-      EditorUtility.SetDirty(targetObject.data); // Mark the ScriptableObject as dirty to save changes
+      targetObject.Data.HeightOffset = targetObject.heightOffset;
+      EditorUtility.SetDirty(targetObject.Data); // Mark the ScriptableObject as dirty to save changes
       Debug.Log("HeightOffset synced to ScriptableObject.");
     }
     else
@@ -104,11 +104,11 @@ public class PreviewObjectEditor : Editor
   }
 
   private void SyncPositionAndRotation() {
-    if (targetObject.data != null)
+    if (targetObject.Data != null)
     {
-      targetObject.data.HeldOffsetPosition = targetObject.transform.localPosition;
-      targetObject.data.HeldOffsetRotation = targetObject.transform.localRotation.eulerAngles;
-      EditorUtility.SetDirty(targetObject.data); // Mark the ScriptableObject as dirty to save changes
+      targetObject.Data.HeldOffsetPosition = targetObject.transform.localPosition;
+      targetObject.Data.HeldOffsetRotation = targetObject.transform.localRotation.eulerAngles;
+      EditorUtility.SetDirty(targetObject.Data); // Mark the ScriptableObject as dirty to save changes
       Debug.Log("Position and Rotation offset synced to ScriptableObject.");
     }
     else

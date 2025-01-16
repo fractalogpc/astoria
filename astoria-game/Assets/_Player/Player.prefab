@@ -4861,10 +4861,12 @@ MonoBehaviour:
   State: 0
   Settings:
     MaxBuildDistance: 4
-    MinBuildDistance: 0.1
+    MinBuildDistance: 0.01
+    RotationStep: 1
     PlacementLayerMask:
       serializedVersion: 2
       m_Bits: 69953
+  _previewObjectLerpSpeed: 25
   _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
   _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
   _cameraTransform: {fileID: 8706593742784918896}
@@ -4874,6 +4876,7 @@ MonoBehaviour:
   OnObjectPlaced:
     m_PersistentCalls:
       m_Calls: []
+  _previewObjectScript: {fileID: 0}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -13208,7 +13211,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 42.71309
+  m_Intensity: 101.4995
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
