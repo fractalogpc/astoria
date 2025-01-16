@@ -9,7 +9,7 @@ public class EnableNatureRendererOnRuntime : MonoBehaviour
         NatureRenderer[] natureRenderers = GetComponentsInChildren<NatureRenderer>();
         foreach (NatureRenderer natureRenderer in natureRenderers) {
             // Enable the renderer
-            natureRenderer.enabled = true;
+            natureRenderer.RenderTreesWithNatureRenderer = true;
         }
     }
 

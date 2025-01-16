@@ -35,7 +35,8 @@ Material:
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
-  - TVE_MOTION_WIND_OPTIMIZED
+  - TVE_MOTION_BASE_BENDING
+  - TVE_MOTION_WIND_ADVANCED
   - TVE_OVERLAY
   - TVE_OVERLAY_ELEMENT
   - TVE_OVERLAY_MASK_SAMPLE_MAIN_UV
@@ -44,8 +45,9 @@ Material:
   - TVE_PIVOT_OFF
   - TVE_SECOND_MASK_SAMPLE_MAIN_UV
   - TVE_SECOND_SAMPLE_MAIN_UV
+  - TVE_THIRD
   - TVE_THIRD_MASK_SAMPLE_MAIN_UV
-  - TVE_THIRD_SAMPLE_MAIN_UV
+  - TVE_THIRD_SAMPLE_STOCHASTIC_3D
   - TVE_TINTING_ELEMENT
   - TVE_WETNESS_DROPS
   - TVE_WETNESS_ELEMENT
@@ -69,11 +71,10 @@ Material:
   disabledShaderPasses:
   - RayTracingPrepass
   - TransparentBackfaceDebugDisplay
-  - MOTIONVECTORS
+  - ForwardEmissiveForDeferred
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  - ForwardEmissiveForDeferred
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -403,7 +404,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdAlbedoTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9d8fc6bdf1a107d41bda285a0ce616c1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdMaskTex:
@@ -411,11 +412,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ab3d210599e7b4c4f84feb0b319426d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdShaderTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f4c6c917ab6714e4bbeef07b84ae0852, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TransmissionThicknessMap:
@@ -654,20 +655,20 @@ Material:
     - _MainNormalValue: 1
     - _MainOcclusionValue: 1
     - _MainSampleMode: 0
-    - _MainSmoothnessValue: 0
+    - _MainSmoothnessValue: 1
     - _MaskMapEncoding: 0
     - _MaterialID: 1
     - _Metallic: 0
     - _MetallicRemapMax: 0
     - _MetallicRemapMin: 0
     - _Mode: 0
-    - _MotionBaseDelayValue: 0
-    - _MotionBaseIntensityValue: 0
-    - _MotionBaseMaskMode: 3
+    - _MotionBaseDelayValue: 0.5
+    - _MotionBaseIntensityValue: 0.2
+    - _MotionBaseMaskMode: 4
     - _MotionBaseNoiseValue: 0.5
     - _MotionBasePhaseValue: 0
-    - _MotionBasePivotValue: 0.8
-    - _MotionBaseSpeedValue: 5
+    - _MotionBasePivotValue: 1
+    - _MotionBaseSpeedValue: 1
     - _MotionBaseTillingValue: 5
     - _MotionDistValue: 100
     - _MotionFrontValue: 0.5
@@ -699,7 +700,7 @@ Material:
     - _MotionWindCategory: 1
     - _MotionWindElementMode: 0
     - _MotionWindEnd: 1
-    - _MotionWindMode: 1
+    - _MotionWindMode: 2
     - _MotionWindOffInfo: 0
     - _MotionWindOptimizedInfo: 0
     - _NORMALMAPSPACE: 0
@@ -879,17 +880,17 @@ Material:
     - _Thickness: 1
     - _ThicknessMapEncoding: 0
     - _ThicknessMultiplier: 1
-    - _ThirdAlbedoValue: 1
+    - _ThirdAlbedoValue: 0.5
     - _ThirdAlphaClipValue: 0.5
     - _ThirdBakeMode: 1
-    - _ThirdBlendAlbedoValue: 0
+    - _ThirdBlendAlbedoValue: 1
     - _ThirdBlendIntensityValue: 1
-    - _ThirdBlendNormalValue: 0
-    - _ThirdBlendShaderValue: 0
+    - _ThirdBlendNormalValue: 1
+    - _ThirdBlendShaderValue: 1
     - _ThirdColorMode: 0
     - _ThirdCoordMode: 0
     - _ThirdElementMode: 0
-    - _ThirdIntensityValue: 0
+    - _ThirdIntensityValue: 1
     - _ThirdMaskCoordMode: 0
     - _ThirdMaskSampleMode: 0
     - _ThirdMaskValue: 1
@@ -897,10 +898,10 @@ Material:
     - _ThirdMeshValue: 0
     - _ThirdMetallicValue: 0
     - _ThirdNormalValue: 1
-    - _ThirdOcclusionValue: 0
+    - _ThirdOcclusionValue: 1
     - _ThirdProjValue: 0
-    - _ThirdSampleMode: 0
-    - _ThirdSmoothnessValue: 0
+    - _ThirdSampleMode: 5
+    - _ThirdSmoothnessValue: 1
     - _TintingBakeMode: 0
     - _TintingCategory: 1
     - _TintingElementMode: 1
@@ -994,7 +995,7 @@ Material:
     - _emissive_power_value: 1
     - _global_push_layer_value: 0
     - _global_wind_layer_value: 0
-    - _motion_base_mask_mode: 0
+    - _motion_base_mask_mode: 1
     - _motion_push_mask_mode: 0
     - _motion_small_mask_mode: 0
     - _motion_tiny_mask_mode: 0
@@ -1072,7 +1073,7 @@ Material:
     - _ThirdBlendRemap: {r: 0, g: 1, b: 0, a: 0}
     - _ThirdColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThirdColorTwo: {r: 1, g: 1, b: 1, a: 1}
-    - _ThirdCoordValue: {r: 1, g: 1, b: 0, a: 0}
+    - _ThirdCoordValue: {r: 5, g: 5, b: 0, a: 0}
     - _ThirdMaskCoordValue: {r: 1, g: 1, b: 0, a: 0}
     - _ThirdMaskRemap: {r: 0, g: 1, b: 0, a: 0}
     - _ThirdMeshRemap: {r: 0, g: 1, b: 0, a: 0}
@@ -1100,7 +1101,7 @@ Material:
     - _emissive_vert_mode: {r: 1, g: 0, b: 0, a: 0}
     - _gradient_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _main_coord_value: {r: 1, g: 1, b: 0, a: 0}
-    - _motion_base_proc_mode: {r: 0, g: 0, b: 0, a: 0}
+    - _motion_base_proc_mode: {r: 1, g: 0, b: 0, a: 0}
     - _motion_base_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _motion_highlight_color: {r: 1, g: 1, b: 1, a: 1}
     - _motion_push_proc_mode: {r: 0, g: 0, b: 0, a: 0}
@@ -1119,7 +1120,7 @@ Material:
     - _second_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _second_mask_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _second_vert_mode: {r: 0, g: 0, b: 1, a: 0}
-    - _third_coord_value: {r: 1, g: 1, b: 0, a: 0}
+    - _third_coord_value: {r: 5, g: 5, b: 0, a: 0}
     - _third_mask_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _third_vert_mode: {r: 0, g: 1, b: 0, a: 0}
     - _tinting_vert_mode: {r: 0, g: 0, b: 0, a: 1}

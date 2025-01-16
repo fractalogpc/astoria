@@ -36,7 +36,9 @@ Material:
   - TVE_EMISSIVE_SAMPLE_MAIN_UV
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
-  - TVE_MOTION_WIND_OPTIMIZED
+  - TVE_MOTION_BASE_BENDING
+  - TVE_MOTION_TINY_FLUTTER
+  - TVE_MOTION_WIND_ADVANCED
   - TVE_OVERLAY_ELEMENT
   - TVE_OVERLAY_MASK_SAMPLE_MAIN_UV
   - TVE_OVERLAY_SAMPLE_PLANAR_2D
@@ -71,9 +73,8 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
-  - MOTIONVECTORS
-  - TransparentBackfaceDebugDisplay
   - TransparentDepthPrepass
+  - TransparentBackfaceDebugDisplay
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -463,7 +464,7 @@ Material:
     - _MetallicRemapMin: 0
     - _Mode: 0
     - _MotionBaseDelayValue: 0
-    - _MotionBaseIntensityValue: 0
+    - _MotionBaseIntensityValue: 1
     - _MotionBaseMaskMode: 3
     - _MotionBaseNoiseValue: 0.5
     - _MotionBasePhaseValue: 0
@@ -490,15 +491,15 @@ Material:
     - _MotionSmallSpeedValue: 5
     - _MotionSmallTillingValue: 5
     - _MotionTillingValue: 5
-    - _MotionTinyIntensityValue: 0
-    - _MotionTinyMaskMode: 2
-    - _MotionTinySpeedValue: 20
+    - _MotionTinyIntensityValue: 0.1
+    - _MotionTinyMaskMode: 3
+    - _MotionTinySpeedValue: 10
     - _MotionTinyTillingValue: 20
     - _MotionWindAdvancedInfo: 0
     - _MotionWindCategory: 1
     - _MotionWindElementMode: 0
     - _MotionWindEnd: 1
-    - _MotionWindMode: 1
+    - _MotionWindMode: 2
     - _MotionWindOffInfo: 0
     - _MotionWindOptimizedInfo: 0
     - _NoiseCategory: 1
@@ -640,7 +641,7 @@ Material:
     - _SubsurfaceDirectValue: 1
     - _SubsurfaceElementMode: 0
     - _SubsurfaceEnd: 1
-    - _SubsurfaceIntensityValue: 1
+    - _SubsurfaceIntensityValue: 0.4
     - _SubsurfaceMask: 1
     - _SubsurfaceMultiValue: 1
     - _SubsurfaceNormalValue: 0
@@ -838,7 +839,7 @@ Material:
     - _motion_small_proc_mode: {r: 0, g: 0, b: 0, a: 0}
     - _motion_small_vert_mode: {r: 0, g: 1, b: 0, a: 0}
     - _motion_tiny_proc_mode: {r: 0, g: 0, b: 0, a: 0}
-    - _motion_tiny_vert_mode: {r: 0, g: 0, b: 1, a: 0}
+    - _motion_tiny_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _normal_vert_mode: {r: 0, g: 0, b: 1, a: 0}
     - _object_phase_mode: {r: 1, g: 0, b: 0, a: 0}
     - _occlusion_vert_mode: {r: 0, g: 1, b: 0, a: 0}
