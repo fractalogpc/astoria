@@ -35,7 +35,7 @@ public class HealthUI : MonoBehaviour
   }
 
   private void Start() {
-    _playerHealth._onHealthChanged.AddListener(OnHealthChanged);
+    _playerHealth.OnHealthChanged.AddListener(OnHealthChanged);
     _healthNumber.text = $"{((int)_playerHealth.CurrentHealth).ToString()} <sup>/ {((int)_playerHealth.MaxHealth).ToString()}</sup>";
     _healthBar.fillAmount = _playerHealth.CurrentHealth / _playerHealth.MaxHealth;
   }

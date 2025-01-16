@@ -5,89 +5,94 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Fires when the health is initialized. The parameter is the max health.
+/// </summary>
 [Serializable]
 public class OnHealthInitializeEvent : UnityEvent<float> {}
+/// <summary>
+/// Fires when the health is changed. The parameters are the health before the damage, the current health, and the max health.
+/// </summary>
 [Serializable]
 public class OnHealthChangedEvent : UnityEvent<float, float, float> {}
+/// <summary>
+/// Fires at the end of the damage calculation. The parameter is the hit position.
+/// </summary>
 [Serializable]
 public class OnDamageEvent : UnityEvent<Vector3> {}
+/// <summary>
+/// Fires when the health is healed.
+/// </summary>
 [Serializable]
 public class OnHealEvent : UnityEvent {}
+/// <summary>
+/// Fires when the health reaches zero.
+/// </summary>
 [Serializable]
 public class OnHealthZeroEvent : UnityEvent {}
 public class HealthInterface : NetworkBehaviour
 {
 
-  public float CurrentHealth {
-    get {
-      if (_currentHealth <= 0) {
-        return 0;
-      }
-      return _currentHealth;
-    }
-  }
+  public float CurrentHealth => _currentHealth;
   public float MaxHealth => _maxHealth;
+  public bool IsDead => _currentHealth <= 0;
+  
+  [Tooltip("OnHealthInitialize(_maxHealth)")] public OnHealthInitializeEvent OnHealthInitialize;
+  [Tooltip("OnHealthZero()")] public OnHealthZeroEvent OnHealthZero;
+  [Tooltip("OnHealthChanged(healthBeforeDamage, _currentHealth, _maxHealth) Doesn't fire when health changes to a value below zero.")]
+  public OnHealthChangedEvent OnHealthChanged;
+  [Tooltip("OnDamaged(hitPosition)")] public OnDamageEvent OnDamaged;
+  [Tooltip("OnHeal()")] public OnHealEvent OnHeal;
   
   [SerializeField] private float _currentHealth;
   [SerializeField] private float _maxHealth;
-  [Tooltip("OnHealthInitialize(_maxHealth)")] public OnHealthInitializeEvent _onHealthInitialize;
-  [Tooltip("OnHealthZero()")] public OnHealthZeroEvent _onHealthZero;
-  [Tooltip("OnHealthChanged(healthBeforeDamage, _currentHealth, _maxHealth) Doesn't fire when health changes to a value below zero.")] public OnHealthChangedEvent _onHealthChanged;
-  [Tooltip("OnDamage(hitPosition)")] public OnDamageEvent _onDamage;
-  [Tooltip("OnHeal()")] public OnHealEvent _onHeal;
-
-  [SerializeField] private bool _isPlayer = false;
-
-  [SerializeField] private float _regenRate = 0;
-  [SerializeField] private float _regenDelay = 0;
+  [Tooltip("If true, the health will not be initialized in Start().")]
+  [SerializeField] private bool _initializeWithScript = true;
 
   private float _regenTimer = 0;
-
-  protected override void OnValidate() {
-    base.OnValidate();
-    _currentHealth = _maxHealth;
+  
+  public void Initialize(float maxHealth) {
+    _maxHealth = maxHealth;
+    _currentHealth = maxHealth;
+    OnHealthInitialize?.Invoke(maxHealth);
   }
-
-  private void Update() {
-    if (!_isPlayer) return;
-    _regenTimer += Time.deltaTime;
-    if (_currentHealth <= 0) {
-      _onHealthZero?.Invoke();
-    }
-    if (_currentHealth < GetMaxHealth() && _regenRate > 0 && _regenTimer >= _regenDelay) {
-      float regenMultiplier = 1;
-      Heal(_regenRate * regenMultiplier * Time.deltaTime);
-    }
-  }
-
-  private float GetMaxHealth() {
-      return _maxHealth;
-  }
-
-  private void Start() {
-    _currentHealth = GetMaxHealth();
-    _onHealthInitialize?.Invoke(GetMaxHealth());
-	}
-
+  
   public void Heal(float healPoints) {
-    _onHeal?.Invoke();
+    OnHeal?.Invoke();
     float initialHealth = _currentHealth;
     if (_currentHealth + healPoints >= GetMaxHealth()) _currentHealth = GetMaxHealth();
     else _currentHealth += healPoints;
-    _onHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
+    OnHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
   }
 
   public void Damage(float damagePoints, Vector3 hitPosition) {
-    _onDamage?.Invoke(hitPosition);
-    
     if (_currentHealth - damagePoints <= 0) {
-      _onHealthZero?.Invoke();
+      OnHealthZero?.Invoke();
     }
     else {
       float initialHealth = _currentHealth;
       _currentHealth -= damagePoints;
       _regenTimer = 0;
-      _onHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
+      OnHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
     }
+    OnDamaged?.Invoke(hitPosition);
+  }
+  
+  protected override void OnValidate() {
+    base.OnValidate();
+    _currentHealth = _maxHealth;
+  }
+  
+  private void Start() {
+    if (!_initializeWithScript) return;
+    Initialize(_maxHealth);
+  }
+  
+  private void Update() {
+
+  }
+
+  private float GetMaxHealth() {
+      return _maxHealth;
   }
 }

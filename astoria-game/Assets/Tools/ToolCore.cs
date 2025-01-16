@@ -19,6 +19,7 @@ public class ToolCore : InputHandlerBase
 	}
 	public void UnequipTool() {
 		_viewmodelManager.PlayUnequip();
+		_viewmodelManager.RemoveViewmodel();
 		CurrentTool.OnUnequip();
 		CurrentTool = null;
 	}

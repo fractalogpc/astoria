@@ -8,19 +8,19 @@ using UnityEngine.Rendering;
 /// </summary>
 public class LowHealthFX : MonoBehaviour
 {
-    private NetworkedHealth _health;
+    private HealthInterface _health;
     [SerializeField] private Volume _lowHealthEffects;
     [Header("Effect Strength over percentage of health gone")]
     [SerializeField] private AnimationCurve _lowHealthStartCurve;
     
     private void Start() {
         if (_health == null) {
-            _health = GameObject.FindWithTag("Player").GetComponent<NetworkedHealth>();
+            _health = GameObject.FindWithTag("Player").GetComponent<HealthInterface>();
         }
         _health.OnHealthChanged.AddListener(OnHealthChanged);
     }
 
-    private void OnHealthChanged(int oldHealth, int newHealth) {
+    private void OnHealthChanged(float oldHealth, float newHealth, float maxHealth) {
         _lowHealthEffects.weight = _lowHealthStartCurve.Evaluate(1 - (float)newHealth / _health.MaxHealth);
     }
 
