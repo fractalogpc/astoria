@@ -5,8 +5,8 @@ using UnityEngine;
 public class AxeInstance : BaseToolInstance
 {
 	public new AxeData ItemData => (AxeData)base.ItemData;
-	private float _timeSinceLastSideChop = 0;
-	private float _timeSinceLastDownChop = 0;
+	private float _timeSinceLastSideChop = float.MaxValue;
+	private float _timeSinceLastDownChop = float.MaxValue;
 	private bool _canChop => _timeSinceLastSideChop >= ItemData.SideChopCooldown && _timeSinceLastDownChop >= ItemData.DownChopCooldown;
 	private Coroutine _chopDelayCoroutine;
 	
@@ -18,6 +18,7 @@ public class AxeInstance : BaseToolInstance
 	}
 	public override void OnUnequip() {
 		base.OnUnequip();
+		_toolCore.StopCoroutine(_chopDelayCoroutine);
 	}
 
 	public override void OnTick() {
@@ -62,10 +63,22 @@ public class AxeInstance : BaseToolInstance
 	private void ChopTree(float range) {
 		Camera mainCamera = Camera.main;
 		if (mainCamera == null) Debug.LogError("AxeInstance: Main camera not found!");
-		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, 4f)) return;
-		if (TreeChopping.Instance == null) Debug.LogError("AxeInstance: TreeChopping instance not found!");
-		GameObject tree = TreeChopping.Instance.RealizeTree(hit.point);
-		if (tree == null) return;
-		tree.GetComponentInChildren<HealthInterface>().Damage(ItemData.ChopDamage, hit.point);
+		// Check for LOS
+		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
+		if (hit.collider.gameObject == null) return;
+		GameObject tree;
+		if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tree")) {
+			Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
+			if (TreeChopping.Instance == null) Debug.LogError("AxeInstance: TreeChopping instance not found!");
+			tree = TreeChopping.Instance.RealizeTree(hit.point);
+		}
+		else {
+			Debug.Log("Hit non tree layer object: " + hit.collider.gameObject.name);
+			tree = hit.collider.gameObject;
+		}
+		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();
+		if (treeChoppable == null) return;
+		treeChoppable.Damage(ItemData.ChopDamage, hit.point);
+		
 	}
 }

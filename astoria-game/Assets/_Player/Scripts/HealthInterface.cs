@@ -30,7 +30,7 @@ public class OnHealEvent : UnityEvent {}
 /// </summary>
 [Serializable]
 public class OnHealthZeroEvent : UnityEvent {}
-public class HealthInterface : NetworkBehaviour
+public class HealthInterface : MonoBehaviour
 {
 
   public float CurrentHealth => _currentHealth;
@@ -46,53 +46,42 @@ public class HealthInterface : NetworkBehaviour
   
   [SerializeField] private float _currentHealth;
   [SerializeField] private float _maxHealth;
-  [Tooltip("If true, the health will not be initialized in Start().")]
-  [SerializeField] private bool _initializeWithScript = true;
 
   private float _regenTimer = 0;
   
-  public void Initialize(float maxHealth) {
+  public virtual void Initialize(float maxHealth) {
     _maxHealth = maxHealth;
     _currentHealth = maxHealth;
     OnHealthInitialize?.Invoke(maxHealth);
   }
   
-  public void Heal(float healPoints) {
+  public virtual void Heal(float healPoints) {
     OnHeal?.Invoke();
     float initialHealth = _currentHealth;
-    if (_currentHealth + healPoints >= GetMaxHealth()) _currentHealth = GetMaxHealth();
+    if (_currentHealth + healPoints >= MaxHealth) _currentHealth = MaxHealth;
     else _currentHealth += healPoints;
-    OnHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
+    OnHealthChanged?.Invoke(initialHealth, _currentHealth, MaxHealth);
   }
 
-  public void Damage(float damagePoints, Vector3 hitPosition) {
+  public virtual void Damage(float damagePoints, Vector3 hitPosition) {
     if (_currentHealth - damagePoints <= 0) {
+      _currentHealth = 0;
       OnHealthZero?.Invoke();
     }
     else {
       float initialHealth = _currentHealth;
       _currentHealth -= damagePoints;
       _regenTimer = 0;
-      OnHealthChanged?.Invoke(initialHealth, _currentHealth, GetMaxHealth());
+      OnHealthChanged?.Invoke(initialHealth, _currentHealth, MaxHealth);
     }
     OnDamaged?.Invoke(hitPosition);
   }
   
-  protected override void OnValidate() {
-    base.OnValidate();
+  protected virtual void OnValidate() {
     _currentHealth = _maxHealth;
   }
   
-  private void Start() {
-    if (!_initializeWithScript) return;
+  protected virtual void Start() {
     Initialize(_maxHealth);
-  }
-  
-  private void Update() {
-
-  }
-
-  private float GetMaxHealth() {
-      return _maxHealth;
   }
 }

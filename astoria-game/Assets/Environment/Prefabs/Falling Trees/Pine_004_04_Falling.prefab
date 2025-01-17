@@ -274,6 +274,7 @@ GameObject:
   - component: {fileID: -6003757947322717508}
   - component: {fileID: 8603412777321115835}
   - component: {fileID: -5537256007758773670}
+  - component: {fileID: -3602127421354475184}
   m_Layer: 0
   m_Name: Pine_004_04_Falling
   m_TagString: Untagged
@@ -383,7 +384,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1000
   m_Drag: 1.5
-  m_AngularDrag: 3
+  m_AngularDrag: 2
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -400,6 +401,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &-3602127421354475184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5530928839789964935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ac962f5563a084c97300465eaa36d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 100
+  _maxHealth: 100
+  _fallingForce: 1000
 --- !u!1 &6105463951207521443
 GameObject:
   m_ObjectHideFlags: 0
