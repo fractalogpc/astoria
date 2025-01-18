@@ -4759,29 +4759,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
   _currentHealth: 200
   _maxHealth: 200
-  _onHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthZero:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _isPlayer: 1
-  _regenRate: 0
-  _regenDelay: 0
 --- !u!114 &5795585357237766305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4862,10 +4856,18 @@ MonoBehaviour:
   Settings:
     MaxBuildDistance: 4
     MinBuildDistance: 0.01
-    RotationStep: 1
+    MaxLayers: 20
+    HorizontalStep: 0.02
+    VerticalStep: 0.04
+    VerticalSubStep: 0.01
+    UpwardCurveFactor: -0.5
+    DensityFactor: -1
     PlacementLayerMask:
       serializedVersion: 2
-      m_Bits: 69953
+      m_Bits: 4161
+    CollisionLayerMask:
+      serializedVersion: 2
+      m_Bits: 71753
   _previewObjectLerpSpeed: 25
   _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
   _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
@@ -9988,7 +9990,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 10000
-  field of view: 55.000004
+  field of view: 55
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
