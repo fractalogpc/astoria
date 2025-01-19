@@ -11879,7 +11879,7 @@ MonoBehaviour:
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 0
   - weight: 50
     scaleHeightRange: {x: 1, y: 1}
     scaleWidthRange: {x: 1, y: 1}
@@ -11904,7 +11904,7 @@ MonoBehaviour:
   seed: 504
   poissonDisk: {fileID: 570998590550230969, guid: 1e884d56bc6f441a9a9553bc6b29638a, type: 3}
   poissonDiskStrength: 0
-  density: 20
+  density: 10
   occludeOthers: 1
   occludedByOthers: 1
   minDistanceFromTree: 0
@@ -11956,9 +11956,9 @@ MonoBehaviour:
       noiseType: 6
       noiseSpace: 1
       frequency: 15
-      amplitude: 500
+      amplitude: 50000
       offset: 0
-      balance: 0
+      balance: 0.5
       texture: {fileID: 2800000, guid: dafe8c0bdc912774e978871484b26711, type: 3}
       textureST: {x: 1, y: 1, z: 0, w: 0}
       channel: 0
