@@ -2074,7 +2074,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &548931223
 Transform:
   m_ObjectHideFlags: 0
@@ -2302,7 +2302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stampVersion: 1
-  layer: {fileID: 8574412962073106934, guid: 1ac967516a2d342288fa6ab6ad29b32c, type: 2}
+  layer: {fileID: 8574412962073106934, guid: 7c08a8e0d7046234a9943daf2bae01bd, type: 2}
   filterSet:
     falloffFilter:
       filterType: 0
@@ -11241,7 +11241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 564435167005534436, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_ProbeSettings.influence.m_SphereRadius
-      value: 500
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 564435167005534436, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_ProbeSettings.cameraSettings.volumes.layerMask.m_Bits
@@ -11337,7 +11337,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7222538594827707203, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_ProbeSettings.influence.m_SphereRadius
-      value: 500
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 7222538594827707203, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_ProbeSettings.cameraSettings.volumes.layerMask.m_Bits
@@ -11971,58 +11971,58 @@ MonoBehaviour:
     prefab: {fileID: 1360243568863834, guid: a9890f89c54105745a59b9d16c908747, type: 3}
   randomizations:
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 0
+    flags: 2
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   - weight: 50
-    scaleHeightRange: {x: 1, y: 1}
-    scaleWidthRange: {x: 1, y: 1}
+    scaleHeightRange: {x: 1, y: 2}
+    scaleWidthRange: {x: 1, y: 2}
     sink: 0
     scaleMultiplierAtBoundaries: 1
     weightRange: {x: 0, y: 99999}
-    flags: 16
+    flags: 18
   seed: 504
   poissonDisk: {fileID: 570998590550230969, guid: 1e884d56bc6f441a9a9553bc6b29638a, type: 3}
-  poissonDiskStrength: 0
-  density: 10
+  poissonDiskStrength: 1
+  density: 4
   occludeOthers: 1
   occludedByOthers: 1
   minDistanceFromTree: 0
@@ -12076,18 +12076,18 @@ MonoBehaviour:
       frequency: 15
       amplitude: 50000
       offset: 0
-      balance: 0.5
-      texture: {fileID: 2800000, guid: dafe8c0bdc912774e978871484b26711, type: 3}
+      balance: 0
+      texture: {fileID: 2800000, guid: b1bd370dab720974c96ab0a776904a03, type: 3}
       textureST: {x: 1, y: 1, z: 0, w: 0}
       channel: 0
       displayGamma: 0
     weight2Noise:
       noiseType: 0
       noiseSpace: 0
-      frequency: 2
-      amplitude: 15
+      frequency: 125
+      amplitude: 1
       offset: 0
-      balance: 0
+      balance: 0.3
       texture: {fileID: 0}
       textureST: {x: 1, y: 1, z: 0, w: 0}
       channel: 0
@@ -12110,8 +12110,8 @@ MonoBehaviour:
       enabled: 0
       filterType: 0
       weight: 1
-      range: {x: 0, y: 100}
-      smoothness: {x: 20, y: 20}
+      range: {x: 800, y: 1500}
+      smoothness: {x: 100, y: 100}
       noise:
         noiseType: 0
         noiseSpace: 0
@@ -12171,7 +12171,7 @@ MonoBehaviour:
       enabled: 0
       filterType: 0
       weight: 1
-      range: {x: 20.571423, y: 60}
+      range: {x: 20, y: 90}
       smoothness: {x: 6.3157897, y: 6.3157897}
       noise:
         noiseType: 0
@@ -12354,7 +12354,7 @@ MonoBehaviour:
       enabled: 0
       filterType: 0
       weight: 1
-      range: {x: 0.6, y: 1}
+      range: {x: 0.37777779, y: 1}
       smoothness: {x: 0.1, y: 0.1}
       noise:
         noiseType: 0
