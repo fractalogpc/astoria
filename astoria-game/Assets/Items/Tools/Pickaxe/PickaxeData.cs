@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Axe", menuName = "Scriptable Objects/AxeData")]
+[CreateAssetMenu(fileName = "New Pickaxe", menuName = "Scriptable Objects/PickaxeData")]
 public class PickaxeData : BaseToolData
 {
 	// TODO: Make this a random range
