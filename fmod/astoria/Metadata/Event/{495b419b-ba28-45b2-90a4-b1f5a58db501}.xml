@@ -70,9 +70,6 @@
 		<relationship name="modules">
 			<destination>{e8041f19-a992-490f-80a0-9330722d3ec7}</destination>
 		</relationship>
-		<relationship name="markers">
-			<destination>{d8e5653c-b9d5-4d5f-951f-e714a37c28dc}</destination>
-		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{19639634-8d04-483d-b1f2-9f2a5587d37a}">
 		<relationship name="effectChain">
@@ -118,20 +115,6 @@
 			<destination>{19639634-8d04-483d-b1f2-9f2a5587d37a}</destination>
 		</relationship>
 	</object>
-	<object class="LoopRegion" id="{d8e5653c-b9d5-4d5f-951f-e714a37c28dc}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="length">
-			<value>0.35000000000000003</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{6410b0a7-16c9-4d18-8cb0-ea16b3553515}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{3b9f7787-e7b9-4c63-b1c4-1403852a28d5}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusEffectChain" id="{615a28a0-fec9-4fb4-ac57-a3593e16c1d0}">
 		<relationship name="effects">
 			<destination>{5c9919ba-570e-486f-858a-431719cacced}</destination>
@@ -139,8 +122,11 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{c9c98ce3-2d75-490e-a471-ede09d390a8f}">
+		<property name="surroundPanDirection">
+			<value>5.62077003e-06</value>
+		</property>
 		<property name="surroundPanExtent">
-			<value>30</value>
+			<value>94.0000381</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{71b1e232-632a-45fa-8bed-0d23c903c8b5}" />
@@ -233,7 +219,6 @@
 		<property name="name">
 			<value>SourcePos</value>
 		</property>
-		<property name="value" />
 		<property name="dataType">
 			<value>-2</value>
 		</property>
@@ -242,7 +227,6 @@
 		<property name="name">
 			<value>OverallGain</value>
 		</property>
-		<property name="value" />
 		<property name="dataType">
 			<value>-1</value>
 		</property>
@@ -252,7 +236,7 @@
 			<value>ApplyDA</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<property name="minimumValue">
 			<value>0</value>
@@ -377,7 +361,7 @@
 			<value>DAMinDist</value>
 		</property>
 		<property name="value">
-			<value>1</value>
+			<value>0</value>
 		</property>
 		<property name="curve">
 			<value>{(0.000000,0.000000)(1.000000,10000.000000)}</value>
@@ -388,7 +372,7 @@
 			<value>DAMaxDist</value>
 		</property>
 		<property name="value">
-			<value>20</value>
+			<value>10000</value>
 		</property>
 		<property name="curve">
 			<value>{(0.000000,0.000000)(1.000000,10000.000000)}</value>
@@ -443,7 +427,7 @@
 			<value>DipoleWeight</value>
 		</property>
 		<property name="value">
-			<value>1</value>
+			<value>0</value>
 		</property>
 		<property name="curve">
 			<value>{(0.000000,0.000000)(1.000000,1.000000)}</value>
@@ -571,7 +555,6 @@
 		<property name="name">
 			<value>SimOutputs</value>
 		</property>
-		<property name="value" />
 		<property name="dataType">
 			<value>0</value>
 		</property>
@@ -588,7 +571,6 @@
 		<property name="name">
 			<value>DistRange</value>
 		</property>
-		<property name="value" />
 		<property name="dataType">
 			<value>-6</value>
 		</property>
