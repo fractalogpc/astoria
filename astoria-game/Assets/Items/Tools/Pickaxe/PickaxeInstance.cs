@@ -61,19 +61,9 @@ public class PickaxeInstance : BaseToolInstance
 		// Check for LOS
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
-		GameObject tree;
-		if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tree")) {
-			Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
-			if (TreeChopping.Instance == null) Debug.LogError("PickaxeInstance: TreeChopping instance not found!");
-			tree = TreeChopping.Instance.RealizeTree(hit.point);
-		}
-		else {
-			Debug.Log("Hit non tree layer object: " + hit.collider.gameObject.name);
-			tree = hit.collider.gameObject;
-		}
-		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();
-		if (treeChoppable == null) return;
-		treeChoppable.Damage(ItemData.SwingDamage, hit.point);
-		
+		GameObject rock = hit.collider.gameObject;
+		HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
+		if (harvestableRock == null) return;
+		harvestableRock.Damage(ItemData.SwingDamage, hit.point);
 	}
 }

@@ -4762,26 +4762,23 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
   _currentHealth: 200
   _maxHealth: 200
-  _onHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthZero:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _isPlayer: 1
-  _regenRate: 0
-  _regenDelay: 0
 --- !u!114 &5795585357237766305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9988,7 +9985,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 10000
-  field of view: 55.000004
+  field of view: 55
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -17217,6 +17214,7 @@ MonoBehaviour:
   _spawnInventoryWith:
   - {fileID: 11400000, guid: 9a5e256aa923e3549b5a6a1b80354f3f, type: 2}
   - {fileID: 11400000, guid: 9012168e6fe5a6847bf2c58376b8da98, type: 2}
+  - {fileID: 11400000, guid: f8d9581525c1c024fb673118a87fdb06, type: 2}
 --- !u!1 &6336928685461450730
 GameObject:
   m_ObjectHideFlags: 0
@@ -20695,8 +20693,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.47233322
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
