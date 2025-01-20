@@ -4,6 +4,7 @@ Shader "Hidden/Shader/RainPostProcess"
     {
         // This property is necessary to make the CommandBuffer.Blit bind the source texture to _MainTex
         _MainTex("Main Texture", 2DArray) = "grey" {}
+
     }
 
     HLSLINCLUDE
@@ -16,6 +17,7 @@ Shader "Hidden/Shader/RainPostProcess"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/PostProcessing/Shaders/FXAA.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/PostProcessing/Shaders/RTUpscale.hlsl"
+    #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 
     struct Attributes
     {
@@ -40,13 +42,38 @@ Shader "Hidden/Shader/RainPostProcess"
         return output;
     }
 
+    float2 hash2(float2 seed) { //as far as I can tell,to make a hash you basically just add a bunch of numbers
+        float2 hash = frac(seed.yx * float2(1.1042, 1.10523)); // to try and make everything as jumbled as possible
+        hash += dot(hash, hash.yx - 222.6234); // Then you fract() it to get it in the 0 - 1 range
+        hash *= frac(hash + .99340184015);
+        hash -= dot(frac(hash), hash);
+        hash = frac(hash.yx - hash.xx * 12.);
+        hash *= 1.; // this makes the results smaller, so the two spheres don't get too far apart
+        return hash;
+    }
+
+    float SmoothUnion(float point1, float point2, float strength) {
+        float temp = clamp(.5 + .5 * (point2 - point1) / strength, 0., 1.);
+        return lerp(point2, point1, temp) - strength * temp * (1. - temp);
+    }
+
     // List of properties to control your post process effect
     float _Intensity;
+    float3 _RainDrops[20];
     TEXTURE2D_X(_MainTex);
 
     float3 CalculateNormal(in float2 r, in float2 uv) {
         float3 normal;
-        normal.xy = r - uv;
+
+        float2 point1 = (r - hash2(r - (length(r.xx) * .12))) - uv;
+        float2 point2 = (r + hash2(r + (length(r.xy) * .15))) - uv;
+        float2 point3 = (r - hash2(r + (length(r.yy) * .09))) - uv;
+        float2 point4 = (r + hash2(r - (length(r.yx) * .13))) - uv;
+
+        float normal1 = SmoothUnion(abs(length(point1)), abs(length(point2)), .5);
+        float normal2 = SmoothUnion(abs(length(point3)), abs(length(point4)), .5);
+
+        normal.xy = SmoothUnion(normal1, normal2, .5) * (r - uv);
 
         normal.z = cos(asin(length(normal.xy)));
 
@@ -62,20 +89,25 @@ Shader "Hidden/Shader/RainPostProcess"
 
         // Note that if HDUtils.DrawFullScreen is not used to render the post process, you don't need to call ClampAndScaleUVForBilinearPostProcessTexture.
         
-        float2 uv = ((2. * input.positionCS - _ScreenParams.xy) / min(_ScreenParams.x, _ScreenParams.y)) * 20.;
+        float2 uv = ((2. * input.positionCS - _ScreenParams.xy) / min(_ScreenParams.x, _ScreenParams.y)) * 15.;
 
         //float3 sourceColor = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, ClampAndScaleUVForBilinearPostProcessTexture(input.texcoord.xy)).xyz;
 
-        // Apply greyscale effect
-        //float3 color = lerp(sourceColor, Luminance(sourceColor), _Intensity);
-
-        float3 color = CalculateNormal(float2(10.3, 10.9), uv);
+        float3 color;
+        for (int i = 0; i < 20; i++) {
+            color += CalculateNormal(_RainDrops[i].xy, uv) * _RainDrops[i].z;
+        }
 
         uv = input.texcoord;
-        uv -= refract(float3(0, 0, -1), color, 1. / 1.3).xy * .3;
+        uv -= refract(float3(0, 0, -1), color, 1. / 1.3).xy * .1;
 
-        color = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, uv).xyz;
-        return float4(color, 1);
+        float4 view = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, uv);
+        float4 scene = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, input.texcoord);
+        view.xyz += clamp(dot(color, float3(.2, .4, .3)) * .1, 0., .4);
+
+        view = lerp(scene, view, .2);
+        
+        return view;
     }
 
     ENDHLSL
