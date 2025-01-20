@@ -4806,11 +4806,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactDistance: 4
-  _treeLayerMask:
-    serializedVersion: 2
-    m_Bits: 65536
-  _treeChopping: {fileID: 0}
-  _treeItemData: {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
 --- !u!114 &1790292005347456770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9924,11 +9919,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8706593742784918896}
   - component: {fileID: 7446644550364225707}
-  - component: {fileID: 7009118809558246342}
   - component: {fileID: 4173330325925990911}
   - component: {fileID: 4396451452828267896}
   - component: {fileID: 7114787213708335111}
   - component: {fileID: 4347217802244067689}
+  - component: {fileID: 1927882715887146813}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -10003,14 +9998,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &7009118809558246342
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3580251812374425634}
-  m_Enabled: 1
 --- !u!114 &4173330325925990911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10200,6 +10187,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 261887
   _camera: {fileID: 7446644550364225707}
+--- !u!114 &1927882715887146813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580251812374425634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &3593174596530558486
 GameObject:
   m_ObjectHideFlags: 0
