@@ -7,7 +7,8 @@ using System;
 public sealed class RainPostProcess : CustomPostProcessVolumeComponent, IPostProcessComponent
 {
     [Tooltip("Controls the intensity of the effect.")]
-    public ClampedFloatParameter intensity = new ClampedFloatParameter(0f, 0f, 1f);
+    public ClampedIntParameter intensity = new ClampedIntParameter(0, 0, 20);
+    private Vector4[] _RainDrops = new Vector4[20];
 
     Material m_Material;
 
@@ -35,9 +36,25 @@ public sealed class RainPostProcess : CustomPostProcessVolumeComponent, IPostPro
         if (m_Material == null)
             return;
 
+        for (int i = 0; i < 20; i++) {
+            if (i < (int)intensity) {
+                if (_RainDrops[i].z <= 0) {
+                    _RainDrops[i] = new Vector3(UnityEngine.Random.Range(-20, 20), UnityEngine.Random.Range(-20, 20), UnityEngine.Random.Range(.2f, 5));
+                } else {
+                    _RainDrops[i].z -= Time.deltaTime;
+                }
+            } else {
+                _RainDrops[i].z = 0;
+            }
+            
+        }
+
         m_Material.SetFloat("_Intensity", intensity.value);
+        m_Material.SetVectorArray("_RainDrops", _RainDrops);
         m_Material.SetTexture("_MainTex", source);
         HDUtils.DrawFullScreen(cmd, m_Material, destination, shaderPassId: 0);
+
+
     }
 
     public override void Cleanup()
