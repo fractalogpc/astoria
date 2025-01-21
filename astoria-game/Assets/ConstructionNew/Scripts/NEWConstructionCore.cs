@@ -219,6 +219,11 @@ public class NEWConstructionCore : InputHandlerBase
                 }
 
                 // If none of the positions are valid, position and rotation are set by the initial test
+                if (!validPosition)
+                {
+                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData.Offset, false, out position, out rotation);
+                }
+
                 RenderPreviewObject(position, rotation);
 
                 Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
@@ -365,8 +370,9 @@ namespace Construction
         // Corrects and validates the position of the object
         public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionOffset offset, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation)
         {
-            finalPosition = Vector3.zero;
-            finalRotation = Quaternion.identity;
+            // Initial values for failed validation
+            finalPosition = origin + offset.PositionOffset + rotation * NEWConstructionCore.Instance.Settings.MaxBuildDistance;
+            finalRotation = GetRotationTowardsCamera(finalPosition, origin, offset.RotationOffset);
 
             RaycastHit hit;
             // Check if the raycast hits anything
@@ -383,9 +389,16 @@ namespace Construction
             }
 
             Vector3 newPosition = hit.point + offset.PositionOffset;
+            Vector3 normal = hit.normal;
 
             // Calculate the new rotation of the object
             Quaternion newRotation = GetRotationTowardsCamera(newPosition, origin, offset.RotationOffset);
+
+            // Rotate the object to match the normal of the surface
+            newRotation = Quaternion.FromToRotation(Vector3.up, normal) * newRotation;
+
+            finalPosition = newPosition;
+            finalRotation = newRotation;
 
             // Check if the object is not colliding with anything
             if (NEWConstructionCore.Instance._previewObjectScript.IsColliding(newPosition, newRotation, NEWConstructionCore.Instance.Settings.CollisionLayerMask))
