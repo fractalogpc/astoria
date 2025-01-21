@@ -51,10 +51,11 @@ namespace Player
     public float CrouchedCapsuleHeight = 1f;
 
     public CharacterState CurrentCharacterState { get; private set; }
+    // field: at the beginning allows for properties to be serialized
+    [field: SerializeField] public Vector3 MoveInputVector { get; private set; }
 
     private Collider[] _probedColliders = new Collider[8];
     private RaycastHit[] _probedHits = new RaycastHit[8];
-    private Vector3 _moveInputVector;
     private bool _jumpRequested = false;
     private bool _jumpConsumed = false;
     private bool _jumpedThisFrame = false;
@@ -130,7 +131,7 @@ namespace Player
 
     private void HandleCharacterInput()
     {
-      _moveInputVector = transform.rotation * new Vector3(_moveInput.x, 0f, _moveInput.y);
+      MoveInputVector = transform.rotation * new Vector3(_moveInput.x, 0f, _moveInput.y);
       switch (CurrentCharacterState)
       {
         case CharacterState.Default:
@@ -186,8 +187,8 @@ namespace Player
             _currentMaxSpeed = NoclipMoveSpeed;
           }
 
-          _moveInputVector += Vector3.up * (_jumpInput ? 1 : 0) + Vector3.down * (_crouchInput ? 1 : 0);
-          _moveInputVector.Normalize();
+          MoveInputVector += Vector3.up * (_jumpInput ? 1 : 0) + Vector3.down * (_crouchInput ? 1 : 0);
+          MoveInputVector.Normalize();
           break;
       }
     }
@@ -198,7 +199,7 @@ namespace Player
       // Orientate the moveDirection vector with the Camera's Y axis
       // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
 
-        Vector3 move = _moveInputVector * _currentMaxSpeed * Time.deltaTime;
+        Vector3 move = MoveInputVector * _currentMaxSpeed * Time.deltaTime;
         transform.position += move;
 
         transform.rotation = PlayerCamera.PlayerYLookQuaternion;
@@ -262,8 +263,8 @@ namespace Player
               currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
 
               // Calculate target velocity
-              Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-              Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+              Vector3 inputRight = Vector3.Cross(MoveInputVector, Motor.CharacterUp);
+              Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * MoveInputVector.magnitude;
               Vector3 targetMovementVelocity = reorientedInput * _currentMaxSpeed;
 
               // Smooth movement Velocity
@@ -273,9 +274,9 @@ namespace Player
             else
             {
               // Add move input
-              if (_moveInputVector.sqrMagnitude > 0f)
+              if (MoveInputVector.sqrMagnitude > 0f)
               {
-                Vector3 addedVelocity = _moveInputVector * AirAccelerationSpeed * deltaTime;
+                Vector3 addedVelocity = MoveInputVector * AirAccelerationSpeed * deltaTime;
 
                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
 
@@ -337,7 +338,7 @@ namespace Player
 
                 // Add to the return velocity and reset jump state
                 currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                currentVelocity += (MoveInputVector * JumpScalableForwardSpeed);
                 _jumpRequested = false;
                 _jumpConsumed = true;
                 _jumpedThisFrame = true;

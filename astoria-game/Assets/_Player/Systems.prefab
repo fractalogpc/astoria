@@ -200,7 +200,7 @@ MonoBehaviour:
   _startGameHour: 6
   _dayCycleInMinutes: 20
   _daysStartAtZero: 1
-  _timeOfDay:
+  TimeOfDay:
     _day: 0
     _hour: 0
     _minute: 0
@@ -256,6 +256,7 @@ Transform:
   - {fileID: 8477229131459008477}
   - {fileID: 6936402533131921073}
   - {fileID: 8947737752910830774}
+  - {fileID: 2127186655774025340}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8850651522397073974
@@ -997,6 +998,70 @@ MonoBehaviour:
   m_ObsoleteBlendNormalDistanceNegative: {x: 0, y: 0, z: 0}
   m_ObsoleteBoxSideFadePositive: {x: 1, y: 1, z: 1}
   m_ObsoleteBoxSideFadeNegative: {x: 1, y: 1, z: 1}
+--- !u!1 &6080432768873460637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2127186655774025340}
+  - component: {fileID: 8696901154001869077}
+  - component: {fileID: 5585074922577992839}
+  m_Layer: 0
+  m_Name: AudioSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2127186655774025340
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6080432768873460637}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 916802654918332166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8696901154001869077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6080432768873460637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db861ad085853e4d8ccff8a194caef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5585074922577992839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6080432768873460637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124c4f8309ce3bf41acb7af5d1b80dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <FootstepsEvent>k__BackingField:
+    Guid:
+      Data1: 1230717339
+      Data2: 1169340968
+      Data3: -172907376
+      Data4: 28675493
+    Path: event:/Footsteps
 --- !u!1 &6509613133625504527
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,7 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 7777
+  port: 2302
   DualMode: 1
   NoDelay: 1
   Interval: 10

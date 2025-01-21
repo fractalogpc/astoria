@@ -7,10 +7,6 @@ using Mirror;
 public class PlayerInteractor : InputHandlerBase, IStartExecution
 {
   [SerializeField] private float _interactDistance = 4f;
-  [SerializeField] private LayerMask _treeLayerMask;
-
-  [SerializeField] private TreeChopping _treeChopping;
-  [SerializeField] private ItemData _treeItemData;
 
   private Camera _camera;
 
@@ -20,7 +16,6 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
 
   public void InitializeStart() {
     _camera = Camera.main;
-    _treeChopping = TreeChopping.Instance;
   }
 
   private void Interact() {
