@@ -49,7 +49,6 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
     private void Start()
     {
-
         SetConstructionState(ConstructionState.None);
     }
 
@@ -314,6 +313,9 @@ public class ConstructionCore : NetworkedInputHandlerBase
     [Command]
     private void CmdPlaceObject(Vector3 position, Quaternion rotation)
     {
+
+        TestDebug($"Placing object at {position} with rotation {rotation}");
+
         // Instantiate the object on the server
         GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
 
@@ -326,6 +328,10 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
         // Spawn the object on the server and sync it with all clients
         NetworkServer.Spawn(placedObject);
+    }
+
+    [ClientRpc] private void TestDebug(string message) {
+        Debug.Log(message);
     }
 
 
