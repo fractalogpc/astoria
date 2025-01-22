@@ -41,7 +41,7 @@ Shader "Hidden/Shader/PoisonEffect"
     }
 
     // List of properties to control your post process effect
-    bool _Intensity;
+    int _Toggle;
     TEXTURE2D_X(_MainTex);
 
     float4 CustomPostProcess(Varyings input) : SV_Target
@@ -53,7 +53,7 @@ Shader "Hidden/Shader/PoisonEffect"
         float3 sourceColor = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, ClampAndScaleUVForBilinearPostProcessTexture(input.texcoord.xy)).xyz;
 
         // Apply greyscale effect
-        float3 color = lerp(sourceColor, Luminance(sourceColor), _Intensity);
+        float3 color = lerp(sourceColor, Luminance(sourceColor), _Toggle);
 
         return float4(color, 1);
     }
