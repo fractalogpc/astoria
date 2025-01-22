@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class BuildingController : MonoBehaviour, IStartExecution
 {
-    public NEWConstructionCore constructionCore;
+    public ConstructionCore constructionCore;
     public TogglePlayerBuildingUI togglePlayerBuildingUI;
 
     public GameObject prefabParentContent;
@@ -32,6 +32,6 @@ public class BuildingController : MonoBehaviour, IStartExecution
 
     private void OnBuildingUIOpen()
     {
-        constructionCore.SetConstructionState(NEWConstructionCore.ConstructionState.None);
+        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
     }
 }

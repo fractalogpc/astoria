@@ -93,7 +93,7 @@ public class PreviewObjectEditor : Editor
   {
     if (targetObject.Data != null)
     {
-      targetObject.Data.HeightOffset = targetObject.heightOffset;
+      targetObject.Data.Offset.HeightOffset = targetObject.heightOffset;
       EditorUtility.SetDirty(targetObject.Data); // Mark the ScriptableObject as dirty to save changes
       Debug.Log("HeightOffset synced to ScriptableObject.");
     }
@@ -106,8 +106,8 @@ public class PreviewObjectEditor : Editor
   private void SyncPositionAndRotation() {
     if (targetObject.Data != null)
     {
-      targetObject.Data.HeldOffsetPosition = targetObject.transform.localPosition;
-      targetObject.Data.HeldOffsetRotation = targetObject.transform.localRotation.eulerAngles;
+      targetObject.Data.Offset.HeldPositionOffset = targetObject.transform.localPosition;
+      targetObject.Data.Offset.HeldRotationOffset = targetObject.transform.localRotation.eulerAngles;
       EditorUtility.SetDirty(targetObject.Data); // Mark the ScriptableObject as dirty to save changes
       Debug.Log("Position and Rotation offset synced to ScriptableObject.");
     }

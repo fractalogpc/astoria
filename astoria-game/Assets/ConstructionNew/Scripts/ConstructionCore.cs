@@ -3,7 +3,7 @@ using Construction;
 using UnityEngine.Events;
 using System;
 
-public class NEWConstructionCore : InputHandlerBase
+public class ConstructionCore : InputHandlerBase
 {
 
     [Serializable]
@@ -15,7 +15,7 @@ public class NEWConstructionCore : InputHandlerBase
         Deleting
     }
 
-    public static NEWConstructionCore Instance;
+    public static ConstructionCore Instance;
 
     public ConstructionData DebugData;
 
