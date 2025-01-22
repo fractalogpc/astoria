@@ -44,7 +44,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
     protected override void InitializeActionMap()
     {
-        RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
+        RegisterAction(_inputActions.Player.Place, _ => { TestDebug($"Trying to place object"); });//OnClick(); });
     }
 
     private void Start()
