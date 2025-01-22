@@ -13164,6 +13164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1042217523}
+  - component: {fileID: 1042217524}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -13185,8 +13186,43 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 592453427}
+  - {fileID: 2008680670}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1042217524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042217522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c6b3eb9fde4c24082b73f5b3d5839b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _terrainObjects:
+  - {fileID: 1445662492}
+  - {fileID: 1115677271}
+  - {fileID: 260043031}
+  - {fileID: 453107899}
+  - {fileID: 413544601}
+  - {fileID: 1895839220}
+  - {fileID: 1252771876}
+  - {fileID: 1423638465}
+  - {fileID: 363830297}
+  - {fileID: 74972401}
+  - {fileID: 1266332332}
+  - {fileID: 228165032}
+  - {fileID: 734478815}
+  - {fileID: 909065655}
+  - {fileID: 591180580}
+  - {fileID: 238356918}
+  _colliderPrefab: {fileID: 1421259895089116328, guid: 616b9a96f7f73994fa4e16df76c84167, type: 3}
+  _colliderParent: {fileID: 2008680670}
+  _activationRadius: 250
+  _tileActivationRadius: 1500
+  _gridDivisions: 10
 --- !u!1 &1057517964
 GameObject:
   m_ObjectHideFlags: 0
@@ -19286,6 +19322,37 @@ MonoBehaviour:
   applyHoles: 1
   pixelQuantization: 1
   version: 2
+--- !u!1 &2008680669
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2008680670}
+  m_Layer: 0
+  m_Name: Tree Colliders
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2008680670
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008680669}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1042217523}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2036047622
 GameObject:
   m_ObjectHideFlags: 0
