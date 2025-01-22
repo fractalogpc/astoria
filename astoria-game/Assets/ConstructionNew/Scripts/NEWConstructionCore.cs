@@ -41,7 +41,8 @@ public class NEWConstructionCore : InputHandlerBase
     private GameObject _previewObject;
     public PreviewObject _previewObjectScript;
     private Vector3 _previewObjectPosition;
-    private float _cashedRandomValue;
+
+    private bool _canPlace;
 
     protected override void InitializeActionMap()
     {
@@ -60,8 +61,6 @@ public class NEWConstructionCore : InputHandlerBase
         }
 
         SetConstructionState(ConstructionState.None);
-
-        _cashedRandomValue = UnityEngine.Random.value;
     }
 
     private void Update()
@@ -91,9 +90,8 @@ public class NEWConstructionCore : InputHandlerBase
 
                 bool isOutOfRange;
                 // Test the initial raycast direction
-                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData.Offset, false, out position, out rotation, out isOutOfRange))
+                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
                 {
-
                     validPosition = true;
                 }
 
@@ -109,16 +107,17 @@ public class NEWConstructionCore : InputHandlerBase
                 {
                     // Test vertical substeps
                     Vector3 subsetOffsetDirection;
-                    
+
                     int numberOfSteps = Mathf.FloorToInt(Settings.VerticalStep / Settings.VerticalSubStep);
-                    for (int i = numberOfSteps; i > 0; i--) {
+                    for (int i = numberOfSteps; i > 0; i--)
+                    {
                         float verticalOffset = (-layer - 1) * verticalStep + i * verticalSubStep;
                         subsetOffsetDirection = ray.direction + (_cameraTransform.up * verticalOffset);
                         subsetOffsetDirection.Normalize();
 
                         Vector3 subsetTestPosition;
                         Quaternion subsetTestRotation;
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, _selectedData.Offset, false, out subsetTestPosition, out subsetTestRotation))
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, _selectedData, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
                         {
                             position = subsetTestPosition;
                             rotation = subsetTestRotation;
@@ -128,7 +127,9 @@ public class NEWConstructionCore : InputHandlerBase
                             DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
 
                             break;
-                        } else {
+                        }
+                        else
+                        {
                             Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.red, 0.1f);
                             DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
                         }
@@ -136,6 +137,9 @@ public class NEWConstructionCore : InputHandlerBase
 
                     // If the initial raycast doesn't hit anything, we assume there aren't any objects near so we simplify by just sampling the horizontal slice.
                     if (validPosition) break;
+
+                    // If the object is out of range, we don't need to sample the horizontal slice
+                    if (isOutOfRange) continue;
 
                     int pointsInLayer = 1 + (layer * 2); // Number of points in the current layer (1, 3, 5, ...)
 
@@ -192,7 +196,7 @@ public class NEWConstructionCore : InputHandlerBase
                         Quaternion testRotation;
 
                         // Don't sphere cast for the layers near the center of the screen because it causes issues with the vertical subset steps
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, _selectedData.Offset, (true ? false : true), out testPosition, out testRotation))
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, _selectedData, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
                         {
                             position = testPosition;
                             rotation = testRotation;
@@ -221,7 +225,7 @@ public class NEWConstructionCore : InputHandlerBase
                 // If none of the positions are valid, position and rotation are set by the initial test
                 if (!validPosition)
                 {
-                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData.Offset, false, out position, out rotation);
+                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out _);
                 }
 
                 RenderPreviewObject(position, rotation);
@@ -229,6 +233,8 @@ public class NEWConstructionCore : InputHandlerBase
                 Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
 
                 _previewObjectScript.SetMaterial(mat);
+
+                _canPlace = validPosition;
 
                 break;
         }
@@ -273,6 +279,8 @@ public class NEWConstructionCore : InputHandlerBase
 
     private bool OnClick()
     {
+
+        if (!_canPlace) return false;
 
         switch (State)
         {
@@ -368,28 +376,43 @@ namespace Construction
         }
 
         // Corrects and validates the position of the object
-        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionOffset offset, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation)
+
+        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionData data, PreviewObject script, BuildingSettings settings, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation, out bool isOutOfRange)
         {
+            ConstructionOffset offset = data.Offset;
+
             // Initial values for failed validation
-            finalPosition = origin + offset.PositionOffset + rotation * NEWConstructionCore.Instance.Settings.MaxBuildDistance;
+            finalPosition = origin + offset.PositionOffset + rotation * settings.MaxBuildDistance;
             finalRotation = GetRotationTowardsCamera(finalPosition, origin, offset.RotationOffset);
+            isOutOfRange = false;
 
             RaycastHit hit;
             // Check if the raycast hits anything
-            if (doSphereCast) {
-                if (!Physics.SphereCast(origin, 0.2f, rotation, out hit, NEWConstructionCore.Instance.Settings.MaxBuildDistance, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            if (doSphereCast)
+            {
+                if (!Physics.SphereCast(origin, 0.2f, rotation, out hit, settings.MaxBuildDistance, settings.PlacementLayerMask | (data.CanBePlacedOnStructures ? (int)settings.ConstructionLayerMask : 0)))
                 {
+                    isOutOfRange = true;
                     return false;
                 }
-            } else {
-                if (!Physics.Raycast(origin, rotation, out hit, NEWConstructionCore.Instance.Settings.MaxBuildDistance, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
+            }
+            else
+            {
+                if (!Physics.Raycast(origin, rotation, out hit, settings.MaxBuildDistance, settings.PlacementLayerMask | (data.CanBePlacedOnStructures ? (int)settings.ConstructionLayerMask : 0)))
                 {
+                    isOutOfRange = true;
                     return false;
                 }
             }
 
             Vector3 newPosition = hit.point + offset.PositionOffset;
             Vector3 normal = hit.normal;
+
+            // Calculate the angle between the normal of the surface and the up vector
+            float angle = Vector3.Angle(Vector3.up, normal);
+
+            // Check if the normal of the surface is within the allowed range
+            if (!ValidateNormal(angle, data, settings)) return false;
 
             // Calculate the new rotation of the object
             Quaternion newRotation = GetRotationTowardsCamera(newPosition, origin, offset.RotationOffset);
@@ -401,47 +424,7 @@ namespace Construction
             finalRotation = newRotation;
 
             // Check if the object is not colliding with anything
-            if (NEWConstructionCore.Instance._previewObjectScript.IsColliding(newPosition, newRotation, NEWConstructionCore.Instance.Settings.CollisionLayerMask))
-            {
-                return false;
-            }
-
-            finalPosition = newPosition;
-            finalRotation = newRotation;
-            return true;
-        }
-
-        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionOffset offset, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation, out bool isOutOfRange)
-        {
-            finalPosition = Vector3.zero;
-            finalRotation = Quaternion.identity;
-            isOutOfRange = false;
-
-            RaycastHit hit;
-            // Check if the raycast hits anything
-            if (doSphereCast) {
-                if (!Physics.SphereCast(origin, 0.2f, rotation, out hit, NEWConstructionCore.Instance.Settings.MaxBuildDistance, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
-                {
-                    Debug.Log("Spherecast hit nothing");
-                    isOutOfRange = true;
-                    return false;
-                }
-            } else {
-                if (!Physics.Raycast(origin, rotation, out hit, NEWConstructionCore.Instance.Settings.MaxBuildDistance, NEWConstructionCore.Instance.Settings.PlacementLayerMask))
-                {
-                    Debug.Log("Raycast hit nothing");
-                    isOutOfRange = true;
-                    return false;
-                }
-            }
-
-            Vector3 newPosition = hit.point + offset.PositionOffset;
-
-            // Calculate the new rotation of the object
-            Quaternion newRotation = GetRotationTowardsCamera(newPosition, origin, offset.RotationOffset);
-
-            // Check if the object is not colliding with anything
-            if (NEWConstructionCore.Instance._previewObjectScript.IsColliding(newPosition, newRotation, NEWConstructionCore.Instance.Settings.CollisionLayerMask))
+            if (script.IsColliding(newPosition, newRotation, settings.CollisionLayerMask))
             {
                 return false;
             }
@@ -456,6 +439,24 @@ namespace Construction
             Vector3 directionTowardsCamera = origin - target;
             directionTowardsCamera.y = 0;
             return Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(rotationOffset);
+        }
+
+        private static bool ValidateNormal(float angle, ConstructionData data, BuildingSettings settings)
+        {
+            if (data.CanBePlacedOnGround)
+            {
+                if (angle >= settings.MinGroundNormal && angle <= settings.MaxGroundNormal) return true;
+            }
+            if (data.CanBePlacedOnWalls)
+            {
+                if (angle >= settings.MinWallNormal && angle <= settings.MaxWallNormal) return true;
+            }
+            if (data.CanBePlacedOnCeilings)
+            {
+                if (angle >= settings.MinCeilingNormal && angle <= settings.MaxCeilingNormal) return true;
+            }
+
+            return false;
         }
     }
 
@@ -473,6 +474,17 @@ namespace Construction
         public int DensityFactor = 3;
 
         public LayerMask PlacementLayerMask;
+        public LayerMask ConstructionLayerMask;
         public LayerMask CollisionLayerMask;
+
+        [Header("Normal settings")]
+        // Angle from 0 to 180 degrees
+        // 0 is straight up, 90 is straight forward, 180 is straight down
+        public float MinGroundNormal = 0.0f;
+        public float MaxGroundNormal = 45f;
+        public float MinWallNormal = 45f;
+        public float MaxWallNormal = 135f;
+        public float MinCeilingNormal = 135f;
+        public float MaxCeilingNormal = 180f;
     }
 }

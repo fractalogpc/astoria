@@ -8,6 +8,12 @@ public class ConstructionData : ScriptableObject
 
     [Header("Placement Offsets")]
     public ConstructionOffset Offset;
+
+    [Header("Placement Settings")]
+    public bool CanBePlacedOnGround;
+    public bool CanBePlacedOnStructures;
+    public bool CanBePlacedOnWalls;
+    public bool CanBePlacedOnCeilings;
 }
 
 [Serializable]
