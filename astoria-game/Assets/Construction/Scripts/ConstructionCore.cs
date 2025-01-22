@@ -314,20 +314,20 @@ public class ConstructionCore : NetworkedInputHandlerBase
     private void CmdPlaceObject(Vector3 position, Quaternion rotation)
     {
 
-        TestDebug($"Placing object at {position} with rotation {rotation}");
+        // TestDebug($"Placing object at {position} with rotation {rotation}");
 
-        // // Instantiate the object on the server
-        // GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
+        // Instantiate the object on the server
+        GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
 
-        // // Ensure the object has a NetworkIdentity component
-        // if (placedObject.GetComponent<NetworkIdentity>() == null)
-        // {
-        //     Debug.LogError("Placed prefab is missing a NetworkIdentity component.");
-        //     return;
-        // }
+        // Ensure the object has a NetworkIdentity component
+        if (placedObject.GetComponent<NetworkIdentity>() == null)
+        {
+            Debug.LogError("Placed prefab is missing a NetworkIdentity component.");
+            return;
+        }
 
-        // // Spawn the object on the server and sync it with all clients
-        // NetworkServer.Spawn(placedObject);
+        // Spawn the object on the server and sync it with all clients
+        NetworkServer.Spawn(placedObject);
     }
 
     [ClientRpc] private void TestDebug(string message) {
