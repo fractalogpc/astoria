@@ -1,596 +1,490 @@
-using System;
-using System.Collections.Generic;
-using Mirror;
-using Player;
 using UnityEngine;
+using Construction;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
+using System;
 
-public class ConstructionCore : NetworkedInputHandlerBase, IStartExecution
+public class ConstructionCore : InputHandlerBase
 {
-  public static ConstructionCore Instance => Singleton<ConstructionCore>.Instance;
 
-  public bool EnableDebugging;
-  public int DebugIndex = 0;
-
-  #region Variables
-
-  [Header("References")]
-  [SerializeField] private InventoryComponent _playerInventory;
-  
-  public bool HasObject; // If the player is currently holding an object
-
-  [Header("Construction Data")]
-  [SerializeField] private ConstructableObjectData[] ConstructableObjects;
-  public ConstructableObjectData[] ConstructableObjectsPublic => ConstructableObjects;
-
-  [Header("General settings")]
-  [SerializeField] private float _minBuildDistance = 1f;
-  [SerializeField] private float _maxBuildDistance = 5f;
-  [SerializeField] private LayerMask _groundLayer;
-  [SerializeField] private LayerMask _constructionLayer;
-  [SerializeField] private Material _validMaterial;
-  [SerializeField] private Material _invalidMaterial;
-  [SerializeField] private Material _destroyMaterial;
-
-  [Header("Wall settings")]
-  [SerializeField] private float _wallSnapDistance = 3f;
-  [SerializeField] private float _wallAngleTolarence = 35f;
-
-  private int _currentStructureIndex;
-  public ConstructableObjectData _currentStructureData;
-  private GameObject _tempObject;
-  private GameObject _heldObject;
-  private GameObject _baseHighlightedObject; // This is the gameObject with the collider and the renderer on it
-  private GameObject _highlightedObject; // This is the head parent of the baseHighlightedObject
-  private Material _highlightedObjectMaterial;
-  public Camera PlayerCamera;
-
-  private PlayerCamera _playerLook;
-
-  private bool _canPlace; // If the currrently held object can be placed
-  [SerializeField] private bool _isRotating;
-  [SerializeField] private bool _isDeleting;
-
-  #endregion
-
-  #region Events
-
-  public UnityEvent<Vector3> OnObjectPlaced;
-  public UnityEvent<Vector3> OnObjectRemoved;
-
-  #endregion
-
-  protected override void InitializeActionMap()
-  {
-    _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
-
-    RegisterAction(_inputActions.Player.Attack, _ => OnClick());
-    RegisterAction(_inputActions.Player.Rotate, _ => ToggleRotating(true), () => ToggleRotating(false));
-    RegisterAction(_inputActions.Player.Delete, _ => ToggleDeleting());
-
-    // Debugging
-    if (!EnableDebugging) return;
-    
-    RegisterAction(_inputActions.Player.Build, _ => DebugBuild());
-    // RegisterAction(_inputActions.Player.KeyOne, _ => ChangeActiveObject(0));
-    // RegisterAction(_inputActions.Player.KeyTwo, _ => ChangeActiveObject(1));
-    // RegisterAction(_inputActions.Player.KeyThree, _ => ChangeActiveObject(2));
-    // RegisterAction(_inputActions.Player.KeyFour, _ => ChangeActiveObject(3));
-    // RegisterAction(_inputActions.Player.KeyFive, _ => ChangeActiveObject(4));
-    // RegisterAction(_inputActions.Player.KeySix, _ => ChangeActiveObject(5));
-  }
-
-  private void ToggleBuilding()
-  {
-    HasObject = !HasObject;
-
-    if (!HasObject)
+    [Serializable]
+    public enum ConstructionState
     {
-      _isRotating = false;
-      _isDeleting = false;
-      TryDestroyTempObject();
-      TryDestroyHeldObject();
-      _currentStructureData = null;
-      _playerLook.canLook = true;
+        None,
+        Placing,
+        Rotating,
+        Deleting
     }
-  }
 
-  private void DebugBuild() {
-    if (HasObject) return;
-    TryGiveObject(ConstructableObjects[DebugIndex]);
-  }
+    public static ConstructionCore Instance;
 
-  private void ToggleRotating(bool enable)
-  {
-    if (!HasObject) return;
+    public ConstructionData DebugData;
 
-    _isRotating = enable;
-    _isDeleting = false;
+    [Header("Construction State")]
+    public ConstructionState State;
 
-    _playerLook.canLook = !enable;
-  }
+    [Header("Placement Settings")]
+    public BuildingSettings Settings;
 
-  private void ToggleDeleting()
-  {
-    if (HasObject) return;
+    [SerializeField] private float _previewObjectLerpSpeed = 10f;
+    [SerializeField] private Material _previewValidMaterial;
+    [SerializeField] private Material _previewInvalidMaterial;
 
-    _isDeleting = !_isDeleting;
+    [Header("References")]
+    [SerializeField] private Transform _cameraTransform;
 
-    if (!_isDeleting)
+    [Header("Events")]
+    public UnityEvent<ConstructionData> OnDataSelected;
+    public UnityEvent<ConstructionData> OnObjectPlaced;
+
+    private ConstructionData _selectedData;
+
+    private GameObject _previewObject;
+    public PreviewObject _previewObjectScript;
+    private Vector3 _previewObjectPosition;
+
+    private bool _canPlace;
+
+    protected override void InitializeActionMap()
     {
-      TryUnhighlightObject();
-    }
-  }
-
-  public void InitializeStart()
-  {
-    _playerLook = PlayerCamera.GetComponent<PlayerCamera>();
-  }
-
-  private void Update()
-  {
-    if (HasObject) {
-      PlaceTemporaryObject();
+        RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
     }
 
-    if (_isDeleting) {
-      TryHighlightObject();
-    }
-  }
-
-  private void PlaceTemporaryObject()
-  {
-    Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-    Ray ray = PlayerCamera.ScreenPointToRay(screenCenter); // This is probably fine, but might cause issues?
-
-    // heightOffset doesn't work with props
-    if (_currentStructureData.Type != ConstructableObjectData.ConstructableType.Prop)
+    private void Start()
     {
-      // Shift the ray based on heightOffset
-      float heightOffset = _currentStructureData.HeightOffset;
-      Vector3 adjustedOrigin = ray.origin - PlayerCamera.transform.up * heightOffset;
-      ray.origin = adjustedOrigin;
-    }
-
-    RaycastHit hit;
-    // Custom raycast logic to handle placeing structures without needing to look at the ground
-    if (TryRaycast(ray, out hit))
-    {
-      TryCreateTemporaryObject();
-
-      // Rotate the temp object to face the player
-      Vector3 directionTowardsCamera = PlayerCamera.transform.position - hit.point;
-      directionTowardsCamera.y = 0;
-      Quaternion offsetRotation = Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(_currentStructureData.RotationOffset);
-
-      if (_isRotating)
-      {
-        _tempObject.GetComponent<PreviewObject>().xRotation += Input.GetAxis("Mouse X") * 2; // Rotation speed
-        _tempObject.GetComponent<PreviewObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
-      }
-      else
-      {
-        _tempObject.GetComponent<PreviewObject>().SetPositionAndRotation(hit.point + _currentStructureData.PositionOffset, offsetRotation);
-      }
-
-
-      if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Wall)
-      {
-        // If the current structure is a wall, snap to the wall
-        if (NearOtherWall(hit.point, out ConstructionWall wallScript))
+        if (Instance == null)
         {
-          // Handles checking if the wall is placeable
-          SnapToWall(hit.point, wallScript);
+            Instance = this;
         }
         else
         {
-          // Else treat it as a normal structure
-          if (CanPlaceStructure())
-          {
-            _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
-            _canPlace = true;
-          }
-          else
-          {
-            _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
-            _canPlace = false;
-          }
+            Debug.LogError("Multiple instances of NEWConstructionCore detected");
+        }
 
-        }
-      }
-      else
-      {
-        // If the current structure is not a wall, check if it can be placed
-        if (CanPlaceStructure())
-        {
-          _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
-          _canPlace = true;
-        }
-        else
-        {
-          _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
-          _canPlace = false;
-        }
-      }
-
+        SetConstructionState(ConstructionState.None);
     }
-    else
+
+    private void Update()
     {
-      // This shouldn't usually happen, but it's fine if it does
-      TryDestroyTemporaryObject();
+
+        if (DebugData != null)
+        {
+            SelectData(DebugData);
+
+            DebugData = null;
+        }
+
+        switch (State)
+        {
+            case ConstructionState.Placing:
+                Vector3 position;
+                Quaternion rotation;
+
+                bool validPosition = false;
+
+                // Get the initial ray direction (from the camera through the cursor)
+                Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+                Vector3 testDirection = ray.direction.normalized; // Initial ray direction
+
+                // Debug the initial ray direction
+                Debug.DrawLine(ray.origin, ray.origin + testDirection * Settings.MaxBuildDistance, Color.white, 1f);
+
+                bool isOutOfRange;
+                // Test the initial raycast direction
+                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
+                {
+                    validPosition = true;
+                }
+
+                int steps = 0;
+                int maxLayers = Settings.MaxLayers; // Maximum number of downward layers
+                float horizontalStep = Settings.HorizontalStep; // Horizontal spread between rays in world units
+                float verticalStep = Settings.VerticalStep; // Vertical distance between layers in world units
+                float verticalSubStep = Settings.VerticalSubStep;
+                float upwardCurveFactor = Settings.UpwardCurveFactor; // Controls the amount of upward bending
+                int densityFactor = Settings.DensityFactor; // Controls the density of the downward layers
+
+                for (int layer = 0; layer < maxLayers && !validPosition; layer++)
+                {
+                    // Test vertical substeps
+                    Vector3 subsetOffsetDirection;
+
+                    int numberOfSteps = Mathf.FloorToInt(Settings.VerticalStep / Settings.VerticalSubStep);
+                    for (int i = numberOfSteps; i > 0; i--)
+                    {
+                        float verticalOffset = (-layer - 1) * verticalStep + i * verticalSubStep;
+                        subsetOffsetDirection = ray.direction + (_cameraTransform.up * verticalOffset);
+                        subsetOffsetDirection.Normalize();
+
+                        Vector3 subsetTestPosition;
+                        Quaternion subsetTestRotation;
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, _selectedData, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
+                        {
+                            position = subsetTestPosition;
+                            rotation = subsetTestRotation;
+                            validPosition = true;
+
+                            Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
+                            DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
+
+                            break;
+                        }
+                        else
+                        {
+                            Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.red, 0.1f);
+                            DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
+                        }
+                    }
+
+                    // If the initial raycast doesn't hit anything, we assume there aren't any objects near so we simplify by just sampling the horizontal slice.
+                    if (validPosition) break;
+
+                    // If the object is out of range, we don't need to sample the horizontal slice
+                    if (isOutOfRange) continue;
+
+                    int pointsInLayer = 1 + (layer * 2); // Number of points in the current layer (1, 3, 5, ...)
+
+                    // Start with the center, then alternate left-right
+                    int directionToggle = 0; // 0 = center, 1 = left, 2 = right
+                    for (int i = 0; i < pointsInLayer && !validPosition; i++)
+                    {
+                        float horizontalOffset = 0f;
+
+                        // Calculate offset for alternating left-right pattern
+                        if (directionToggle == 0)
+                        {
+                            // Center point (first)
+                            horizontalOffset = 0f;
+                            directionToggle = 1; // Next point will go left
+                        }
+                        else if (directionToggle == 1)
+                        {
+                            // Left point
+                            horizontalOffset = -(i / 2 + 1) * horizontalStep;
+                            directionToggle = 2; // Next point will go right
+                        }
+                        else
+                        {
+                            // Right point
+                            horizontalOffset = (i / 2) * horizontalStep;
+                            directionToggle = 1; // Next point will go left again
+                        }
+
+                        float layerOffset = -layer * verticalStep; // Downward bias for this layer
+
+                        // Smooth upward curve: Use a quadratic curve for smoothness
+                        float normalizedOffset = Mathf.Abs(horizontalOffset) / (pointsInLayer * horizontalStep); // Normalize to range [0, 1]
+                        float upwardOffset = -Mathf.Pow(normalizedOffset, 2) * upwardCurveFactor; // Quadratic curve for smoothness
+
+                        // Adjust the direction based on the offsets
+                        Vector3 offsetDirection = ray.direction
+                          + (_cameraTransform.up * (layerOffset + upwardOffset)) // Apply downward bias and smooth upward curve
+                          + (_cameraTransform.right * horizontalOffset); // Apply horizontal bias
+                        offsetDirection.Normalize();
+
+                        // Cull ray based on Density Factor
+                        if (densityFactor == 0) continue;
+                        if (densityFactor != -1f)
+                        {
+                            if (i % densityFactor != 0)
+                            {
+                                continue;
+                            }
+                        }
+
+                        // Test this direction
+                        Vector3 testPosition;
+                        Quaternion testRotation;
+
+                        // Don't sphere cast for the layers near the center of the screen because it causes issues with the vertical subset steps
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, _selectedData, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
+                        {
+                            position = testPosition;
+                            rotation = testRotation;
+                            validPosition = true;
+
+                            // Draw the valid ray in blue
+                            Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
+
+                            DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
+                        }
+                        else
+                        {
+                            // Draw invalid rays in a gradient from green to red
+                            float t = (float)steps / (maxLayers * maxLayers); // Normalize step count
+                            Color rayColor = Color.Lerp(Color.green, Color.red, t);
+                            Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, rayColor, Time.deltaTime);
+
+                            DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
+
+                        }
+
+                        steps++; // Increment the step count
+                    }
+                }
+
+                // If none of the positions are valid, position and rotation are set by the initial test
+                if (!validPosition)
+                {
+                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out _);
+                }
+
+                RenderPreviewObject(position, rotation);
+
+                Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
+
+                _previewObjectScript.SetMaterial(mat);
+
+                _canPlace = validPosition;
+
+                break;
+        }
     }
-  }
 
-  private bool TryRaycast(Ray ray, out RaycastHit hit)
-  {
-    // Get the current 'player' position
-    Vector2 currPositionVector2 = new Vector2(PlayerCamera.transform.position.x, PlayerCamera.transform.position.z);
-
-    // Default test distance to max build distance
-    float testDistance = _maxBuildDistance;
-
-    RaycastHit tempHit;
-
-    LayerMask effectiveLayer = _currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop ? (_groundLayer | _constructionLayer) : _groundLayer;
-
-    // Raycast from the mouse position to the ground, arbitrary ray distance
-    if (Physics.Raycast(ray, out tempHit, 100f, effectiveLayer))
+    private void DebugDrawCross(Vector3 position, float size, Color color)
     {
-      // If collides with ground, check if it's within the min and max distance
-      Vector2 hitPositionVector2 = new Vector2(tempHit.point.x, tempHit.point.z);
-      float distance = Vector2.Distance(currPositionVector2, hitPositionVector2);
+        Debug.DrawLine(position + Vector3.up * size, position + Vector3.down * size, color);
+        Debug.DrawLine(position + Vector3.right * size, position + Vector3.left * size, color);
+        Debug.DrawLine(position + Vector3.forward * size, position + Vector3.back * size, color);
+    }
 
-      // Handle min and max distance
-      if (distance < _minBuildDistance)
-      {
-        testDistance = _minBuildDistance;
-      }
-      else if (distance > _maxBuildDistance)
-      {
-        testDistance = _maxBuildDistance;
-      }
-      else
-      {
-        hit = tempHit;
+    private void RenderPreviewObject(Vector3 position, Quaternion rotation)
+    {
+        _previewObjectPosition = Vector3.Lerp(_previewObjectPosition, position, Time.deltaTime * _previewObjectLerpSpeed);
+
+        _previewObject.transform.position = _previewObjectPosition;
+        _previewObject.transform.rotation = rotation;
+
+        _previewObjectPosition = _previewObject.transform.position;
+    }
+
+    public bool SelectData(ConstructionData data)
+    {
+        if (!ConstructionCoreLogic.ValidateData(data)) return false;
+
+        if (_selectedData != null && _selectedData != data)
+        {
+            SetConstructionState(ConstructionState.None);
+        }
+
+        _selectedData = data;
+
+        _previewObject = CreatePreviewObject();
+
+        SetConstructionState(ConstructionState.Placing);
+
+        OnDataSelected?.Invoke(_selectedData);
+
         return true;
-      }
     }
 
-    Vector3 cameraForward = PlayerCamera.transform.forward;
-    if (Mathf.Approximately(cameraForward.y, 1.0f) || Mathf.Approximately(cameraForward.y, -1.0f))
+    private bool OnClick()
     {
-      // If the camera y is close enough to 1 or -1, don't allow building
-      hit = new RaycastHit();
-      return false;
-    }
-    cameraForward.y = 0;
-    cameraForward = cameraForward.normalized * testDistance;
-    Vector3 downRayOrigin = PlayerCamera.transform.position + cameraForward;
-    // If the raycast didn't hit anything, try a raycast from the camera to the ground
-    if (Physics.Raycast(downRayOrigin, Vector3.down, out hit, 100f, _groundLayer))
-    {
-      return true;
-    }
 
-    return false;
-  }
+        if (!_canPlace) return false;
 
-  private void CreateHeldObject() {
-    if (_heldObject == null) {
-      _heldObject = Instantiate(_currentStructureData.TemporaryPrefab);
-
-      // Remove the box collider from the held object
-      Collider[] colliders = _heldObject.GetComponentsInChildren<Collider>();
-      foreach (Collider c in colliders) {
-        Destroy(c);
-      }
-
-      _heldObject.transform.parent = PlayerCamera.transform;
-      _heldObject.transform.localPosition = _currentStructureData.HeldOffsetPosition;
-      _heldObject.transform.localRotation = Quaternion.Euler(_currentStructureData.HeldOffsetRotation);
-    }
-  }
-
-  private void OnClick()
-  {
-    if (HasObject) {
-      if (_canPlace) {
-        PlacePermanentObject();
-
-        // Reset player build state
-        TryDestroyHeldObject();
-        _currentStructureData = null;
-        HasObject = false;
-        _playerLook.canLook = true;
-      }
-    }
-
-    if (_isDeleting) {
-      TryDestroyObject();
-    }
-  }
-
-  private void TryCreateTemporaryObject () {
-    if (_tempObject == null) {
-      _tempObject = Instantiate(_currentStructureData.TemporaryPrefab);
-    }
-  }
-
-  private void TryHighlightObject() {
-    Ray ray = PlayerCamera.ScreenPointToRay(Input.mousePosition);
-    RaycastHit hit;
-    if (Physics.Raycast(ray, out hit, 100f, _constructionLayer)) {
-      if (_baseHighlightedObject != hit.collider.gameObject) {
-        if (_baseHighlightedObject != null) {
-          _baseHighlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
-        }
-        _baseHighlightedObject = hit.collider.gameObject;
-        _highlightedObject = _baseHighlightedObject.GetComponent<ReferenceParent>().ParentScript.gameObject;
-        _highlightedObjectMaterial = _baseHighlightedObject.GetComponent<Renderer>().material;
-        _baseHighlightedObject.GetComponent<Renderer>().material = _destroyMaterial;
-      }
-    } else {
-      TryUnhighlightObject();
-    }
-  }
-
-  private void TryUnhighlightObject() {
-    if (_highlightedObject != null) {
-      _baseHighlightedObject.GetComponent<Renderer>().material = _highlightedObjectMaterial;
-      _baseHighlightedObject = null;
-      _highlightedObject = null;
-      _highlightedObjectMaterial = null;
-    }
-  }
-
-  private void TryDestroyTemporaryObject() {
-    if (_tempObject != null) {
-      Destroy(_tempObject);
-      _tempObject = null;
-    }
-  }
-
-  private void TryDestroyHeldObject() {
-    if (_heldObject != null) {
-      Destroy(_heldObject);
-      _heldObject = null;
-    }
-  }
-
-  private void TryDestroyObject() {
-    if (_highlightedObject != null) {
-      
-      // If the selected object is falling, ignore click
-      if (_highlightedObject.GetComponent<ConstructionFallingObject>()) {
-        return;
-      }
-
-      ConstructionPermObject script = _highlightedObject.GetComponent<ConstructionPermObject>();
-      ConstructableObjectData objectType = script.Data;
-      
-      script.OnObjectRemoved();
-
-      MakeObjectsFall(script.GetObjects(0));
-
-      Destroy(_highlightedObject.gameObject);
-      _highlightedObject = null;
-      _highlightedObjectMaterial = null;
-      _baseHighlightedObject = null;
-
-      OnObjectRemoved?.Invoke(_highlightedObject.transform.position);
-
-      _isDeleting = false;
-      TryGiveObject(objectType);
-    }
-  }
-
-  private void MakeObjectsFall(List<GameObject> objects) {
-
-    foreach (GameObject obj in objects) {
-      ConstructableObjectData data = obj.GetComponent<ConstructionPermObject>().Data;
-      GameObject fallingObject = Instantiate(data.FallingPrefab, obj.transform.position, obj.transform.rotation);
-
-      fallingObject.GetComponent<ConstructionFallingObject>().Data = data;
-
-      Destroy(obj);
-    }
-  }
-
-  private bool NearOtherWall(Vector3 position, out ConstructionWall wallScript) {
-    Collider[] colliders = Physics.OverlapSphere(position, _wallSnapDistance, _constructionLayer);
-    wallScript = null;
-
-    float closestDistance = float.MaxValue;
-    foreach (Collider c in colliders) {
-      // Skip if the collider is not a wall
-      if (c.GetComponent<ConstructionWall>() == null) {
-        continue;
-      }
-      ConstructionWall tempWall = c.GetComponent<ConstructionWall>();
-
-      Vector3 closestJoint = tempWall.GetClosestJointWorldSpace(position);
-      float distance = Vector3.Distance(closestJoint, position);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        wallScript = tempWall;
-      }
-    }
-
-    if (closestDistance == float.MaxValue) {
-      return false;
-    } else {
-      return true;
-    }
-  } 
-
-  private int stashedTempJointIndex = 0;
-  private bool SnapToWall(Vector3 position, ConstructionWall wallScript) {
-    Vector3 closestOtherWallJoint = wallScript.GetClosestJointWorldSpace(position, out int otherJointIndex);
-    Vector3 closestTempWallJoint;
-    int tempJointIndex;
-    if (_isRotating) {
-      closestTempWallJoint = _tempObject.GetComponent<ConstructionWall>().GetJointWorldSpace(stashedTempJointIndex);
-      tempJointIndex = stashedTempJointIndex;
-    } else {
-      closestTempWallJoint = _tempObject.GetComponent<ConstructionWall>().GetClosestJointWorldSpace(closestOtherWallJoint, out tempJointIndex);
-      stashedTempJointIndex = tempJointIndex;
-    }
-
-    Vector3 tempWallOffset = _tempObject.transform.position - closestTempWallJoint;
-
-    _tempObject.transform.position = closestOtherWallJoint + tempWallOffset;
-
-    Vector3 otherWallDirection = wallScript.GetJointWorldSpace((otherJointIndex == 0) ? 0 : 1) - wallScript.GetJointWorldSpace((otherJointIndex == 0) ? 1 : 0);
-    Vector3 tempWallDirection = _tempObject.GetComponent<ConstructionWall>().GetJointWorldSpace((tempJointIndex == 0) ? 0 : 1) - _tempObject.GetComponent<ConstructionWall>().GetJointWorldSpace((tempJointIndex == 0) ? 1 : 0);
-
-    float angle = Vector3.Angle(otherWallDirection, tempWallDirection);
-    if (angle > _wallAngleTolarence) {
-      if (CanPlaceStructure(ignoreTransform: wallScript.transform)) {
-        _tempObject.GetComponent<PreviewObject>().SetMaterial(_validMaterial);
-        _canPlace = true;
-      } else {
-        _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
-        _canPlace = false;
-      }
-    } else {
-      _tempObject.GetComponent<PreviewObject>().SetMaterial(_invalidMaterial);
-      _canPlace = false;
-    }
-
-    return true;
-  }
-
-  private bool CanPlaceStructure(LayerMask? layer = null, Transform ignoreTransform = null) {
-    // If the structure is a wall, don't check for other walls
-    LayerMask effectiveLayer = layer ?? (_constructionLayer | LayerMask.GetMask("Default")); // Not great practice but works
-    return !_tempObject.GetComponent<PreviewObject>().IsColliding(effectiveLayer, ignoreTransform);
-  }
-
-  private void PlacePermanentObject() {
-    // Logic for placing an object (setting a parent, etc) goes here
-    
-    // GameObject permanentObject = 
-    // if (_currentStructureData.CarveNavmesh) {
-    //   NavMeshObstacle obstacle = permanentObject.AddComponent<NavMeshObstacle>();
-    //   obstacle.carving = true;
-    //   obstacle.radius = permanentObject.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.size.x / 2;
-    // }
-    // If the object is a prop, call the OnPlaced method
-    if (BackgroundInfo._infBuild) {
-    } else {
-      foreach (ConstructionObjectCost cost in _currentStructureData.Cost) {
-        if (!_playerInventory.RemoveItemByData(cost.Item, cost.Amount)) {
-          Debug.LogError("ConstructionCore: Failed to remove cost item from player inventory after check!");
-        }
-      }
-    }
-    NetworkServer.Spawn(Instantiate(_currentStructureData.FinalPrefab, _tempObject.transform.position, _tempObject.transform.rotation));
-
-    OnObjectPlaced?.Invoke(_tempObject.transform.position);
-
-    // if (_currentStructureData.Type == ConstructableObjectData.ConstructableType.Prop) {
-    //   permanentObject.GetComponent<ConstructionPermObject>().OnObjectPlaced();
-    // }
-
-
-    TryDestroyTempObject();
-  }
-
-  private void TryDestroyTempObject()
-  {
-    if (_tempObject != null)
-    {
-      Destroy(_tempObject);
-      _tempObject = null;
-    }
-  }
-
-  /// <summary>
-  /// Changes the current wall type to the one at the specified index
-  /// </summary>
-  /// <param name="index">Wall index on ConstructionCore gameobject</param>
-  public void ChangeActiveObject(int index)
-  {
-    if (index < 0 || index >= ConstructableObjects.Length)
-    {
-      Debug.LogError("Invalid structure index");
-      return;
-    }
-
-    _currentStructureData = null;
-    TryDestroyHeldObject();
-    TryDestroyTempObject();
-
-    _currentStructureIndex = index;
-    _currentStructureData = ConstructableObjects[_currentStructureIndex];
-    
-    CreateHeldObject();
-  }
-
-  /// <summary>
-  /// Tries to give the player an object to place
-  /// </summary>
-  /// <param name="data">The object data to give the player</param>
-  public bool TryGiveObject(ConstructableObjectData data)
-  {
-    if (_currentStructureData != null) return false;
-    if (BackgroundInfo._infBuild) {
-    } else {
-      if (!data.MeetsCost(_playerInventory.GetItems())) return false;
-    }
-    
-    _isDeleting = false;
-    TryUnhighlightObject();
-
-    _currentStructureData = data;
-    HasObject = true;
-
-    CreateHeldObject();
-
-    return true;
-  }
-
-  public bool TryRemoveObject() {
-    if (_currentStructureData == null) return false;
-
-    _currentStructureData = null;
-    TryDestroyHeldObject();
-    TryDestroyTempObject();
-    HasObject = false;
-
-    return true;
-  }
-
-  public bool CanGiveObject(ConstructableObjectData data, out string errorText)
-  {
-    errorText = "";
-
-    if (HasObject)
-    {
-      errorText = "You are already holding an object";
-      return false;
-    }
-
-    if (data == null)
-    {
-      errorText = "No object selected";
-      return false;
-    }
-
-    if (data.Cost.Count > 0)
-    {
-      foreach (ConstructionObjectCost cost in data.Cost)
-      {
-        if (!NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>().ItemCountOrMoreInInventory(cost.Item, cost.Amount))
+        switch (State)
         {
-          errorText = "You do not have the required resources";
-          return false;
+            case ConstructionState.Placing:
+
+                CreateObject();
+
+                SetConstructionState(ConstructionState.None);
+
+                OnObjectPlaced?.Invoke(_selectedData);
+
+                SetConstructionState(ConstructionState.None);
+
+                return true;
         }
-      }
+
+        return false;
     }
 
-    return true;
-  }
+    private GameObject CreatePreviewObject()
+    {
+        GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab);
 
+        _previewObjectScript = localPreviewObject.GetComponent<PreviewObject>();
+
+        if (_previewObjectScript == null)
+        {
+            Debug.LogError("PreviewObject script not found on preview object");
+            return null;
+        }
+
+        _previewObjectScript.SetMaterial(_previewValidMaterial);
+
+        return localPreviewObject;
+    }
+
+    private GameObject CreateObject()
+    {
+        Vector3 placedPosition = _previewObject.transform.position;
+        Quaternion placedRotation = _previewObject.transform.rotation;
+
+        GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
+
+        return placedObject;
+    }
+
+    private void CleanupPreviewObject()
+    {
+        if (_previewObject != null)
+        {
+            Destroy(_previewObject);
+        }
+
+        _previewObject = null;
+        _previewObjectScript = null;
+    }
+
+    public void SetConstructionState(ConstructionState state)
+    {
+
+        // Cleanup previous state
+        switch (State)
+        {
+            case ConstructionState.Placing:
+                CleanupPreviewObject();
+                break;
+        }
+
+        State = state;
+
+        // Initialize new state
+        switch (State)
+        {
+            case ConstructionState.None:
+                break;
+        }
+    }
+}
+
+namespace Construction
+{
+    public static class ConstructionCoreLogic
+    {
+        public static bool ValidateData(ConstructionData data)
+        {
+            if (data == null)
+            {
+                Debug.LogError("ConstructionData is null");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Corrects and validates the position of the object
+
+        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionData data, PreviewObject script, BuildingSettings settings, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation, out bool isOutOfRange)
+        {
+            ConstructionOffset offset = data.Offset;
+
+            // Initial values for failed validation
+            finalPosition = origin + offset.PositionOffset + rotation * settings.MaxBuildDistance;
+            finalRotation = GetRotationTowardsCamera(finalPosition, origin, offset.RotationOffset);
+            isOutOfRange = false;
+
+            RaycastHit hit;
+            // Check if the raycast hits anything
+            if (doSphereCast)
+            {
+                if (!Physics.SphereCast(origin, 0.2f, rotation, out hit, settings.MaxBuildDistance, settings.PlacementLayerMask | (data.CanBePlacedOnStructures ? (int)settings.ConstructionLayerMask : 0)))
+                {
+                    isOutOfRange = true;
+                    return false;
+                }
+            }
+            else
+            {
+                if (!Physics.Raycast(origin, rotation, out hit, settings.MaxBuildDistance, settings.PlacementLayerMask | (data.CanBePlacedOnStructures ? (int)settings.ConstructionLayerMask : 0)))
+                {
+                    isOutOfRange = true;
+                    return false;
+                }
+            }
+
+            Vector3 newPosition = hit.point + offset.PositionOffset;
+            Vector3 normal = hit.normal;
+
+            // Calculate the angle between the normal of the surface and the up vector
+            float angle = Vector3.Angle(Vector3.up, normal);
+
+            // Check if the normal of the surface is within the allowed range
+            if (!ValidateNormal(angle, data, settings)) return false;
+
+            // Calculate the new rotation of the object
+            Quaternion newRotation = GetRotationTowardsCamera(newPosition, origin, offset.RotationOffset);
+
+            // Rotate the object to match the normal of the surface
+            newRotation = Quaternion.FromToRotation(Vector3.up, normal) * newRotation;
+
+            finalPosition = newPosition;
+            finalRotation = newRotation;
+
+            // Check if the object is not colliding with anything
+            if (script.IsColliding(newPosition, newRotation, settings.CollisionLayerMask))
+            {
+                return false;
+            }
+
+            finalPosition = newPosition;
+            finalRotation = newRotation;
+            return true;
+        }
+
+        public static Quaternion GetRotationTowardsCamera(Vector3 origin, Vector3 target, Vector3 rotationOffset = default)
+        {
+            Vector3 directionTowardsCamera = origin - target;
+            directionTowardsCamera.y = 0;
+            return Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(rotationOffset);
+        }
+
+        private static bool ValidateNormal(float angle, ConstructionData data, BuildingSettings settings)
+        {
+            if (data.CanBePlacedOnGround)
+            {
+                if (angle >= settings.MinGroundNormal && angle <= settings.MaxGroundNormal) return true;
+            }
+            if (data.CanBePlacedOnWalls)
+            {
+                if (angle >= settings.MinWallNormal && angle <= settings.MaxWallNormal) return true;
+            }
+            if (data.CanBePlacedOnCeilings)
+            {
+                if (angle >= settings.MinCeilingNormal && angle <= settings.MaxCeilingNormal) return true;
+            }
+
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class BuildingSettings
+    {
+        public float MaxBuildDistance = 10f;
+
+        // Sampling settings
+        public int MaxLayers = 5;
+        public float HorizontalStep = 0.5f;
+        public float VerticalStep = 0.5f;
+        public float VerticalSubStep = 0.01f;
+        public float UpwardCurveFactor = -0.5f;
+        public int DensityFactor = 3;
+
+        public LayerMask PlacementLayerMask;
+        public LayerMask ConstructionLayerMask;
+        public LayerMask CollisionLayerMask;
+
+        [Header("Normal settings")]
+        // Angle from 0 to 180 degrees
+        // 0 is straight up, 90 is straight forward, 180 is straight down
+        public float MinGroundNormal = 0.0f;
+        public float MaxGroundNormal = 45f;
+        public float MinWallNormal = 45f;
+        public float MaxWallNormal = 135f;
+        public float MinCeilingNormal = 135f;
+        public float MaxCeilingNormal = 180f;
+    }
 }

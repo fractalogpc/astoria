@@ -5,7 +5,7 @@ using UnityEngine;
 public class PreviewObject : MonoBehaviour
 {
 
-  public ConstructableObjectData Data;
+  public ConstructionData Data;
 
   [System.Serializable]
   public class BoxData

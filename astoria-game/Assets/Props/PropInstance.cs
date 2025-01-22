@@ -7,11 +7,11 @@ public class PropInstance : ItemInstance
     public PropInstance(PropData propData) : base(propData)
     {
         ItemData = propData;
-        _constructionCore = NetworkClient.localPlayer.gameObject.GetComponentInChildren<NEWConstructionCore>();
+        _constructionCore = NetworkClient.localPlayer.gameObject.GetComponentInChildren<ConstructionCore>();
         _constructionCore.OnObjectPlaced.AddListener(OnConstructionCorePlace);
     }
     
-    private NEWConstructionCore _constructionCore;
+    private ConstructionCore _constructionCore;
     private bool _selected = false;
     private InventoryHotbarSlot _hotbarSlot = null;
     
@@ -25,7 +25,7 @@ public class PropInstance : ItemInstance
         base.OnHotbarDeselected(hotbarSlot);
         _hotbarSlot = null;
         _selected = false;
-        _constructionCore.SetConstructionState(NEWConstructionCore.ConstructionState.None);
+        _constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
     }
 
     public override void OnItemDestruction() {
