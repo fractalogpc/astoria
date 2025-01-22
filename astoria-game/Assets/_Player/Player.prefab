@@ -4674,9 +4674,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3739774951926790246}
+      - m_Target: {fileID: 3179117669751118423}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4686,7 +4686,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  DisableForNetworkedPlayer: []
+  DisableForNetworkedPlayer:
+  - {fileID: 8836738444778269712}
+  - {fileID: 1989162189779702438}
+  - {fileID: 7651286900178554149}
+  - {fileID: 5795585357237766305}
 --- !u!114 &5077299882305822583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4789,6 +4793,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d73758bb34f60f4394d64dd2fa000a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   DebugData: {fileID: 0}
   State: 0
   Settings:
