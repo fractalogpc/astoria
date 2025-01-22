@@ -13165,6 +13165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1042217523}
   - component: {fileID: 1042217524}
+  - component: {fileID: 1042217525}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -13187,6 +13188,7 @@ Transform:
   m_Children:
   - {fileID: 592453427}
   - {fileID: 2008680670}
+  - {fileID: 1043925286}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042217524
@@ -13223,6 +13225,76 @@ MonoBehaviour:
   _activationRadius: 250
   _tileActivationRadius: 1500
   _gridDivisions: 10
+--- !u!114 &1042217525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042217522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ac1cc77b33e8a4398abe8899f906ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _terrainObjects:
+  - {fileID: 1445662492}
+  - {fileID: 1115677271}
+  - {fileID: 260043031}
+  - {fileID: 453107899}
+  - {fileID: 413544601}
+  - {fileID: 1895839220}
+  - {fileID: 1252771876}
+  - {fileID: 1423638465}
+  - {fileID: 363830297}
+  - {fileID: 74972401}
+  - {fileID: 1266332332}
+  - {fileID: 228165032}
+  - {fileID: 734478815}
+  - {fileID: 909065655}
+  - {fileID: 591180580}
+  - {fileID: 238356918}
+  _treeParent: {fileID: 1043925286}
+  _treeSearchRadius: 1.5
+  _treePrefabs:
+  - {fileID: 1466960570830871581, guid: 5b38d09366c737846b56711fd46a7dac, type: 3}
+  - {fileID: 373422227704654650, guid: 6cf16e81baf22eb4db17257f25412cd0, type: 3}
+  - {fileID: 4667486293402130132, guid: 49113c352fa14cf42870a732a955bf1d, type: 3}
+  - {fileID: 2275148164409449891, guid: 0df25496aa3db914aba37388c210bc92, type: 3}
+  - {fileID: 5530928839789964935, guid: 7147a0bacd5d6b74d89dda673b955ea6, type: 3}
+  - {fileID: 6057943475895152557, guid: 7d9f3ca732879bd499b6aef86156a23d, type: 3}
+  - {fileID: 1632174277690965477, guid: a5c79ff2f1848784faf7cdff31e10615, type: 3}
+--- !u!1 &1043925285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1043925286}
+  m_Layer: 0
+  m_Name: Tree Falling Objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1043925286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043925285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1042217523}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1057517964
 GameObject:
   m_ObjectHideFlags: 0

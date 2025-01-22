@@ -4,20 +4,38 @@ using UnityEngine;
 public class TreeChopping : MonoBehaviour
 {
 
-  [SerializeField] private TerrainData _terrainData;
+  private struct TerrainTile
+  {
+
+    public Vector3 position;
+    public Vector2 size;
+    public TerrainData terrainData;
+    public TreeInstance[] treeInstances;
+    public List<TreeInstance> removedTreeInstances;
+
+  }
+
+  [SerializeField] private GameObject[] _terrainObjects;
   [SerializeField] private Transform _treeParent;
   [SerializeField] private float _treeSearchRadius = 1f;
   [SerializeField] private GameObject[] _treePrefabs;
 
-  private TreeInstance[] _treeInstances;
-
-  private List<TreeInstance> _removedTreeInstances = new List<TreeInstance>();
+  private TerrainTile[] _terrainTiles;
 
   public static TreeChopping Instance { get; private set; }
 
   public void Start() {
     Instance = this;
-    _treeInstances = _terrainData.treeInstances;
+
+    _terrainTiles = new TerrainTile[_terrainObjects.Length];
+    for (int i = 0; i < _terrainObjects.Length; i++) {
+      Terrain terrain = _terrainObjects[i].GetComponent<Terrain>();
+      _terrainTiles[i].terrainData = terrain.terrainData;
+      _terrainTiles[i].treeInstances = terrain.terrainData.treeInstances;
+      _terrainTiles[i].position = terrain.transform.position;
+      _terrainTiles[i].size = new Vector2(terrain.terrainData.size.x, terrain.terrainData.size.z);
+      _terrainTiles[i].removedTreeInstances = new List<TreeInstance>();
+    }
   }
 
   /// <summary>
@@ -26,104 +44,85 @@ public class TreeChopping : MonoBehaviour
   /// <param name="position">The closest point you can get to the tree. Can be a hit.position on the terrain tree collider.</param>
   /// <returns>The realized tree prefab GameObject.</returns>
   public GameObject RealizeTree(Vector3 position) {
-    Debug.Log("Realizing tree at " + position);
+    //Debug.Log("Realizing tree at " + position);
 
     // Find the tree instance at the given position
     Vector2 position2D = new Vector2(position.x, position.z);
-    for (int i = 0; i < _treeInstances.Length; i++) {
-      TreeInstance treeInstance = _treeInstances[i];
-      Vector3 treePosition = Vector3.Scale(treeInstance.position, _terrainData.size) + transform.position;
+    for (int t = 0; t < _terrainTiles.Length; t++) {
+      // Check if the position is within the bounds of the terrain tile
+      TerrainTile terrainTile = _terrainTiles[t];
+      if (position2D.x < terrainTile.position.x || position2D.x > terrainTile.position.x + terrainTile.size.x ||
+          position2D.y < terrainTile.position.z || position2D.y > terrainTile.position.z + terrainTile.size.y) {
+        continue;
+      }
 
-      Vector2 treePosition2D = new Vector2(treePosition.x, treePosition.z);
+      //Debug.Log("Found tree's terrain tile");
+      for (int i = 0; i < terrainTile.treeInstances.Length; i++) {
+        TreeInstance treeInstance = terrainTile.treeInstances[i];
+        Vector3 treePosition = Vector3.Scale(treeInstance.position, terrainTile.terrainData.size) + terrainTile.position;
 
-      if (Vector2.Distance(treePosition2D, position2D) < _treeSearchRadius) {
-        Debug.Log("Found tree at " + treePosition);
-        // Remove the tree instance
-        TreeInstance _newInstance = new TreeInstance();
-        _newInstance.prototypeIndex = _treeInstances[i].prototypeIndex;
-        _newInstance.position = _treeInstances[i].position;
-        _newInstance.widthScale = _treeInstances[i].widthScale;
-        _newInstance.heightScale = 0;
-        _newInstance.color = _treeInstances[i].color;
-        _newInstance.lightmapColor = _treeInstances[i].lightmapColor;
-        _newInstance.rotation = _treeInstances[i].rotation;
-        _terrainData.SetTreeInstance(i, _newInstance);
+        Vector2 treePosition2D = new Vector2(treePosition.x, treePosition.z);
 
-        // Below is alternative way to do it, more expensive theoretically because it sets whole array.
-        // Above is rendering change only and better if not using terrain colliders.
-        // Terrain tree colliders are expensive to update and should not be used.
-        // See TreeColliderManager.
+        if (Vector2.Distance(treePosition2D, position2D) < _treeSearchRadius) {
+          Debug.Log("Found tree at " + treePosition);
+          // Remove the tree instance
+          TreeInstance _newInstance = new TreeInstance();
+          TreeInstance oldInstance = terrainTile.treeInstances[i];
+          _newInstance.prototypeIndex = oldInstance.prototypeIndex;
+          _newInstance.position = oldInstance.position;
+          _newInstance.widthScale = oldInstance.widthScale;
+          _newInstance.heightScale = 0;
+          _newInstance.color = oldInstance.color;
+          _newInstance.lightmapColor = oldInstance.lightmapColor;
+          _newInstance.rotation = oldInstance.rotation;
+          terrainTile.terrainData.SetTreeInstance(i, _newInstance);
 
-        // // Create new list of tree instances without the chopped tree
-        // TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length - 1];
-        // int j = 0;
-        // for (int k = 0; k < _treeInstances.Length; k++) {
-        //   if (k != i) {
-        //     newTreeInstances[j] = _treeInstances[k];
-        //     j++;
-        //   }
-        // }
+          TreeColliderManager.Instance.DisableCollider(treePosition);
 
-        // _removedTreeInstances.Add(_treeInstances[i]);
-
-        // // Set the new tree instances
-        // _treeInstances = newTreeInstances;
-        // _terrainData.SetTreeInstances(newTreeInstances, false);
-
-        // _terrainCollider.enabled = false;
-        // _terrainCollider.enabled = true;
-
-        // Update tree collider
-        TreeColliderManager.Instance.DisableCollider(treePosition);
-
-        // Instantiate a tree prefab at the tree position
-        return Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
+          // Instantiate a tree prefab at the tree position
+          return Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
+        }
       }
     }
     return null;
   }
 
   public void RegrowTree(Vector3 position) {
-    Debug.Log("Regrowing tree at " + position);
+    //Debug.Log("Regrowing tree at " + position);
 
     // Find the tree instance at the given position
-    for (int i = 0; i < _removedTreeInstances.Count; i++) {
-      TreeInstance treeInstance = _removedTreeInstances[i];
-      Vector3 treePosition = Vector3.Scale(treeInstance.position, _terrainData.size) + transform.position;
+    for (int t = 0; t < _terrainTiles.Length; t++) {
+      TerrainTile terrainTile = _terrainTiles[t];
 
-      if (Vector3.Distance(treePosition, position) < _treeSearchRadius) {
-        Debug.Log("Found tree at " + treePosition);
-        // Regrow the tree instance
-        TreeInstance _newInstance = _removedTreeInstances[i];
-        _newInstance.prototypeIndex = _removedTreeInstances[i].prototypeIndex;
-        _newInstance.position = _removedTreeInstances[i].position;
-        _newInstance.widthScale = _removedTreeInstances[i].widthScale;
-        _newInstance.heightScale = _removedTreeInstances[i].heightScale;
-        _newInstance.color = _removedTreeInstances[i].color;
-        _newInstance.lightmapColor = _removedTreeInstances[i].lightmapColor;
-        _newInstance.rotation = _removedTreeInstances[i].rotation;
-        _terrainData.SetTreeInstance(i, _newInstance);
+      // Check if the position is within the bounds of the terrain tile
+      Vector2 position2D = new Vector2(position.x, position.z);
+      if (position2D.x < terrainTile.position.x || position2D.x > terrainTile.position.x + terrainTile.size.x ||
+          position2D.y < terrainTile.position.y || position2D.y > terrainTile.position.y + terrainTile.size.y) {
+        continue;
+      }
 
-        // // Create new list of tree instances with the regrown tree
-        // TreeInstance[] newTreeInstances = new TreeInstance[_treeInstances.Length + 1];
-        // for (int j = 0; j < _treeInstances.Length; j++) {
-        //   newTreeInstances[j] = _treeInstances[j];
-        // }
-        // newTreeInstances[_treeInstances.Length] = _newInstance;
+      for (int i = 0; i < terrainTile.removedTreeInstances.Count; i++) {
+        TreeInstance treeInstance = terrainTile.removedTreeInstances[i];
+        Vector3 treePosition = Vector3.Scale(treeInstance.position, terrainTile.terrainData.size) + transform.position;
 
-        // _removedTreeInstances.RemoveAt(i);
+        if (Vector3.Distance(treePosition, position) < _treeSearchRadius) {
+          //Debug.Log("Found tree at " + treePosition);
+          // Regrow the tree instance
+          TreeInstance _newInstance = terrainTile.removedTreeInstances[i];
+          _newInstance.prototypeIndex = terrainTile.removedTreeInstances[i].prototypeIndex;
+          _newInstance.position = terrainTile.removedTreeInstances[i].position;
+          _newInstance.widthScale = terrainTile.removedTreeInstances[i].widthScale;
+          _newInstance.heightScale = terrainTile.removedTreeInstances[i].heightScale;
+          _newInstance.color = terrainTile.removedTreeInstances[i].color;
+          _newInstance.lightmapColor = terrainTile.removedTreeInstances[i].lightmapColor;
+          _newInstance.rotation = terrainTile.removedTreeInstances[i].rotation;
+          terrainTile.terrainData.SetTreeInstance(i, _newInstance);
 
-        // // Set the new tree instances
-        // _treeInstances = newTreeInstances;
-        // _terrainData.SetTreeInstances(newTreeInstances, false);
+          // Update tree collider
+          TreeColliderManager.Instance.EnableCollider(treePosition);
 
-        // _terrainCollider.enabled = false;
-        // _terrainCollider.enabled = true;
-
-        // Update tree collider
-        TreeColliderManager.Instance.EnableCollider(treePosition);
-
-        return;
+          return;
+        }
       }
     }
   }
