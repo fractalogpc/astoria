@@ -452,7 +452,28 @@ MonoBehaviour:
   State: 0
   Settings:
     MaxBuildDistance: 10
-    MinBuildDistance: 2
+    MaxLayers: 5
+    HorizontalStep: 0.5
+    VerticalStep: 0.5
+    VerticalSubStep: 0.01
+    UpwardCurveFactor: -0.5
+    DensityFactor: 3
+    PlacementLayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ConstructionLayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    CollisionLayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    MinGroundNormal: 0
+    MaxGroundNormal: 45
+    MinWallNormal: 45
+    MaxWallNormal: 135
+    MinCeilingNormal: 135
+    MaxCeilingNormal: 180
+  _previewObjectLerpSpeed: 10
   _previewValidMaterial: {fileID: 0}
   _previewInvalidMaterial: {fileID: 0}
   _cameraTransform: {fileID: 0}
@@ -462,6 +483,7 @@ MonoBehaviour:
   OnObjectPlaced:
     m_PersistentCalls:
       m_Calls: []
+  _previewObjectScript: {fileID: 0}
 --- !u!114 &1251270166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,7 +723,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 303398999124722286, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: sceneId
-      value: 2509784016
+      value: 1358892889
       objectReference: {fileID: 0}
     - target: {fileID: 916802654918332166, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_LocalPosition.x
@@ -745,7 +767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2094222977147676279, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: sceneId
-      value: 4252357067
+      value: 3989596799
       objectReference: {fileID: 0}
     - target: {fileID: 3629593839374956622, guid: 25f82eb4df85ed24b9fec0f99b6de187, type: 3}
       propertyPath: m_Name

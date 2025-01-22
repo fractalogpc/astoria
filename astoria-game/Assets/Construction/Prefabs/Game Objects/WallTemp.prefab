@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2696878739928491752}
   - component: {fileID: 2168746305627033419}
-  - component: {fileID: 1013821881572768877}
   - component: {fileID: 3379828815347189491}
   - component: {fileID: -4618734245124323925}
   m_Layer: 7
@@ -48,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48985a38910876b4eb20c08ec73ccb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 294795282748d584fbb45fecf3ef6428, type: 2}
+  Data: {fileID: 0}
   xRotation: 0
   boxes:
   - position: {x: 0, y: 0, z: 0}
@@ -56,21 +55,6 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0, w: 1}
     isExpanded: 1
   heightOffset: 0.78
---- !u!114 &1013821881572768877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6887075782289690670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c0694db949cd804ebad6e30a48fe84e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallJoints:
-  - {x: 0, y: 0, z: 1.6}
-  - {x: 0, y: 0, z: -1.6}
 --- !u!114 &3379828815347189491
 MonoBehaviour:
   m_ObjectHideFlags: 0

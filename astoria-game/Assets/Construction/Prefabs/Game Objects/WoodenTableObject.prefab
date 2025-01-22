@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5367620847508979193}
-  - component: {fileID: -8504255697327834096}
   - component: {fileID: 1979199183969824285}
   m_Layer: 6
   m_Name: WoodenTableObject
@@ -34,20 +33,6 @@ Transform:
   - {fileID: 8721841092810876542}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-8504255697327834096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4568782367682809396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921361d71af424042a0d8a597a00c155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: 08efd39c0c1253947b9bccc0ffee903e, type: 2}
-  _objects: []
 --- !u!114 &1979199183969824285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8b11045d35af64e82f9c6e7212f4fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParentScript: {fileID: -8504255697327834096}
+  ParentScript: {fileID: 0}
 --- !u!4 &8721841092810876542 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0bb3a461bc717584b8849178c86f432d, type: 3}
