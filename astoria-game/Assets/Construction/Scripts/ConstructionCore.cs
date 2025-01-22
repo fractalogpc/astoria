@@ -317,17 +317,17 @@ public class ConstructionCore : NetworkedInputHandlerBase
         TestDebug($"Placing object at {position} with rotation {rotation}");
 
         // Instantiate the object on the server
-        GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
+        // GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
 
         // Ensure the object has a NetworkIdentity component
-        if (placedObject.GetComponent<NetworkIdentity>() == null)
-        {
-            Debug.LogError("Placed prefab is missing a NetworkIdentity component.");
-            return;
-        }
+        // if (placedObject.GetComponent<NetworkIdentity>() == null)
+        // {
+        //     Debug.LogError("Placed prefab is missing a NetworkIdentity component.");
+        //     return;
+        // }
 
         // Spawn the object on the server and sync it with all clients
-        NetworkServer.Spawn(placedObject);
+        NetworkServer.Spawn(_selectedData.PlacedPrefab);
     }
 
     [ClientRpc] private void TestDebug(string message) {
