@@ -15,9 +15,6 @@ public class ConstructionCore : NetworkedInputHandlerBase
         Rotating,
         Deleting
     }
-
-    public static ConstructionCore Instance;
-
     public ConstructionData DebugData;
 
     [Header("Construction State")]
@@ -52,14 +49,6 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
     private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.LogError("Multiple instances of NEWConstructionCore detected");
-        }
 
         SetConstructionState(ConstructionState.None);
     }
