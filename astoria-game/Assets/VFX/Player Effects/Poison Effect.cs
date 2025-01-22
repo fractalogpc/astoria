@@ -31,7 +31,7 @@ public sealed class PoisonEffect : CustomPostProcessVolumeComponent, IPostProces
         if (m_Material == null)
             return;
 
-        m_Material.SetFloat("_Intensity", intensity.value);
+        //m_Material.SetInteger("_Intensity", intensity.value);
         m_Material.SetTexture("_MainTex", source);
         HDUtils.DrawFullScreen(cmd, m_Material, destination, shaderPassId: 0);
     }

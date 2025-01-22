@@ -41,7 +41,7 @@ Shader "Hidden/Shader/PoisonEffect"
     }
 
     // List of properties to control your post process effect
-    float _Intensity;
+    bool _Intensity;
     TEXTURE2D_X(_MainTex);
 
     float4 CustomPostProcess(Varyings input) : SV_Target
