@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4406364604304169715
+--- !u!114 &-8740031317826951755
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,9 +13,30 @@ MonoBehaviour:
   m_Name: PoisonEffect
   m_EditorClassIdentifier: 
   active: 1
-  intensity:
+  toggle:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
+  loops:
+    m_OverrideState: 1
+    m_Value: 5
+  step:
+    m_OverrideState: 1
+    m_Value: 0.015
+  stepAmout:
+    m_OverrideState: 1
+    m_Value: 0.005
+  speed:
+    m_OverrideState: 1
+    m_Value: 1.03
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 0.19624422, g: 0.6603774, b: 0.24269356, a: 1}
+  mixAmount:
+    m_OverrideState: 1
+    m_Value: 0.8
+  ChromAbbOffset:
+    m_OverrideState: 1
+    m_Value: 0.00943
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,4 +50,4 @@ MonoBehaviour:
   m_Name: Player Effects
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -4406364604304169715}
+  - {fileID: -8740031317826951755}
