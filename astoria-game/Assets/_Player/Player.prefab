@@ -4349,7 +4349,6 @@ GameObject:
   - component: {fileID: 7651286900178554149}
   - component: {fileID: 1790292005347456770}
   - component: {fileID: 1989162189779702438}
-  - component: {fileID: 8836738444778269712}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -4374,6 +4373,7 @@ Transform:
   - {fileID: 9088220939750902593}
   - {fileID: 6436276974784848592}
   - {fileID: 8227020351119092859}
+  - {fileID: 28544713668145202}
   - {fileID: 6245448379990478009}
   - {fileID: 1753549542417720184}
   - {fileID: 94701644033090388}
@@ -4686,8 +4686,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3048112630466135115}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DisableForNetworkedPlayer:
-  - {fileID: 8836738444778269712}
   - {fileID: 1989162189779702438}
   - {fileID: 7651286900178554149}
   - {fileID: 5795585357237766305}
@@ -4781,57 +4792,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 5598755213258857593, guid: 6b9a18ca31046fd4ebfcaf9bae93efd5, type: 3}
---- !u!114 &8836738444778269712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d73758bb34f60f4394d64dd2fa000a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  DebugData: {fileID: 0}
-  State: 0
-  Settings:
-    MaxBuildDistance: 4
-    MaxLayers: 20
-    HorizontalStep: 0.02
-    VerticalStep: 0.04
-    VerticalSubStep: 0.01
-    UpwardCurveFactor: -0.5
-    DensityFactor: -1
-    PlacementLayerMask:
-      serializedVersion: 2
-      m_Bits: 4105
-    ConstructionLayerMask:
-      serializedVersion: 2
-      m_Bits: 64
-    CollisionLayerMask:
-      serializedVersion: 2
-      m_Bits: 71753
-    MinGroundNormal: 0
-    MaxGroundNormal: 30
-    MinWallNormal: 60
-    MaxWallNormal: 120
-    MinCeilingNormal: 165
-    MaxCeilingNormal: 180
-  _previewObjectLerpSpeed: 25
-  _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
-  _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
-  _cameraTransform: {fileID: 8706593742784918896}
-  OnDataSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnObjectPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-  _previewObjectScript: {fileID: 0}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -7170,7 +7130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd3dd8d426126c949b2b7bd4eea41626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  constructionCore: {fileID: 8836738444778269712}
+  constructionCore: {fileID: 0}
   togglePlayerBuildingUI: {fileID: 7753506192576928618}
   prefabParentContent: {fileID: 6847233402077956102}
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
@@ -8314,6 +8274,89 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _greenHighlightGroup: {fileID: 3269612510596594851}
   _redHighlightGroup: {fileID: 5930226714268245633}
+--- !u!1 &3048112630466135115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 28544713668145202}
+  - component: {fileID: 6547859344957998441}
+  m_Layer: 0
+  m_Name: Crafting System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &28544713668145202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048112630466135115}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.4390001, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4723388315618955371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6547859344957998441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048112630466135115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d73758bb34f60f4394d64dd2fa000a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  DebugData: {fileID: 0}
+  State: 0
+  Settings:
+    MaxBuildDistance: 4
+    MaxLayers: 20
+    HorizontalStep: 0.02
+    VerticalStep: 0.04
+    VerticalSubStep: 0.01
+    UpwardCurveFactor: -0.5
+    DensityFactor: -1
+    PlacementLayerMask:
+      serializedVersion: 2
+      m_Bits: 4105
+    ConstructionLayerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    CollisionLayerMask:
+      serializedVersion: 2
+      m_Bits: 71753
+    MinGroundNormal: 0
+    MaxGroundNormal: 30
+    MinWallNormal: 60
+    MaxWallNormal: 120
+    MinCeilingNormal: 165
+    MaxCeilingNormal: 180
+  _previewObjectLerpSpeed: 25
+  _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
+  _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
+  _cameraTransform: {fileID: 8706593742784918896}
+  OnDataSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectPlaced:
+    m_PersistentCalls:
+      m_Calls: []
+  _previewObjectScript: {fileID: 0}
 --- !u!1 &3091587483582729622
 GameObject:
   m_ObjectHideFlags: 0
