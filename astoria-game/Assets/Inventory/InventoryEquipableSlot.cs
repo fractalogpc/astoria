@@ -86,6 +86,6 @@ public class InventoryEquipableSlot : MonoBehaviour
         // Parented to whole canvas
         _draggedInstance = Instantiate(_draggablePrefab, transform.GetComponentInParent<Canvas>().transform);
         InventoryItemDraggedUI script = _draggedInstance.GetComponent<InventoryItemDraggedUI>();
-        script.InitializeWithSlot(this, itemInstance);
+        script.InitializeFromSlot(this, itemInstance);
     }
 }

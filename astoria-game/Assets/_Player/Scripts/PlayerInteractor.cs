@@ -19,7 +19,10 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   }
 
   private void Interact() {
-    if (!Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit hit, _interactDistance)) return;
+    if (!Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
+      print("did not hit anything");
+      return;
+    }
     Interactable interactable = hit.collider.GetComponentInChildren<Interactable>();
     interactable?.Interact();
   }

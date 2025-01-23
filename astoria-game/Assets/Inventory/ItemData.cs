@@ -16,6 +16,7 @@ public class ItemData : ScriptableObject
     [ColorUsage(true, false)] public Color ItemBGColor;
     public Vector2Int ItemSize = Vector2Int.one;
     public bool IsStackable;
+    public int MaxStackSize = 8;
     public GameObject DroppedItemPrefab;
 
     private void OnEnable() {

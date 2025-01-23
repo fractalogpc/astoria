@@ -26,6 +26,14 @@ public class ItemInstance
 		}
 	}
 	
+	public int StackCount { get; private set; }
+	public void AddToStack(int amount) {
+		if (!ItemData.IsStackable) {
+			Debug.LogError("Tried to add to stack of non-stackable item: " + ItemData.ItemName);
+		}
+		StackCount += amount;
+	}
+	
 	public virtual void OnItemDestruction() {
 		Debug.Log("Item destroyed: " + ItemData.ItemName);
 	}

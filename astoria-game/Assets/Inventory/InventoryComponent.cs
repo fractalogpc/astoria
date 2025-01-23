@@ -278,7 +278,7 @@ public class InventoryComponent : MonoBehaviour
 		for (int i = count - 1; i >= 0; i--) {
 			InventoryItemUI itemUIScript = itemInstancesToRemove[i].GetComponent<InventoryItemUI>();
 			_inventoryItemPrefabInstances.Remove(itemInstancesToRemove[i]);
-			itemUIScript.RemoveSelfFromInventory();
+			itemUIScript.DeleteSelfFromInventory();
 		}
 		return true;
 	}
@@ -287,7 +287,7 @@ public class InventoryComponent : MonoBehaviour
 		InventoryItemUI itemUIScript = _inventoryItemPrefabInstances.Find(itemUI => itemUI.GetComponent<InventoryItemUI>().ItemInstance == item).GetComponent<InventoryItemUI>();
 		if (itemUIScript == null) return false;
 		_inventoryItemPrefabInstances.Remove(itemUIScript.gameObject);
-		itemUIScript.RemoveSelfFromInventory();
+		itemUIScript.DeleteSelfFromInventory();
 		return true;
 	}
 	
@@ -296,7 +296,7 @@ public class InventoryComponent : MonoBehaviour
 			GameObject itemUIInstance = _inventoryItemPrefabInstances[i];
 			InventoryItemUI itemUIScript = itemUIInstance.GetComponent<InventoryItemUI>();
 			_inventoryItemPrefabInstances.Remove(itemUIInstance);
-			itemUIScript.RemoveSelfFromInventory();
+			itemUIScript.DeleteSelfFromInventory();
 		}
 	}
 
