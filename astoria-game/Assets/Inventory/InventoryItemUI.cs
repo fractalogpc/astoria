@@ -14,30 +14,24 @@ public class InventoryItemUI : MonoBehaviour
 {
 	[Header("Data")]
 	public ItemInstance ItemInstance;
-
+	[Header("Events")]
+	public UnityEvent<GameObject> OnDestroyItem;
 	[Header("Ext Refs")]
 	[SerializeField] private GameObject _inventoryItemDraggedPrefab;
-
-	private GameObject _draggedInstance;
-
 	[Header("Self Refs")]
 	[SerializeField] private Image _itemImage;
-
 	[SerializeField] private TextMeshProUGUI _itemText;
+	[SerializeField] private InventoryComponent _parentInventory;
+	
 	private RectTransform _rectTransform;
 	private GraphicRaycaster _canvasGraphicRaycaster;
 	private CanvasGroup _canvasGroup;
 	private ClickableEvents _clickableEvents;
-
-	[SerializeField] private InventoryComponent _parentInventory;
-
 	private PointerEventData _pointerEventData = new(EventSystem.current);
 	private List<RaycastResult> _raycastResults;
 	private Vector2Int _BLContainerIndex;
-
-	[Header("Events")]
-	public UnityEvent<GameObject> OnDestroyItem;
-
+	private GameObject _draggedInstance;
+	
 	private void Start() {
 		// InitializeWithItem(Item); should be called by instantiating object
 		_rectTransform = GetComponent<RectTransform>();
