@@ -39,6 +39,7 @@ public class GunData : ViewmodelItemData
 	public MagazineSettings MagazineSetting;
 	public InternalSettings InternalSetting;
 	public ChamberSettings ChamberSetting;
+	public RecoilData RecoilData;
 	
 	[Header("Bullet Data")]
 	public float Damage = 30f;
@@ -53,6 +54,20 @@ public class GunData : ViewmodelItemData
 	public override ItemInstance CreateItem() {
 		return new GunInstance(this);
 	}
+}
+
+public struct RecoilData
+{
+
+	public float MeanUpwardsRecoil;
+	public float MeanHorizontalRecoil;
+	public float MeanBackwardsRecoil;
+	public float UpwardsRecoilVariance;
+	public float HorizontalRecoilVariance;
+	public float BackwardsRecoilVariance;
+	public float MeanRecoilTime;
+	public float RecoilTimeVariance;
+
 }
 
 
