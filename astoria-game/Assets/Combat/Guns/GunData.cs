@@ -11,6 +11,7 @@ public class GunData : ViewmodelItemData
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;
 	public RecoilSettings RecoilSetting;
+	public RecoilData RecoilData;
 	
 	[Header("Fire Settings")]
 	[
@@ -39,7 +40,6 @@ public class GunData : ViewmodelItemData
 	public MagazineSettings MagazineSetting;
 	public InternalSettings InternalSetting;
 	public ChamberSettings ChamberSetting;
-	public RecoilData RecoilData;
 	
 	[Header("Bullet Data")]
 	public float Damage = 30f;
@@ -56,17 +56,20 @@ public class GunData : ViewmodelItemData
 	}
 }
 
+[System.Serializable]
 public struct RecoilData
 {
-
+	public AnimationCurve RecoilCurve;
 	public float MeanUpwardsRecoil;
 	public float MeanHorizontalRecoil;
 	public float MeanBackwardsRecoil;
-	public float UpwardsRecoilVariance;
-	public float HorizontalRecoilVariance;
-	public float BackwardsRecoilVariance;
+	public float UpwardsRecoilVariation;
+	public float HorizontalRecoilVariation;
+	public float BackwardsRecoilVariation;
 	public float MeanRecoilTime;
-	public float RecoilTimeVariance;
+	public float RecoilTimeVariation;
+	public float NoiseMagnitude;
+	public float NoiseSpeed;
 
 }
 

@@ -18,6 +18,7 @@ MonoBehaviour:
   ItemBGColor: {r: 0.105000004, g: 0.1458333, b: 0.35, a: 0.9019608}
   ItemSize: {x: 2, y: 1}
   IsStackable: 0
+  MaxStackSize: 8
   DroppedItemPrefab: {fileID: 6806437227400300054, guid: 2338a9b082fba9c4cbf63be7f5c344ac, type: 3}
   ViewmodelPrefab: {fileID: 5955355545312717904, guid: 2e5d8a66547b2e64fb4b4200b2bbc2d9, type: 3}
   AmmoItem: {fileID: 11400000, guid: f25c56c36d5ac3440859263b1d4cf5b4, type: 2}
@@ -27,6 +28,50 @@ MonoBehaviour:
   RecoilSetting:
     UpwardsPerShotDegSec: 0
     HorizontalDeviationDegSec: 0
+  RecoilData:
+    RecoilCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MeanUpwardsRecoil: 3
+    MeanHorizontalRecoil: 0
+    MeanBackwardsRecoil: -0.25
+    UpwardsRecoilVariation: 2
+    HorizontalRecoilVariation: 1
+    BackwardsRecoilVariation: 0.1
+    MeanRecoilTime: 0.5
+    RecoilTimeVariation: 0.1
+    NoiseMagnitude: 0.5
+    NoiseSpeed: 1
   FireCombination: 0
   SemiAutoSetting:
     CycleTime: 0.02
