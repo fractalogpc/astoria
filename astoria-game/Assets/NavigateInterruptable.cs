@@ -60,8 +60,10 @@ public partial class NavigateInterruptableAction : Action
 
         if (distance < 3) {
             m_State.Value = State.Attacking;
+            return Status.Success;
         } else if (distance > 30) {
             m_State.Value = State.Patrolling;
+            return Status.Success;
         }
 
         if (m_NavMeshAgent != null)
