@@ -4,7 +4,7 @@ using UnityEngine;
 public class AxeData : BaseToolData
 {
 	// TODO: Make this a random range
-	[Tooltip("The value subtracted from the tree's health when chopping.")]
+	[Tooltip("The value added to the harvesting bar on each chop. The bar will fill when it reaches the health of the tree.")]
 	public int ChopDamage = 50;
 	[Tooltip("Time in seconds axe cannot be used after a side chop is started.")]
 	public float SideChopCooldown = 1f;
