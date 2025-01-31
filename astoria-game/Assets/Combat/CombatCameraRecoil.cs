@@ -64,16 +64,16 @@ public class CombatCameraRecoil : MonoBehaviour
         _recoilTransform.localPosition = new Vector3(0, 0, backwardsRecoil);
     }
 
-    public void ApplyRecoil(RecoilData recoilData) {
+    public void ApplyRecoil(RecoilSettings recoilSettings) {
         RecoilInstance recoilInstance = new RecoilInstance {
-            RecoilCurve = recoilData.RecoilCurve,
-            Duration = recoilData.MeanRecoilTime + Random.Range(-recoilData.RecoilTimeVariation, recoilData.RecoilTimeVariation),
-            MagnitudeUpwards = recoilData.MeanUpwardsRecoil + Random.Range(-recoilData.UpwardsRecoilVariation, recoilData.UpwardsRecoilVariation),
-            MagnitudeHorizontal = recoilData.MeanHorizontalRecoil + Random.Range(-recoilData.HorizontalRecoilVariation, recoilData.HorizontalRecoilVariation),
-            MagnitudeBackwards = recoilData.MeanBackwardsRecoil + Random.Range(-recoilData.BackwardsRecoilVariation, recoilData.BackwardsRecoilVariation),
+            RecoilCurve = recoilSettings.RecoilCurve,
+            Duration = recoilSettings.MeanRecoilTime + Random.Range(-recoilSettings.RecoilTimeVariation, recoilSettings.RecoilTimeVariation),
+            MagnitudeUpwards = recoilSettings.MeanUpwardsRecoil + Random.Range(-recoilSettings.UpwardsRecoilVariation, recoilSettings.UpwardsRecoilVariation),
+            MagnitudeHorizontal = recoilSettings.MeanHorizontalRecoil + Random.Range(-recoilSettings.HorizontalRecoilVariation, recoilSettings.HorizontalRecoilVariation),
+            MagnitudeBackwards = recoilSettings.MeanBackwardsRecoil + Random.Range(-recoilSettings.BackwardsRecoilVariation, recoilSettings.BackwardsRecoilVariation),
             TimeElapsed = 0,
-            NoiseMagnitude = recoilData.NoiseMagnitude,
-            NoiseSpeed = recoilData.NoiseSpeed
+            NoiseMagnitude = recoilSettings.NoiseMagnitude,
+            NoiseSpeed = recoilSettings.NoiseSpeed
         };
         _activeRecoilInstances.Add(recoilInstance);
     }

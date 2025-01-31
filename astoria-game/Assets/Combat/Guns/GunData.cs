@@ -10,8 +10,7 @@ public class GunData : ViewmodelItemData
 
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;
-	public RecoilSettings RecoilSetting;
-	public RecoilData RecoilData;
+	public RecoilSettings RecoilSettings;
 	
 	[Header("Fire Settings")]
 	[
@@ -57,7 +56,7 @@ public class GunData : ViewmodelItemData
 }
 
 [System.Serializable]
-public struct RecoilData
+public struct RecoilSettings
 {
 	public AnimationCurve RecoilCurve;
 	public float MeanUpwardsRecoil;
@@ -134,12 +133,6 @@ public struct AccuracySettings
 	[Tooltip("The distance where a projectile fired by the weapon, when aimed down sights, will land in a circle of diameter PatternSpread.")]
 	public float EffectiveRange;
 	public float PatternSpread;
-}
-[Serializable]
-public struct RecoilSettings
-{
-	public float UpwardsPerShotDegSec;
-	public float HorizontalDeviationDegSec;
 }
 [Serializable]
 public struct MagazineSettings
