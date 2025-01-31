@@ -14,6 +14,10 @@ public class TreeChoppable : HealthInterface
 			base.Start();
 			_rigidbody = GetComponent<Rigidbody>();
 			_rigidbody.isKinematic = true;
+
+			if (_woodItem == null) {
+				Debug.LogError("Wood item is not set in " + name);
+			}
 		}
 		
 		public override void Damage(float damagePoints, Vector3 hitPosition) {

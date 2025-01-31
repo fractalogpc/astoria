@@ -98,6 +98,8 @@ public class GunInstance : ViewmodelItemInstance
 	/// </summary>
 	public void Fire() {
 		if (!Initialized) return;
+		// Call recoil on camera
+		CombatCameraRecoil.Instance.ApplyRecoil(ItemData.RecoilData);
 		if (IsShotgun(ItemData.FireCombination)) {
 			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
