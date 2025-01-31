@@ -197,9 +197,16 @@ namespace Player
     {
 
       // Orientate the moveDirection vector with the Camera's Y axis
-      // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
+      // Vector3 moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * MoveInputVector; // TODO: Make this work
 
-      Vector3 move = MoveInputVector * _currentMaxSpeed * Time.deltaTime;
+      float maxSpeed = _currentMaxSpeed;
+      // If player holds two opposing directions, speed up currentMaxSpeed
+      if (_jumpInput && _crouchInput)
+      {
+        maxSpeed = _currentMaxSpeed * 20;
+      }
+
+      Vector3 move = MoveInputVector * maxSpeed * Time.deltaTime;
       transform.position += move;
 
       transform.rotation = PlayerCamera.PlayerYLookQuaternion;
