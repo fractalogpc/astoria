@@ -12,11 +12,18 @@ namespace Player
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Transform _cameraTarget;
     [SerializeField] private Transform CameraTransform;
+    [SerializeField] private Transform _viewmodelTransform;
+    [SerializeField] private float _viewmodelFollowSpeed = 10;
+    [SerializeField] private float _viewmodelMaxXOffset = 15f;
+    [SerializeField] private float _viewmodelMaxYOffset = 15f;
 
     [HideInInspector] public Quaternion PlayerYLookQuaternion = Quaternion.identity;
 
     [HideInInspector] public float CameraXRotation = 0;
     private Vector2 _mouseInput;
+
+    private Vector2 _viewmodelTargetRotation;
+    private float _aggregateYRotation = 0;
 
     // Maximum vertical look angle (just below 90°)
     private const float MaxVerticalAngle = 89f;
@@ -43,6 +50,7 @@ namespace Player
     private void PlayerYLook()
     {
       PlayerYLookQuaternion *= Quaternion.AngleAxis(_mouseInput.x, Vector3.up);
+      _aggregateYRotation += _mouseInput.x;
     }
 
     private void CameraXLook()
@@ -62,7 +70,16 @@ namespace Player
 
       CameraXLook();
       Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
+      Vector2 cameraTargetRot = new Vector2(CameraXRotation, _aggregateYRotation);
+      // Clamp viewmodel offset
+      Vector2 diff = _viewmodelTargetRotation - cameraTargetRot;
+      diff.x = Mathf.Clamp(diff.x, -_viewmodelMaxXOffset, _viewmodelMaxXOffset);
+      diff.y = Mathf.Clamp(diff.y, -_viewmodelMaxYOffset, _viewmodelMaxYOffset);
+      _viewmodelTargetRotation = cameraTargetRot + diff;
+      Vector2 viewmodelTargetRot = Vector2.Lerp(_viewmodelTargetRotation, cameraTargetRot, _viewmodelFollowSpeed * Time.deltaTime);
       CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
+      _viewmodelTargetRotation = viewmodelTargetRot;
+      _viewmodelTransform.rotation = Quaternion.Euler(viewmodelTargetRot.x, viewmodelTargetRot.y, 0);
     }
   }
 }
