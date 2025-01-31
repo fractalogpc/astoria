@@ -11,8 +11,9 @@ public class ConstructionCore : NetworkedInputHandlerBase
     public enum ConstructionState
     {
         None,
-        Placing,
-        Rotating,
+        PlacingProp,
+        RotatingProp,
+        PlacingStructure,
         Deleting
     }
     public ConstructionData DebugData;
@@ -64,7 +65,9 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
         switch (State)
         {
-            case ConstructionState.Placing:
+            case ConstructionState.PlacingProp:
+                ConstructionPropData data = _selectedData as ConstructionPropData;
+
                 Vector3 position;
                 Quaternion rotation;
 
@@ -79,7 +82,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
                 bool isOutOfRange;
                 // Test the initial raycast direction
-                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
+                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
                 {
                     validPosition = true;
                 }
@@ -106,7 +109,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
                         Vector3 subsetTestPosition;
                         Quaternion subsetTestRotation;
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, _selectedData, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, data, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
                         {
                             position = subsetTestPosition;
                             rotation = subsetTestRotation;
@@ -185,7 +188,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
                         Quaternion testRotation;
 
                         // Don't sphere cast for the layers near the center of the screen because it causes issues with the vertical subset steps
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, _selectedData, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
+                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, data, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
                         {
                             position = testPosition;
                             rotation = testRotation;
@@ -214,7 +217,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
                 // If none of the positions are valid, position and rotation are set by the initial test
                 if (!validPosition)
                 {
-                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, _selectedData, _previewObjectScript, Settings, false, out position, out rotation, out _);
+                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out _);
                 }
 
                 RenderPreviewObject(position, rotation);
@@ -259,7 +262,14 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
         _previewObject = CreatePreviewObject();
 
-        SetConstructionState(ConstructionState.Placing);
+        if (data.GetType() == typeof(ConstructionPropData))
+        {
+            SetConstructionState(ConstructionState.PlacingProp);
+        }
+        else if (data.GetType() == typeof(ConstructionStructureData))
+        {
+            SetConstructionState(ConstructionState.PlacingStructure);
+        }
 
         OnDataSelected?.Invoke(_selectedData);
 
@@ -272,7 +282,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
 
         switch (State)
         {
-            case ConstructionState.Placing:
+            case ConstructionState.PlacingProp:
                 CmdPlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
                 SetConstructionState(ConstructionState.None);
                 OnObjectPlaced?.Invoke(_selectedData);
@@ -352,7 +362,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
         // Cleanup previous state
         switch (State)
         {
-            case ConstructionState.Placing:
+            case ConstructionState.PlacingProp:
                 CleanupPreviewObject();
                 break;
         }
@@ -385,7 +395,7 @@ namespace Construction
 
         // Corrects and validates the position of the object
 
-        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionData data, PreviewObject script, BuildingSettings settings, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation, out bool isOutOfRange)
+        public static bool ValidatePlacementPosition(Vector3 origin, Vector3 rotation, ConstructionPropData data, PreviewObject script, BuildingSettings settings, bool doSphereCast, out Vector3 finalPosition, out Quaternion finalRotation, out bool isOutOfRange)
         {
             ConstructionOffset offset = data.Offset;
 
@@ -449,7 +459,7 @@ namespace Construction
             return Quaternion.LookRotation(directionTowardsCamera) * Quaternion.Euler(rotationOffset);
         }
 
-        private static bool ValidateNormal(float angle, ConstructionData data, BuildingSettings settings)
+        private static bool ValidateNormal(float angle, ConstructionPropData data, BuildingSettings settings)
         {
             if (data.CanBePlacedOnGround)
             {

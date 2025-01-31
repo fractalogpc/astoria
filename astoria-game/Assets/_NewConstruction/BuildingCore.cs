@@ -6,11 +6,28 @@ public class BuildingCore
     Dictionary<Vector2Int, FoundationTile> placedTiles;
 
     public bool CanPlaceTile(Vector2Int position, FoundationTile tile) {
+        // Check if the tile is already placed
+        if (placedTiles.ContainsKey(position)) {
+            return false;
+        }
+
+        // Check if the tile is connected to the core
+        if (!IsConnectedToCore(position)) {
+            return false;
+        }
 
         return false;
     }
 
     public void PlaceTile(Vector2Int position, FoundationTile tile) {
+
+    }
+
+    public bool CanRemoveTile(Vector2Int position) {
+        return false;
+    }
+
+    public void RemoveTile(Vector2Int position) {
 
     }
 
