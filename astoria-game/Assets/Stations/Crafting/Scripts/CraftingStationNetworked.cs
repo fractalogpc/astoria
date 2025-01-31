@@ -17,7 +17,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Interactable))]
 public class CraftingStationNetworked : NetworkBehaviour
 {
-	public List<RecipeData> Recipes;
+	public RecipeLibrary Recipes;
 	public CraftingItemInfoUI ItemInfoUI;
 	public CraftingRecipeGridUI RecipeGridUI;
 	public CraftingCountUI CraftCountUI;

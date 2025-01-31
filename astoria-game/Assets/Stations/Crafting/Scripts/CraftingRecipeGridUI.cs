@@ -12,7 +12,7 @@ public class CraftingRecipeGridUI : MonoBehaviour
 	public void Initialize(CraftingStationNetworked craftingStation) {
 		if (Initialized) return;
 		_craftingStation = craftingStation;
-		CreateRecipeGrid(_craftingStation.Recipes);
+		CreateRecipeGrid(_craftingStation.Recipes.GetRecipes());
 		Initialized = true;
 	}
 	
