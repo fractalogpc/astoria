@@ -18,10 +18,12 @@ public class CombatCameraRecoil : MonoBehaviour
         public float TimeElapsed;
         public float NoiseMagnitude;
         public float NoiseSpeed;
+        public float MainTransferToViewmodel;
 
     }
 
     [SerializeField] private Transform _recoilTransform;
+    [SerializeField] private Transform _viewmodelTransform;
 
     [SerializeField] private AnimationCurve _recoilCurve;
     [SerializeField] private float _recoilMultiplier = 1;
@@ -39,7 +41,10 @@ public class CombatCameraRecoil : MonoBehaviour
         float upwardsRecoil = 0;
         float horizontalRecoil = 0;
         float backwardsRecoil = 0;
-        Debug.Log("Recoil instances: " + _activeRecoilInstances.Count);
+        float viewmodelTransferUpwards = 0;
+        float viewmodelTransferHorizontal = 0;
+        float viewmodelTransferBackwards = 0;
+        // Debug.Log("Recoil instances: " + _activeRecoilInstances.Count);
         for (int i = 0; i < _activeRecoilInstances.Count; i++) {
             RecoilInstance recoilInstance = _activeRecoilInstances[i];
             recoilInstance.TimeElapsed += Time.deltaTime;
@@ -55,13 +60,22 @@ public class CombatCameraRecoil : MonoBehaviour
             upwardsRecoil += recoil * recoilInstance.MagnitudeUpwards;
             horizontalRecoil += recoil * recoilInstance.MagnitudeHorizontal;
             backwardsRecoil += recoil * recoilInstance.MagnitudeBackwards;
+
+            float transfer = recoilInstance.MainTransferToViewmodel;
+            viewmodelTransferUpwards += recoil * recoilInstance.MagnitudeUpwards * transfer;
+            viewmodelTransferHorizontal += recoil * recoilInstance.MagnitudeHorizontal * transfer;
+            viewmodelTransferBackwards += recoil * recoilInstance.MagnitudeBackwards * transfer;
         }
         upwardsRecoil *= _recoilMultiplier;
         horizontalRecoil *= _recoilMultiplier;
         backwardsRecoil *= _recoilMultiplier;
-        Debug.Log("Recoil: " + upwardsRecoil + ", " + horizontalRecoil + ", " + backwardsRecoil);
+        viewmodelTransferUpwards *= _recoilMultiplier;
+        viewmodelTransferHorizontal *= _recoilMultiplier;
+        viewmodelTransferBackwards *= _recoilMultiplier;
+        // Debug.Log("Recoil: " + upwardsRecoil + ", " + horizontalRecoil + ", " + backwardsRecoil);
         _recoilTransform.localEulerAngles = new Vector3(-upwardsRecoil, horizontalRecoil, 0);
         _recoilTransform.localPosition = new Vector3(0, 0, backwardsRecoil);
+        _viewmodelTransform.localPosition = new Vector3(viewmodelTransferHorizontal, viewmodelTransferUpwards, viewmodelTransferBackwards);
     }
 
     public void ApplyRecoil(RecoilSettings recoilSettings) {
@@ -73,7 +87,8 @@ public class CombatCameraRecoil : MonoBehaviour
             MagnitudeBackwards = recoilSettings.MeanBackwardsRecoil + Random.Range(-recoilSettings.BackwardsRecoilVariation, recoilSettings.BackwardsRecoilVariation),
             TimeElapsed = 0,
             NoiseMagnitude = recoilSettings.NoiseMagnitude,
-            NoiseSpeed = recoilSettings.NoiseSpeed
+            NoiseSpeed = recoilSettings.NoiseSpeed,
+            MainTransferToViewmodel = recoilSettings.MainTransferToViewmodel
         };
         _activeRecoilInstances.Add(recoilInstance);
     }

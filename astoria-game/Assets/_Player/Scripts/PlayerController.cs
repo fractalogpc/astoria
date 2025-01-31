@@ -199,10 +199,10 @@ namespace Player
       // Orientate the moveDirection vector with the Camera's Y axis
       // moveDirection = Quaternion.Euler(0, PlayerCamera.PlayerYLookQuaternion.eulerAngles.y, 0) * moveDirection; // TODO: Make this work
 
-        Vector3 move = MoveInputVector * _currentMaxSpeed * Time.deltaTime;
-        transform.position += move;
+      Vector3 move = MoveInputVector * _currentMaxSpeed * Time.deltaTime;
+      transform.position += move;
 
-        transform.rotation = PlayerCamera.PlayerYLookQuaternion;
+      transform.rotation = PlayerCamera.PlayerYLookQuaternion;
     }
 
     private Quaternion _nextFrameRotation = Quaternion.identity;
@@ -524,6 +524,12 @@ namespace Player
         case CharacterState.Water:
           break;
         case CharacterState.Noclip:
+          // If leaving noclip and holding up and down, keep the player position
+          if (!(_jumpInput && _crouchInput))
+          {
+            Motor.SetPosition(transform.position);
+          }
+
           Motor.enabled = true;
           GetComponent<Collider>().enabled = true;
           break;

@@ -69,6 +69,7 @@ public struct RecoilSettings
 	public float RecoilTimeVariation;
 	public float NoiseMagnitude;
 	public float NoiseSpeed;
+	public float MainTransferToViewmodel;
 
 }
 
