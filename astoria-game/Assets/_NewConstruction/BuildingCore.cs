@@ -32,6 +32,8 @@ public class BuildingCore
     }
 
     private bool IsConnectedToCore(Vector2Int position) {
+        // Assume the core is at (0,0)
+        
         return false;
     }
 
