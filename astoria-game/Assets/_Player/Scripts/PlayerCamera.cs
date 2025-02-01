@@ -10,6 +10,7 @@ namespace Player
   {
     public bool canLook = true;
     [SerializeField] private Transform _playerTransform;
+    [SerializeField] private PlayerViewBob _viewBob;
     [SerializeField] private Transform _cameraTarget;
     [SerializeField] private Transform CameraTransform;
     [SerializeField] private Transform _viewmodelTransform;
@@ -87,6 +88,7 @@ namespace Player
       UpdateViewmodel();
 
       CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
+      CameraTransform.localPosition += _viewBob.CameraOffset;
     }
   }
 }

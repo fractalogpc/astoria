@@ -6,7 +6,6 @@ public class PlayerViewBob : MonoBehaviour
 {
 
   [SerializeField] private PlayerController _playerController;
-  [SerializeField] private Transform _cameraTransform;
   [SerializeField] private AnimationCurve _viewBobVerticalCurve;
   [SerializeField] private float _verticalMultiplier;
   [SerializeField] private AnimationCurve _viewBobHorizontalCurve;
@@ -25,6 +24,8 @@ public class PlayerViewBob : MonoBehaviour
   private float _timeSinceLastStep;
   private bool _stepRight;
   private float _currentCurvePosition = 1;
+  private Vector3 _cameraOffset;
+  public Vector3 CameraOffset => _cameraOffset;
 
   private void Start() {
     _motor = _playerController.Motor;
@@ -69,7 +70,7 @@ public class PlayerViewBob : MonoBehaviour
     noise = Mathf.PerlinNoise(0, Time.time * _noiseFrequency) * _noiseAmplitude * magnitude;
     verticalOffset += noise;
 
-    _cameraTransform.localPosition = new Vector3(horizontalOffset, verticalOffset, 0);
+    _cameraOffset = new Vector3(horizontalOffset, verticalOffset, 0);
   }
 
 }
