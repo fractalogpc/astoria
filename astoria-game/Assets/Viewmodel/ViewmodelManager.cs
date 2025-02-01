@@ -1,13 +1,58 @@
 ﻿using System;
 using Mirror;
 using UnityEngine;
+using KinematicCharacterController;
+using Player;
 
 public class ViewmodelManager : NetworkBehaviour
 {
 	public Type ViewmodelType => _currentViewmodel.GetType();
 	
 	[SerializeField] protected Transform _viewmodelParent;
-	[SerializeField][ReadOnly] protected Viewmodel _currentViewmodel;
+	[SerializeField][Mirror.ReadOnly] protected Viewmodel _currentViewmodel;
+
+	[SerializeField] private Transform _viewmodelTransform;
+	[SerializeField] private float _maxVelocity = 10;
+	[SerializeField] private Vector3 _viewmodelVelocityOffsetMagnitude;
+	[SerializeField] private float _overallMultiplier = 1;
+	[SerializeField] private float _transitionSpeed = 10;
+  	[SerializeField] private PlayerController _playerController;
+
+	private KinematicCharacterMotor _motor;
+	private Vector3 _viewmodelVelocityOffset;
+
+	private void Start() {
+		_motor = _playerController.Motor;
+	}
+
+	private void Update() {
+		UpdateViewmodelVelocity();
+
+		_viewmodelTransform.localPosition = _viewmodelVelocityOffset;
+	}
+
+	private void UpdateViewmodelVelocity() {
+		Vector3 playerVelocity = _motor.BaseVelocity;
+
+		// Transform velocity into viewmodel's space
+		playerVelocity = _viewmodelTransform.InverseTransformDirection(playerVelocity);
+
+		Vector3 proportionalVelocity = new Vector3(
+			Mathf.Clamp(playerVelocity.x / _maxVelocity, -1, 1),
+			Mathf.Clamp(playerVelocity.y / _maxVelocity, -1, 1),
+			Mathf.Clamp(playerVelocity.z / _maxVelocity, -1, 1)
+		);
+
+		Vector3 viewmodelVelocityOffset = new Vector3(
+			_viewmodelVelocityOffsetMagnitude.x * proportionalVelocity.x,
+			_viewmodelVelocityOffsetMagnitude.y * proportionalVelocity.y,
+			_viewmodelVelocityOffsetMagnitude.z * proportionalVelocity.z
+		);
+
+		viewmodelVelocityOffset *= _overallMultiplier;
+
+		_viewmodelVelocityOffset = Vector3.Lerp(_viewmodelVelocityOffset, viewmodelVelocityOffset, Time.deltaTime * _transitionSpeed);
+	}
 	
 	public void SetViewmodelFor(ViewmodelItemInstance itemInstance) {
 		if (_currentViewmodel != null) {

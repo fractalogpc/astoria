@@ -4345,7 +4345,6 @@ GameObject:
   - component: {fileID: 6613076594192004588}
   - component: {fileID: 7069476422261629523}
   - component: {fileID: 5077299882305822583}
-  - component: {fileID: 5795585357237766305}
   - component: {fileID: 7651286900178554149}
   - component: {fileID: 1790292005347456770}
   - component: {fileID: 1989162189779702438}
@@ -4701,7 +4700,7 @@ MonoBehaviour:
   DisableForNetworkedPlayer:
   - {fileID: 1989162189779702438}
   - {fileID: 7651286900178554149}
-  - {fileID: 5795585357237766305}
+  - {fileID: 0}
 --- !u!114 &5077299882305822583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4734,20 +4733,6 @@ MonoBehaviour:
       m_Calls: []
   _currentHealth: 200
   _maxHealth: 200
---- !u!114 &5795585357237766305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b80b818ea5018465293f42ed95b8e3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _console: {fileID: 6075829514514647394}
-  _enableCheats: 1
 --- !u!114 &7651286900178554149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6527,7 +6512,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4269779522831702966}
-  - component: {fileID: 4055732598531671012}
   m_Layer: 5
   m_Name: Compass
   m_TagString: Untagged
@@ -6557,109 +6541,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -94}
   m_SizeDelta: {x: -1059.6133, y: 69.0364}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4055732598531671012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2477719193185334233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 582f981ca1b43c04ba7ec943269f867d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 8706593742784918896}
-  directionsParent: {fileID: 3897780342584463253}
-  objectsParent: {fileID: 6046848685110087104}
-  _barParent: {fileID: 2254357263537937360}
-  _barSprite: {fileID: 21300000, guid: 6081df1e12e56a44b9f9747c90cfffb0, type: 3}
-  _barCount: 8
-  directionHorizontalPositionScalar: 9
-  iconsHorizontalPositionScalar: 4
-  compassWidth: 700
-  defaultDirectionIconScale: 0.4
-  defaultDirectionIconAlpha: 0.4
-  defaultObjectIconScale: 0.75
-  defaultObjectIconAlpha: 1
-  iconScaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.4
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0.4
-      inSlope: -1
-      outSlope: -1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxScaleDistance: 40
-  iconAlphaCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -0.078213476
-      outSlope: -0.078213476
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.3533131
-    - serializedVersion: 3
-      time: 0.95
-      value: 0
-      inSlope: -1.8108218
-      outSlope: -1.8108218
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.10961789
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxAlphaDistance: 40
-  disableScaleWithDistanceForKeyItems: 1
-  disableAlphaWithDistanceForKeyItems: 1
-  cardinalDirections:
-  - name: North
-    angle: 0
-    sprite: {fileID: 21300000, guid: 9e60242863943f24ebe664d4f6fddeab, type: 3}
-    ignoreScale: 0
-  - name: East
-    angle: 90
-    sprite: {fileID: 21300000, guid: 11b7a2c68985a6945bd200c60a31c4ff, type: 3}
-    ignoreScale: 0
-  - name: South
-    angle: 180
-    sprite: {fileID: 21300000, guid: 2abe49c07a95c0144be65d4953c47408, type: 3}
-    ignoreScale: 0
-  - name: West
-    angle: 270
-    sprite: {fileID: 21300000, guid: 58cf76d0dfe77354fa92f7814a886da1, type: 3}
-    ignoreScale: 0
 --- !u!1 &2498971131843903557
 GameObject:
   m_ObjectHideFlags: 0
@@ -19287,6 +19168,12 @@ MonoBehaviour:
   syncInterval: 0
   _viewmodelParent: {fileID: 6126032875406853262}
   _currentViewmodel: {fileID: 0}
+  _viewmodelTransform: {fileID: 6126032875406853262}
+  _maxVelocity: 10
+  _viewmodelVelocityOffsetMagnitude: {x: 1, y: 1, z: 1}
+  _overallMultiplier: -0.05
+  _transitionSpeed: 10
+  _playerController: {fileID: 1033706171325523888}
 --- !u!1 &7231544063822146898
 GameObject:
   m_ObjectHideFlags: 0
@@ -24748,6 +24635,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7955397909748889041, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8106524044072960596, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -24852,7 +24743,11 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8710965558585481025, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
+    - {fileID: 5616305972871373091, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
+    - {fileID: 3891119808410894099, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
+    - {fileID: 675262492924649235, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -24865,11 +24760,6 @@ GameObject:
 --- !u!224 &4735654920565021876 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8586635495714480356, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
-  m_PrefabInstance: {fileID: 3932124550661782608}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6075829514514647394 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7115714566556972338, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
   m_PrefabInstance: {fileID: 3932124550661782608}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4528381278800155340
