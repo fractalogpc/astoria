@@ -12,14 +12,22 @@ public class ViewmodelManager : NetworkBehaviour
 	[SerializeField][Mirror.ReadOnly] protected Viewmodel _currentViewmodel;
 
 	[SerializeField] private Transform _viewmodelTransform;
+	[Tooltip("The velocity at which viewmodel offset is at its maximum.")]
 	[SerializeField] private float _maxVelocity = 10;
+	[Tooltip("The maximum offset of the viewmodel due to player velocity.")]
 	[SerializeField] private Vector3 _viewmodelVelocityOffsetMagnitude;
+	[Tooltip("The multiplier for the viewmodel's offset.")]
 	[SerializeField] private float _overallMultiplier = 1;
+	[Tooltip("The speed at which the viewmodel lerps to its target offset.")]
 	[SerializeField] private float _transitionSpeed = 10;
+	[Tooltip("The multiplier for the viewmodel's adoption of the camera's bobbing.")]
+	[SerializeField] private float _viewBobbingMultiplier = 1;
   	[SerializeField] private PlayerController _playerController;
+	[SerializeField] private PlayerViewBob _viewBob;
 
 	private KinematicCharacterMotor _motor;
 	private Vector3 _viewmodelVelocityOffset;
+	private Vector3 _viewmodelBobbingOffset;
 
 	private void Start() {
 		_motor = _playerController.Motor;
@@ -27,8 +35,9 @@ public class ViewmodelManager : NetworkBehaviour
 
 	private void Update() {
 		UpdateViewmodelVelocity();
+		UpdateViewmodelBobbing();
 
-		_viewmodelTransform.localPosition = _viewmodelVelocityOffset;
+		_viewmodelTransform.localPosition = _viewmodelVelocityOffset + _viewmodelBobbingOffset;
 	}
 
 	private void UpdateViewmodelVelocity() {
@@ -52,6 +61,11 @@ public class ViewmodelManager : NetworkBehaviour
 		viewmodelVelocityOffset *= _overallMultiplier;
 
 		_viewmodelVelocityOffset = Vector3.Lerp(_viewmodelVelocityOffset, viewmodelVelocityOffset, Time.deltaTime * _transitionSpeed);
+	}
+
+	private void UpdateViewmodelBobbing() {
+		Vector3 cameraOffset = _viewBob.CameraOffset;
+		_viewmodelBobbingOffset = -cameraOffset * _viewBobbingMultiplier;
 	}
 	
 	public void SetViewmodelFor(ViewmodelItemInstance itemInstance) {

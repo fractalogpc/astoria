@@ -65,7 +65,7 @@ public class PlayerViewBob : MonoBehaviour
 
     float magnitude = _viewBobVelocityCurve.Evaluate(velocity.magnitude / _velocityRange);
 
-    float noise = Mathf.PerlinNoise(Time.time * _noiseFrequency, 0) * _noiseAmplitude * magnitude;
+    float noise = (Mathf.PerlinNoise(Time.time * _noiseFrequency, 0) - 0.5f) * _noiseAmplitude * magnitude;
     horizontalOffset += noise;
     noise = Mathf.PerlinNoise(0, Time.time * _noiseFrequency) * _noiseAmplitude * magnitude;
     verticalOffset += noise;
