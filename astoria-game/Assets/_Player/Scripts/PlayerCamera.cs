@@ -62,6 +62,19 @@ namespace Player
       CameraXRotation = Mathf.Clamp(CameraXRotation, -MaxVerticalAngle, MaxVerticalAngle);
     }
 
+    private void UpdateViewmodel()
+    {
+      Vector2 cameraTargetRot = new Vector2(CameraXRotation, _aggregateYRotation);
+
+      _viewmodelTargetRotation = Vector2.Lerp(_viewmodelTargetRotation, cameraTargetRot, Time.deltaTime * _viewmodelFollowSpeed);
+      // Clamp viewmodel offset
+      Vector2 diff = _viewmodelTargetRotation - cameraTargetRot;
+      diff.x = Mathf.Clamp(diff.x, -_viewmodelMaxXOffset, _viewmodelMaxXOffset);
+      diff.y = Mathf.Clamp(diff.y, -_viewmodelMaxYOffset, _viewmodelMaxYOffset);
+
+      _viewmodelTransform.localRotation = Quaternion.Euler(diff.x, diff.y, 0);
+    }
+
     private void LateUpdate()
     {
       if (!canLook) return;
@@ -70,16 +83,10 @@ namespace Player
 
       CameraXLook();
       Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
-      Vector2 cameraTargetRot = new Vector2(CameraXRotation, _aggregateYRotation);
-      // Clamp viewmodel offset
-      Vector2 diff = _viewmodelTargetRotation - cameraTargetRot;
-      diff.x = Mathf.Clamp(diff.x, -_viewmodelMaxXOffset, _viewmodelMaxXOffset);
-      diff.y = Mathf.Clamp(diff.y, -_viewmodelMaxYOffset, _viewmodelMaxYOffset);
-      _viewmodelTargetRotation = cameraTargetRot + diff;
-      Vector2 viewmodelTargetRot = Vector2.Lerp(_viewmodelTargetRotation, cameraTargetRot, _viewmodelFollowSpeed * Time.deltaTime);
+
+      UpdateViewmodel();
+
       CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
-      _viewmodelTargetRotation = viewmodelTargetRot;
-      _viewmodelTransform.rotation = Quaternion.Euler(viewmodelTargetRot.x, viewmodelTargetRot.y, 0);
     }
   }
 }
