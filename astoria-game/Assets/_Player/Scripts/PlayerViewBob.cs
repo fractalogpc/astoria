@@ -13,17 +13,24 @@ public class PlayerViewBob : MonoBehaviour
   [SerializeField] private AnimationCurve _viewBobVelocityCurve;
   [SerializeField] private AnimationCurve _viewBobVelocityAmplitudeCurve;
   [Range(0.1f, 10f)] [SerializeField] private float _velocityRange = 1f;
+  [SerializeField] private Vector2 _breathingFrequencyRange = new Vector2(0.5f, 1.5f);
+  [SerializeField] private Vector2 _breathingAmplitudeRange = new Vector2(0.1f, 0.3f);
+  [SerializeField] private AnimationCurve _breathingVelocityCurve;
+  [SerializeField] private AnimationCurve _breathingCurve;
   [SerializeField] private float _viewBobFrequency = 1f;
 
   [Header("Noise")]
   [SerializeField] private float _noiseFrequency = 1f;
   [SerializeField] private float _noiseAmplitude = 1f;
+  [SerializeField] private float _breathingNoiseFrequency = 1f;
+  [SerializeField] private float _breathingNoiseAmplitude = 1f;
 
   private KinematicCharacterMotor _motor;
   private Vector3 _baseVelocity;
   private float _timeSinceLastStep;
   private bool _stepRight;
   private float _currentCurvePosition = 1;
+  private float _currentBreathingPosition = 1;
   private Vector3 _cameraOffset;
   public Vector3 CameraOffset => _cameraOffset;
 
@@ -69,6 +76,24 @@ public class PlayerViewBob : MonoBehaviour
     horizontalOffset += noise;
     noise = Mathf.PerlinNoise(0, Time.time * _noiseFrequency) * _noiseAmplitude * magnitude;
     verticalOffset += noise;
+
+    // Breathing effect
+    float curveProgress = velocity.magnitude / _velocityRange;
+    float breathingFrequency = Mathf.Lerp(_breathingFrequencyRange.x, _breathingFrequencyRange.y, _breathingVelocityCurve.Evaluate(curveProgress));
+    float breathingAmplitude = Mathf.Lerp(_breathingAmplitudeRange.x, _breathingAmplitudeRange.y, _breathingVelocityCurve.Evaluate(curveProgress));
+
+    _currentBreathingPosition += Time.deltaTime * breathingFrequency;
+    _currentBreathingPosition %= 1;
+
+    float breathingOffset = _breathingCurve.Evaluate(_currentBreathingPosition) * breathingAmplitude;
+    Vector2 breathingNoise = new Vector2(
+      (Mathf.PerlinNoise(Time.time * _breathingNoiseFrequency, 0) - 0.5f) * _breathingNoiseAmplitude * breathingAmplitude,
+      (Mathf.PerlinNoise(0, Time.time * _breathingNoiseFrequency) - 0.5f) * _breathingNoiseAmplitude * breathingAmplitude
+    );
+
+    horizontalOffset += breathingNoise.x;
+    verticalOffset += breathingNoise.y;
+    verticalOffset += breathingOffset;
 
     _cameraOffset = new Vector3(horizontalOffset, verticalOffset, 0);
   }

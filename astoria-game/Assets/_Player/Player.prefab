@@ -7056,8 +7056,8 @@ MonoBehaviour:
   prefabParentContent: {fileID: 6847233402077956102}
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
   ConstructableObjects:
-  - {fileID: 11400000, guid: 2f57602b9d8e968449e3969feaf6f43d, type: 2}
-  - {fileID: 11400000, guid: 2823b052ee447ae4a97eef663e1a1a19, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -10357,9 +10357,70 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _velocityRange: 10
+  _breathingFrequencyRange: {x: 0.25, y: 0.8}
+  _breathingAmplitudeRange: {x: 0.05, y: 0.2}
+  _breathingVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _breathingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _viewBobFrequency: 5
   _noiseFrequency: 1
   _noiseAmplitude: 1
+  _breathingNoiseFrequency: 2
+  _breathingNoiseAmplitude: 0.2
 --- !u!1 &3593174596530558486
 GameObject:
   m_ObjectHideFlags: 0
@@ -24759,6 +24820,10 @@ PrefabInstance:
     - target: {fileID: 5680960991281712486, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.029968262
+      objectReference: {fileID: 0}
+    - target: {fileID: 5765208662730661372, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6172793388276307889, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
       propertyPath: m_AnchoredPosition.y
