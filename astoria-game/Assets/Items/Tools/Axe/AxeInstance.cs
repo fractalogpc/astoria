@@ -61,6 +61,7 @@ public class AxeInstance : BaseToolInstance
 		ChopTree(ItemData.ChopRange);
 	}
 	private void ChopTree(float range) {
+		// Getting tree
 		Camera mainCamera = Camera.main;
 		if (mainCamera == null) Debug.LogError("AxeInstance: Main camera not found!");
 		// Check for LOS
@@ -78,7 +79,8 @@ public class AxeInstance : BaseToolInstance
 		}
 		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();
 		if (treeChoppable == null) return;
-		treeChoppable.Damage(ItemData.ChopDamage, hit.point);
+		
+		// Actual chopping logic
 		
 	}
 }
