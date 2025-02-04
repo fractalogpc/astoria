@@ -12,6 +12,9 @@ public class LightningMeshGeneration : MonoBehaviour {
     
     public Vector3[] Vertex = new Vector3[30];
 
+    public Vector3[] Bitangent = new Vector3[30];
+    public Vector3[] Binormal = new Vector3[30];
+    public Vector3[] Biongo = new Vector3[30];
     public List<Vector3> SubVertex;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -85,8 +88,14 @@ public class LightningMeshGeneration : MonoBehaviour {
             {
                 Debug.DrawRay(Vertex[i], goal.position - Vertex[i], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
             }
-            
-            //if (Random.Range(0, 1))
+
+            if (i > 1)
+            {
+                Vector3 tangent = goal.position - Vertex[i];
+                Vector3 biNormal = Vector3.Cross(Vertex[i] - Vertex[i - 1], tangent + new Vector3(100, -12, 402));
+                Debug.DrawRay(Vertex[i], tangent, Color.red);
+                Debug.DrawRay(Vertex[i] - ((Vertex[i] - Vertex[i - 1]) * .5f), biNormal, Color.magenta);
+            }
         }
     }
 }
