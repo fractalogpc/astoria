@@ -14,23 +14,34 @@ public class FadeElementInOut : MonoBehaviour
   [Header("Events")]
   public UnityEvent _OnFadeComplete;
 
-  void OnValidate() {
+  private void OnValidate() {
     if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
   }
 
+  /// <summary>
+  /// Hides the element immediately.
+  /// </summary>
   public void Hide() {
     _canvasGroup.alpha = 0;
     _canvasGroup.interactable = false;
     _canvasGroup.blocksRaycasts = false;
   }
   
+  /// <summary>
+  /// Shows the element immediately.
+  /// </summary>
   public void Show() {
     _canvasGroup.alpha = 1;
     _canvasGroup.interactable = true;
     _canvasGroup.blocksRaycasts = true;
   }
   
-  public void FadeIn(bool resetAlpha = false) {
+  /// <summary>
+  /// Fades in the element, allowing for a smooth transition.
+  /// </summary>
+  /// <param name="resetAlpha">Whether to start with the element fully hidden or at it's current opacity.</param>
+  /// <returns>The fade in duration set on this script.</returns>
+  public float FadeIn(bool resetAlpha = false) {
     _canvasGroup.interactable = true;
     _canvasGroup.blocksRaycasts = true;
     if (resetAlpha) {
@@ -38,8 +49,15 @@ public class FadeElementInOut : MonoBehaviour
     } else {
       StartCoroutine(FadeElementInOutCoroutine(_canvasGroup.alpha, 1, _inDuration));
     }
+    return _inDuration;
   }
-  public void FadeOut(bool resetAlpha = false) {
+  
+  /// <summary>
+  /// Fades out the element, allowing for a smooth transition.
+  /// </summary>
+  /// <param name="resetAlpha">Whether to start with the element fully visible or at it's current opacity.</param>
+  /// <returns>The fade out duration set on this script.</returns>
+  public float FadeOut(bool resetAlpha = false) {
     _canvasGroup.interactable = false;
     _canvasGroup.blocksRaycasts = false;
     if (resetAlpha) {
@@ -47,6 +65,7 @@ public class FadeElementInOut : MonoBehaviour
     } else {
       StartCoroutine(FadeElementInOutCoroutine(_canvasGroup.alpha, 0, _outDuration));
     }
+    return _outDuration;
   }
   private IEnumerator FadeElementInOutCoroutine(float startAlpha, float targetAlpha, float duration) {
     float time = 0;

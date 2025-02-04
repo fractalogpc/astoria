@@ -8641,13 +8641,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04feb3a17f2b360499c7e50dc76fe85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _critMarkerMoveSpeed: 1
-  _fadeElementInOut: {fileID: 7619629028060977983}
-  _progressBar: {fileID: 0}
-  _critBar: {fileID: 0}
-  _critFillLeft: {fileID: 0}
-  _critFillRight: {fileID: 0}
-  _critMarker: {fileID: 0}
+  _critMarkerMoveSpeed: 250
+  _barFade: {fileID: 7619629028060977983}
+  _progressBar: {fileID: 493947038006974538}
+  _minigameBar: {fileID: 129513002595384346}
+  _critFillLeft: {fileID: 3122806506989067526}
+  _critFillRight: {fileID: 605145467693291877}
+  _minigameMarker: {fileID: 4090275637724233081}
 --- !u!1 &3021386767256931005
 GameObject:
   m_ObjectHideFlags: 0
@@ -9044,7 +9044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6141987d2524a34ba4c324ab8e6c706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HarvestingMinigameScript: {fileID: 0}
+  _harvestingMinigameUIScript: {fileID: 0}
   _viewmodelManager: {fileID: 9160868286085553714}
 --- !u!114 &3600426329130368141
 MonoBehaviour:
@@ -12917,7 +12917,6 @@ GameObject:
   - component: {fileID: 4721685260391598661}
   - component: {fileID: 2426517764416871742}
   - component: {fileID: 1914804139996394957}
-  - component: {fileID: 2526978126382822629}
   m_Layer: 5
   m_Name: BarOutline
   m_TagString: Untagged
@@ -12982,25 +12981,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2526978126382822629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4281392710510262009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04feb3a17f2b360499c7e50dc76fe85f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _critMarkerMoveSpeed: 1
-  _fadeElementInOut: {fileID: 0}
-  _progressBar: {fileID: 0}
-  _critBar: {fileID: 0}
-  _critFillLeft: {fileID: 0}
-  _critFillRight: {fileID: 0}
-  _critMarker: {fileID: 0}
 --- !u!1 &4289736783351989351
 GameObject:
   m_ObjectHideFlags: 0

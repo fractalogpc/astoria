@@ -5,7 +5,7 @@ public class ToolCore : InputHandlerBase
 {
 	public static ToolCore Instance; // Singleton
 	public BaseToolInstance CurrentTool { get; private set; }
-	public HarvestingMinigame HarvestingMinigameScript;
+	public HarvestingMinigameUI _harvestingMinigameUIScript;
 	
 	[SerializeField] private ViewmodelManager _viewmodelManager;
 	

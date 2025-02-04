@@ -3,31 +3,22 @@ using Mirror;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class TreeChoppable : HealthInterface
+public class TreeChoppable : Harvestable
 {
-		[SerializeField] private ItemData _woodItem;
 		[SerializeField] private float _fallingForce = 1000f;
 		private Rigidbody _rigidbody;
-		private bool _chopped;
 
 		protected override void Start() {
-			base.Start();
 			_rigidbody = GetComponent<Rigidbody>();
 			_rigidbody.isKinematic = true;
-
-			if (_woodItem == null) {
-				Debug.LogError("Wood item is not set in " + name);
-			}
 		}
 		
-		public override void Damage(float damagePoints, Vector3 hitPosition) {
-			if (_chopped) return;
-			base.Damage(damagePoints, hitPosition);
-			if (IsDead) {
-				_chopped = true;
+		public override bool Damage(float damagePoints, Vector3 hitPosition) {
+			bool deadThisHit = base.Damage(damagePoints, hitPosition);
+			if (deadThisHit) {
 				_rigidbody.isKinematic = false;
-				NetworkClient.localPlayer.GetComponentInChildren<InventoryComponent>().AddItemByData(_woodItem);
 				_rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition, ForceMode.Impulse);
 			}
+			return deadThisHit;
 		}
 }
