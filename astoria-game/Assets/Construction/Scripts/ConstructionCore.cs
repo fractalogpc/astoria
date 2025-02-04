@@ -40,7 +40,7 @@ public class ConstructionCore : InputHandlerBase
     public PreviewObject _previewObjectScript;
     private Vector3 _previewObjectPosition;
 
-    private CoreController _core;
+    public CoreController Core;
 
     private bool _canPlace;
 
@@ -64,7 +64,7 @@ public class ConstructionCore : InputHandlerBase
             DebugData = null;
         }
 
-    
+
         switch (State)
         {
             case ConstructionState.PlacingProp:
@@ -235,16 +235,18 @@ public class ConstructionCore : InputHandlerBase
 
             case ConstructionState.PlacingStructure:
                 {
-                    if (_core == null) {
+                    if (Core == null)
+                    {
                         SetConstructionState(ConstructionState.None);
+
+                        break;
                     }
 
                     ConstructionStructureData data = _selectedData as ConstructionStructureData;
 
                     Vector3 position;
-                    Quaternion rotation;
 
-                    bool validPosition = false;
+                    bool validPosition = true;
 
                     // Get the initial ray direction (from the camera through the cursor)
                     Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
@@ -253,6 +255,16 @@ public class ConstructionCore : InputHandlerBase
                     RaycastHit hit;
                     Physics.Raycast(ray, out hit, 20f, Settings.PlacementLayerMask);
 
+                    position = new Vector3(hit.point.x, 0, hit.point.z);
+
+                    position = ConstructionCoreLogic.SnapToGrid(position, Core.position, Core.rotation, 1.5f);
+
+                    // Lock the position to the grid
+                    Vector3 origin = Core.position;
+
+                    RenderPreviewObject(position, Core.rotation);
+
+                    _canPlace = validPosition;
 
                 }
                 break;
@@ -314,6 +326,12 @@ public class ConstructionCore : InputHandlerBase
                 SetConstructionState(ConstructionState.None);
                 OnObjectPlaced?.Invoke(_selectedData);
                 return true;
+            case ConstructionState.PlacingStructure:
+                CmdPlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                SetConstructionState(ConstructionState.None);
+                OnObjectPlaced?.Invoke(_selectedData);
+                return true;
+
         }
 
         return false;
@@ -490,7 +508,24 @@ namespace Construction
 
             return false;
         }
+
+        public static Vector3 SnapToGrid(Vector3 point, Vector3 origin, Quaternion rotation, float gridSize = 1f)
+        {
+            // Translate the point into the grid's local space.
+            Vector3 localPoint = Quaternion.Inverse(rotation) * (point - origin);
+
+            // Snap each coordinate of the local point to the nearest grid cell.
+            localPoint.x = Mathf.Round(localPoint.x / gridSize) * gridSize;
+            localPoint.y = Mathf.Round(localPoint.y / gridSize) * gridSize;
+            localPoint.z = Mathf.Round(localPoint.z / gridSize) * gridSize;
+
+            // Transform the snapped local point back to world space.
+            Vector3 snappedPoint = rotation * localPoint + origin;
+
+            return snappedPoint;
+        }
     }
+
 
     [Serializable]
     public class BuildingSettings
