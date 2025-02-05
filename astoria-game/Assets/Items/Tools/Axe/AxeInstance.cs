@@ -10,6 +10,9 @@ public class AxeInstance : BaseToolInstance
 	private bool _canChop => _timeSinceLastSideChop >= ItemData.SideChopCooldown && _timeSinceLastDownChop >= ItemData.DownChopCooldown;
 	private Coroutine _chopDelayCoroutine;
 	
+	private TreeChoppable _lastHitTree;
+	private TreeChoppable _lookingAtTree;
+	
 	public AxeInstance(ItemData itemData) : base(itemData) {
 	}
 	
@@ -25,6 +28,7 @@ public class AxeInstance : BaseToolInstance
 		base.OnTick();
 		_timeSinceLastSideChop += Time.deltaTime;
 		_timeSinceLastDownChop += Time.deltaTime;
+		
 	}
 	public override void OnUseDown() {
 		if (!_canChop) return;
@@ -81,6 +85,5 @@ public class AxeInstance : BaseToolInstance
 		if (treeChoppable == null) return;
 		
 		// Actual chopping logic
-		
 	}
 }

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Harvestable : NetworkBehaviour
 {
+    public float MaxHealth => _maxHealth;
+    public float CurrentHealth => _currentHealth;
     public bool IsDead => _currentHealth <= 0;
+    public bool FinalSwingAvailable = true;
     
     [Tooltip("The amount a tool has to damage the harvestable to start the harvesting minigame.")]
     [SerializeField] private float _maxHealth;
@@ -14,8 +17,6 @@ public class Harvestable : NetworkBehaviour
     [SerializeField] private LootTable _rewardItems; 
     [Tooltip("The items that are added to the reward if the minigame is completed successfully.")]
     [SerializeField] private LootTable _additionalItems;
-
-    private HarvestingMinigameUI _minigameUI;
     
     /// <summary>
     /// Damages the harvestable by the given amount.
@@ -32,7 +33,7 @@ public class Harvestable : NetworkBehaviour
         }
         return false;
     }
-
+    
     protected virtual void Start() {
         _currentHealth = _maxHealth;
         if (_rewardItems == null) {

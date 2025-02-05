@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 
 /// </summary>
-public class HarvestingMinigameUI : MonoBehaviour
+public class HarvestingUI : MonoBehaviour
 {
     public float MarkerPositionPercent => _minigameMarker.anchoredPosition.x / _minigameBar.rect.width;
     
@@ -29,15 +29,36 @@ public class HarvestingMinigameUI : MonoBehaviour
     [SerializeField] private RectTransform _minigameMarker;
 
     private bool _markerTargetRight;
+    private bool _moveMarker;
     
-    public void SetProgress(float progress) {
-        _progressBar.value = progress;
+    public void SetDisplayedBarTo(HarvestBar bar) {
+        _progressBar.value = bar.CurrentValue / bar.MaxValue;
+        _critFillLeft.value = bar.CritPosition - bar.CritWidth / 2;
+        _critFillRight.value = 100 - bar.CritPosition - bar.CritWidth / 2;
+        _minigameMarker.anchoredPosition = new Vector2(0, 0);
+        switch (bar.State) {
+            case HarvestBar.HarvestBarState.Progress:
+                ShowProgressBar();
+                break;
+            case HarvestBar.HarvestBarState.Minigame:
+                ShowMinigameBar();
+                break;
+            case HarvestBar.HarvestBarState.Hidden:
+                HideBar(true);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     public float ShowBar() {
         return _barFade.FadeIn();
     }
-    public float HideBar() {
+    public float HideBar(bool instant = false) {
+        if (instant) {
+            _barFade.Hide();
+            return 0;
+        } 
         return _barFade.FadeOut();
     }
 
@@ -51,6 +72,7 @@ public class HarvestingMinigameUI : MonoBehaviour
     }
 
     private void Update() {
+        if (!_moveMarker) return;
         _minigameMarker.anchoredPosition += Vector2.right * ((_markerTargetRight ? 1 : -1) * _critMarkerMoveSpeed * Time.deltaTime);
         if (_minigameMarker.anchoredPosition.x >= _minigameBar.rect.width) {
             _markerTargetRight = false;
@@ -59,7 +81,7 @@ public class HarvestingMinigameUI : MonoBehaviour
         }
     }
 
-    public void SetMarkerMovement(bool ) {
-        
+    public void SetMarkerMovement(bool moving) {
+        _moveMarker = moving;
     }
 }
