@@ -1,5 +1,4 @@
 using System;
-using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +11,7 @@ public class DroppedItem : Interactable
   
   public override void Interact() {
     // Add the item to the player's inventory.
-    InventoryComponent playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
+    InventoryComponent playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
     if (playerInventory.AddItem(Item)) { 
       _isBeingPickedUp = true;
       Destroy(gameObject);

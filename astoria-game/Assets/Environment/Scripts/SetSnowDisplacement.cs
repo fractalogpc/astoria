@@ -35,7 +35,7 @@ public class SetSnowDisplacement : MonoBehaviour
     snowMaterial.SetVector("_Center", new Vector4(center.x, center.y, 0.0f, 0.0f));
     while (_localPlayer == null) {
       yield return null;
-      _localPlayer = NetworkClient.localPlayer?.transform;
+      _localPlayer = PlayerInstance.Instance?.transform;
     }
   }
 

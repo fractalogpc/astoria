@@ -1,5 +1,4 @@
 using System;
-using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -31,7 +30,7 @@ public class ContainerManager : InputHandlerBase
 
 	protected virtual void Interact() {
 		if (_playerInventory == null) {
-			_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
+			_playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
 			if (_playerInventory == null) {
 				Debug.LogError("ContainerManager: Player Inventory not found! Ensure the player has an InventoryComponent, and that it is a child of the player GameObject.");
 				return;

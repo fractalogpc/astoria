@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-public class GameStateHandler : NetworkBehaviour
+// public class GameStateHandler : NetworkBehaviour
+public class GameStateHandler : MonoBehaviour
 {
   public enum GameState
   {
@@ -14,7 +14,7 @@ public class GameStateHandler : NetworkBehaviour
     GameOver
   }
 
-  [SyncVar(hook = nameof(OnGameStateChanged))]
+  [SerializeField]
   private GameState currentState = GameState.None;
 
   private readonly Dictionary<GameState, Action> onStateEnterActions = new Dictionary<GameState, Action>();
@@ -22,7 +22,7 @@ public class GameStateHandler : NetworkBehaviour
 
   public GameState CurrentState => currentState;
 
-  public override void OnStartServer()
+  public void Start()
   {
     // Set initial state
     ChangeState(GameState.Lobby);
@@ -53,7 +53,6 @@ public class GameStateHandler : NetworkBehaviour
   /// <summary>
   /// Changes the game state. Only the server can invoke this.
   /// </summary>
-  [Server]
   public void ChangeState(GameState newState)
   {
     if (currentState == newState)
@@ -76,9 +75,6 @@ public class GameStateHandler : NetworkBehaviour
   /// </summary>
   private void OnGameStateChanged(GameState oldState, GameState newState)
   {
-    if (isServer)
-      return; // Server already handles state logic
-
     // Clients can perform local actions based on state change
     HandleClientStateChange(newState);
   }

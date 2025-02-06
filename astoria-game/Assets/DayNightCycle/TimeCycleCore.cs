@@ -104,8 +104,9 @@ public class TimeOfDay
 
 // Mirror has its own NetworkTime.time for syncing time across the network,
 // But we want to have a synced time of day for our day night cycle and other things
-[RequireComponent(typeof(NetworkIdentity))]
-public class TimeCycleCore : NetworkBehaviour
+// [RequireComponent(typeof(NetworkIdentity))]
+// public class TimeCycleCore : NetworkBehaviour
+public class TimeCycleCore : MonoBehaviour
 {
 	private double _networkTime;
 	[Tooltip("The hour that the game starts at. 6:00 is sunrise, and 18:00 is sunset. Follows 24-hour format.")]
@@ -130,12 +131,12 @@ public class TimeCycleCore : NetworkBehaviour
 	}
 
 	private void Start() {
-		_networkTime = NetworkTime.time;
+		_networkTime = Time.time;
 		TimeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
 	}
 
 	private void Update() {
-		_networkTime = NetworkTime.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24);
+		_networkTime = Time.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24);
 		TimeOfDay.SetTime((float)_networkTime);
 	}
 

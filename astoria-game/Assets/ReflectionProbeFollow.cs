@@ -1,4 +1,3 @@
-using Mirror;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Rendering.HighDefinition;
@@ -29,16 +28,12 @@ public class ReflectionProbeFollow : MonoBehaviour
     _secondaryReflectionProbeComponent.timeSlicingMode = ReflectionProbeTimeSlicingMode.IndividualFaces;
 
     while (true) {
-      if (_localPlayer == null) {
-        if (NetworkClient.localPlayer == null) {
+        if (PlayerInstance.Instance == null) {
           yield return null;
           continue;
         }
-        _localPlayer = NetworkClient.localPlayer.transform;
+        _localPlayer = PlayerInstance.Instance.transform;
         _timeSinceLastUpdate = _updateInterval;
-      } else {
-        break;
-      }
       yield return null;
     }
   }

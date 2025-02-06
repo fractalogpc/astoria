@@ -704,7 +704,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6159813253559258251}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: CameraTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -823,7 +823,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9127445491231679375}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1395,7 +1395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4510189919291746493}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1515,7 +1515,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6933499006060940071}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: spine_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1583,9 +1583,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc808ac73d8e994dad6f66b9035c73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   _playerInventory: {fileID: 6580231562744375249}
   _viewmodelManager: {fileID: 9160868286085553714}
   OnEquipWeapon:
@@ -2320,7 +2317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7806112713832010361}
   - component: {fileID: 5918438384883708768}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: exportsMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2635,7 +2632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1561083713912692533}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3057,7 +3054,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7262356435097342959}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: neck_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4473,17 +4470,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4723388315618955371}
-  - component: {fileID: 8845252744102797929}
-  - component: {fileID: 1674963457922141699}
   - component: {fileID: 1519387078295194375}
   - component: {fileID: 3739774951926790246}
   - component: {fileID: 1033706171325523888}
   - component: {fileID: 6613076594192004588}
-  - component: {fileID: 7069476422261629523}
   - component: {fileID: 5077299882305822583}
   - component: {fileID: 7651286900178554149}
   - component: {fileID: 1790292005347456770}
   - component: {fileID: 1989162189779702438}
+  - component: {fileID: 1345790810473838691}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -4520,56 +4515,6 @@ Transform:
   - {fileID: 4067430925847243588}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8845252744102797929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 4723388315618955371}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  timelineOffset: 1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 2
-  rotationSensitivity: 0.01
-  positionPrecision: 0.01
-  scalePrecision: 0.01
---- !u!114 &1674963457922141699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 2144777234
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!136 &1519387078295194375
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -4681,163 +4626,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7069476422261629523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574363177667902295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcba9fed344355148b3e1c048e3316b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  OnLocalPlayerStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6964196041773474963}
-        m_TargetAssemblyTypeName: SetLayer, Assembly-CSharp
-        m_MethodName: SetLayers
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 8
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnNetworkedPlayerStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3580251812374425634}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 642439937972844160}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7275362077817861799}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7275362077817861799}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2631073145775880247}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8658901789698088293}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4222898334509212256}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8932846636545529079}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3179117669751118423}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3048112630466135115}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  DisableForNetworkedPlayer:
-  - {fileID: 1989162189779702438}
-  - {fileID: 7651286900178554149}
-  - {fileID: 0}
 --- !u!114 &5077299882305822583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4850,9 +4638,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   OnHealthInitialize:
     m_PersistentCalls:
       m_Calls: []
@@ -4914,6 +4699,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 5598755213258857593, guid: 6b9a18ca31046fd4ebfcaf9bae93efd5, type: 3}
+--- !u!114 &1345790810473838691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574363177667902295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac288be53a34972478df2c4fce1b8111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5187,7 +4984,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 338380952136689870}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5548,7 +5345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2153930014839869551}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ball_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5803,7 +5600,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4743018411430012809}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5835,7 +5632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 97182995863611973}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5872,7 +5669,7 @@ GameObject:
   - component: {fileID: 8213902068015065991}
   - component: {fileID: 6964196041773474963}
   - component: {fileID: 5665581964394726580}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: Worldmodel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6073,7 +5870,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 984744361841372302}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6192,7 +5989,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5957264144836893996}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: spine_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6226,7 +6023,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5031751903551152820}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6258,7 +6055,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8656130276581306835}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6687,7 +6484,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2931377382618173088}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7192,9 +6989,7 @@ MonoBehaviour:
   togglePlayerBuildingUI: {fileID: 7753506192576928618}
   prefabParentContent: {fileID: 6847233402077956102}
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
-  ConstructableObjects:
-  - {fileID: 0}
-  - {fileID: 0}
+  ConstructableObjects: []
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -7204,7 +6999,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1332466171070128565}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: foot_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8217,7 +8012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4720931582090100387}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: clavicle_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8468,9 +8263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d73758bb34f60f4394d64dd2fa000a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   DebugData: {fileID: 0}
   State: 0
   Settings:
@@ -9022,7 +8814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3336087315982724822}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10004,7 +9796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7215018566698238315}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10035,7 +9827,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4714796741950046248}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10091,7 +9883,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3571996721196704676
@@ -10103,7 +9895,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6091588896203624306}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11212,7 +11004,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5348766334442083068}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11465,7 +11257,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6785652109339563668}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11725,7 +11517,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3826666167200791947}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11845,7 +11637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2912617374645305437}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12951,7 +12743,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7783014193787382515}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ball_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13158,7 +12950,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5264320103929215417}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14226,7 +14018,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2056384117211139771}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: lowerarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14621,7 +14413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8603856533031203525}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: upperarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15142,7 +14934,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2729506158415211095}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15262,7 +15054,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1077807388121126276}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thigh_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15369,7 +15161,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7449316622413049582}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16377,7 +16169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7486107804770368443}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thigh_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16559,7 +16351,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8709442382017569606}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16591,7 +16383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4203464006119483375}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17029,7 +16821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1337246323698379485}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17149,7 +16941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4293809837215301307}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17361,7 +17153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9220491964679541606}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pinky_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17661,7 +17453,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3378472099848154965}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: pelvis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18141,7 +17933,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a5e256aa923e3549b5a6a1b80354f3f, type: 2}
   - {fileID: 11400000, guid: 9012168e6fe5a6847bf2c58376b8da98, type: 2}
   - {fileID: 11400000, guid: f8d9581525c1c024fb673118a87fdb06, type: 2}
-  - {fileID: 11400000, guid: 935a62b602b5116428f5e58cc87e37fb, type: 2}
 --- !u!1 &6336928685461450730
 GameObject:
   m_ObjectHideFlags: 0
@@ -18239,7 +18030,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2813550041206433807}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: foot_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18271,7 +18062,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5802311558630162460}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: spine_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18470,7 +18261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7437742762127797249}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18681,7 +18472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9110031953523243833}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: hand_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18717,7 +18508,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7984111592227391257}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: calf_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18948,7 +18739,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8154524398286504266}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: Game_engine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19309,7 +19100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4179923545293239642}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: lowerarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19644,9 +19435,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f7b57dd55846719dc0530877cec2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   _viewmodelParent: {fileID: 6126032875406853262}
   _currentViewmodel: {fileID: 0}
   _viewmodelTransform: {fileID: 6126032875406853262}
@@ -19903,7 +19691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3785729932643348292}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: upperarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20247,7 +20035,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1379305453622511113}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: hand_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20375,7 +20163,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4811829736929187560}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: middle_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20407,7 +20195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2247238825399071486}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ring_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20531,7 +20319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2675406589151907517}
   - component: {fileID: 2300291710943347643}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: high-polyMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20878,7 +20666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 958639170530679904}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21086,7 +20874,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 391301230926063008}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: thumb_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21628,7 +21416,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -21643,7 +21431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3960852911573661488}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: clavicle_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21675,7 +21463,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4983514315322227308}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: index_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21795,7 +21583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5593207799423531767}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: calf_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25251,11 +25039,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
---- !u!1 &4222898334509212256 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 867798190505270832, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}
-  m_PrefabInstance: {fileID: 3932124550661782608}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4735654920565021876 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8586635495714480356, guid: dfa38f7ea23ec01448c7a96811b5493f, type: 3}

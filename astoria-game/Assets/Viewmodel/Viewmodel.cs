@@ -12,7 +12,7 @@ public class Viewmodel : MonoBehaviour
 	private Vector2 inputVector;
 	
 	protected void Update() {
-		Debug.Log("Problems with viewmodel animation during movement? Check this line, it uses hardcoded input.");
+		Debug.LogWarning("Problems with viewmodel animation during movement? Check this line, it uses hardcoded input.");
 		inputVector.x = Input.GetAxisRaw("Horizontal");
 		inputVector.y = Input.GetAxisRaw("Vertical");
 		_animator.SetFloat("InputMagnitude", inputVector.magnitude);

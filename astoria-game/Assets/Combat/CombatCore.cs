@@ -16,7 +16,7 @@ using UnityEngine.PlayerLoop;
 /// Sending inputs to weapons
 /// Running coroutines on weapons
 /// </summary>
-public class CombatCore : NetworkedInputHandlerBase
+public class CombatCore : InputHandlerBase
 {
 	[SerializeField] private InventoryComponent _playerInventory;
 	[SerializeField] private ViewmodelManager _viewmodelManager;

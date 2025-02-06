@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Mirror;
 
 public class FollowPlayer : MonoBehaviour
 {
@@ -11,15 +10,11 @@ public class FollowPlayer : MonoBehaviour
 
     private IEnumerator Start() {
         while (true) {
-            if (_localPlayer == null) {
-                if (NetworkClient.localPlayer == null) {
+                if (PlayerInstance.Instance == null) {
                     yield return null;
                     continue;
                 }
-                _localPlayer = NetworkClient.localPlayer.transform;
-            } else {
-                break;
-            }
+                _localPlayer = PlayerInstance.Instance.transform;
             yield return null;
         }
     }

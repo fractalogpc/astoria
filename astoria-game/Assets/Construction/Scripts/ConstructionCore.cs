@@ -2,9 +2,8 @@ using UnityEngine;
 using Construction;
 using UnityEngine.Events;
 using System;
-using Mirror;
 
-public class ConstructionCore : NetworkedInputHandlerBase
+public class ConstructionCore : InputHandlerBase
 {
 
     [Serializable]
@@ -283,7 +282,7 @@ public class ConstructionCore : NetworkedInputHandlerBase
         switch (State)
         {
             case ConstructionState.PlacingProp:
-                CmdPlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                PlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
                 SetConstructionState(ConstructionState.None);
                 OnObjectPlaced?.Invoke(_selectedData);
                 return true;
@@ -320,30 +319,14 @@ public class ConstructionCore : NetworkedInputHandlerBase
         return placedObject;
     }
 
-    [Command]
-    private void CmdPlaceObject(Vector3 position, Quaternion rotation)
+    private void PlaceObject(Vector3 position, Quaternion rotation)
     {
 
         // TestDebug($"Placing object at {position} with rotation {rotation}");
 
         // Instantiate the object on the server
         GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
-
-        // Ensure the object has a NetworkIdentity component
-        if (placedObject.GetComponent<NetworkIdentity>() == null)
-        {
-            Debug.LogError("Placed prefab is missing a NetworkIdentity component.");
-            return;
-        }
-
-        // Spawn the object on the server and sync it with all clients
-        NetworkServer.Spawn(placedObject);
     }
-
-    [ClientRpc] private void TestDebug(string message) {
-        Debug.Log(message);
-    }
-
 
     private void CleanupPreviewObject()
     {

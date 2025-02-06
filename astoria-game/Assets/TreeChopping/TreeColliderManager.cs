@@ -63,7 +63,7 @@ public class TreeColliderManager : MonoBehaviour
 
     while (_localPlayer == null) {
       yield return null;
-      _localPlayer = NetworkClient.localPlayer?.transform;
+      _localPlayer = PlayerInstance.Instance?.transform;
     }
   }
 

@@ -1,5 +1,3 @@
-using Mirror;
-using UnityEngine;
 
 public class PropInstance : ItemInstance
 {
@@ -7,11 +5,11 @@ public class PropInstance : ItemInstance
     public PropInstance(PropData propData) : base(propData)
     {
         ItemData = propData;
-        _constructionCore = NetworkClient.localPlayer.gameObject.GetComponentInChildren<ConstructionCore>();
+        _constructionCore = PlayerInstance.Instance.gameObject.GetComponentInChildren<ConstructionCore>();
         _constructionCore.OnObjectPlaced.AddListener(OnConstructionCorePlace);
     }
     
-    private ConstructionCore _constructionCore;
+    public ConstructionCore _constructionCore;
     private bool _selected = false;
     private InventoryHotbarSlot _hotbarSlot = null;
     

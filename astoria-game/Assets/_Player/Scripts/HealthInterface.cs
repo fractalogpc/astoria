@@ -30,7 +30,8 @@ public class OnHealEvent : UnityEvent {}
 /// </summary>
 [Serializable]
 public class OnHealthZeroEvent : UnityEvent {}
-public class HealthInterface : NetworkBehaviour
+// public class HealthInterface : NetworkBehaviour
+public class HealthInterface : MonoBehaviour
 {
 
   public float CurrentHealth => _currentHealth;

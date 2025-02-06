@@ -69,6 +69,9 @@ public abstract class InputHandlerBase : MonoBehaviour, IOnEnableExecution
   }
 }
 
+// Networked version of the InputHandlerBase class
+/*
+
 /// <summary>
 /// Abstract base class for handling input actions.
 /// </summary>
@@ -132,3 +135,4 @@ public abstract class NetworkedInputHandlerBase : NetworkBehaviour
     }
   }
 }
+*/
