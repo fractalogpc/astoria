@@ -84,7 +84,7 @@ public class TreeChopping : MonoBehaviour
           // Instantiate a tree prefab at the tree position
           GameObject treePrefab = Instantiate(_treePrefabs[_newInstance.prototypeIndex], treePosition, Quaternion.Euler(0, treeInstance.rotation * Mathf.Rad2Deg, 0), _treeParent);
           // Set the tree prefab's scale to the tree instance's scale
-          treePrefab.transform.localScale = new Vector3(treePrefab.transform.localScale.x * _newInstance.widthScale, treePrefab.transform.localScale.y * _newInstance.heightScale, treePrefab.transform.localScale.z * _newInstance.widthScale);
+          treePrefab.transform.localScale = new Vector3(treePrefab.transform.localScale.x * oldInstance.widthScale, treePrefab.transform.localScale.y * oldInstance.heightScale, treePrefab.transform.localScale.z * oldInstance.widthScale);
           return treePrefab;
         }
       }
