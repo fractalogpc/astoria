@@ -40,7 +40,8 @@ public class Harvestable : NetworkBehaviour
 
 public class HarvestState
 {
-    public bool InMinigame {get; private set;}
+    public Harvestable HarvestableObject { get; private set; }
+    public bool InMinigame { get; private set; }
     
     // Progress Bar
     public float CurrentValue;
@@ -53,8 +54,9 @@ public class HarvestState
     
     public HarvestState(Harvestable harvestable, float critWidthPercent)
     {
-        CurrentValue = harvestable.CurrentHealth;
-        MaxValue = harvestable.MaxHealth;
+        HarvestableObject = harvestable;
+        CurrentValue = HarvestableObject.;
+        MaxValue = harvestable.;
         CritWidth = critWidthPercent;
         float rangeHigh = 100 - (critWidthPercent / 2);
         float rangeLow = critWidthPercent / 2;
