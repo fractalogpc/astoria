@@ -10,8 +10,10 @@ using UnityEngine.UI;
 /// </summary>
 public class HarvestingUI : MonoBehaviour
 {
+    public HarvestState CurrentState { get; private set; }
+    public bool BarShown => _barFade.Visible;
     public float MarkerPositionPercent => _minigameMarker.anchoredPosition.x / _minigameBar.rect.width;
-    
+    public bool IsCrit => MarkerPositionPercent >= _critFillLeft.value && MarkerPositionPercent <= 1 - _critFillRight.value;
     [Header("Settings")]
     [SerializeField] private float _critMarkerMoveSpeed = 250f;
     [Header("References")]
@@ -31,26 +33,14 @@ public class HarvestingUI : MonoBehaviour
     private bool _markerTargetRight;
     private bool _moveMarker;
     
-    public void SetDisplayedBarTo(HarvestBar bar) {
-        _progressBar.value = bar.CurrentValue / bar.MaxValue;
-        _critFillLeft.value = bar.CritPosition - bar.CritWidth / 2;
-        _critFillRight.value = 100 - bar.CritPosition - bar.CritWidth / 2;
+    public void UpdateDisplayStateTo(HarvestState state) {
+        _progressBar.value = state.CurrentValue / state.MaxValue;
+        _critFillLeft.value = state.CritPosition - state.CritWidth / 2;
+        _critFillRight.value = 100 - state.CritPosition - state.CritWidth / 2;
         _minigameMarker.anchoredPosition = new Vector2(0, 0);
-        switch (bar.State) {
-            case HarvestBar.HarvestBarState.Progress:
-                ShowProgressBar();
-                break;
-            case HarvestBar.HarvestBarState.Minigame:
-                ShowMinigameBar();
-                break;
-            case HarvestBar.HarvestBarState.Hidden:
-                HideBar(true);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        CurrentState = state;
     }
-
+    
     public float ShowBar() {
         return _barFade.FadeIn();
     }

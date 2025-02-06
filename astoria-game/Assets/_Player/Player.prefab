@@ -9010,6 +9010,7 @@ GameObject:
   - component: {fileID: 8227020351119092859}
   - component: {fileID: 7803336822960942441}
   - component: {fileID: 3600426329130368141}
+  - component: {fileID: 949388014195051774}
   m_Layer: 12
   m_Name: Tool System
   m_TagString: Untagged
@@ -9044,7 +9045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6141987d2524a34ba4c324ab8e6c706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _harvestingBarManager: {fileID: 0}
+  _harvestingManager: {fileID: 949388014195051774}
   _viewmodelManager: {fileID: 9160868286085553714}
 --- !u!114 &3600426329130368141
 MonoBehaviour:
@@ -9058,6 +9059,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &949388014195051774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3179117669751118423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 127a6bfd17524644979a7bb9f049194f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  _harvestUI: {fileID: 4165832711410089000}
 --- !u!1 &3181362262498068231
 GameObject:
   m_ObjectHideFlags: 0
@@ -10505,7 +10522,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0006713867}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3571996721196704676
@@ -22275,7 +22292,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.47233322
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

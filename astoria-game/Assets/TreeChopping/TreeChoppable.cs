@@ -13,9 +13,9 @@ public class TreeChoppable : Harvestable
 			_rigidbody.isKinematic = true;
 		}
 		
-		public override bool Damage(float damagePoints, Vector3 hitPosition) {
-			bool deadThisHit = base.Damage(damagePoints, hitPosition);
-			if (deadThisHit) {
+		public override bool Hit(float damagePoints, Vector3 hitPosition, bool criticalHit = false) {
+			bool deadThisHit = base.Hit(damagePoints, hitPosition, criticalHit);
+			if (IsHarvested) {
 				_rigidbody.isKinematic = false;
 				_rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition, ForceMode.Impulse);
 			}

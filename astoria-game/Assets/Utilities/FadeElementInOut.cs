@@ -5,6 +5,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CanvasGroup))]
 public class FadeElementInOut : MonoBehaviour
 {
+  public bool Visible => _canvasGroup.alpha > 0;
+  
   [Header("References")]
   public CanvasGroup _canvasGroup;
   [Header("Settings")]
