@@ -1,8 +1,9 @@
 using UnityEngine;
-using Mirror;
 
-public class GameStateController : NetworkBehaviour
+// public class GameStateController : NetworkBehaviour
+public class GameStateController : MonoBehaviour
 {
+  /*
   [SerializeField]
   private GameStateHandler gameStateHandler;
 
@@ -44,4 +45,5 @@ public class GameStateController : NetworkBehaviour
     Debug.Log("Changing game state to Playing...");
     gameStateHandler.ChangeState(GameStateHandler.GameState.Playing);
   }
+  */
 }

@@ -22,6 +22,8 @@ public class FootstepAudio : MonoBehaviour
         Vector3 positionXZ = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 lastPositionXZ = new Vector3(_lastFootstepPosition.x, 0, _lastFootstepPosition.z);
         if (!(Vector3.Distance(positionXZ, lastPositionXZ) > _footstepDistance)) return;
+
+        Debug.Log(transform.position);
         AudioManager.Instance.PlayOneShot(_footstepsEvent, transform.position);
         _lastFootstepPosition = transform.position;
     }

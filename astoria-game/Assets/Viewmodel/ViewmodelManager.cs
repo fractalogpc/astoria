@@ -4,7 +4,8 @@ using UnityEngine;
 using KinematicCharacterController;
 using Player;
 
-public class ViewmodelManager : NetworkBehaviour
+// public class ViewmodelManager : NetworkBehaviour
+public class ViewmodelManager : MonoBehaviour
 {
 	public Type ViewmodelType => _currentViewmodel.GetType();
 	

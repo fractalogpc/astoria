@@ -1,4 +1,3 @@
-using Mirror;
 using UnityEngine;
 
 public class HarvestableRock : HealthInterface
@@ -8,7 +7,7 @@ public class HarvestableRock : HealthInterface
 		base.Damage(damagePoints, hitPosition);
 		if (IsDead) {
 			// Drop resources
-			NetworkClient.localPlayer.GetComponentInChildren<InventoryComponent>().AddItemByData(_stoneItem);
+			PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(_stoneItem);
 			// Destroy game object
 			Destroy(gameObject);
 		}

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
-using System.Linq;
-using TMPro;
 using UnityEngine.UI;
+using System;
+using Mirror;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -15,25 +14,19 @@ using UnityEngine.UI;
 /// This and supporting classes were all made in under 30 minutes! This is definitely a little rough around the edges.
 /// </summary>
 [RequireComponent(typeof(Interactable))]
-public class CraftingStationNetworked : NetworkBehaviour
+// public class CraftingStationNetworked : NetworkBehaviour
+public class CraftingStationNetworked : MonoBehaviour
 {
 	public RecipeLibrary Recipes;
 	public CraftingItemInfoUI ItemInfoUI;
 	public CraftingRecipeGridUI RecipeGridUI;
 	public CraftingCountUI CraftCountUI;
-	[SerializeField] [ReadOnly] private InventoryComponent _playerInventory;
+	[SerializeField, ReadOnly] private InventoryComponent _playerInventory;
 	[SerializeField] private Interactable _interactable;
 	[SerializeField] private Button _craftButton;
 
 	[ReadOnly] public RecipeData SelectedRecipe { get; private set; }
 	[ReadOnly] public int SelectedCraftCount { get; private set; }
-	
-	/// <summary>
-	/// Add your validation code here after the base.OnValidate(); call.
-	/// </summary>
-	protected override void OnValidate() {
-		base.OnValidate();
-	}
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
@@ -54,7 +47,7 @@ public class CraftingStationNetworked : NetworkBehaviour
 	public void OnInteract() {
 		// Because the player inventory won't exist at start, but definitely does exist if the player can interact with the station
 		bool firstTime = _playerInventory == null;
-		_playerInventory = NetworkClient.localPlayer.gameObject.GetComponentInChildren<InventoryComponent>();
+		_playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
 		if (firstTime) _playerInventory.OnInventoryChange.AddListener(OnPlayerInventoryChanged);
 		ItemInfoUI.Initialize(this);
 		RecipeGridUI.Initialize(this);
