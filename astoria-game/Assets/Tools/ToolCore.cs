@@ -29,7 +29,7 @@ public class ToolCore : InputHandlerBase
 		RegisterAction(_inputActions.Player.AttackSecondary, _ => OnAltUseDown(), OnAltUseUp);
 	}
 
-	private void Start() {
+	private void OnEnable() {
 		if (Instance != null) {
 			Debug.LogError("Multiple ToolCore instances detected!");
 			Destroy(this);

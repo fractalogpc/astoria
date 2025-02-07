@@ -11,7 +11,7 @@ public class CoreController : NetworkBehaviour
 
     private void OnEnable()
     {
-        if (NetworkClient.localPlayer.GetComponentInChildren<ConstructionCore>().Core != null)
+        if (PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Core != null)
         {
             Debug.LogError("Core already exists");
             Destroy(gameObject);
@@ -22,6 +22,6 @@ public class CoreController : NetworkBehaviour
         rotation = transform.rotation;
         scale = transform.localScale.x;
 
-        NetworkClient.localPlayer.GetComponentInChildren<ConstructionCore>().Core = this;
+        PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Core = this;
     }
 }

@@ -47,6 +47,7 @@ public class ConstructionCore : InputHandlerBase
     protected override void InitializeActionMap()
     {
         RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
+        Debug.Log("Click registered");
     }
 
     private void Start()
@@ -327,7 +328,7 @@ public class ConstructionCore : InputHandlerBase
                 OnObjectPlaced?.Invoke(_selectedData);
                 return true;
             case ConstructionState.PlacingStructure:
-                CmdPlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                PlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
                 SetConstructionState(ConstructionState.None);
                 OnObjectPlaced?.Invoke(_selectedData);
                 return true;
