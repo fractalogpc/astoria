@@ -61,7 +61,13 @@ namespace Construction
       Vector3 endpoint1 = distances[0].Item2 == 0 ? edge1PointB : edge1PointA;
       Vector3 endpoint2 = distances[0].Item3 == 0 ? edge2PointB : edge2PointA;
 
-      
+      // Calculate the rotation
+      Quaternion rotation = Quaternion.FromToRotation(endpoint1 - pivot1, endpoint2 - pivot2);
+
+      // Calculate the position given the rotation
+      Vector3 position = pivot2 - rotation * pivot1;
+
+      return (position, rotation);
     }
   };
 }

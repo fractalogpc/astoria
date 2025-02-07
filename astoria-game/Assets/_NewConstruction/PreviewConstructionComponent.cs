@@ -15,7 +15,7 @@ namespace Construction
         public List<Edge> edges; // Public for editor
 
         // Called by construction system to see if this component can connect to another component
-        public bool HasAvailableConnection(out Vector3 snappedPosition)
+        public bool HasAvailableConnection(out Vector3 snappedPosition, out Quaternion snappedRotation)
         {
             List<(Edge, Edge, float, Transform)> compatibleEdges = new List<(Edge, Edge, float, Transform)>(); // List of compatible edges and their distance to the other component
 
@@ -37,6 +37,7 @@ namespace Construction
             }
 
             snappedPosition = Vector3.zero;
+            snappedRotation = Quaternion.identity;
 
             if (compatibleEdges.Count > 0)
             {
@@ -46,7 +47,10 @@ namespace Construction
                 Edge closestOtherEdge = compatibleEdges[0].Item2;
                 Transform otherTransform = compatibleEdges[0].Item4;
 
-                float snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, transform, otherTransform);
+                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, transform, otherTransform);
+
+                snappedPosition = transform.position + snappedPositionOffset.Item1;
+                snappedRotation = snappedPositionOffset.Item2;
 
                 return true;
             }
