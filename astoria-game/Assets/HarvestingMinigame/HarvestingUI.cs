@@ -10,7 +10,6 @@ using UnityEngine.UI;
 /// </summary>
 public class HarvestingUI : MonoBehaviour
 {
-    public HarvestState CurrentState { get; private set; }
     public bool BarShown => _barFade.Visible;
     public float MarkerPositionPercent => _minigameMarker.anchoredPosition.x / _minigameBar.rect.width;
     public bool IsCrit => MarkerPositionPercent >= _critFillLeft.value && MarkerPositionPercent <= 1 - _critFillRight.value;
@@ -29,17 +28,6 @@ public class HarvestingUI : MonoBehaviour
     [SerializeField] private Slider _critFillRight;
     [Tooltip("The UI component labeled Marker under the CritBar UI element.")]
     [SerializeField] private RectTransform _minigameMarker;
-
-    private bool _markerTargetRight;
-    private bool _moveMarker;
-    
-    public void UpdateDisplayStateTo(HarvestState state) {
-        _progressBar.value = state.CurrentValue / state.MaxValue;
-        _critFillLeft.value = state.CritPosition - state.CritWidth / 2;
-        _critFillRight.value = 100 - state.CritPosition - state.CritWidth / 2;
-        _minigameMarker.anchoredPosition = new Vector2(0, 0);
-        CurrentState = state;
-    }
     
     public float ShowBar() {
         return _barFade.FadeIn();
@@ -62,16 +50,6 @@ public class HarvestingUI : MonoBehaviour
     }
 
     private void Update() {
-        if (!_moveMarker) return;
-        _minigameMarker.anchoredPosition += Vector2.right * ((_markerTargetRight ? 1 : -1) * _critMarkerMoveSpeed * Time.deltaTime);
-        if (_minigameMarker.anchoredPosition.x >= _minigameBar.rect.width) {
-            _markerTargetRight = false;
-        } else if (_minigameMarker.anchoredPosition.x <= 0) {
-            _markerTargetRight = true;
-        }
-    }
 
-    public void SetMarkerMovement(bool moving) {
-        _moveMarker = moving;
     }
 }

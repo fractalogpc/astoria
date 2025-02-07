@@ -6,16 +6,30 @@ using Random = UnityEngine.Random;
 
 public class HarvestingManager : Singleton<HarvestingManager>
 {
-	public List<Harvestable> _harvestables = new();
+	public List<Harvestable> Harvestables = new();
+	public HarvesterData CurrentHarvester { get; private set; }
 	public bool RegisterHarvestable(Harvestable harvestable) {
-		if (_harvestables.Contains(harvestable)) return false;
-		_harvestables.Add(harvestable);
+		if (Harvestables.Contains(harvestable)) return false;
+		Harvestables.Add(harvestable);
 		return true;
 	}
 	public bool DeregisterHarvestable(Harvestable harvestable) {
-		return _harvestables.Remove(harvestable);
+		return Harvestables.Remove(harvestable);
+	}
+	public void RegisterHarvester(HarvesterData harvester) {
+		CurrentHarvester = harvester;
+	}
+	public void DeregisterHarvester() {
+		CurrentHarvester = null;
+	}
+	private void OnHarvestableLookedAt(Harvestable harvestable) {
+		
+	}
+	private void OnHarvestableHit(Harvestable harvestable) {
+		
 	}
 	
 	
+
 }
 

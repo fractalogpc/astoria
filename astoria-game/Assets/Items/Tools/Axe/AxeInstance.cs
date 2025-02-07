@@ -3,7 +3,7 @@ using Mirror.BouncyCastle.Asn1;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class AxeInstance : BaseToolInstance
+public class AxeInstance : HarvesterInstance
 {
 	public new AxeData ItemData => (AxeData)base.ItemData;
 	private float _timeSinceLastSideChop = float.MaxValue;
@@ -82,5 +82,6 @@ public class AxeInstance : BaseToolInstance
 		if (treeChoppable == null) return;
 		
 		// TODO: Actual chopping logic
+		treeChoppable.Hit(hit.point);
 	}
 }

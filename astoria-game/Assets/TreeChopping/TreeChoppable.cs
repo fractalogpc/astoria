@@ -13,12 +13,17 @@ public class TreeChoppable : Harvestable
 			_rigidbody.isKinematic = true;
 		}
 		
-		public override bool Hit(float damagePoints, Vector3 hitPosition, bool criticalHit = false) {
+		public override void Hit(Vector3 hitPosition) {
 			bool deadThisHit = base.Hit(damagePoints, hitPosition, criticalHit);
 			if (IsHarvested) {
-				_rigidbody.isKinematic = false;
-				_rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition, ForceMode.Impulse);
+				
 			}
 			return deadThisHit;
+		}
+
+		protected override void HarvestedEffects(Vector3 hitPosition) {
+			base.HarvestedEffects();
+			_rigidbody.isKinematic = false;
+			_rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition, ForceMode.Impulse);
 		}
 }
