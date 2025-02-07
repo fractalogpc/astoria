@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Color = UnityEngine.Color;
 using Vector3 = UnityEngine.Vector3;
@@ -15,8 +16,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     public List<Vector3> SubVertexDirection;
     public List<Vector3> SubVertexStart;
     public List<Vector3> SubVertexGoal;
-    public List<Vector3[]> SubVertex = new List<Vector3[]>(new Vector3[15][]);
-    [SerializeField] private List<int[]> listOfArrays;
+    public List<Vector3[]> SubVertex = new List<Vector3[]>();
 
     private bool canDebug = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -106,11 +106,11 @@ public class LightningMeshGeneration : MonoBehaviour {
             {
                 Debug.DrawRay(SubVertexStart[i], SubVertexDirection[i], Color.magenta);
                 Debug.DrawRay(SubVertexStart[i], -SubVertexDirection[i], Color.magenta);
+                Debug.DrawRay(SubVertexStart[i], SubVertex[i][0], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
                 //Debug.DrawRay(SubVertexStart[i], SubVertexGoal[i], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
                 for (int j = 1; j < 15; j++)
                 {
-                    Debug.DrawRay(SubVertex[0][0], SubVertex[0][1] - SubVertex[0][0], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
-                    Debug.DrawRay(SubVertex[1][0], SubVertex[1][1] - SubVertex[1][0], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+                    Debug.DrawRay(SubVertex[i][j], SubVertex[i][j] - SubVertex[i][j - 1], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
                 }
                 /*for (int j = 1; j < 15; j++)
                 {
@@ -161,12 +161,13 @@ public class LightningMeshGeneration : MonoBehaviour {
         
         for (int i = 0; i < SubVertexDirection.Count; i++)
         {
-            SubVertexGoal.Add(SubVertexStart[i] + Random.insideUnitSphere * 100);
+            SubVertexGoal.Add(SubVertexStart[i] + Random.insideUnitSphere * 50);
             for (int j = 0; j < 15; j++)
             {
-                Random.seed = Mathf.FloorToInt(SubVertexStart[i].x + SubVertexStart[i].y + SubVertexStart[i].z * 20 + i) + 50 * i + Time.frameCount;
-                Vector3 line = Random.insideUnitSphere * Mathf.Clamp(Vector3.Distance(Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / numSegments), SubVertexGoal[i]), .1f, 10);
-                SubVertex[i][j] = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)i / numSegments) + new Vector3(line.x, Mathf.Abs(line.y), line.z);
+                Random.seed = Mathf.FloorToInt(SubVertexStart[i].x + SubVertexStart[i].y + SubVertexStart[i].z * 20 + i) + 50 * j + Time.frameCount;
+                Vector3 line = SubVertexGoal[i] * Vector3.Distance(Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 15), SubVertexGoal[i]);
+                SubVertex[i][j] = Random.insideUnitSphere + line + SubVertexStart[i];
+                Debug.Log(SubVertex[i][j]);
             }
         }
     }
