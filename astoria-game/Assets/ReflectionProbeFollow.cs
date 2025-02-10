@@ -34,7 +34,7 @@ public class ReflectionProbeFollow : MonoBehaviour
         }
         _localPlayer = PlayerInstance.Instance.transform;
         _timeSinceLastUpdate = _updateInterval;
-      yield return null;
+        break;
     }
   }
 

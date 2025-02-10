@@ -19,6 +19,10 @@ public class PreviewObject : MonoBehaviour
   [HideInInspector] public float xRotation = 0;
   [HideInInspector] public List<BoxData> boxes = new List<BoxData>();
 
+  public List<Vector3> Edges = new List<Vector3>();
+
+
+
   [HideInInspector] public float heightOffset = 0f;
 
 

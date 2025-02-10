@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
 
 public class TreeColliderManager : MonoBehaviour
 {
@@ -63,7 +62,7 @@ public class TreeColliderManager : MonoBehaviour
 
     while (_localPlayer == null) {
       yield return null;
-      _localPlayer = PlayerInstance.Instance?.transform;
+      _localPlayer = PlayerInstance.Instance.transform;
     }
   }
 
@@ -169,7 +168,7 @@ public class TreeColliderManager : MonoBehaviour
 
         if (activeGrids == 0) continue;
       }
-      Debug.Log("Terrain tile " + terrainTile.centerPosition + " is active");
+      // Debug.Log("Terrain tile " + terrainTile.centerPosition + " is active");
       for (int i = 0; i < terrainTile.grid.Length; i++) {
         ColliderGrid gridCell = terrainTile.grid[i];
         Vector2 gridCellPosition = gridCell.centerPosition;

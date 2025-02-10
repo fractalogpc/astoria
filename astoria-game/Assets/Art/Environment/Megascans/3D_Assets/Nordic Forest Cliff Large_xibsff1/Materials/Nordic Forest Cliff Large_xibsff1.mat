@@ -36,13 +36,15 @@ Material:
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
   - TVE_MOTION_WIND_OPTIMIZED
+  - TVE_OVERLAY
   - TVE_OVERLAY_ELEMENT
   - TVE_OVERLAY_MASK_SAMPLE_MAIN_UV
   - TVE_OVERLAY_SAMPLE_PLANAR_2D
   - TVE_PIPELINE_HD
   - TVE_PIVOT_OFF
+  - TVE_SECOND
   - TVE_SECOND_MASK_SAMPLE_MAIN_UV
-  - TVE_SECOND_SAMPLE_MAIN_UV
+  - TVE_SECOND_SAMPLE_STOCHASTIC_3D
   - TVE_THIRD
   - TVE_THIRD_MASK_SAMPLE_MAIN_UV
   - TVE_THIRD_SAMPLE_STOCHASTIC_3D
@@ -212,7 +214,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondAlbedoTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 07a0c10518a240744b51ef19a82e0515, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondMaskTex:
@@ -220,11 +222,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3d6d9a4a37d1a1d4293df5e59c54ee38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondShaderTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 78a37bd86d26f4947a44b3dbc6609c98, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecularColorMap:
@@ -434,7 +436,7 @@ Material:
     - _IsConverted: 1
     - _IsCustomShader: 0
     - _IsGeneralShader: 1
-    - _IsIdentifier: 97
+    - _IsIdentifier: 50
     - _IsShared: 0
     - _IsStandardShader: 1
     - _IsTVEShader: 1
@@ -535,7 +537,7 @@ Material:
     - _OverlayGlitterDistValue: 100
     - _OverlayGlitterIntensityValue: 0
     - _OverlayGlitterTillingValue: 4
-    - _OverlayIntensityValue: 0
+    - _OverlayIntensityValue: 1
     - _OverlayLumaValue: 1
     - _OverlayMaskCoordMode: 0
     - _OverlayMaskSampleMode: 0
@@ -585,14 +587,14 @@ Material:
     - _SecondAlbedoValue: 1
     - _SecondAlphaClipValue: 0.5
     - _SecondBakeMode: 1
-    - _SecondBlendAlbedoValue: 0
+    - _SecondBlendAlbedoValue: 1
     - _SecondBlendIntensityValue: 1
-    - _SecondBlendNormalValue: 0
-    - _SecondBlendShaderValue: 0
+    - _SecondBlendNormalValue: 1
+    - _SecondBlendShaderValue: 1
     - _SecondColorMode: 0
     - _SecondCoordMode: 0
     - _SecondElementMode: 0
-    - _SecondIntensityValue: 0
+    - _SecondIntensityValue: 1
     - _SecondMaskCoordMode: 0
     - _SecondMaskSampleMode: 0
     - _SecondMaskValue: 1
@@ -600,10 +602,10 @@ Material:
     - _SecondMeshValue: 0
     - _SecondMetallicValue: 0
     - _SecondNormalValue: 1
-    - _SecondOcclusionValue: 0
+    - _SecondOcclusionValue: 1
     - _SecondProjValue: 0
-    - _SecondSampleMode: 0
-    - _SecondSmoothnessValue: 0
+    - _SecondSampleMode: 5
+    - _SecondSmoothnessValue: 1
     - _SizeFadeCategory: 1
     - _SizeFadeDistMaxValue: 0
     - _SizeFadeDistMinValue: 0
@@ -788,7 +790,7 @@ Material:
     - _SecondBlendRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SecondColor: {r: 1, g: 1, b: 1, a: 1}
     - _SecondColorTwo: {r: 1, g: 1, b: 1, a: 1}
-    - _SecondCoordValue: {r: 1, g: 1, b: 0, a: 0}
+    - _SecondCoordValue: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _SecondMaskCoordValue: {r: 1, g: 1, b: 0, a: 0}
     - _SecondMaskRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SecondMeshRemap: {r: 0, g: 1, b: 0, a: 0}
@@ -801,7 +803,7 @@ Material:
     - _ThirdBlendRemap: {r: 0, g: 1, b: 0, a: 0}
     - _ThirdColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThirdColorTwo: {r: 1, g: 1, b: 1, a: 1}
-    - _ThirdCoordValue: {r: 0.2, g: 0.2, b: 0, a: 0}
+    - _ThirdCoordValue: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _ThirdMaskCoordValue: {r: 1, g: 1, b: 0, a: 0}
     - _ThirdMaskRemap: {r: 0, g: 1, b: 0, a: 0}
     - _ThirdMeshRemap: {r: 0, g: 1, b: 0, a: 0}
@@ -845,10 +847,10 @@ Material:
     - _overlay_mask_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _overlay_vert_mode: {r: 0, g: 1, b: 0, a: 0}
     - _render_normal: {r: -1, g: -1, b: -1, a: 0}
-    - _second_coord_value: {r: 1, g: 1, b: 0, a: 0}
+    - _second_coord_value: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _second_mask_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _second_vert_mode: {r: 0, g: 0, b: 1, a: 0}
-    - _third_coord_value: {r: 0.2, g: 0.2, b: 0, a: 0}
+    - _third_coord_value: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _third_mask_coord_value: {r: 1, g: 1, b: 0, a: 0}
     - _third_vert_mode: {r: 0, g: 1, b: 0, a: 0}
     - _tinting_vert_mode: {r: 0, g: 0, b: 0, a: 1}

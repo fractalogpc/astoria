@@ -40,11 +40,14 @@ public class ConstructionCore : InputHandlerBase
     public PreviewObject _previewObjectScript;
     private Vector3 _previewObjectPosition;
 
+    public CoreController Core;
+
     private bool _canPlace;
 
     protected override void InitializeActionMap()
     {
         RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
+        Debug.Log("Click registered");
     }
 
     private void Start()
@@ -62,171 +65,209 @@ public class ConstructionCore : InputHandlerBase
             DebugData = null;
         }
 
+
         switch (State)
         {
             case ConstructionState.PlacingProp:
-                ConstructionPropData data = _selectedData as ConstructionPropData;
-
-                Vector3 position;
-                Quaternion rotation;
-
-                bool validPosition = false;
-
-                // Get the initial ray direction (from the camera through the cursor)
-                Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
-                Vector3 testDirection = ray.direction.normalized; // Initial ray direction
-
-                // Debug the initial ray direction
-                Debug.DrawLine(ray.origin, ray.origin + testDirection * Settings.MaxBuildDistance, Color.white, 1f);
-
-                bool isOutOfRange;
-                // Test the initial raycast direction
-                if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
                 {
-                    validPosition = true;
-                }
+                    ConstructionPropData data = _selectedData as ConstructionPropData;
 
-                int steps = 0;
-                int maxLayers = Settings.MaxLayers; // Maximum number of downward layers
-                float horizontalStep = Settings.HorizontalStep; // Horizontal spread between rays in world units
-                float verticalStep = Settings.VerticalStep; // Vertical distance between layers in world units
-                float verticalSubStep = Settings.VerticalSubStep;
-                float upwardCurveFactor = Settings.UpwardCurveFactor; // Controls the amount of upward bending
-                int densityFactor = Settings.DensityFactor; // Controls the density of the downward layers
+                    Vector3 position;
+                    Quaternion rotation;
 
-                for (int layer = 0; layer < maxLayers && !validPosition; layer++)
-                {
-                    // Test vertical substeps
-                    Vector3 subsetOffsetDirection;
+                    bool validPosition = false;
 
-                    int numberOfSteps = Mathf.FloorToInt(Settings.VerticalStep / Settings.VerticalSubStep);
-                    for (int i = numberOfSteps; i > 0; i--)
+                    // Get the initial ray direction (from the camera through the cursor)
+                    Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+                    Vector3 testDirection = ray.direction.normalized; // Initial ray direction
+
+                    // Debug the initial ray direction
+                    Debug.DrawLine(ray.origin, ray.origin + testDirection * Settings.MaxBuildDistance, Color.white, 1f);
+
+                    bool isOutOfRange;
+                    // Test the initial raycast direction
+                    if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out isOutOfRange))
                     {
-                        float verticalOffset = (-layer - 1) * verticalStep + i * verticalSubStep;
-                        subsetOffsetDirection = ray.direction + (_cameraTransform.up * verticalOffset);
-                        subsetOffsetDirection.Normalize();
-
-                        Vector3 subsetTestPosition;
-                        Quaternion subsetTestRotation;
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, data, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
-                        {
-                            position = subsetTestPosition;
-                            rotation = subsetTestRotation;
-                            validPosition = true;
-
-                            Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
-                            DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
-
-                            break;
-                        }
-                        else
-                        {
-                            Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.red, 0.1f);
-                            DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
-                        }
+                        validPosition = true;
                     }
 
-                    // If the initial raycast doesn't hit anything, we assume there aren't any objects near so we simplify by just sampling the horizontal slice.
-                    if (validPosition) break;
+                    int steps = 0;
+                    int maxLayers = Settings.MaxLayers; // Maximum number of downward layers
+                    float horizontalStep = Settings.HorizontalStep; // Horizontal spread between rays in world units
+                    float verticalStep = Settings.VerticalStep; // Vertical distance between layers in world units
+                    float verticalSubStep = Settings.VerticalSubStep;
+                    float upwardCurveFactor = Settings.UpwardCurveFactor; // Controls the amount of upward bending
+                    int densityFactor = Settings.DensityFactor; // Controls the density of the downward layers
 
-                    // If the object is out of range, we don't need to sample the horizontal slice
-                    if (isOutOfRange) continue;
-
-                    int pointsInLayer = 1 + (layer * 2); // Number of points in the current layer (1, 3, 5, ...)
-
-                    // Start with the center, then alternate left-right
-                    int directionToggle = 0; // 0 = center, 1 = left, 2 = right
-                    for (int i = 0; i < pointsInLayer && !validPosition; i++)
+                    for (int layer = 0; layer < maxLayers && !validPosition; layer++)
                     {
-                        float horizontalOffset = 0f;
+                        // Test vertical substeps
+                        Vector3 subsetOffsetDirection;
 
-                        // Calculate offset for alternating left-right pattern
-                        if (directionToggle == 0)
+                        int numberOfSteps = Mathf.FloorToInt(Settings.VerticalStep / Settings.VerticalSubStep);
+                        for (int i = numberOfSteps; i > 0; i--)
                         {
-                            // Center point (first)
-                            horizontalOffset = 0f;
-                            directionToggle = 1; // Next point will go left
-                        }
-                        else if (directionToggle == 1)
-                        {
-                            // Left point
-                            horizontalOffset = -(i / 2 + 1) * horizontalStep;
-                            directionToggle = 2; // Next point will go right
-                        }
-                        else
-                        {
-                            // Right point
-                            horizontalOffset = (i / 2) * horizontalStep;
-                            directionToggle = 1; // Next point will go left again
-                        }
+                            float verticalOffset = (-layer - 1) * verticalStep + i * verticalSubStep;
+                            subsetOffsetDirection = ray.direction + (_cameraTransform.up * verticalOffset);
+                            subsetOffsetDirection.Normalize();
 
-                        float layerOffset = -layer * verticalStep; // Downward bias for this layer
-
-                        // Smooth upward curve: Use a quadratic curve for smoothness
-                        float normalizedOffset = Mathf.Abs(horizontalOffset) / (pointsInLayer * horizontalStep); // Normalize to range [0, 1]
-                        float upwardOffset = -Mathf.Pow(normalizedOffset, 2) * upwardCurveFactor; // Quadratic curve for smoothness
-
-                        // Adjust the direction based on the offsets
-                        Vector3 offsetDirection = ray.direction
-                          + (_cameraTransform.up * (layerOffset + upwardOffset)) // Apply downward bias and smooth upward curve
-                          + (_cameraTransform.right * horizontalOffset); // Apply horizontal bias
-                        offsetDirection.Normalize();
-
-                        // Cull ray based on Density Factor
-                        if (densityFactor == 0) continue;
-                        if (densityFactor != -1f)
-                        {
-                            if (i % densityFactor != 0)
+                            Vector3 subsetTestPosition;
+                            Quaternion subsetTestRotation;
+                            if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, subsetOffsetDirection, data, _previewObjectScript, Settings, false, out subsetTestPosition, out subsetTestRotation, out _))
                             {
-                                continue;
+                                position = subsetTestPosition;
+                                rotation = subsetTestRotation;
+                                validPosition = true;
+
+                                Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
+                                DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
+
+                                break;
+                            }
+                            else
+                            {
+                                Debug.DrawLine(ray.origin, ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, Color.red, 0.1f);
+                                DebugDrawCross(ray.origin + subsetOffsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
                             }
                         }
 
-                        // Test this direction
-                        Vector3 testPosition;
-                        Quaternion testRotation;
+                        // If the initial raycast doesn't hit anything, we assume there aren't any objects near so we simplify by just sampling the horizontal slice.
+                        if (validPosition) break;
 
-                        // Don't sphere cast for the layers near the center of the screen because it causes issues with the vertical subset steps
-                        if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, data, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
+                        // If the object is out of range, we don't need to sample the horizontal slice
+                        if (isOutOfRange) continue;
+
+                        int pointsInLayer = 1 + (layer * 2); // Number of points in the current layer (1, 3, 5, ...)
+
+                        // Start with the center, then alternate left-right
+                        int directionToggle = 0; // 0 = center, 1 = left, 2 = right
+                        for (int i = 0; i < pointsInLayer && !validPosition; i++)
                         {
-                            position = testPosition;
-                            rotation = testRotation;
-                            validPosition = true;
+                            float horizontalOffset = 0f;
 
-                            // Draw the valid ray in blue
-                            Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
+                            // Calculate offset for alternating left-right pattern
+                            if (directionToggle == 0)
+                            {
+                                // Center point (first)
+                                horizontalOffset = 0f;
+                                directionToggle = 1; // Next point will go left
+                            }
+                            else if (directionToggle == 1)
+                            {
+                                // Left point
+                                horizontalOffset = -(i / 2 + 1) * horizontalStep;
+                                directionToggle = 2; // Next point will go right
+                            }
+                            else
+                            {
+                                // Right point
+                                horizontalOffset = (i / 2) * horizontalStep;
+                                directionToggle = 1; // Next point will go left again
+                            }
 
-                            DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
+                            float layerOffset = -layer * verticalStep; // Downward bias for this layer
+
+                            // Smooth upward curve: Use a quadratic curve for smoothness
+                            float normalizedOffset = Mathf.Abs(horizontalOffset) / (pointsInLayer * horizontalStep); // Normalize to range [0, 1]
+                            float upwardOffset = -Mathf.Pow(normalizedOffset, 2) * upwardCurveFactor; // Quadratic curve for smoothness
+
+                            // Adjust the direction based on the offsets
+                            Vector3 offsetDirection = ray.direction
+                              + (_cameraTransform.up * (layerOffset + upwardOffset)) // Apply downward bias and smooth upward curve
+                              + (_cameraTransform.right * horizontalOffset); // Apply horizontal bias
+                            offsetDirection.Normalize();
+
+                            // Cull ray based on Density Factor
+                            if (densityFactor == 0) continue;
+                            if (densityFactor != -1f)
+                            {
+                                if (i % densityFactor != 0)
+                                {
+                                    continue;
+                                }
+                            }
+
+                            // Test this direction
+                            Vector3 testPosition;
+                            Quaternion testRotation;
+
+                            // Don't sphere cast for the layers near the center of the screen because it causes issues with the vertical subset steps
+                            if (ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, offsetDirection, data, _previewObjectScript, Settings, (true ? false : true), out testPosition, out testRotation, out _))
+                            {
+                                position = testPosition;
+                                rotation = testRotation;
+                                validPosition = true;
+
+                                // Draw the valid ray in blue
+                                Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, Color.blue, 0.1f);
+
+                                DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.blue);
+                            }
+                            else
+                            {
+                                // Draw invalid rays in a gradient from green to red
+                                float t = (float)steps / (maxLayers * maxLayers); // Normalize step count
+                                Color rayColor = Color.Lerp(Color.green, Color.red, t);
+                                Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, rayColor, Time.deltaTime);
+
+                                DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
+
+                            }
+
+                            steps++; // Increment the step count
                         }
-                        else
-                        {
-                            // Draw invalid rays in a gradient from green to red
-                            float t = (float)steps / (maxLayers * maxLayers); // Normalize step count
-                            Color rayColor = Color.Lerp(Color.green, Color.red, t);
-                            Debug.DrawLine(ray.origin, ray.origin + offsetDirection * Settings.MaxBuildDistance, rayColor, Time.deltaTime);
-
-                            DebugDrawCross(ray.origin + offsetDirection * Settings.MaxBuildDistance, 0.1f, Color.black);
-
-                        }
-
-                        steps++; // Increment the step count
                     }
-                }
 
-                // If none of the positions are valid, position and rotation are set by the initial test
-                if (!validPosition)
+                    // If none of the positions are valid, position and rotation are set by the initial test
+                    if (!validPosition)
+                    {
+                        ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out _);
+                    }
+
+                    RenderPreviewObject(position, rotation);
+
+                    Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
+
+                    _previewObjectScript.SetMaterial(mat);
+
+                    _canPlace = validPosition;
+                }
+                break;
+
+            case ConstructionState.PlacingStructure:
                 {
-                    ConstructionCoreLogic.ValidatePlacementPosition(ray.origin, testDirection, data, _previewObjectScript, Settings, false, out position, out rotation, out _);
+                    if (Core == null)
+                    {
+                        SetConstructionState(ConstructionState.None);
+
+                        break;
+                    }
+
+                    ConstructionStructureData data = _selectedData as ConstructionStructureData;
+
+                    Vector3 position;
+
+                    bool validPosition = true;
+
+                    // Get the initial ray direction (from the camera through the cursor)
+                    Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+                    Vector3 testDirection = ray.direction.normalized; // Initial ray direction
+
+                    RaycastHit hit;
+                    Physics.Raycast(ray, out hit, 20f, Settings.PlacementLayerMask);
+
+                    position = new Vector3(hit.point.x, 0, hit.point.z);
+
+                    position = ConstructionCoreLogic.SnapToGrid(position, Core.position, Core.rotation, 1.5f);
+
+                    // Lock the position to the grid
+                    Vector3 origin = Core.position;
+
+                    RenderPreviewObject(position, Core.rotation);
+
+                    _canPlace = validPosition;
+
                 }
-
-                RenderPreviewObject(position, rotation);
-
-                Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
-
-                _previewObjectScript.SetMaterial(mat);
-
-                _canPlace = validPosition;
-
                 break;
         }
     }
@@ -286,6 +327,12 @@ public class ConstructionCore : InputHandlerBase
                 SetConstructionState(ConstructionState.None);
                 OnObjectPlaced?.Invoke(_selectedData);
                 return true;
+            case ConstructionState.PlacingStructure:
+                PlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                SetConstructionState(ConstructionState.None);
+                OnObjectPlaced?.Invoke(_selectedData);
+                return true;
+
         }
 
         return false;
@@ -346,6 +393,9 @@ public class ConstructionCore : InputHandlerBase
         switch (State)
         {
             case ConstructionState.PlacingProp:
+                CleanupPreviewObject();
+                break;
+            case ConstructionState.PlacingStructure:
                 CleanupPreviewObject();
                 break;
         }
@@ -459,7 +509,24 @@ namespace Construction
 
             return false;
         }
+
+        public static Vector3 SnapToGrid(Vector3 point, Vector3 origin, Quaternion rotation, float gridSize = 1f)
+        {
+            // Translate the point into the grid's local space.
+            Vector3 localPoint = Quaternion.Inverse(rotation) * (point - origin);
+
+            // Snap each coordinate of the local point to the nearest grid cell.
+            localPoint.x = Mathf.Round(localPoint.x / gridSize) * gridSize;
+            localPoint.y = Mathf.Round(localPoint.y / gridSize) * gridSize;
+            localPoint.z = Mathf.Round(localPoint.z / gridSize) * gridSize;
+
+            // Transform the snapped local point back to world space.
+            Vector3 snappedPoint = rotation * localPoint + origin;
+
+            return snappedPoint;
+        }
     }
+
 
     [Serializable]
     public class BuildingSettings
