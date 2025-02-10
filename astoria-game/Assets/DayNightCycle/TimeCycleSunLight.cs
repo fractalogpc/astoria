@@ -13,6 +13,10 @@ public class TimeCycleSunLight : MonoBehaviour
 	[SerializeField] private Light _moonLight;
 	[SerializeField] private HDAdditionalLightData _moonLightData;
 
+	[SerializeField] private AnimationCurve _sunTempCurve;
+	[SerializeField] private float _sunIntensityMax = 15000f;
+	[SerializeField] private float _sunIntensityMin = 5500f;
+
 	[SerializeField] private float _fullMoonIntensity = 1f;
 	[SerializeField] private float _newMoonIntensity = 0.5f;
 	[SerializeField] private float _moonPhaseOffset = 0.5f;
@@ -39,5 +43,7 @@ public class TimeCycleSunLight : MonoBehaviour
 		float moonPhase = (_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength % 29.5f / 29.5f + _moonPhaseOffset) % 1;
 		_moonLightData.moonPhase = moonPhase;
 		_moonLight.intensity = Mathf.Lerp(_newMoonIntensity, _fullMoonIntensity, (moonPhase > 0.5f ? 1 - moonPhase : moonPhase) * 2);
+
+		_sunLight.colorTemperature = _sunTempCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength) * (_sunIntensityMax - _sunIntensityMin) + _sunIntensityMin;
 	}
 }
