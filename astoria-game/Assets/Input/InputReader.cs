@@ -83,7 +83,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
 
     OnAfterInputMapChange?.Invoke(newInputMap);
 
-    Debug.Log($"Changed Input Map: {newInputMap}");
+    Debug.Log($"<color=grey>Changed Input Map:</color> {newInputMap}");
   }
 }
 

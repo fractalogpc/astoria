@@ -19,7 +19,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
   }
 
   private void Interact() {
-    if (!Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
+    if (!Physics.SphereCast(_camera.transform.position, 0.2f, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       print("did not hit anything");
       return;
     }

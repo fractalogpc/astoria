@@ -30,12 +30,14 @@ public class CraftingStationNetworked : MonoBehaviour
 
 	// NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-	private void Start() {
+	private void Start()
+	{
 		_interactable.OnInteract.AddListener(OnInteract);
 		_craftButton.onClick.AddListener(OnCraftButtonClicked);
 	}
 
-	private void OnDisable() {
+	private void OnDisable()
+	{
 		_interactable.OnInteract.RemoveListener(OnInteract);
 		_craftButton.onClick.RemoveListener(OnCraftButtonClicked);
 		if (_playerInventory != null) _playerInventory.OnInventoryChange.RemoveListener(OnPlayerInventoryChanged);
@@ -44,7 +46,8 @@ public class CraftingStationNetworked : MonoBehaviour
 	/// <summary>
 	/// Should be called by a Interactor event.
 	/// </summary>
-	public void OnInteract() {
+	public void OnInteract()
+	{
 		// Because the player inventory won't exist at start, but definitely does exist if the player can interact with the station
 		bool firstTime = _playerInventory == null;
 		_playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
@@ -57,53 +60,78 @@ public class CraftingStationNetworked : MonoBehaviour
 		ItemInfoUI.ResetInfo();
 		RecipeGridUI.UpdateRecipeGrid();
 	}
-	
-	public void OnPlayerInventoryChanged(List<ItemInstance> items) {
+
+	public void OnPlayerInventoryChanged(List<ItemInstance> items)
+	{
 		RecipeGridUI.UpdateRecipeGrid();
 		if (SelectedRecipe == null) return;
-		if (!CanCraftRecipe(SelectedRecipe, 1)) {
+		if (!CanCraftRecipe(SelectedRecipe, 1))
+		{
 			SelectedRecipe = null;
 			ItemInfoUI.ResetInfo();
 		}
 	}
 
-	public void OnCraftButtonClicked() {
+	public void OnCraftButtonClicked()
+	{
 		if (SelectedRecipe == null) return;
 		Craft(SelectedRecipe, SelectedCraftCount);
 		CraftCountUI.UpdateUI();
 	}
 
-	public void SetCraftCount(int count) {
+	public void SetCraftCount(int count)
+	{
 		if (SelectedRecipe == null) return;
 		SelectedCraftCount = count;
 		if (SelectedCraftCount < 1) SelectedCraftCount = 1;
 	}
-	
-	public void SelectRecipe(RecipeData recipe) {
+
+	public void SelectRecipe(RecipeData recipe)
+	{
 		SelectedRecipe = recipe;
 		SelectedCraftCount = 1;
 		ItemInfoUI.SetRecipe(recipe);
 		CraftCountUI.UpdateUI();
 	}
-	
-	public bool Craft(RecipeData recipe, int craftCount) {
+
+	public bool Craft(RecipeData recipe, int craftCount)
+	{
+		if (BackgroundInfo._infBuild)
+		{
+			foreach (ItemSet resultSet in recipe._resultSetList.ItemSets)
+			{
+				int outputItems = resultSet.ItemCount * craftCount;
+				for (int j = 0; j < outputItems; j++)
+				{
+					_playerInventory.AddItemByData(resultSet.ItemData);
+				}
+			}
+			return true;
+		}
+
 		if (!CanCraftRecipe(recipe, craftCount)) return false;
-		foreach (ItemSet ingredientSet in recipe._ingredientSetList.ItemSets) {
+		foreach (ItemSet ingredientSet in recipe._ingredientSetList.ItemSets)
+		{
 			int itemsNeeded = ingredientSet.ItemCount * craftCount;
-			for (int i = 0; i < itemsNeeded; i++) {
+			for (int i = 0; i < itemsNeeded; i++)
+			{
 				_playerInventory.RemoveItemByData(ingredientSet.ItemData);
 			}
 		}
-		foreach (ItemSet resultSet in recipe._resultSetList.ItemSets) {
+		foreach (ItemSet resultSet in recipe._resultSetList.ItemSets)
+		{
 			int outputItems = resultSet.ItemCount * craftCount;
-			for (int j = 0; j < outputItems; j++) {
+			for (int j = 0; j < outputItems; j++)
+			{
 				_playerInventory.AddItemByData(resultSet.ItemData);
 			}
 		}
 		return true;
 	}
-	
-	public bool CanCraftRecipe(RecipeData recipe, int craftCount) {
+
+	public bool CanCraftRecipe(RecipeData recipe, int craftCount)
+	{
+		if (BackgroundInfo._infBuild) return true;
 		return recipe._ingredientSetList.ContainedWithin(_playerInventory.GetItems(), craftCount);
 	}
 }

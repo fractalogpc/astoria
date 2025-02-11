@@ -69,6 +69,14 @@ MonoBehaviour:
   _sunLight: {fileID: 0}
   _moonLight: {fileID: 0}
   _moonLightData: {fileID: 0}
+  _sunTempCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _sunIntensityMax: 15000
+  _sunIntensityMin: 5500
   _fullMoonIntensity: 1
   _newMoonIntensity: 0.5
   _moonPhaseOffset: 0.5
@@ -196,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72398e4b80dbae04cad0291be8498a63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startGameHour: 8
+  _startGameHour: 6
   _dayCycleInMinutes: 20
   _daysStartAtZero: 1
   TimeOfDay:

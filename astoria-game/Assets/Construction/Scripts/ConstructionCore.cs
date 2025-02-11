@@ -243,11 +243,21 @@ public class ConstructionCore : InputHandlerBase
                         break;
                     }
 
+                    bool validPosition = false;
+
                     ConstructionStructureData data = _selectedData as ConstructionStructureData;
+
+                    PreviewConstructionComponent constructionComponent = _previewObject.GetComponent<PreviewConstructionComponent>();
+
+                    if (constructionComponent == null)
+                    {
+                        Debug.LogError("PreviewConstructionComponent not found on preview object");
+                        SetConstructionState(ConstructionState.None);
+                        break;
+                    }
 
                     Vector3 position;
 
-                    bool validPosition = true;
 
                     // Get the initial ray direction (from the camera through the cursor)
                     Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
@@ -256,14 +266,12 @@ public class ConstructionCore : InputHandlerBase
                     RaycastHit hit;
                     Physics.Raycast(ray, out hit, 20f, Settings.PlacementLayerMask);
 
-                    position = new Vector3(hit.point.x, 0, hit.point.z);
-
-                    position = ConstructionCoreLogic.SnapToGrid(position, Core.position, Core.rotation, 1.5f);
+                    
 
                     // Lock the position to the grid
                     Vector3 origin = Core.position;
 
-                    RenderPreviewObject(position, Core.rotation);
+                    RenderPreviewObject(hit.point, Core.rotation);
 
                     _canPlace = validPosition;
 
