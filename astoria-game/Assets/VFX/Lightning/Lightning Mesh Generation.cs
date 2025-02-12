@@ -128,24 +128,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     }
 
     void UpdateMesh() {
-        mesh.Clear();
-        
-        List<Vector3> vertices = new List<Vector3>(Vertex);
-        List<int> triangles = new List<int>();
-        
-        for (int i = 0; i < numSegments; i++)
-        {
-            vertices.Add(Vertex[i]);
-            if (i > 0)
-            {
-                triangles.Add(i - 1);
-                triangles.Add(i);
-            }
-        }
-        
-        mesh.SetVertices(vertices);
-        mesh.SetTriangles(triangles, 0);
-        mesh.RecalculateNormals();
+        throw new System.NotImplementedException();
 
     }
     
