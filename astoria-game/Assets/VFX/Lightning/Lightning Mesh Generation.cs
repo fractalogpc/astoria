@@ -71,7 +71,7 @@ public class LightningMeshGeneration : MonoBehaviour {
         //main path
         for (int i = 0; i < numSegments; i++)
         {
-            Random.seed = Mathf.FloorToInt(spawn.position.x * 20 + spawn.position.y * 20 + spawn.position.z * 20 + i) + 100 * i;// + Time.frameCount;
+            //Random.seed = Mathf.FloorToInt(spawn.position.x * 20 + spawn.position.y * 20 + spawn.position.z * 20 + i) + 100 * i;// + Time.frameCount;
             Vector3 line = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments), goal.position), .1f, 10);
             Vertex[i] = Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments) + new Vector3(line.x, Mathf.Abs(line.y), line.z);
             //Debug.DrawRay(Vertex[i], (goal.position - spawn.position) * 1 / numSegments, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
@@ -106,7 +106,7 @@ public class LightningMeshGeneration : MonoBehaviour {
             SubVertexGoal.Add(SubVertexStart[i] + Random.insideUnitSphere * Vector3.Distance(goal.position, SubVertexStart[i]));
             for (int j = 0; j < 8; j++)
             {
-                Random.seed = Mathf.FloorToInt(SubVertexStart[i].x + SubVertexStart[i].y + SubVertexStart[i].z * 20 + i) + 50 * j + 100;// + Time.frameCount;
+                //Random.seed = Mathf.FloorToInt(SubVertexStart[i].x + SubVertexStart[i].y + SubVertexStart[i].z * 20 + i) + 50 * j + 100;// + Time.frameCount;
                 if (j == 0)
                 {
                     SubVertex[i][j] = SubVertexStart[i];
