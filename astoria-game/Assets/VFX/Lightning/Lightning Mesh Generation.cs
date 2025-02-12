@@ -22,21 +22,27 @@ public class LightningMeshGeneration : MonoBehaviour {
     public float lerp = .75f;
     
     private bool canDebug = false;
+    
+    public Mesh mesh;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+    void Start() {
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
     }
 
     // Update is called once per frame
     void Update() {
+
+        if (Input.anyKeyDown)
+        {
+            SubVertexDirection.Clear();
+            SubVertexStart.Clear();
+            SubVertexGoal.Clear();
+            SubVertex.Clear();
+            FormLightning();
+            canDebug = true;
+        }
         
-        SubVertexDirection.Clear();
-        SubVertexStart.Clear();
-        SubVertexGoal.Clear();
-        SubVertex.Clear();
-        FormLightning();
-        canDebug = true;
 
         if (canDebug)
         {
@@ -119,6 +125,28 @@ public class LightningMeshGeneration : MonoBehaviour {
                 
             }
         }
+    }
+
+    void UpdateMesh() {
+        mesh.Clear();
+        
+        List<Vector3> vertices = new List<Vector3>(Vertex);
+        List<int> triangles = new List<int>();
+        
+        for (int i = 0; i < numSegments; i++)
+        {
+            vertices.Add(Vertex[i]);
+            if (i > 0)
+            {
+                triangles.Add(i - 1);
+                triangles.Add(i);
+            }
+        }
+        
+        mesh.SetVertices(vertices);
+        mesh.SetTriangles(triangles, 0);
+        mesh.RecalculateNormals();
+
     }
     
 }
