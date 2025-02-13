@@ -10,8 +10,6 @@ namespace Construction
     public class PreviewConstructionComponent : MonoBehaviour
     {
         [Header("Settings")]
-        [Tooltip("The distance to sphere cast to find nearby components to connect to from the transform 0,0.")]
-        [SerializeField] private float _sphereRadius = 2f;
         [Tooltip("The layer to sphere cast on to find nearby components to connect to.")]
         [SerializeField] private LayerMask _checkLayer = default;
 
@@ -66,7 +64,7 @@ namespace Construction
 
             // Snap to nearby component
             List<Transform> snappedTransforms;
-            if (HasAvailableConnection(tryPosition, tryRotation, out finalPosition, out finalRotation, out snappedTransforms))
+            if (HasAvailableConnection(tryPosition, tryRotation, settings, out finalPosition, out finalRotation, out snappedTransforms))
             {
                 // Check for collision
                 if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
@@ -84,13 +82,13 @@ namespace Construction
             return false;
         }
 
-        private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
+        private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
         {
             List<(Edge, Edge, float, Transform)> compatibleEdges = new List<(Edge, Edge, float, Transform)>(); // List of compatible edges and their distance to the other component
 
             snappedTransforms = null;
 
-            foreach (Collider collider in Physics.OverlapSphere(tryPosition, _sphereRadius, _checkLayer))
+            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, _checkLayer))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)

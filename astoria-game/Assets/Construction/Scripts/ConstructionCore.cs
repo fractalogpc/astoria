@@ -277,12 +277,12 @@ namespace Construction
                         testDirection.y = 0;
 
                         RaycastHit hit;
-                        Physics.Raycast(ray, out hit, 20f, Settings.PlacementLayerMask);
+                        Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
 
                         // Check if the component can be placed
-                        constructionComponent.CanPlace(hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
-                        RenderPreviewObject(position, rotation, validPosition);
-                        _canPlace = validPosition;
+                        constructionComponent.CanPlace(hit.transform == null ? transform.position + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
+                        RenderPreviewObject(position, rotation, hit.transform == null ? false : validPosition);
+                        _canPlace = hit.transform == null ? false : validPosition; // Can't place structures in mid air
 
                     }
                     break;
