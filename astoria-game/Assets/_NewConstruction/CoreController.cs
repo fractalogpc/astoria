@@ -2,6 +2,9 @@ using UnityEngine;
 using Mirror;
 using Construction;
 
+/// <summary>
+/// Handles the CORE prop. Not to be confused with ConstructionCore.
+/// </summary>
 public class CoreController : NetworkBehaviour
 {
 

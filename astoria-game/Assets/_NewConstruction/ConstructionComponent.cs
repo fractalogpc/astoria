@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Construction
 {
+    /// <summary>
+    /// Goes on the construction component object.
+    /// Handles placing and snapping of components on eachother.
+    /// </summary>
     public class ConstructionComponent : MonoBehaviour
     {
         [Tooltip("Optional preview component for syncing data.")]
@@ -232,7 +236,12 @@ namespace Construction
                 Collapse();
             }
         }
-        
+
+        public void Destroy()
+        {
+            Damage(health);
+        }
+
         public void TriggerStabilityCheck()
         {
             EvaluateStability();

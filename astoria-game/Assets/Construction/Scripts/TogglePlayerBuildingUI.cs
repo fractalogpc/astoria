@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Simply toggles building menu.
+/// </summary>
 public class TogglePlayerBuildingUI : InputHandlerBase
 {
     public UnityEvent OnBuildingUIOpen;

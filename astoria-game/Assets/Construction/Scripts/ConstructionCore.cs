@@ -5,6 +5,11 @@ using System;
 
 namespace Construction
 {
+    /// <summary>
+    /// This is the core of the construction system. Not to be confused with CoreController which handles the CORE prop.
+    /// Should be on the player somewhere.
+    /// This handles the placing and deleting of props and components, nothing more.
+    /// </summary>
     public class ConstructionCore : InputHandlerBase
     {
 
@@ -13,11 +18,11 @@ namespace Construction
         {
             None,
             PlacingProp,
-            RotatingProp,
             PlacingStructure,
             Deleting
         }
         public ConstructionData DebugData;
+        public bool HoldComponentAfterPlace = true;
 
         [Header("Construction State")]
         public ConstructionState State;
@@ -35,13 +40,17 @@ namespace Construction
         [Header("Events")]
         public UnityEvent<ConstructionData> OnDataSelected;
         public UnityEvent<ConstructionData> OnObjectPlaced;
+        public UnityEvent OnObjectDeleted;
 
+        // Placing stuff
         private ConstructionData _selectedData;
-
         private GameObject _previewObject;
         public PreviewObject _previewObjectScript;
         private Vector3 _previewObjectPosition;
         private Vector3 _previewObjectLerpPosition; // Stored seporately for lerping
+
+        // Deleting stuff
+        private GameObject _highlightedForDeletionObject;
 
         public CoreController Core;
 
@@ -50,7 +59,7 @@ namespace Construction
         protected override void InitializeActionMap()
         {
             RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
-            Debug.Log("Click registered");
+            RegisterAction(_inputActions.Player.Delete, _ => SetConstructionState(ConstructionState.Deleting));
         }
 
         private void Start()
@@ -273,6 +282,34 @@ namespace Construction
 
                     }
                     break;
+
+                case ConstructionState.Deleting:
+                    {
+                        // Get the initial ray direction (from the camera through the cursor)
+                        Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+
+                        RaycastHit hit;
+                        Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.ConstructionLayerMask);
+
+                        Debug.Log(hit.transform);
+
+                        if (hit.transform != null)
+                        {
+                            Debug.Log("Found object");
+                            if (hit.transform.GetComponentInParent<ConstructionObject>() != null)
+                            {
+                                Debug.Log("Found component");
+                                GameObject highlightedObject = hit.transform.GetComponentInParent<ConstructionObject>().gameObject;
+
+                                if (_highlightedForDeletionObject == highlightedObject) break;
+                                if (_highlightedForDeletionObject != null) UnhighlightObject(_highlightedForDeletionObject);
+
+                                _highlightedForDeletionObject = highlightedObject;
+                                HighlightObject(highlightedObject);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -286,7 +323,7 @@ namespace Construction
         private void RenderPreviewObject(Vector3 position, Quaternion rotation, bool validPosition)
         {
             _previewObjectPosition = position;
-            
+
             _previewObjectLerpPosition = Vector3.Lerp(_previewObjectLerpPosition, position, Time.deltaTime * _previewObjectLerpSpeed);
 
             _previewObject.transform.position = _previewObjectLerpPosition;
@@ -328,20 +365,34 @@ namespace Construction
 
         private bool OnClick()
         {
-            if (!_canPlace) return false;
-
             switch (State)
             {
                 case ConstructionState.PlacingProp:
+                    if (!_canPlace) break;
                     PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
                     return true;
                 case ConstructionState.PlacingStructure:
+                    if (!_canPlace) break;
                     PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
+
+                    if (HoldComponentAfterPlace)
+                    {
+                        SelectData(_selectedData);
+                    }
                     return true;
+                case ConstructionState.Deleting:
+                    if (_highlightedForDeletionObject == null) break;
+
+                    _highlightedForDeletionObject.GetComponent<ConstructionObject>().Delete();
+
+                    OnObjectDeleted?.Invoke();
+
+                    SetConstructionState(ConstructionState.None);
+                    break;
 
             }
 
@@ -366,6 +417,7 @@ namespace Construction
             return localPreviewObject;
         }
 
+        // Honestly I can not remember why this function exists
         private GameObject CreateObject()
         {
             Vector3 placedPosition = _previewObject.transform.position;
@@ -379,10 +431,15 @@ namespace Construction
         private void PlaceObject(Vector3 position, Quaternion rotation)
         {
 
-            // TestDebug($"Placing object at {position} with rotation {rotation}");
+            // This is where weird server stuff would go
 
             // Instantiate the object on the server
             GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
+        }
+
+        private ConstructionData TryDeleteObject()
+        {
+            return null;
         }
 
         private void CleanupPreviewObject()
@@ -396,6 +453,16 @@ namespace Construction
             _previewObjectScript = null;
         }
 
+        private void HighlightObject(GameObject obj)
+        {
+            Debug.Log("Highlighting " + obj.name);
+        }
+
+        private void UnhighlightObject(GameObject obj)
+        {
+            Debug.Log("UnHighlighting " + obj.name);
+        }
+
         public void SetConstructionState(ConstructionState state)
         {
 
@@ -407,6 +474,10 @@ namespace Construction
                     break;
                 case ConstructionState.PlacingStructure:
                     CleanupPreviewObject();
+                    break;
+                case ConstructionState.Deleting:
+                    UnhighlightObject(_highlightedForDeletionObject);
+                    _highlightedForDeletionObject = null;
                     break;
             }
 
@@ -424,6 +495,9 @@ namespace Construction
 
 namespace Construction
 {
+    /// <summary>
+    /// Static library for functionality with construction. Mainwly about checking for placement or raycasting.
+    /// </summary>
     public static class ConstructionCoreLogic
     {
         public static bool ValidateData(ConstructionData data)
@@ -539,22 +613,37 @@ namespace Construction
     }
 }
 
+/// <summary>
+/// Simple class for storing building settings.
+/// I'm not sure if this should be a class or a struct, I guess it doesn't matter? 
+/// </summary>
 [Serializable]
 public class ConstructionSettings
 {
+    [Tooltip("Maximum distance from the camera position that you can place.")]
     public float MaxBuildDistance = 10f;
 
     // Sampling settings
+    [Tooltip("Number of vertical large steps.")]
     public int MaxLayers = 5;
+    [Tooltip("Distance horizontally that the raycast checks.")]
     public float HorizontalStep = 0.5f;
+    [Tooltip("Distance vertically that the raycast checks.")]
     public float VerticalStep = 0.5f;
+    [Tooltip("Distance vertically for the center line of checks. Should be lower then VerticalStep.")]
     public float VerticalSubStep = 0.01f;
+    [Tooltip("Amount that the outer points curve upwards.")]
     public float UpwardCurveFactor = -0.5f;
+    [Tooltip("The density of the number of points. Lower number means less points. -1 means all points.")]
     public int DensityFactor = 3;
+    [Tooltip("The radius a structure checks for snapping with other structures.")]
     public float StructurePlaceRadius = 5f;
 
+    [Tooltip("The layer that you can place things on. Should be ground, rocks, other construction etc.")]
     public LayerMask PlacementLayerMask;
+    [Tooltip("Should only be the layer of construction objects.")]
     public LayerMask ConstructionLayerMask;
+    [Tooltip("Layer that interferes with placing construction objects.")]
     public LayerMask CollisionLayerMask;
 
     [Header("Normal settings")]

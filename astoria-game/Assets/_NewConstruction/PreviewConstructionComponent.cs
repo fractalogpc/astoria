@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace Construction
 {
+    /// <summary>
+    /// Goes on preview construction components
+    /// </summary>
     public class PreviewConstructionComponent : MonoBehaviour
     {
-
         [Header("Settings")]
         [Tooltip("The distance to sphere cast to find nearby components to connect to from the transform 0,0.")]
         [SerializeField] private float _sphereRadius = 2f;

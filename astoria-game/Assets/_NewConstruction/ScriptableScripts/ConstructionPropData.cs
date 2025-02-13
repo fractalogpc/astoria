@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Scriptable for construction props
+/// </summary>
 [CreateAssetMenu(fileName = "Prop", menuName = "Scriptable Objects/Construction/Prop")]
 public class ConstructionPropData : ConstructionData
 {

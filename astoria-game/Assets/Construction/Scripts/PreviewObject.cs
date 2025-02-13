@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script attached to the preview object of either props or components. Handles logic for checking for collisions and setting the material.
+/// </summary>
 [ExecuteInEditMode]
 public class PreviewObject : MonoBehaviour
 {
-
   public ConstructionData Data;
 
   [System.Serializable]

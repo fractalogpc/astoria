@@ -2,8 +2,11 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 using Construction;
-using System.Collections.Generic;
 
+/// <summary>
+/// Handles the building menu. Not to be confused with ConstructionCore, which handles the placing and deleting of props and components.
+/// This controls the backend of the building menu, designed for selecting components to place. This could also probably work with props, but I haven't tested.
+/// </summary>
 public class BuildingController : MonoBehaviour, IStartExecution
 {
     public ConstructionCore constructionCore;
