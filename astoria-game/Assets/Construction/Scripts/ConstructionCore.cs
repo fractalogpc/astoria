@@ -41,6 +41,7 @@ namespace Construction
         private GameObject _previewObject;
         public PreviewObject _previewObjectScript;
         private Vector3 _previewObjectPosition;
+        private Vector3 _previewObjectLerpPosition; // Stored seporately for lerping
 
         public CoreController Core;
 
@@ -284,12 +285,14 @@ namespace Construction
 
         private void RenderPreviewObject(Vector3 position, Quaternion rotation, bool validPosition)
         {
-            _previewObjectPosition = Vector3.Lerp(_previewObjectPosition, position, Time.deltaTime * _previewObjectLerpSpeed);
+            _previewObjectPosition = position;
+            
+            _previewObjectLerpPosition = Vector3.Lerp(_previewObjectLerpPosition, position, Time.deltaTime * _previewObjectLerpSpeed);
 
-            _previewObject.transform.position = _previewObjectPosition;
+            _previewObject.transform.position = _previewObjectLerpPosition;
             _previewObject.transform.rotation = rotation;
 
-            _previewObjectPosition = _previewObject.transform.position;
+            _previewObjectLerpPosition = _previewObject.transform.position;
 
             Material mat = validPosition ? _previewValidMaterial : _previewInvalidMaterial;
 
@@ -330,12 +333,12 @@ namespace Construction
             switch (State)
             {
                 case ConstructionState.PlacingProp:
-                    PlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                    PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
                     return true;
                 case ConstructionState.PlacingStructure:
-                    PlaceObject(_previewObject.transform.position, _previewObject.transform.rotation);
+                    PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
                     return true;
