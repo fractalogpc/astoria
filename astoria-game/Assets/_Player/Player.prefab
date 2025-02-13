@@ -6991,6 +6991,10 @@ MonoBehaviour:
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
   ConstructableObjects:
   - {fileID: 11400000, guid: 6be556ff677cd51459c0de555fc514a3, type: 2}
+  - {fileID: 11400000, guid: 16eba045c42a9d74da3ac6ccb6049114, type: 2}
+  - {fileID: 11400000, guid: e7504a9deccd4c048ae42dbdfc7393c8, type: 2}
+  - {fileID: 11400000, guid: c2ac5cb6c22ec5f47905c485a809a4ca, type: 2}
+  - {fileID: 11400000, guid: 8c3c1736ddea6e3489343576864d7e75, type: 2}
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -8266,6 +8270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugData: {fileID: 0}
+  HoldComponentAfterPlace: 1
   State: 0
   Settings:
     MaxBuildDistance: 4
@@ -8294,11 +8299,15 @@ MonoBehaviour:
   _previewObjectLerpSpeed: 25
   _previewValidMaterial: {fileID: 2100000, guid: 83a6174f7c8339b41b627da51b1f3ee3, type: 2}
   _previewInvalidMaterial: {fileID: 2100000, guid: 7d211ab32f45b4d47aa0ae6b140213b0, type: 2}
+  _deletingMaterial: {fileID: 0}
   _cameraTransform: {fileID: 8706593742784918896}
   OnDataSelected:
     m_PersistentCalls:
       m_Calls: []
   OnObjectPlaced:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectDeleted:
     m_PersistentCalls:
       m_Calls: []
   _previewObjectScript: {fileID: 0}

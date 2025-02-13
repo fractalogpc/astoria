@@ -2,6 +2,7 @@ using UnityEngine;
 using Construction;
 using UnityEngine.Events;
 using System;
+using System.Collections.Generic;
 
 namespace Construction
 {
@@ -33,6 +34,7 @@ namespace Construction
         [SerializeField] private float _previewObjectLerpSpeed = 10f;
         [SerializeField] private Material _previewValidMaterial;
         [SerializeField] private Material _previewInvalidMaterial;
+        [SerializeField] private Material _deletingMaterial;
 
         [Header("References")]
         [SerializeField] private Transform _cameraTransform;
@@ -51,6 +53,8 @@ namespace Construction
 
         // Deleting stuff
         private GameObject _highlightedForDeletionObject;
+        private List<Renderer> _highlightedRenderers = new List<Renderer>();
+        private List<Material> _highlightedMaterials = new List<Material>();
 
         public CoreController Core;
 
@@ -308,6 +312,13 @@ namespace Construction
                                 HighlightObject(highlightedObject);
                             }
                         }
+                        else
+                        {
+                            if (_highlightedForDeletionObject != null)
+                            {
+                                UnhighlightObject(_highlightedForDeletionObject);
+                            }
+                        }
                     }
                     break;
             }
@@ -456,11 +467,28 @@ namespace Construction
         private void HighlightObject(GameObject obj)
         {
             Debug.Log("Highlighting " + obj.name);
+
+            _highlightedRenderers = new List<Renderer>(obj.GetComponentsInChildren<Renderer>());
+            foreach (Renderer r in _highlightedRenderers)
+            {
+                _highlightedMaterials.Add(r.material);
+
+                r.material = _deletingMaterial;
+            }
         }
 
         private void UnhighlightObject(GameObject obj)
         {
             Debug.Log("UnHighlighting " + obj.name);
+            for (int i = 0; i < _highlightedRenderers.Count; i++)
+            {
+                _highlightedRenderers[i].material = _highlightedMaterials[i];
+            }
+
+            _highlightedRenderers.Clear();
+            _highlightedMaterials.Clear();
+
+            _highlightedForDeletionObject = null;
         }
 
         public void SetConstructionState(ConstructionState state)
