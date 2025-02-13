@@ -32,14 +32,16 @@ namespace Construction
         [SerializeField] private LayerMask _checkLayer = default;
 
         public List<Edge> edges; // Public for editor
-        private Dictionary<Edge, List<ConstructionComponent>> connections;
+        private Dictionary<Edge, List<ConstructionComponent>> connections = new Dictionary<Edge, List<ConstructionComponent>>();
         private float stability;
         private float health;
 
         private void Awake()
         {
-            connections = new Dictionary<Edge, List<ConstructionComponent>>();
             health = maximumHealth;
+
+            TriggerNearbyImplicitConnections();
+            EvaluateStability();
         }
 
         // Try to add a connection explicitly (meant for construction by player)
@@ -58,7 +60,6 @@ namespace Construction
 
             if (baseEdge == null) return;
 
-
             // Add the connection
             AddConnectionDirect(baseEdge.Value, component);
         }
@@ -69,8 +70,9 @@ namespace Construction
             foreach (Collider collider in Physics.OverlapSphere(transform.position, _sphereRadius, _checkLayer))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
-                if (otherComponent != null)
+                if (otherComponent != null && otherComponent != this)
                 {
+                    Debug.Log("Found nearby component: " + otherComponent.gameObject.name);
                     DetermineImplicitConnections(otherComponent);
                 }
             }
@@ -86,21 +88,11 @@ namespace Construction
             {
                 foreach (Edge otherEdge in otherComponent.edges)
                 {
-                    if (edge.IsSame(otherEdge))
+                    // Debug.Log("Checking edge: " + edge.pointA + " " + edge.pointB + " against " + otherEdge.pointA + " " + otherEdge.pointB);
+                    if (edge.IsSame(otherEdge, transform.position, otherComponent.transform.position, transform.rotation, otherComponent.transform.rotation))
                     {
+                        // Debug.Log("Found implicit connection");
                         implicitConnections.Add(edge);
-                    }
-                }
-            }
-
-            // Cull any connections already contained
-            foreach (Edge edge in edges)
-            {
-                foreach (Edge otherEdge in implicitConnections)
-                {
-                    if (edge.IsSame(otherEdge))
-                    {
-                        implicitConnections.Remove(otherEdge);
                     }
                 }
             }
@@ -109,16 +101,23 @@ namespace Construction
             foreach (Edge edge in implicitConnections)
             {
                 AddConnectionDirect(edge, otherComponent);
+                // Add connections to the other component's dictionary
+                otherComponent.AddConnectionDirect(edge, this);
             }
+
+            // Debug.Log("Implicit connections: " + implicitConnections.Count);
 
             return implicitConnections.ToArray();
         }
 
-        private void AddConnectionDirect(Edge edge, ConstructionComponent component)
+        public void AddConnectionDirect(Edge edge, ConstructionComponent component)
         {
             if (connections.ContainsKey(edge))
             {
-                connections[edge].Add(component);
+                if (!connections[edge].Contains(component))
+                {
+                    connections[edge].Add(component);
+                }
             }
             else
             {
@@ -162,6 +161,7 @@ namespace Construction
         private void EvaluateStability()
         {
             stability = CalculateStability();
+            Debug.Log("Stability: " + stability + " Health: " + health + " Identity: " + gameObject.name);
             if (stability < minimumStability)
             {
                 Collapse();
@@ -170,6 +170,17 @@ namespace Construction
 
         private float CalculateStability()
         {
+
+            Debug.Log("Calculating stability for " + gameObject.name);
+            Debug.Log("Connections: " + connections.Count);
+            foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
+            {
+                Debug.Log("Connection: " + connection.Key.pointA + " " + connection.Key.pointB);
+                foreach (ConstructionComponent component in connection.Value)
+                {
+                    Debug.Log("Component: " + component.gameObject.name);
+                }
+            }
             // Calculate stability based on connections
             float stability = inherentStability * stabilityHealthCurve.Evaluate(health / maximumHealth);
 
@@ -207,10 +218,24 @@ namespace Construction
         public void Damage(float damage)
         {
             health -= damage;
+            // Evaluate stability of neighbors
+            foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
+            {
+                foreach (ConstructionComponent component in connection.Value)
+                {
+                    component.TriggerStabilityCheck();
+                }
+            }
+
             if (health <= 0)
             {
                 Collapse();
             }
+        }
+        
+        public void TriggerStabilityCheck()
+        {
+            EvaluateStability();
         }
 
         private void Collapse()
@@ -223,6 +248,8 @@ namespace Construction
                     component.RemoveConnectionDirect(connection.Key, this);
                 }
             }
+
+            Destroy(gameObject);
         }
 
         private static bool Vector3Approximately(Vector3 a, Vector3 b)
