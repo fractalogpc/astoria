@@ -16,8 +16,19 @@ namespace Construction
 
     public readonly bool IsSame(Edge otherEdge)
     {
-      return VectorFunctions.Vector3Approximately(pointA, otherEdge.pointA, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointB, 0.1f) || 
-      VectorFunctions.Vector3Approximately(pointA, otherEdge.pointB, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointA, 0.1f);
+      return (VectorFunctions.Vector3Approximately(pointA, otherEdge.pointA, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointB, 0.1f)) || 
+      (VectorFunctions.Vector3Approximately(pointA, otherEdge.pointB, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointA, 0.1f));
+    }
+
+    public readonly bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2)
+    {
+      Vector3 edge1PointA = position1 + rotation1 * pointA;
+      Vector3 edge1PointB = position1 + rotation1 * pointB;
+      Vector3 edge2PointA = position2 + rotation2 * otherEdge.pointA;
+      Vector3 edge2PointB = position2 + rotation2 * otherEdge.pointB;
+
+      return (VectorFunctions.Vector3Approximately(edge1PointA, edge2PointA, 0.1f) && VectorFunctions.Vector3Approximately(edge1PointB, edge2PointB, 0.1f)) || 
+      (VectorFunctions.Vector3Approximately(edge1PointA, edge2PointB, 0.1f) && VectorFunctions.Vector3Approximately(edge1PointB, edge2PointA, 0.1f));
     }
 
     public static float CalculateEdgeDistance(Edge edge1, Edge edge2, Transform parent1, Transform parent2)
