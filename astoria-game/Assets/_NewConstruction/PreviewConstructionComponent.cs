@@ -114,9 +114,27 @@ namespace Construction
             {
                 compatibleEdges.Sort((x, y) => x.Item3.CompareTo(y.Item3));
 
-                Edge closestEdge = compatibleEdges[0].Item1;
-                Edge closestOtherEdge = compatibleEdges[0].Item2;
-                Transform otherTransform = compatibleEdges[0].Item4;
+                // Put all items with the same distance in a list
+                List<(Edge, Edge, float, Transform)> closestEdges = new List<(Edge, Edge, float, Transform)>();
+                closestEdges.Add(compatibleEdges[0]);
+                for (int i = 1; i < compatibleEdges.Count; i++)
+                {
+                    if (Mathf.Abs(compatibleEdges[i].Item3 - closestEdges[0].Item3) < 0.1f)
+                    {
+                        closestEdges.Add(compatibleEdges[i]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                // Choose the edge attached to the furthest object from the initial preview object position
+                closestEdges.Sort((x, y) => Vector3.Distance(x.Item4.position, tryPosition).CompareTo(Vector3.Distance(y.Item4.position, tryPosition)));
+
+                Edge closestEdge = closestEdges[0].Item1;
+                Edge closestOtherEdge = closestEdges[0].Item2;
+                Transform otherTransform = closestEdges[0].Item4;
 
                 (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, tryPosition, tryRotation, otherTransform.position, otherTransform.rotation);
 
