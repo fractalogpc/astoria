@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Structure", menuName = "Scriptable Objects/Construction/Structure")]
-public class ConstructionStructureData : ConstructionData
+[CreateAssetMenu(fileName = "Component", menuName = "Scriptable Objects/Construction/Component")]
+public class ConstructionComponentData : ConstructionData
 {
     public enum StructureType
     {
