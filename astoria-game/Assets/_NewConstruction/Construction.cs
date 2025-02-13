@@ -118,17 +118,39 @@ namespace Construction
       // Get the closest points
       Vector3 pivot1 = distances[0].Item2 == 0 ? edge1PointA : edge1PointB;
       Vector3 pivot2 = distances[0].Item3 == 0 ? edge2PointA : edge2PointB;
+      Vector3 pivot1Local = distances[0].Item2 == 0 ? edge1.pointA : edge1.pointB;
+      Vector3 pivot2Local = distances[0].Item3 == 0 ? edge2.pointA : edge2.pointB;
 
       Vector3 endpoint1 = distances[0].Item2 == 0 ? edge1PointB : edge1PointA;
       Vector3 endpoint2 = distances[0].Item3 == 0 ? edge2PointB : edge2PointA;
+      Vector3 endpoint1Local = distances[0].Item2 == 0 ? edge1.pointB : edge1.pointA;
+      Vector3 endpoint2Local = distances[0].Item3 == 0 ? edge2.pointB : edge2.pointA;
 
       // Calculate the rotation
       Quaternion rotation = Quaternion.FromToRotation(endpoint1 - pivot1, endpoint2 - pivot2);
-      // TODO: Problem is with the local/world position differences
+
       // Calculate the position given the rotation
       Vector3 pivot1Updated = pivot1 - position1;
       pivot1Updated = rotation * pivot1Updated + position1;
       Vector3 position = pivot2 - pivot1Updated;
+
+      Vector3 travel1 = (pivot1Local + endpoint1Local) / 2;
+      Vector3 travel2 = (pivot2Local + endpoint2Local) / 2;
+
+      float dot = Vector3.Dot(rotation1 * rotation * travel1, rotation2 * travel2);
+      // Debug.Log(dot);
+      if (dot > 0)
+      {
+        // Swap pivot and endpoint
+        Vector3 temp = pivot1;
+        pivot1 = endpoint1;
+        endpoint1 = temp;
+
+        rotation = Quaternion.FromToRotation(endpoint1 - pivot1, endpoint2 - pivot2);
+        pivot1Updated = pivot1 - position1;
+        pivot1Updated = rotation * pivot1Updated + position1;
+        position = pivot2 - pivot1Updated;
+      }
 
       return (position, rotation);
     }
