@@ -72,7 +72,7 @@ namespace Construction
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null && otherComponent != this)
                 {
-                    Debug.Log("Found nearby component: " + otherComponent.gameObject.name);
+                    // Debug.Log("Found nearby component: " + otherComponent.gameObject.name);
                     DetermineImplicitConnections(otherComponent);
                 }
             }
@@ -161,7 +161,7 @@ namespace Construction
         private void EvaluateStability()
         {
             stability = CalculateStability();
-            Debug.Log("Stability: " + stability + " Health: " + health + " Identity: " + gameObject.name);
+            // Debug.Log("Stability: " + stability + " Health: " + health + " Identity: " + gameObject.name);
             if (stability < minimumStability)
             {
                 Collapse();
@@ -171,14 +171,14 @@ namespace Construction
         private float CalculateStability()
         {
 
-            Debug.Log("Calculating stability for " + gameObject.name);
-            Debug.Log("Connections: " + connections.Count);
+            // Debug.Log("Calculating stability for " + gameObject.name);
+            // Debug.Log("Connections: " + connections.Count);
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
-                Debug.Log("Connection: " + connection.Key.pointA + " " + connection.Key.pointB);
+                // Debug.Log("Connection: " + connection.Key.pointA + " " + connection.Key.pointB);
                 foreach (ConstructionComponent component in connection.Value)
                 {
-                    Debug.Log("Component: " + component.gameObject.name);
+                    // Debug.Log("Component: " + component.gameObject.name);
                 }
             }
             // Calculate stability based on connections
