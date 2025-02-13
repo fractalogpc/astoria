@@ -68,7 +68,7 @@ namespace Construction
             // Sphere overlap nearby components and run DetermineImplicitConnections on them
             foreach (Collider collider in Physics.OverlapSphere(transform.position, _sphereRadius, _checkLayer))
             {
-                ConstructionComponent otherComponent = collider.GetComponent<ConstructionComponent>();
+                ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)
                 {
                     DetermineImplicitConnections(otherComponent);

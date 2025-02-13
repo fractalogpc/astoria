@@ -51,7 +51,7 @@ public class PreviewObject : MonoBehaviour
   }
 
   // Check if the preview object is colliding with any other objects in a specific position and rotation
-  public bool IsColliding(Vector3 position, Quaternion rotation, LayerMask layer = default, Transform ignoreTransform = null)
+  public bool IsColliding(Vector3 position, Quaternion rotation, LayerMask layer = default, List<Transform> ignoreTransforms = null)
   {
     foreach (BoxData box in boxes)
     {
@@ -69,7 +69,7 @@ public class PreviewObject : MonoBehaviour
 
       foreach (Collider hit in hits)
       {
-        if (hit.transform == transform || hit.transform == ignoreTransform) continue;
+        if (hit.transform == transform || (ignoreTransforms != null && ignoreTransforms.Contains(hit.transform))) continue;
         return true; // Collision detected
       }
     }

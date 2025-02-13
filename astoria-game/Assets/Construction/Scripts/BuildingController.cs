@@ -12,7 +12,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
     public GameObject prefabParentContent;
     public GameObject StructureObjectPrefab;
 
-    public ConstructionStructureData[] ConstructableObjects;
+    public ConstructionComponentData[] ConstructableObjects;
 
 
     public void InitializeStart()
