@@ -222,6 +222,13 @@ namespace Construction
         public void Damage(float damage)
         {
             health -= damage;
+
+            if (health <= 0)
+            {
+                Collapse();
+                return;
+            }
+
             // Evaluate stability of neighbors
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
@@ -229,11 +236,6 @@ namespace Construction
                 {
                     component.TriggerStabilityCheck();
                 }
-            }
-
-            if (health <= 0)
-            {
-                Collapse();
             }
         }
 
