@@ -23,7 +23,7 @@ public class TimeOfDay
 	[SerializeField][ReadOnly]  private int _second;
 
 	/// <summary>
-	/// Seconds elapsed since the start of the game. Note that this does not automatically update, you need to call Tick() or SetTime() to update it.
+	/// Real seconds elapsed since the start of the game. Note that this does not automatically update, you need to call Tick() or SetTime() to update it.
 	/// </summary>
 	public float SecsElapsed => _secsElapsed;
 
@@ -69,7 +69,7 @@ public class TimeOfDay
 	}
 
 	/// <summary>
-	/// Sets the TimeOfDay to a specific time. Useful for corrections on a existing TimeOfDay object. 
+	/// Sets the TimeOfDay to a specific time. Useful for corrections on an existing TimeOfDay object. 
 	/// </summary>
 	/// <param name="secondsSinceStart">Amount of seconds since Day 1, 00:00:00.</param>
 	public void SetTime(float secondsSinceStart) {
@@ -86,7 +86,7 @@ public class TimeOfDay
 	}
 
 	/// <summary>
-	/// Tick the TimeOfDay forward by a certain amount of seconds. Make sure to take into account the current DayLength.
+	/// Tick the TimeOfDay forward by a certain amount of real seconds. Make sure to take into account the current DayLength.
 	/// </summary>
 	/// <param name="seconds">Seconds to tick forward by.</param>
 	public void Tick(float seconds) {
@@ -131,6 +131,7 @@ public class TimeCycleCore : MonoBehaviour
 	}
 
 	private void Start() {
+		// Multiplayer: Change to network time for multiplayer
 		_networkTime = Time.time;
 		TimeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
 	}
