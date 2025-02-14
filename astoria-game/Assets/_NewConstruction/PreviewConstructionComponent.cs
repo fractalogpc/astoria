@@ -64,7 +64,7 @@ namespace Construction
 
             // Snap to nearby component
             List<Transform> snappedTransforms;
-            if (HasAvailableConnection(tryPosition, tryRotation, settings, out finalPosition, out finalRotation, out snappedTransforms))
+            if (HasAvailableConnection(tryPosition, tryRotation, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
             {
                 // Check for collision
                 if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
@@ -82,7 +82,7 @@ namespace Construction
             return false;
         }
 
-        private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
+        private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionData data, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
         {
             List<(Edge, Edge, float, Transform)> compatibleEdges = new List<(Edge, Edge, float, Transform)>(); // List of compatible edges and their distance to the other component
 
@@ -134,7 +134,17 @@ namespace Construction
                 Edge closestOtherEdge = closestEdges[0].Item2;
                 Transform otherTransform = closestEdges[0].Item4;
 
-                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, tryPosition, tryRotation, otherTransform.position, otherTransform.rotation);
+                bool? doSnapping = null;
+                // Try to cast data to ConstructionComponentData
+                if (data is ConstructionComponentData componentData)
+                {
+                    
+                    if (componentData.Type != ConstructionComponentData.StructureType.Foundation) {
+                        doSnapping = GlobalVariables.FlipRotation;
+                    }
+                }
+
+                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, tryPosition, tryRotation, otherTransform.position, otherTransform.rotation, doSnapping);
 
                 snappedPosition = tryPosition + snappedPositionOffset.Item1;
                 snappedRotation = tryRotation * snappedPositionOffset.Item2;
