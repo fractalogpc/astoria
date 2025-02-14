@@ -11,7 +11,7 @@ public class ConstructionComponentData : ConstructionData
     {
         Foundation,
         Wall,
-        Ceiling
+        Floor
     }
 
     [Header("Structure Settings")]

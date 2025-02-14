@@ -282,8 +282,8 @@ namespace Construction
 
                         // Check if the component can be placed
                         constructionComponent.CanPlace(hit.transform == null ? transform.position + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
-                        RenderPreviewObject(position, rotation, hit.transform == null ? false : validPosition);
-                        _canPlace = hit.transform == null ? false : validPosition; // Can't place structures in mid air
+                        RenderPreviewObject(position, rotation, validPosition);
+                        _canPlace = validPosition; // Can't place structures in mid air
 
                     }
                     break;
