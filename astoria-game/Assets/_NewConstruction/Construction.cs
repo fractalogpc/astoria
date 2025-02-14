@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Construction
 {
+  /// <summary>
+  /// Struct for handling edges between construction components.
+  /// </summary>
   [System.Serializable]
   public struct Edge
   {
@@ -16,7 +19,7 @@ namespace Construction
 
     public readonly bool IsSame(Edge otherEdge)
     {
-      return (VectorFunctions.Vector3Approximately(pointA, otherEdge.pointA, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointB, 0.1f)) || 
+      return (VectorFunctions.Vector3Approximately(pointA, otherEdge.pointA, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointB, 0.1f)) ||
       (VectorFunctions.Vector3Approximately(pointA, otherEdge.pointB, 0.1f) && VectorFunctions.Vector3Approximately(pointB, otherEdge.pointA, 0.1f));
     }
 
@@ -27,7 +30,7 @@ namespace Construction
       Vector3 edge2PointA = position2 + rotation2 * otherEdge.pointA;
       Vector3 edge2PointB = position2 + rotation2 * otherEdge.pointB;
 
-      return (VectorFunctions.Vector3Approximately(edge1PointA, edge2PointA, 0.1f) && VectorFunctions.Vector3Approximately(edge1PointB, edge2PointB, 0.1f)) || 
+      return (VectorFunctions.Vector3Approximately(edge1PointA, edge2PointA, 0.1f) && VectorFunctions.Vector3Approximately(edge1PointB, edge2PointB, 0.1f)) ||
       (VectorFunctions.Vector3Approximately(edge1PointA, edge2PointB, 0.1f) && VectorFunctions.Vector3Approximately(edge1PointB, edge2PointA, 0.1f));
     }
 
@@ -44,7 +47,7 @@ namespace Construction
       float distanceBB = Vector3.Distance(edge1PointB, edge2PointB);
 
       float distance = Mathf.Min(distanceAA, distanceAB) + Mathf.Min(distanceBA, distanceBB);
-      
+
       return distance;
     }
 
@@ -61,7 +64,7 @@ namespace Construction
       float distanceBB = Vector3.Distance(edge1PointB, edge2PointB);
 
       float distance = Mathf.Min(distanceAA, distanceAB) + Mathf.Min(distanceBA, distanceBB);
-      
+
       return distance;
     }
 
@@ -98,7 +101,7 @@ namespace Construction
       return (position, rotation);
     }
 
-    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge edge1, Edge edge2, Vector3 position1, Quaternion rotation1, Vector3 position2, Quaternion rotation2)
+    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge edge1, Edge edge2, Vector3 position1, Quaternion rotation1, Vector3 position2, Quaternion rotation2, bool? snapDirection = null)
     {
       Vector3 edge1PointA = position1 + rotation1 * edge1.pointA;
       Vector3 edge1PointB = position1 + rotation1 * edge1.pointB;
@@ -138,8 +141,30 @@ namespace Construction
       Vector3 travel2 = (pivot2Local + endpoint2Local) / 2;
 
       float dot = Vector3.Dot(rotation1 * rotation * travel1, rotation2 * travel2);
-      // Debug.Log(dot);
-      if (dot > 0)
+
+
+      if (snapDirection == null)
+      {
+        // Defualt state
+        if (dot > 0)
+        {
+          // Swap pivot and endpoint
+          Vector3 temp = pivot1;
+          pivot1 = endpoint1;
+          endpoint1 = temp;
+
+          rotation = Quaternion.FromToRotation(endpoint1 - pivot1, endpoint2 - pivot2);
+          pivot1Updated = pivot1 - position1;
+          pivot1Updated = rotation * pivot1Updated + position1;
+          position = pivot2 - pivot1Updated;
+        }
+      }
+      else if (snapDirection == true)
+      {
+        // Snap in direction of camera
+        // Do nothing
+      }
+      else if (snapDirection == false)
       {
         // Swap pivot and endpoint
         Vector3 temp = pivot1;

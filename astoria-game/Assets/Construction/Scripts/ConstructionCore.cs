@@ -64,6 +64,7 @@ namespace Construction
         {
             RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
             RegisterAction(_inputActions.Player.Delete, _ => SetConstructionState(ConstructionState.Deleting));
+            RegisterAction(_inputActions.Player.FlipBuilding, _ => GlobalVariables.FlipRotation = !GlobalVariables.FlipRotation);
         }
 
         private void Start()
@@ -299,10 +300,8 @@ namespace Construction
 
                         if (hit.transform != null)
                         {
-                            Debug.Log("Found object");
                             if (hit.transform.GetComponentInParent<ConstructionObject>() != null)
                             {
-                                Debug.Log("Found component");
                                 GameObject highlightedObject = hit.transform.GetComponentInParent<ConstructionObject>().gameObject;
 
                                 if (_highlightedForDeletionObject == highlightedObject) break;
@@ -466,8 +465,6 @@ namespace Construction
 
         private void HighlightObject(GameObject obj)
         {
-            Debug.Log("Highlighting " + obj.name);
-
             _highlightedRenderers = new List<Renderer>(obj.GetComponentsInChildren<Renderer>());
             foreach (Renderer r in _highlightedRenderers)
             {
@@ -479,7 +476,6 @@ namespace Construction
 
         private void UnhighlightObject(GameObject obj)
         {
-            Debug.Log("UnHighlighting " + obj.name);
             for (int i = 0; i < _highlightedRenderers.Count; i++)
             {
                 _highlightedRenderers[i].material = _highlightedMaterials[i];
