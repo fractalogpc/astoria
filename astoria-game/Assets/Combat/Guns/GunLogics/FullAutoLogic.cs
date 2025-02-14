@@ -17,7 +17,7 @@ public class FullAutoLogic : FireLogic
 	}
 
 	public override void Tick() {
-		if (!Instance.HasAmmo) return;
+		if (!Instance.HasAmmo && !BackgroundInfo._infAmmo) return;
 		if (!_triggerDown) return;
 		if (_timeSinceLastShot < RPMToSeconds(Instance.ItemData.FullAutoSetting.RoundsPerMinute)) return;
 		Instance.Fire();

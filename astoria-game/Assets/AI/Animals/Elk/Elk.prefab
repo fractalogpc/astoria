@@ -219,29 +219,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
   _currentHealth: 100
   _maxHealth: 100
-  _onHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthZero:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  _onHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _isPlayer: 0
-  _regenRate: 0
-  _regenDelay: 0
 --- !u!114 &6876712786833947819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,4 +250,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnProjectileHit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3389677160241562406}
+        m_TargetAssemblyTypeName: HealthInterface, Assembly-CSharp
+        m_MethodName: Damage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

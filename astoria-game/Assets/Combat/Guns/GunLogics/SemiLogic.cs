@@ -19,7 +19,7 @@ public class SemiLogic : FireLogic
 	}
 
 	public override void OnFireDown() {
-		if (!Instance.HasAmmo) return;
+		if (!Instance.HasAmmo && !BackgroundInfo._infAmmo) return;
 		if (_timeSinceLastShot < Instance.ItemData.SemiAutoSetting.CycleTime) return;
 		Instance.Fire();
 	}

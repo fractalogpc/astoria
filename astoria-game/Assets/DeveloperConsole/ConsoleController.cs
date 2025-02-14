@@ -45,7 +45,8 @@ namespace Console
                 new _LoadSceneCommand(),
                 new _TimeScaleCommand(),
                 new _GodCommand(),
-                new _InfBuildCommand()
+                new _InfBuildCommand(),
+                new _InfAmmoCommand(),
                 // Cheat commands here
             };
 

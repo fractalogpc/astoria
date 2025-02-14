@@ -127,10 +127,10 @@ public class GunInstance : ViewmodelItemInstance
 	}
 
 	private void ProjectileCallback(RaycastHit hit) {
-		Debug.Log($"hit {hit.collider.gameObject.name} at {hit.point}");
-		HealthInterface healthInterface = hit.collider.gameObject.GetComponentInChildren<HealthInterface>();
-		if (healthInterface != null) {
-			healthInterface.Damage(ItemData.Damage, hit.point);
+		Debug.Log($"CALLBACK from {ItemData.ItemName}");
+		ProjectileHittable projectileHittable = hit.collider.gameObject.GetComponentInChildren<ProjectileHittable>();
+		if (projectileHittable != null) {
+			projectileHittable.HitWithProjectile(ItemData.Damage, hit.point);
 		}
 	}
 	
@@ -304,7 +304,7 @@ public class GunInstance : ViewmodelItemInstance
 	
 	private bool ModeAvailable(FireMode mode, FireCombinations combination) {
 		return combination switch {
-			FireCombinations.Semi or FireCombinations.ShotgunSemi => mode == FireMode.Semi,
+			FireCombinations.Semi or FireCombinations.ShotgunSemi => mode is FireMode.Semi,
 			FireCombinations.SemiBurst or FireCombinations.ShotgunSemiBurst => mode is FireMode.Semi or FireMode.Burst,
 			FireCombinations.SemiFull or FireCombinations.ShotgunSemiFull => mode is FireMode.Semi or FireMode.Full,
 			FireCombinations.SemiBurstFull or FireCombinations.ShotgunSemiBurstFull => mode is FireMode.Semi or FireMode.Burst or FireMode.Full,

@@ -6,5 +6,6 @@ public static class BackgroundInfo
   public static bool _freezeTimeOnEnterConsole = true;
   public static bool _godMode = false;
   public static bool _infBuild = true;
+  public static bool _infAmmo = false;
 
 }

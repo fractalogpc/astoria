@@ -41,7 +41,7 @@ public class BurstLogic : FireLogic
 		_firing = true;
 		int shotsFired = 0;
 		while (shotsFired < Instance.ItemData.BurstSetting.ShotsPerBurst) {
-			if (!Instance.HasAmmo) break;
+			if (!Instance.HasAmmo && !BackgroundInfo._infAmmo) break;
 			Instance.Fire();
 			shotsFired++;
 			yield return new WaitForSeconds(RPMToSeconds(Instance.ItemData.BurstSetting.RoundsPerMinute));
