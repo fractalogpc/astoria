@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class LootContainer : ContainerManager
 {
-	[Header("Loot Table")]
+	
+	/// <summary>
+	/// A set of loot pools drawn from sequentially.
+	/// </summary>
+	[Tooltip("A set of loot pools drawn from sequentially, which create the loot in the container.")]
 	public LootTable LootTable;
 
 	public void GenerateLoot() {
