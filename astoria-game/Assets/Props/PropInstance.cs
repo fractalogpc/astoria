@@ -35,6 +35,7 @@ public class PropInstance : ItemInstance
 
     private void OnConstructionCorePlace(ConstructionData constructionData) {
         if (!_selected || !constructionData == ItemData.ConstructionData) return;
+        _hotbarSlot.Deselect();
         _hotbarSlot.AttachedSlot.RemoveItem();
     }
 }
