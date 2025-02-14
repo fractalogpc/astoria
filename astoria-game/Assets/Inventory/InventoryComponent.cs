@@ -49,7 +49,7 @@ public class InventoryComponent : MonoBehaviour
 		FindReferences();
 	}
 
-	public void Start() {
+	public void Awake() {
 		FindReferences();
 		if (_useAssignedInventoryData) {
 			InventoryData = null;
@@ -90,6 +90,13 @@ public class InventoryComponent : MonoBehaviour
 		_colliderImage.color = new Color(0, 0, 0, 0.1f);
 	}
 
+	/// <summary>
+	/// Creates a new empty Inventory with the assigned inventory size in the inspector.
+	/// </summary>
+	public void CreateInventory() {
+		CreateInvFromItemDatas(new List<ItemData>(), _assignedInventorySize);
+	}
+	
 	/// <summary>
 	/// Creates a new InventoryData of inventorySize, containing itemDatas. Packs the item instances into the inventory.
 	/// </summary>
