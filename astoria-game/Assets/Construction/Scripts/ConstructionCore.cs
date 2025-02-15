@@ -3,6 +3,7 @@ using Construction;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace Construction
 {
@@ -511,6 +512,7 @@ namespace Construction
             switch (State)
             {
                 case ConstructionState.None:
+                    GlobalVariables.FlipRotation = true;
                     break;
             }
         }

@@ -1,7 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Scriptable for construction props
+/// Scriptable for construction props.
+/// Props are things that can be placed anywhere. Think chairs, tables, lights, etc.
 /// </summary>
 [CreateAssetMenu(fileName = "Prop", menuName = "Scriptable Objects/Construction/Prop")]
 public class ConstructionPropData : ConstructionData

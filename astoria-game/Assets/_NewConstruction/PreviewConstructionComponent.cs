@@ -39,6 +39,17 @@ namespace Construction
             tryPosition += data.Offset.PositionOffset;
             tryRotation *= Quaternion.Euler(data.Offset.RotationOffset);
 
+            switch (data.Type) {
+                case ConstructionComponentData.StructureType.Foundation:
+                    
+                    break;
+                case ConstructionComponentData.StructureType.Wall:
+                    
+                    break;
+                case ConstructionComponentData.StructureType.Floor:
+                    
+                    break;
+            }
             // If can place component on ground
             if (data.Type == ConstructionComponentData.StructureType.Foundation)
             {
