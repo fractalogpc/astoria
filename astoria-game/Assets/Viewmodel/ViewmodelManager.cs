@@ -9,8 +9,14 @@ public class ViewmodelManager : MonoBehaviour
 {
 	public Type ViewmodelType => _currentViewmodel.GetType();
 	
+	[Tooltip("The transform all viewmodels will be parented to.")]
 	[SerializeField] protected Transform _viewmodelParent;
+	[Tooltip("The current viewmodel being used.")]
 	[SerializeField][Mirror.ReadOnly] protected Viewmodel _currentViewmodel;
+	[Tooltip("The transform all props will be parented to.")]
+	[SerializeField] private Transform _propParent;
+	[Tooltip("The current prop being used.")]
+	[SerializeField] protected GameObject _currentProp;
 
 	[SerializeField] private Transform _viewmodelTransform;
 	[Tooltip("The velocity at which viewmodel offset is at its maximum.")]
@@ -23,7 +29,7 @@ public class ViewmodelManager : MonoBehaviour
 	[SerializeField] private float _transitionSpeed = 10;
 	[Tooltip("The multiplier for the viewmodel's adoption of the camera's bobbing.")]
 	[SerializeField] private float _viewBobbingMultiplier = 1;
-  	[SerializeField] private PlayerController _playerController;
+	[SerializeField] private PlayerController _playerController;
 	[SerializeField] private PlayerViewBob _viewBob;
 
 	private KinematicCharacterMotor _motor;
