@@ -57,6 +57,7 @@ public class PickaxeInstance : BaseToolInstance
 	}
 	private void HarvestRock(float range) {
 		Camera mainCamera = Camera.main;
+		Debug.Log("E");
 		if (mainCamera == null) Debug.LogError("PickaxeInstance: Main camera not found!");
 		// Check for LOS
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
