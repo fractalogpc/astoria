@@ -119,6 +119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 572548277311793284}
   - component: {fileID: 3670722689739216432}
+  - component: {fileID: -3594361241218634603}
   m_Layer: 0
   m_Name: Forest Boulder_wgosajs
   m_TagString: Untagged
@@ -171,6 +172,36 @@ LODGroup:
     renderers:
     - renderer: {fileID: 6816200706358451648}
   m_Enabled: 1
+--- !u!114 &-3594361241218634603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962173127146171508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8db2d568de6fff4790ce45785fc60a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 1
+  _maxHealth: 1
+  _stoneItem: {fileID: 11400000, guid: 4838af18813e4d040a31da7b311d46ac, type: 2}
 --- !u!1 &1294390808409172327
 GameObject:
   m_ObjectHideFlags: 0
