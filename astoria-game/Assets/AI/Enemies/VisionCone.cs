@@ -10,6 +10,7 @@ public class VisionCone : MonoBehaviour
     [SerializeField][Range(0, 180)] private float _horizontalAngle;
     [SerializeField] private float _verticalHeight;
     [SerializeField] private float _distance;
+    [SerializeField] private float _eyeHeight;
     private List<Collider> _colliderContacts = new();
     private List<GameObject> _visibleObjects = new();
     
@@ -63,8 +64,8 @@ public class VisionCone : MonoBehaviour
     }
     
     private bool IsColliderVisible(Collider col) {
-        Vector3 direction = col.transform.position - transform.position;
-        Physics.Raycast(transform.position, direction, out RaycastHit hit, _distance);
+        Vector3 direction = col.transform.position - (transform.position + Vector3.up * _eyeHeight);
+        Physics.Raycast(transform.position + Vector3.up * _eyeHeight, direction, out RaycastHit hit, _distance);
         return hit.collider == col;
     }
     
@@ -86,5 +87,10 @@ public class VisionCone : MonoBehaviour
         if (_colliderContacts.Contains(other)) {
             _colliderContacts.Remove(other);
         }
+    }
+    
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + Vector3.up * _eyeHeight, 0.1f);
     }
 }
