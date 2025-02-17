@@ -128,9 +128,9 @@ public class GunInstance : ViewmodelItemInstance
 
 	private void ProjectileCallback(RaycastHit hit) {
 		Debug.Log($"CALLBACK from {ItemData.ItemName}");
-		ProjectileHittable projectileHittable = hit.collider.gameObject.GetComponentInChildren<ProjectileHittable>();
-		if (projectileHittable != null) {
-			projectileHittable.HitWithProjectile(ItemData.Damage, hit.point);
+		IDamageable damageable = hit.collider.gameObject.GetComponentInChildren<IDamageable>();
+		if (damageable != null) {
+			damageable.TakeDamage(ItemData.Damage, hit.point);
 		}
 	}
 	
