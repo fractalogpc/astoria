@@ -9,6 +9,8 @@ public class TogglePauseMenu : InputHandlerBase
     public UnityEvent OnPauseMenuOpen;
     public UnityEvent OnPauseMenuClose;
 
+    public bool FreezeTimeOnPause = true;
+
     public bool IsPauseMenuOpen { get; private set; }
     [SerializeField] private CanvasGroup _pauseMenuCanvasGroup;
 
@@ -18,6 +20,7 @@ public class TogglePauseMenu : InputHandlerBase
         RegisterAction(_inputActions.GenericUI.CloseUI, ctx => SetVisibility(false));
     }
 
+    private float cashedTimeScale;
     public void SetVisibility(bool show)
     {
         IsPauseMenuOpen = show;
@@ -30,6 +33,11 @@ public class TogglePauseMenu : InputHandlerBase
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             InputReader.Instance.SwitchInputMap(InputMap.GenericUI);
+
+            if (FreezeTimeOnPause) {
+                cashedTimeScale = Time.timeScale;
+                Time.timeScale = 0;
+            }
         }
         else
         {
@@ -37,6 +45,10 @@ public class TogglePauseMenu : InputHandlerBase
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             InputReader.Instance.SwitchInputMap(InputMap.Player);
+
+            if (FreezeTimeOnPause) {
+                Time.timeScale = cashedTimeScale;
+            }
         }
     }
 }
