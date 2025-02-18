@@ -15,6 +15,7 @@ public class WeatherManager : MonoBehaviour
         public float snowIntensity;
         public float wetnessIntensity;
         public float drynessIntensity;
+        public float windSpeed;
         public float weight;
         public UnityEvent onEnter;
         public UnityEvent onExit;
@@ -44,6 +45,7 @@ public class WeatherManager : MonoBehaviour
         _tveManager.globalAtmoData.overlayIntensity = _currentWeatherState.snowIntensity;
         _tveManager.globalAtmoData.wetnessIntensity = _currentWeatherState.wetnessIntensity;
         _tveManager.globalAtmoData.drynessIntensity = _currentWeatherState.drynessIntensity;
+        _tveManager.motionControl = _currentWeatherState.windSpeed;
     }
 
     private WeatherState GetRandomWeatherState()
@@ -99,6 +101,7 @@ public class WeatherManager : MonoBehaviour
                 _tveManager.globalAtmoData.overlayIntensity = Mathf.Lerp(_currentWeatherState.snowIntensity, _targetWeatherState.snowIntensity, t);
                 _tveManager.globalAtmoData.wetnessIntensity = Mathf.Lerp(_currentWeatherState.wetnessIntensity, _targetWeatherState.wetnessIntensity, t);
                 _tveManager.globalAtmoData.drynessIntensity = Mathf.Lerp(_currentWeatherState.drynessIntensity, _targetWeatherState.drynessIntensity, t);
+                _tveManager.motionControl = Mathf.Lerp(_currentWeatherState.windSpeed, _targetWeatherState.windSpeed, t);
             }
             if (t >= _transitionEventThreshold) {
                 _currentWeatherState.onExit.Invoke();
@@ -111,6 +114,7 @@ public class WeatherManager : MonoBehaviour
         _tveManager.globalAtmoData.overlayIntensity = _targetWeatherState.snowIntensity;
         _tveManager.globalAtmoData.wetnessIntensity = _targetWeatherState.wetnessIntensity;
         _tveManager.globalAtmoData.drynessIntensity = _targetWeatherState.drynessIntensity;
+        _tveManager.motionControl = _targetWeatherState.windSpeed;
         _currentWeatherState = _targetWeatherState;
     }
 
