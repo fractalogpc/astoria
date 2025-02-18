@@ -18,7 +18,13 @@ public class MiningRockArea : MonoBehaviour
         for (int i = 0; i < maxRocks; i++)
         {
             Transform spawnPoint = rockSpawnPoints[Random.Range(0, rockSpawnPoints.Length)];
+            if (spawnedRocks.ContainsKey(spawnPoint))
+            {
+                i--;
+                continue;
+            }
             GameObject rock = Instantiate(rockPrefab, spawnPoint.position, spawnPoint.rotation, transform);
+            rock.transform.localScale = 1 / transform.localScale.x * rock.transform.localScale;
             spawnedRocks.Add(spawnPoint, rock);
         }
         currentRocks = maxRocks;
