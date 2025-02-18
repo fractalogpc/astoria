@@ -192,7 +192,7 @@ MonoBehaviour:
   _fullMoonIntensity: 1
   _newMoonIntensity: 0.5
   _moonPhaseOffset: 0.5
-  _framesPerUpdate: 5
+  _framesPerUpdate: 7
 --- !u!1 &3131991583011751211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,6 +1207,8 @@ Transform:
   m_Children:
   - {fileID: 8484009040548842948}
   - {fileID: 4698742586949265630}
+  - {fileID: 1885318167003812103}
+  - {fileID: 504813252765694685}
   m_Father: {fileID: 916802654918332166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8816866635159608012
@@ -1224,6 +1226,9 @@ MonoBehaviour:
   _weatherStates:
   - name: Overcast
     volume: {fileID: 2598816211438639911}
+    snowIntensity: 0
+    wetnessIntensity: 0
+    drynessIntensity: 0
     weight: 1
     onEnter:
       m_PersistentCalls:
@@ -1233,7 +1238,34 @@ MonoBehaviour:
         m_Calls: []
   - name: Sunny
     volume: {fileID: 1732287399192083456}
+    snowIntensity: 0
+    wetnessIntensity: 0
+    drynessIntensity: 0
     weight: 1
+    onEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: Snowy
+    volume: {fileID: 1842194996466230861}
+    snowIntensity: 1
+    wetnessIntensity: 0
+    drynessIntensity: 0
+    weight: 1
+    onEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: Ash
+    volume: {fileID: 5882459957618842523}
+    snowIntensity: 0
+    wetnessIntensity: 0
+    drynessIntensity: 1
+    weight: 5
     onEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -1246,6 +1278,7 @@ MonoBehaviour:
   _transitionEventThreshold: 0.5
   _averageTimeBetweenWeatherChanges: 10
   _timeBetweenWeatherChangesVariance: 5
+  _tveManager: {fileID: 0}
 --- !u!1 &7313327821601961810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1721,6 +1754,55 @@ MonoBehaviour:
   m_ObsoleteBlendNormalDistanceNegative: {x: 0, y: 0, z: 0}
   m_ObsoleteBoxSideFadePositive: {x: 1, y: 1, z: 1}
   m_ObsoleteBoxSideFadeNegative: {x: 1, y: 1, z: 1}
+--- !u!1 &7526942889338288034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 504813252765694685}
+  - component: {fileID: 5882459957618842523}
+  m_Layer: 0
+  m_Name: Ash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &504813252765694685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7526942889338288034}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4865391219141531170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5882459957618842523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7526942889338288034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 8ddc0e34db599694ba76c698a209a615, type: 2}
 --- !u!1 &8209795426072223272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1827,3 +1909,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8581559166613680771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1885318167003812103}
+  - component: {fileID: 1842194996466230861}
+  m_Layer: 0
+  m_Name: Snowy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1885318167003812103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8581559166613680771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4865391219141531170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1842194996466230861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8581559166613680771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: c28947ab375c3ca4584e9c061bcf02fd, type: 2}
