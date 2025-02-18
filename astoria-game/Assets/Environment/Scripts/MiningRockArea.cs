@@ -72,6 +72,7 @@ public class MiningRockArea : MonoBehaviour
             return;
         }
         GameObject rock = Instantiate(rockPrefab, spawnPoint.position, spawnPoint.rotation);
+        rock.transform.localScale = 1 / transform.localScale.x * rock.transform.localScale;
         spawnedRocks.Add(spawnPoint, rock);
         currentRocks++;
     }
