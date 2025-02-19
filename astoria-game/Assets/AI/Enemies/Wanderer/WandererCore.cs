@@ -1,5 +1,13 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
+public enum State {
+    Chasing,
+    Wandering,
+    Attacking,
+    Eating
+}
 
 public class WandererCore : MonoBehaviour, IDamageable
 {
@@ -9,8 +17,12 @@ public class WandererCore : MonoBehaviour, IDamageable
     [SerializeField] private VisionCone _vision;
     [SerializeField] private RagdollToggle _ragdoll;
     
+    private GameObject _currentPlayerTarget;
     private Vector3 _lastPlayerPosition;
-    
+    private Vector3 _nextPoint = Vector3.zero;
+
+    public State _state = State.Wandering;
+
     public void TakeDamage(float damage, Vector3 hitPosition) {
         _health -= damage;
         if (_health <= 0) {
@@ -24,12 +36,53 @@ public class WandererCore : MonoBehaviour, IDamageable
         _health = _fullHealth;
     }
     private void Update() {
-        foreach (GameObject obj in _vision.VisibleObjects) {
-            if (!obj.CompareTag("Player")) continue;
-            _lastPlayerPosition = obj.transform.position;
-            _movement.SetTarget(_lastPlayerPosition);
-            _movement.Go();
-            return;
+        Debug.Log(_state);
+        switch(_state) {
+            case State.Wandering:
+                if (_nextPoint == Vector3.zero) {
+                    _nextPoint = generateNewPoint();
+                } else {
+                    if (Vector3.Distance(_nextPoint, this.transform.position) < 3) {
+                        _nextPoint = generateNewPoint();
+                    }
+                }
+
+                foreach (GameObject obj in _vision.VisibleObjects) {
+                    if (!obj.CompareTag("Player")) continue;
+                    _currentPlayerTarget = obj;
+                    _state = State.Chasing;
+                    return;
+                }
+
+                _movement.SetTarget(_nextPoint);
+                _movement.Go();
+                break;
+            case State.Chasing:
+                _lastPlayerPosition = _currentPlayerTarget.transform.position;
+                if (Vector3.Distance(_lastPlayerPosition, this.transform.position) < 2) {
+                    _state = State.Attacking;
+                    return;
+                }
+                _movement.SetTarget(_lastPlayerPosition);
+                _movement.Go();
+                break;
+            case State.Attacking:
+                _state = State.Wandering;
+                break;
+            default:
+                _state = State.Wandering;
+                break;
         }
+    }
+
+    private Vector3 generateNewPoint() {
+        float x = Random.value * 100 + this.transform.position.x;
+        float z =  Random.value * 100 + this.transform.position.z;
+        float y = 0;
+        RaycastHit hit;
+        if (Physics.Raycast(new Vector3(x, 10000, z), Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
+            y = 10000 - hit.distance; 
+        }
+        return new Vector3(x, y, z);
     }
 }
