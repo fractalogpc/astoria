@@ -20,7 +20,6 @@ public class TogglePauseMenu : InputHandlerBase
         RegisterAction(_inputActions.GenericUI.CloseUI, ctx => SetVisibility(false));
     }
 
-    private float cashedTimeScale;
     public void SetVisibility(bool show)
     {
         IsPauseMenuOpen = show;
@@ -35,7 +34,6 @@ public class TogglePauseMenu : InputHandlerBase
             InputReader.Instance.SwitchInputMap(InputMap.GenericUI);
 
             if (FreezeTimeOnPause) {
-                cashedTimeScale = Time.timeScale;
                 Time.timeScale = 0;
             }
         }
@@ -47,7 +45,7 @@ public class TogglePauseMenu : InputHandlerBase
             InputReader.Instance.SwitchInputMap(InputMap.Player);
 
             if (FreezeTimeOnPause) {
-                Time.timeScale = cashedTimeScale;
+                Time.timeScale = 1.0f;
             }
         }
     }
