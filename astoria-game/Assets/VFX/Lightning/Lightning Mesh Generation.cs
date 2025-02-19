@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SteamAudio;
 using UnityEngine;
 using Color = UnityEngine.Color;
 using Vector3 = UnityEngine.Vector3;
@@ -22,7 +23,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     public float lerp = .75f;
     
     private bool canDebug = false;
-    
+
     public Mesh mesh;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -41,6 +42,11 @@ public class LightningMeshGeneration : MonoBehaviour {
             SubVertex.Clear();
             FormLightning();
             canDebug = true;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FormMesh();
         }
         
 
@@ -127,9 +133,53 @@ public class LightningMeshGeneration : MonoBehaviour {
         }
     }
 
-    void UpdateMesh() {
-        throw new System.NotImplementedException();
+    void FormMesh() {
+        mesh = new Mesh {
+            name = "Procedural Mesh"
+        };
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
 
+        for (int i = 0; i < Vertex.Length; i++)
+        {
+            Vector3 nextVertex = i < Vertex.Length - 1 ? Vertex[i + 1] : goal.position;
+            Vector3 Tangent = nextVertex - Vertex[i];
+            Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
+            Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
+
+            vertices.Add(Vertex[i] + BiNormal);
+            vertices.Add(Vertex[i] + RotNormal);
+            vertices.Add(Vertex[i] - BiNormal);
+            vertices.Add(Vertex[i] - RotNormal);
+        }
+
+        for (int i = 0; i < vertices.Count - 5; i++)
+        {
+            if (i % 4 == 3)
+            {
+                triangles.Add(i);
+                triangles.Add(i + 4);
+                triangles.Add(i + 1);
+                triangles.Add(i);
+                triangles.Add(i + 1);
+                triangles.Add(i - 3);
+            }
+            else
+            {
+                triangles.Add(i);
+                triangles.Add(i + 4);
+                triangles.Add(i + 5);
+                triangles.Add(i);
+                triangles.Add(i + 5);
+                triangles.Add(i + 1);    
+            }
+            
+        }
+
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        
+        GetComponent<MeshFilter>().mesh = mesh;
     }
     
 }
