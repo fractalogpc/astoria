@@ -17,4 +17,6 @@ public class ConstructionComponentData : ConstructionData
     [Header("Structure Settings")]
     public StructureType Type;
 
+    public ItemSetList Cost;
+
 }

@@ -34,9 +34,13 @@ namespace Construction
         public bool CanPlace(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionComponentData data, out Vector3 finalPosition, out Quaternion finalRotation, out bool validPosition)
         {
 
+            Debug.DrawLine(tryPosition, tryPosition + Vector3.up * 0.1f, Color.green, 1f);
+            Debug.DrawLine(tryPosition, tryPosition + Vector3.right * 0.1f, Color.blue, 1f);
+            Debug.DrawLine(tryPosition, tryPosition + Vector3.forward * 0.1f, Color.red, 1f);
+
             // Apply offsets
-            tryPosition += data.Offset.PositionOffset;
-            tryRotation *= Quaternion.Euler(data.Offset.RotationOffset);
+            // tryPosition += data.Offset.PositionOffset;
+            // tryRotation *= Quaternion.Euler(data.Offset.RotationOffset);
 
             switch (data.Type) {
                 case ConstructionComponentData.StructureType.Foundation:
@@ -130,10 +134,6 @@ namespace Construction
                     if (Mathf.Abs(compatibleEdges[i].Item3 - closestEdges[0].Item3) < 0.1f)
                     {
                         closestEdges.Add(compatibleEdges[i]);
-                    }
-                    else
-                    {
-                        break;
                     }
                 }
 
