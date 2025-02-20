@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Player
@@ -53,6 +54,9 @@ namespace Player
     public CharacterState CurrentCharacterState { get; private set; }
     // field: at the beginning allows for properties to be serialized
     [field: SerializeField] public Vector3 MoveInputVector { get; private set; }
+
+    [Header("Events")]
+    public UnityEvent<SoundEvent> OnStep;
 
     private Collider[] _probedColliders = new Collider[8];
     private RaycastHit[] _probedHits = new RaycastHit[8];
@@ -127,6 +131,8 @@ namespace Player
       {
         HandleNoclipMovement();
       }
+
+      OnStep?.Invoke(new SoundEvent(transform.position, 20f, "Footstep"));
     }
 
     private void HandleCharacterInput()

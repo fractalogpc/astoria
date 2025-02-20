@@ -4,18 +4,25 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-
     private List<IListener> listeners = new List<IListener>();
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void RegisterListener(IListener listener)
     {
-        if (!listeners.Contains(listener))
+        if (!listeners.Contains(listener)) {
             listeners.Add(listener);
+        }
     }
 
     public void UnregisterListener(IListener listener)
@@ -25,8 +32,8 @@ public class SoundManager : MonoBehaviour
 
     public void EmitSound(SoundEvent soundEvent)
     {
-        foreach (var listener in listeners)
-        {
+        Debug.Log("Sound emitted: " + soundEvent.soundName);
+        foreach (var listener in listeners) {
             listener.OnSoundHeard(soundEvent);
         }
     }
