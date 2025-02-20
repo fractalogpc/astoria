@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using Random = UnityEngine.Random;
 
 public enum State {
@@ -9,7 +11,7 @@ public enum State {
     Eating
 }
 
-public class WandererCore : MonoBehaviour, IDamageable
+public class WandererCore : MonoBehaviour, IDamageable, IListener
 {
     [SerializeField] private float _fullHealth = 100.0f;
     [SerializeField] private float _health;
@@ -34,6 +36,9 @@ public class WandererCore : MonoBehaviour, IDamageable
     }
     private void OnValidate() {
         _health = _fullHealth;
+    }
+    private void Start() {
+        SoundManager.Instance.RegisterListener(this);
     }
     private void Update() {
         Debug.Log(_state);
@@ -63,11 +68,45 @@ public class WandererCore : MonoBehaviour, IDamageable
                     _state = State.Attacking;
                     return;
                 }
+
+                bool canSeePlayer = false;
+                foreach (GameObject obj in _vision.VisibleObjects) {
+                    if (obj.CompareTag("Player")) {
+                        canSeePlayer = true;
+                        break;
+                    }
+                }
+
+                if (!canSeePlayer) {
+                    _nextPoint = _lastPlayerPosition;
+                    _state = State.Wandering;
+                    return;
+                }
+
                 _movement.SetTarget(_lastPlayerPosition);
                 _movement.Go();
                 break;
             case State.Attacking:
-                _state = State.Wandering;
+                Collider[] players = Physics.OverlapSphere(this.transform.position, 2.0f, LayerMask.GetMask("Player"));
+                GameObject closestPlayer = null;
+                float closestDistance = float.MaxValue;
+
+                foreach (Collider player in players)
+                {
+                    float distance = Vector3.Distance(player.transform.position, this.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestPlayer = player.gameObject;
+                        closestDistance = distance;
+                    }
+                }
+
+                if (closestPlayer != null) {
+                    this.transform.LookAt(closestPlayer.transform.position);
+                    closestPlayer.GetComponentInChildren<IDamageable>().TakeDamage(10, this.transform.position);
+                }
+
+                _state = State.Chasing;
                 break;
             default:
                 _state = State.Wandering;
@@ -81,8 +120,19 @@ public class WandererCore : MonoBehaviour, IDamageable
         float y = 0;
         RaycastHit hit;
         if (Physics.Raycast(new Vector3(x, 10000, z), Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
-            y = 10000 - hit.distance; 
+            y = 10000 - hit.distance;
         }
         return new Vector3(x, y, z);
+    }
+
+    public void OnSoundHeard(SoundEvent soundEvent) {
+        float power = soundEvent.intensity / Mathf.Pow(Vector3.Distance(soundEvent.position, this.transform.position), 2);
+        if (power > 0.1f) {
+            _state = State.Wandering;
+            _nextPoint = soundEvent.position;
+        } else if (power > 0.2f) {
+            _state = State.Chasing;
+            _lastPlayerPosition = soundEvent.position;
+        }
     }
 }
