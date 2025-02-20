@@ -24,9 +24,9 @@ public class GroundHarvestable : MonoBehaviour
             int amount = Random.Range(drop.minAmount, drop.maxAmount + 1);
             items.Add((drop.item, amount));
         }
-        return items.ToArray();
 
         Destroy(gameObject);
+        return items.ToArray();
     }
 
 }
