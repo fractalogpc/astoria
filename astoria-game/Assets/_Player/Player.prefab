@@ -4614,6 +4614,9 @@ MonoBehaviour:
   MeshRoot: {fileID: 6245448379990478009}
   CrouchedCapsuleHeight: 1
   <MoveInputVector>k__BackingField: {x: 0, y: 0, z: 0}
+  OnStep:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6613076594192004588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9100,6 +9103,7 @@ MonoBehaviour:
   OnPauseMenuClose:
     m_PersistentCalls:
       m_Calls: []
+  FreezeTimeOnPause: 1
   _pauseMenuCanvasGroup: {fileID: 7022181597682395735}
 --- !u!114 &7026571989502640051
 MonoBehaviour:
@@ -10213,7 +10217,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 524031
+    m_Bits: 1048319
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -19585,6 +19589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _viewmodelParent: {fileID: 6126032875406853262}
   _currentViewmodel: {fileID: 0}
+  _propParent: {fileID: 0}
+  _currentProp: {fileID: 0}
   _viewmodelTransform: {fileID: 6126032875406853262}
   _maxVelocity: 10
   _viewmodelVelocityOffsetMagnitude: {x: 1, y: 1, z: 1}
