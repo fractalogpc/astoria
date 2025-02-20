@@ -96,7 +96,7 @@ public class CraftingStationNetworked : MonoBehaviour
 
 	public bool Craft(RecipeData recipe, int craftCount)
 	{
-		if (BackgroundInfo._infBuild)
+		if (BackgroundInfo._infCraft)
 		{
 			foreach (ItemSet resultSet in recipe._resultSetList.ItemSets)
 			{
@@ -131,7 +131,7 @@ public class CraftingStationNetworked : MonoBehaviour
 
 	public bool CanCraftRecipe(RecipeData recipe, int craftCount)
 	{
-		if (BackgroundInfo._infBuild) return true;
+		if (BackgroundInfo._infCraft) return true;
 		return recipe._ingredientSetList.ContainedWithin(_playerInventory.GetItems(), craftCount);
 	}
 }

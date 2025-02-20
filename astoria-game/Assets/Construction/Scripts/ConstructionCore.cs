@@ -3,7 +3,6 @@ using Construction;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace Construction
 {
@@ -24,6 +23,7 @@ namespace Construction
             Deleting
         }
         public ConstructionData DebugData;
+        public bool RequireCoreToPlaceStructures;
         public bool HoldComponentAfterPlace = true;
 
         [Header("Construction State")]
@@ -250,7 +250,7 @@ namespace Construction
 
                 case ConstructionState.PlacingStructure:
                     {
-                        if (Core == null)
+                        if (Core == null && RequireCoreToPlaceStructures)
                         {
                             SetConstructionState(ConstructionState.None);
 
@@ -279,12 +279,21 @@ namespace Construction
                         testDirection.y = 0;
 
                         RaycastHit hit;
-                        Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
+                        Physics.SphereCast(ray, 0.4f, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
 
                         // Check if the component can be placed
                         constructionComponent.CanPlace(hit.transform == null ? transform.position + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
-                        RenderPreviewObject(position, rotation, validPosition);
-                        _canPlace = validPosition; // Can't place structures in mid air
+
+                        // Check if player has required materials
+                        if (validPosition) {
+                            if (BackgroundInfo._infBuild) {
+                                _canPlace = true;
+                            } else {
+                                _canPlace = data.Cost.ContainedWithin(PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItems());
+                            }
+                        }
+
+                        RenderPreviewObject(position, rotation, _canPlace);
 
                     }
                     break;
@@ -387,6 +396,18 @@ namespace Construction
                 case ConstructionState.PlacingStructure:
                     if (!_canPlace) break;
                     PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
+
+                    // Removing items
+                    if (!BackgroundInfo._infBuild)
+                    {
+                        ConstructionComponentData data = _selectedData as ConstructionComponentData;
+                        List<ItemInstance> cost = data.Cost.ToItemsList();
+                        foreach (ItemInstance item in cost)
+                        {
+                            PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().RemoveItemByData(item.ItemData);
+                        }
+                    }
+
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
 
