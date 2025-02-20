@@ -31,7 +31,7 @@ public class OnHealEvent : UnityEvent {}
 [Serializable]
 public class OnHealthZeroEvent : UnityEvent {}
 // public class HealthInterface : NetworkBehaviour
-public class HealthInterface : MonoBehaviour
+public class HealthInterface : MonoBehaviour, IDamageable
 {
 
   public float CurrentHealth => _currentHealth;
@@ -62,6 +62,10 @@ public class HealthInterface : MonoBehaviour
     if (_currentHealth + healPoints >= MaxHealth) _currentHealth = MaxHealth;
     else _currentHealth += healPoints;
     OnHealthChanged?.Invoke(initialHealth, _currentHealth, MaxHealth);
+  }
+
+  public void TakeDamage(float damage, Vector3 hitPosition) {
+    Damage(damage, hitPosition);
   }
 
   public virtual void Damage(float damagePoints, Vector3 hitPosition) {

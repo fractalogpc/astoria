@@ -18,6 +18,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
     [SerializeField] private WandererMovement _movement;
     [SerializeField] private VisionCone _vision;
     [SerializeField] private RagdollToggle _ragdoll;
+    [SerializeField] private LayerMask _playerLayerMask;
     
     private GameObject _currentPlayerTarget;
     private Vector3 _lastPlayerPosition;
@@ -87,7 +88,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
                 _movement.Go();
                 break;
             case State.Attacking:
-                Collider[] players = Physics.OverlapSphere(this.transform.position, 2.0f, LayerMask.GetMask("Player"));
+                Collider[] players = Physics.OverlapSphere(this.transform.position, 2.0f, _playerLayerMask);
                 GameObject closestPlayer = null;
                 float closestDistance = float.MaxValue;
 
@@ -103,6 +104,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
 
                 if (closestPlayer != null) {
                     this.transform.LookAt(closestPlayer.transform.position);
+                    // Debug.Log("Attacking player");
                     closestPlayer.GetComponentInChildren<IDamageable>().TakeDamage(10, this.transform.position);
                 }
 
