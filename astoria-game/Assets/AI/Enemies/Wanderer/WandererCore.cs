@@ -68,11 +68,45 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
                     _state = State.Attacking;
                     return;
                 }
+
+                bool canSeePlayer = false;
+                foreach (GameObject obj in _vision.VisibleObjects) {
+                    if (obj.CompareTag("Player")) {
+                        canSeePlayer = true;
+                        break;
+                    }
+                }
+
+                if (!canSeePlayer) {
+                    _nextPoint = _lastPlayerPosition;
+                    _state = State.Wandering;
+                    return;
+                }
+
                 _movement.SetTarget(_lastPlayerPosition);
                 _movement.Go();
                 break;
             case State.Attacking:
-                _state = State.Wandering;
+                Collider[] players = Physics.OverlapSphere(this.transform.position, 2.0f, LayerMask.GetMask("Player"));
+                GameObject closestPlayer = null;
+                float closestDistance = float.MaxValue;
+
+                foreach (Collider player in players)
+                {
+                    float distance = Vector3.Distance(player.transform.position, this.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestPlayer = player.gameObject;
+                        closestDistance = distance;
+                    }
+                }
+
+                if (closestPlayer != null) {
+                    this.transform.LookAt(closestPlayer.transform.position);
+                    closestPlayer.GetComponentInChildren<IDamageable>().TakeDamage(10, this.transform.position);
+                }
+
+                _state = State.Chasing;
                 break;
             default:
                 _state = State.Wandering;
