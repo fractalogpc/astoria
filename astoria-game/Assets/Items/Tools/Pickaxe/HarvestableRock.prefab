@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 1089167366979148549}
   - component: {fileID: 3538177573406532465}
   - component: {fileID: 1301450978573949416}
+  - component: {fileID: 1973973707221888727}
   m_Layer: 0
   m_Name: HarvestableRock
   m_TagString: Untagged
@@ -221,9 +222,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8db2d568de6fff4790ce45785fc60a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   OnHealthInitialize:
     m_PersistentCalls:
       m_Calls: []
@@ -291,6 +289,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8384123865561006696, guid: 07a6f22e0808fed498a8b3b604ac47c7, type: 3}
+--- !u!114 &1973973707221888727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7120065448141022749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c33b2eed63f4cf4ca50ecad4b882f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 66d8334317ef6c743be6a7a87fbb79e0, type: 3}
+  keyItem: 0
 --- !u!1 &7173855237398038192
 GameObject:
   m_ObjectHideFlags: 0
