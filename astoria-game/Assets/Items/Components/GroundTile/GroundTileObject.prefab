@@ -104,8 +104,7 @@ MonoBehaviour:
   customMaterial: {fileID: 0}
   terrainData: {fileID: 0}
   terrainMask: -1
-  debugData: <b><size=10><color=#ff7663>The element is outside the base distance
-    bounds</color></size></b>
+  debugData: <size=10>The element is disabled because the manager is missing</size>
   materialData:
     shader: {fileID: 0}
     shaderName: 
@@ -122,6 +121,7 @@ GameObject:
   - component: {fileID: 2466775887803502924}
   - component: {fileID: 410531920953912757}
   - component: {fileID: 1932626940936400721}
+  - component: {fileID: 8211777716394839338}
   m_Layer: 18
   m_Name: Cube
   m_TagString: Untagged
@@ -218,6 +218,47 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8211777716394839338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362616116664352962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4673460970429034823}
+        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 100
+  _maxHealth: 100
 --- !u!1 &8513741646287064064
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   previewComponent: {fileID: 7775519575857303430, guid: 937005e1d7f7abd40bf261a6d4d8eb80, type: 3}
   neighborStabilityContributionUpwards: 0.1
-  neighborStabilityContributionDownwards: 0.1
+  neighborStabilityContributionDownwards: 0
   neighborStabilityContributionHorizontal: 0.1
   inherentStability: 0.2
   minimumStability: 0.2

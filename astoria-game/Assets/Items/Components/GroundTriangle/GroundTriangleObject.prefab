@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   previewComponent: {fileID: 8802408707026768891, guid: 1a2db25b34eea22489c61427f30798e9, type: 3}
   neighborStabilityContributionUpwards: 0.1
-  neighborStabilityContributionDownwards: 0.1
+  neighborStabilityContributionDownwards: 0
   neighborStabilityContributionHorizontal: 0.1
   inherentStability: 0.2
   minimumStability: 0.2
@@ -214,7 +214,7 @@ MonoBehaviour:
   customMaterial: {fileID: 0}
   terrainData: {fileID: 0}
   terrainMask: -1
-  debugData: <size=10><color=#e1f043>The element is inside the base distance bounds</color></size>
+  debugData: <size=10>The element is disabled because the manager is missing</size>
   materialData:
     shader: {fileID: 0}
     shaderName: 
@@ -298,6 +298,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 021384e0f83d4c646b430f645d06d122, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1569884589154570138}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 021384e0f83d4c646b430f645d06d122, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3815752395913666915}
   m_SourcePrefab: {fileID: 100100000, guid: 021384e0f83d4c646b430f645d06d122, type: 3}
 --- !u!1 &7215215311198527474 stripped
 GameObject:
@@ -326,6 +329,47 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2124705421725058983, guid: 021384e0f83d4c646b430f645d06d122, type: 3}
+--- !u!114 &3815752395913666915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215215311198527474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6666949201643369300}
+        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 100
+  _maxHealth: 100
 --- !u!4 &8028309230572455240 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 021384e0f83d4c646b430f645d06d122, type: 3}
