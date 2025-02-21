@@ -132,7 +132,7 @@ namespace Player
         HandleNoclipMovement();
       }
 
-      OnStep?.Invoke(new SoundEvent(transform.position, 20f, "Footstep"));
+      OnStep?.Invoke(new SoundEvent(transform.position, 100f, "Footstep"));
     }
 
     private void HandleCharacterInput()
