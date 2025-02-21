@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30639bdccfc11b14a8e443825ca74f9f, type: 3}
+  m_Name: Pistol 1
+  m_EditorClassIdentifier: 
+  ItemName: Glock Lv2
+  ItemDescription: running up on the block
+  ItemIcon: {fileID: 21300000, guid: e9f34f436e8556349b2f958c6c38410c, type: 3}
+  ItemBGColor: {r: 0.105000004, g: 0.1458333, b: 0.35, a: 0.9019608}
+  ItemSize: {x: 2, y: 1}
+  IsStackable: 0
+  MaxStackSize: 8
+  DroppedItemPrefab: {fileID: 6806437227400300054, guid: 2338a9b082fba9c4cbf63be7f5c344ac, type: 3}
+  ViewmodelPrefab: {fileID: 5955355545312717904, guid: 2e5d8a66547b2e64fb4b4200b2bbc2d9, type: 3}
+  AmmoItem: {fileID: 11400000, guid: f25c56c36d5ac3440859263b1d4cf5b4, type: 2}
+  AccuracySetting:
+    EffectiveRange: 10
+    PatternSpread: 0.2
+  RecoilSettings:
+    RecoilCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.07323152
+        value: 0.9952033
+        inSlope: 0.00412357
+        outSlope: 0.00412357
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.1826827
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0.0045219655
+        outSlope: 0.0045219655
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.25462505
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MeanUpwardsRecoil: 1
+    MeanHorizontalRecoil: 0.005
+    MeanBackwardsRecoil: 0
+    UpwardsRecoilVariation: 0.005
+    HorizontalRecoilVariation: 0.001
+    BackwardsRecoilVariation: 0
+    MeanRecoilTime: 0.4
+    RecoilTimeVariation: 0.05
+    NoiseMagnitude: 1
+    NoiseSpeed: 1
+    MainTransferToViewmodel: 0.03
+  FireCombination: 0
+  SemiAutoSetting:
+    CycleTime: 0.02
+  BurstSetting:
+    ShotsPerBurst: 0
+    RoundsPerMinute: 0
+    CycleTime: 0
+  FullAutoSetting:
+    RoundsPerMinute: 0
+  ShotgunSetting:
+    PelletsPerShot: 0
+  ReloadType: 0
+  MagazineSetting:
+    MagazineCapacity: 24
+    ReloadTime: 1
+  InternalSetting:
+    InternalCapacity: 0
+    ReloadTime: 0
+  ChamberSetting:
+    ChamberTime: 0
+  Damage: 50
+  SamplesPerFixedUpdate: 5
+  InitialVelocityMS: 400
+  BulletMassKg: 0.007
+  BulletDiameterM: 0.009
+  AirDensityKgPerM: 1.1
+  DragCoefficient: 0.149
