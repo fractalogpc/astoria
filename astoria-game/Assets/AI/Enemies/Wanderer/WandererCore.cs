@@ -104,7 +104,6 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
 
                 if (closestPlayer != null) {
                     this.transform.LookAt(closestPlayer.transform.position);
-                    // Debug.Log("Attacking player");
                     closestPlayer.GetComponentInChildren<IDamageable>().TakeDamage(10, this.transform.position);
                 }
 
@@ -129,12 +128,19 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
 
     public void OnSoundHeard(SoundEvent soundEvent) {
         float power = soundEvent.intensity / Mathf.Pow(Vector3.Distance(soundEvent.position, this.transform.position), 2);
-        if (power > 0.1f) {
-            _state = State.Wandering;
-            _nextPoint = soundEvent.position;
-        } else if (power > 0.2f) {
+        Debug.Log("sound received");
+         if (power > 0.2f) {
+            Debug.Log("0.2 heard");
             _state = State.Chasing;
             _lastPlayerPosition = soundEvent.position;
+            _movement.SetTarget(_lastPlayerPosition);
+            _movement.Go();
+        } else if (power > 0.1f) {
+            Debug.Log("0.1 heard");
+            _state = State.Wandering;
+            _movement.SetTarget(_nextPoint);
+            _movement.Go();
+            _nextPoint = soundEvent.position;
         }
     }
 }
