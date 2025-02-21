@@ -18,6 +18,7 @@ public class InventoryComponent : MonoBehaviour
 	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
 	/// </summary>
 	[HideInInspector] public InventoryData InventoryData = null;
+	public bool Initialized => InventoryData != null;
 
 	public Vector2Int AssignedInventorySize => _assignedInventorySize;
 	public float SlotSizeUnits => _slotPrefab.GetComponent<RectTransform>().sizeDelta.x;
@@ -207,6 +208,10 @@ public class InventoryComponent : MonoBehaviour
 	/// <returns>A list of InventoryItem that match the ItemData.</returns>
 	public List<ItemInstance> GetItemsOfType(ItemData itemData)
 	{
+		if (!Initialized) {
+			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
+			return new List<ItemInstance>();
+		}
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
 
@@ -216,6 +221,10 @@ public class InventoryComponent : MonoBehaviour
 	/// <returns>A list of all the InventoryItems in the inventory.</returns>
 	public List<ItemInstance> GetItems()
 	{
+		if (!Initialized) {
+			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
+			return new List<ItemInstance>();
+		}
 		return InventoryData.Items;
 	}
 
@@ -247,8 +256,11 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
-	public bool AddItemByData(ItemData itemData)
-	{
+	public bool AddItemByData(ItemData itemData) {
+		if (!Initialized) {
+			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
+			return false;
+		}
 		ItemInstance itemInstance = itemData.CreateItem();
 		if (!InventoryData.TryAddItem(this, itemInstance, out Vector2Int slotIndexBL))
 		{
