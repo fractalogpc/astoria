@@ -23,6 +23,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
     private GameObject _currentPlayerTarget;
     private Vector3 _lastPlayerPosition;
     private Vector3 _nextPoint = Vector3.zero;
+    private float _lastAttackTime = 0;
 
     public State _state = State.Wandering;
 
@@ -42,7 +43,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
         SoundManager.Instance.RegisterListener(this);
     }
     private void Update() {
-        Debug.Log(_state);
+        _lastAttackTime += Time.deltaTime;
         switch(_state) {
             case State.Wandering:
                 if (_nextPoint == Vector3.zero) {
@@ -102,9 +103,10 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
                     }
                 }
 
-                if (closestPlayer != null) {
-                    this.transform.LookAt(closestPlayer.transform.position);
+                if (closestPlayer != null && _lastAttackTime > 1) {
+                    // this.transform.LookAt(closestPlayer.transform.position);
                     closestPlayer.GetComponentInChildren<IDamageable>().TakeDamage(10, this.transform.position);
+                    _lastAttackTime = 0;
                 }
 
                 _state = State.Chasing;
@@ -132,15 +134,13 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
          if (power > 0.2f) {
             Debug.Log("0.2 heard");
             _state = State.Chasing;
-            _lastPlayerPosition = soundEvent.position;
-            _movement.SetTarget(_lastPlayerPosition);
-            _movement.Go();
+            _currentPlayerTarget = GameObject.FindWithTag("Player");
         } else if (power > 0.1f) {
             Debug.Log("0.1 heard");
             _state = State.Wandering;
+            _nextPoint = soundEvent.position;
             _movement.SetTarget(_nextPoint);
             _movement.Go();
-            _nextPoint = soundEvent.position;
         }
     }
 }
