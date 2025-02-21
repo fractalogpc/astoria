@@ -51,6 +51,10 @@ public class HealthInterface : MonoBehaviour, IDamageable
   private float _regenTimer = 0;
   
   public virtual void Initialize(float maxHealth) {
+    if (maxHealth <= 0) {
+      Debug.LogWarning("Max health is zero or less. Is this intended?");
+    }
+
     _maxHealth = maxHealth;
     _currentHealth = maxHealth;
     OnHealthInitialize?.Invoke(maxHealth);

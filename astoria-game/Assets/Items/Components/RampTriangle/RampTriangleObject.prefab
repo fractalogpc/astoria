@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   previewComponent: {fileID: 8802408707026768891, guid: 1ccc5f7fb1cc7494783c5a2847453ac5, type: 3}
   neighborStabilityContributionUpwards: 0.1
-  neighborStabilityContributionDownwards: 0.1
+  neighborStabilityContributionDownwards: 0
   neighborStabilityContributionHorizontal: 0.1
   inherentStability: 0.1
   minimumStability: 0.2
@@ -173,6 +173,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 64a131144f15016448f01c1e26fe339a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3455154458047370446}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 64a131144f15016448f01c1e26fe339a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6269119340840542598}
   m_SourcePrefab: {fileID: 100100000, guid: 64a131144f15016448f01c1e26fe339a, type: 3}
 --- !u!4 &5954443803235582252 stripped
 Transform:
@@ -206,3 +209,44 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2124705421725058983, guid: 64a131144f15016448f01c1e26fe339a, type: 3}
+--- !u!114 &6269119340840542598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478920352391125910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6666949201643369300}
+        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 100
+  _maxHealth: 100
