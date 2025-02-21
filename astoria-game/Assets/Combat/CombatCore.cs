@@ -49,7 +49,8 @@ public class CombatCore : InputHandlerBase
 		if (CurrentGunInstance == null) return;
 		CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
 		CurrentGunInstance.Unequip();
-		StartCoroutine(UnequipWeaponCoroutine());
+		// StartCoroutine(UnequipWeaponCoroutine());
+		_viewmodelManager.RemoveViewmodel();
 		CurrentGunInstance = null;
 		OnUnequipWeapon?.Invoke();
 	}
