@@ -16,6 +16,11 @@ public class InventoryEquipableSlot : MonoBehaviour
     public UnityEvent<ItemInstance> OnItemAdded;
     public UnityEvent<ItemInstance> OnItemRemoved;
     
+    /// <summary>
+    /// Puts an item into the slot, if an item isn't in there already. Invokes OnItemAdded.
+    /// </summary>
+    /// <param name="itemInstance">The item instance to put into the slot.</param>
+    /// <returns>Whether the item was successfully added into the slot.</returns>
     public virtual bool TryAddToSlot(ItemInstance itemInstance) {
         if (_heldItemInstance != null) {
             return false;
@@ -40,6 +45,9 @@ public class InventoryEquipableSlot : MonoBehaviour
         _heldItemInstance = null;
     }
     
+    /// <summary>
+    /// Removes the item from the slot. Invokes OnItemRemoved and calls the item's OnItemDestruction method.
+    /// </summary>
     public virtual void RemoveItem() {
         if (_heldItemInstance == null) return;
         _itemImage.sprite = null;
