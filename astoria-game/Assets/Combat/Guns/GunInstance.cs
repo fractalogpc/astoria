@@ -31,7 +31,7 @@ public class GunInstance : ViewmodelItemInstance
 		}
 	}
 	private void SetCurrentAmmoTo(int value) {
-		AmmoChanged.Invoke(CurrentAmmo, value);
+		AmmoChanged?.Invoke(CurrentAmmo, value);
 		CurrentAmmo = value;
 	}
 	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
@@ -76,8 +76,8 @@ public class GunInstance : ViewmodelItemInstance
 
 	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
 		base.OnHotbarSelected(hotbarSlot);
-		_combatCore.EquipWeapon(this);
 		Debug.Log("Combat Core is null: " + (_combatCore == null));
+		_combatCore.EquipWeapon(this);
 	}
 	
 	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
@@ -88,10 +88,6 @@ public class GunInstance : ViewmodelItemInstance
 	public void Unequip() {
 		_currentFireLogic.Cleanup();
 		Initialized = false;
-		_combatCore = null;
-		_viewmodelManager = null;
-		_projectileManager = null;
-		_currentFireLogic = null;
 	}
 	
 	/// <summary>
@@ -100,7 +96,12 @@ public class GunInstance : ViewmodelItemInstance
 	public void Fire() {
 		if (!Initialized) return;
 		// Call recoil on camera
-		SoundManager.Instance.EmitSound(new SoundEvent(GameObject.FindWithTag("Player").transform.position, 200f, "Gunshot"));
+		if (SoundManager.Instance != null) {
+			SoundManager.Instance.EmitSound(new SoundEvent(GameObject.FindWithTag("Player").transform.position, 200f, "Gunshot"));
+		}
+		else {
+			Debug.LogWarning("GunInstance: SoundManager.Instance not found! Gunshot sound will not alert SoundManager listeners.");
+		}
 		CombatCameraRecoil.Instance.ApplyRecoil(ItemData.RecoilSettings);
 		if (IsShotgun(ItemData.FireCombination)) {
 			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
@@ -129,7 +130,6 @@ public class GunInstance : ViewmodelItemInstance
 	}
 
 	private void ProjectileCallback(RaycastHit hit) {
-		Debug.Log($"CALLBACK from {ItemData.ItemName}");
 		IDamageable damageable = hit.collider.gameObject.GetComponentInChildren<IDamageable>();
 		if (damageable != null) {
 			damageable.TakeDamage(ItemData.Damage, hit.point);
