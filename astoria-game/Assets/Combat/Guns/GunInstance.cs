@@ -77,6 +77,7 @@ public class GunInstance : ViewmodelItemInstance
 	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
 		base.OnHotbarSelected(hotbarSlot);
 		_combatCore.EquipWeapon(this);
+		Debug.Log("Combat Core is null: " + (_combatCore == null));
 	}
 	
 	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
