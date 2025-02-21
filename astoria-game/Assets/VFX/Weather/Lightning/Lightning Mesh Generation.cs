@@ -153,6 +153,11 @@ public class LightningMeshGeneration : MonoBehaviour {
             vertices.Add(Vertex[i] - RotNormal);
         }
 
+        vertices.Add(goal.position + new Vector3(1, 0, 0));
+        vertices.Add(goal.position + new Vector3(0, 0, 1));
+        vertices.Add(goal.position + new Vector3(-1, 0, 0));
+        vertices.Add(goal.position + new Vector3(0, 0, -1));
+
         for (int i = 0; i < vertices.Count - 5; i++)
         {
             if (i % 4 == 3)
