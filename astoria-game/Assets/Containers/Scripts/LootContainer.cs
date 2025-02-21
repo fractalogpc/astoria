@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +31,10 @@ public class LootContainer : ContainerManager
 	protected override void Start() {
 		base.Start();
 		LootTable.ValidateInput();
+		StartCoroutine(DelayedStart());
+	}
+	private IEnumerator DelayedStart() {
+		yield return null;
 		GenerateLoot();
 	}
 }
