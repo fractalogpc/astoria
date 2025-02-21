@@ -17,7 +17,7 @@ public class PickaxeInstance : BaseToolInstance
 	}
 	public override void OnUnequip() {
 		base.OnUnequip();
-		_toolCore.StopCoroutine(_swingDelayCoroutine);
+		if (_swingDelayCoroutine != null) _toolCore.StopCoroutine(_swingDelayCoroutine);
 	}
 
 	public override void OnTick() {

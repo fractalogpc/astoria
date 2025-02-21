@@ -19,7 +19,7 @@ public class AxeInstance : BaseToolInstance
 	}
 	public override void OnUnequip() {
 		base.OnUnequip();
-		_toolCore.StopCoroutine(_chopDelayCoroutine);
+		if (_chopDelayCoroutine != null) _toolCore.StopCoroutine(_chopDelayCoroutine);
 	}
 
 	public override void OnTick() {
