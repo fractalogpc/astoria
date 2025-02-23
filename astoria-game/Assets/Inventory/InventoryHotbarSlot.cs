@@ -58,5 +58,6 @@ public class InventoryHotbarSlot : MonoBehaviour
     private void ShowIcon() {
         _itemImage.color = Color.white;
         _itemImage.sprite = _attachedSlot._heldItemInstance.ItemData.ItemIcon;
+        _itemImage.preserveAspect = true;
     }
 }
