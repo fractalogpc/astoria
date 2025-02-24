@@ -45,7 +45,8 @@ public class GroundHarvestableSpawner : MonoBehaviour
 
         if (Physics.Raycast(randomPoint + Vector3.up * 25f, Vector3.down, out RaycastHit hit, 50f, groundLayer))
         {
-            GameObject harvestable = Instantiate(harvestablePrefabs[Random.Range(0, harvestablePrefabs.Length)], hit.point, Quaternion.identity, transform);
+            Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            GameObject harvestable = Instantiate(harvestablePrefabs[Random.Range(0, harvestablePrefabs.Length)], hit.point, randomRotation, transform);
             // harvestable.transform.up = hit.normal;
             spawnedHarvestables.Add(harvestable.transform);
         }
