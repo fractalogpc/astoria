@@ -44,6 +44,7 @@ namespace Console
             List<IConsoleCommand> cheatCommands = new List<IConsoleCommand>() {
                 new _LoadSceneCommand(),
                 new _TimeScaleCommand(),
+                new _HideUICommand(),
                 new _GodCommand(),
                 new _InfBuildCommand(),
                 new _InfCraftCommand(),
