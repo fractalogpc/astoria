@@ -338,13 +338,12 @@ public class InventoryComponent : MonoBehaviour
 		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, itemInstance.Size.y * SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
 		_inventoryItemPrefabInstances.Add(itemPrefab);
-		Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");
+		// Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");
 		return itemPrefab;
 	}
 
 	private void DeleteChildrenOf(Transform parent) {
 		for (int i = parent.childCount - 1; i >= 0; i--) {
-			Debug.Log(parent.GetChild(i).gameObject == null);
 			Destroy(parent.GetChild(i).gameObject);
 		}
 	}
