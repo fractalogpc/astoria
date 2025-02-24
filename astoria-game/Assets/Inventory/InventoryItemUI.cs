@@ -59,7 +59,8 @@ public class InventoryItemUI : MonoBehaviour
 	}
 
 	private void OnDisable() {
-		_clickableEvents.OnClickDownSelected.RemoveListener(OnClickedOn);
+		// Getting errors with clickable events being null? This is probably bad
+		_clickableEvents?.OnClickDownSelected.RemoveListener(OnClickedOn);
 	}
 	
 	private void OnClickedOn() {
