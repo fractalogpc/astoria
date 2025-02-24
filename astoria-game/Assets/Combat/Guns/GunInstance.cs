@@ -166,6 +166,7 @@ public class GunInstance : ViewmodelItemInstance
 			_isReloading = false;
 			yield break;
 		}
+		int invAmmo;
 		switch (ItemData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt:
 				// One in chamber and magazine is full
@@ -174,12 +175,13 @@ public class GunInstance : ViewmodelItemInstance
 				if (CurrentAmmo == 0) {
 					yield return new WaitForSeconds(_viewmodelManager.PlayReloadEmpty());
 					if (AmmoInInventory() < ItemData.MagazineSetting.MagazineCapacity) {
-						SetCurrentAmmoTo(AmmoInInventory());
+						invAmmo = AmmoInInventory();
 						RemoveAmmoFromInventory(CurrentAmmo);
+						SetCurrentAmmoTo(invAmmo);
 					}
 					else {
-						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity);
 						RemoveAmmoFromInventory(ItemData.MagazineSetting.MagazineCapacity);
+						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity);
 					}
 					break;
 				}
@@ -188,12 +190,13 @@ public class GunInstance : ViewmodelItemInstance
 					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
 					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity + 1 - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
-						SetCurrentAmmoTo(CurrentAmmo + AmmoInInventory());
+						invAmmo = AmmoInInventory();
 						RemoveAmmoFromInventory(AmmoInInventory());
+						SetCurrentAmmoTo(CurrentAmmo + invAmmo);
 					}
 					else {
-						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity + 1);
 						RemoveAmmoFromInventory(ammoNeeded);
+						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity + 1);
 					}
 					break;
 				}
