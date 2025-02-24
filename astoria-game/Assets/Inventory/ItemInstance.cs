@@ -17,6 +17,7 @@ public class ItemInstance
 		ItemData = itemData;
 	}
 
+	public Vector2Int OriginalSize => ItemData.ItemSize;
 	public Vector2Int Size {
 		get {
 			if (ItemData == null) return Vector2Int.zero;

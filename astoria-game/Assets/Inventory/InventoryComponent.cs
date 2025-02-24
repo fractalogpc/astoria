@@ -328,14 +328,10 @@ public class InventoryComponent : MonoBehaviour
 
 	private GameObject CreateItemPrefab(ItemInstance itemInstance, Vector2Int slotIndexBL) {
 		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
-		itemPrefab.name = itemInstance.ItemData.ItemName + Random.Range(0, 100000);
+		itemPrefab.name = itemInstance.ItemData.ItemName + Random.Range(0, 100000); // Doesn't actually need to be unique, just enough to identify during debugging
 		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
 		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
-		newItemUIScript.InitializeWithItem(itemInstance, this);
-		itemRect.anchoredPosition = new Vector2(slotIndexBL.x * SlotSizeUnits + SlotSizeUnits * itemInstance.Size.x / 2,
-			slotIndexBL.y * SlotSizeUnits + SlotSizeUnits * itemInstance.Size.y / 2);
-		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, itemInstance.Size.x * SlotSizeUnits);
-		itemRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, itemInstance.Size.y * SlotSizeUnits);
+		newItemUIScript.InitializeWithItem(this, itemInstance, slotIndexBL, SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
 		_inventoryItemPrefabInstances.Add(itemPrefab);
 		// Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");

@@ -31,7 +31,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <param name="originalInventory">The inventory that the InventoryUI spawning the object belongs to.</param>
 	/// <param name="itemInstance">The item this draggable holds.</param>
 	/// <param name="itemUI">The InventoryUI that this object was spawned by.</param>
-	public void InitializeFromInventory(InventoryComponent originalInventory, ItemInstance itemInstance, Vector2Int slotIndexBL) {
+	public void InitializeFromInventory(InventoryComponent originalInventory, ItemInstance itemInstance, Vector2Int slotIndexBL, float slotSize) {
 		ItemInstance = itemInstance;
 		_originInventory = originalInventory;
 		_originSlotIndex = slotIndexBL;
@@ -165,6 +165,12 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * 96f / 2f, ItemInstance.Size.y * 96f / 2f);
 			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * 96, ItemInstance.Size.y * 96);
 		}
+		_itemIconImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+		_itemIconImage.rectTransform.anchoredPosition = Vector2.zero;
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ItemInstance.ItemData.ItemSize.x * _originInventory.SlotSizeUnits);
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ItemInstance.ItemData.ItemSize.y * _originInventory.SlotSizeUnits);
+		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
+		_itemIconImage.rectTransform.rotation = ItemInstance.Rotated ? Quaternion.Euler(0, 0, 90) : Quaternion.identity;
 	}
 
 	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory) {
