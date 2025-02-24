@@ -6,7 +6,7 @@ public class InventoryContainer
 { 
     public InventoryContainer(Vector2Int index) {
         Index = index;
-        HeldItemInstance = null;
+        HeldItemSetList = null;
         Highlight = ContainerHighlight.None;
     }
     
@@ -15,11 +15,11 @@ public class InventoryContainer
     
     public Vector2Int Index { get; }
     
-    private ItemInstance _heldItemInstance;
-    public ItemInstance HeldItemInstance {
-        get => _heldItemInstance;
+    private ItemSetList _heldItemSet;
+    public ItemSetList HeldItemSetList {
+        get => _heldItemSet;
         set {
-            _heldItemInstance = value;
+            _heldItemSet = value;
             OnContainerUpdated?.Invoke();
         }
     }

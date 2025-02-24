@@ -21,6 +21,22 @@ public class InventoryHotbar : InputHandlerBase
 	[SerializeField] private InventoryEquipableSlot _slotTen;
 	
 	private List<GameObject> _hotbarSlots = new();
+
+	public bool InHotbar(ItemInstance itemInstance, out int slotIndex) {
+		for (int i = 0; i < _hotbarSlots.Count; i++) {
+			if (_hotbarSlots[i].GetComponent<InventoryHotbarSlot>().AttachedSlot.HeldItem != itemInstance) continue;
+			slotIndex = i;
+			return true;
+		}
+		slotIndex = -1;
+		return false;
+	}
+	
+	public void RemoveItem(ItemInstance itemInstance) {
+		if (!InHotbar(itemInstance, out int slotIndex)) return;
+		_hotbarSlots[slotIndex].GetComponent<InventoryHotbarSlot>().Deselect();
+		_hotbarSlots[slotIndex].GetComponent<InventoryHotbarSlot>().AttachedSlot.RemoveItem();
+	}
 	
 	private void Start() {
 		for (int i = _slotParent.childCount - 1; i >= 0; i--) {

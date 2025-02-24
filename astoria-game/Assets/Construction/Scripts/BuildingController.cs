@@ -26,7 +26,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
         {
             GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
             prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
-            prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.ItemSets[0].ItemCount;
+            prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
 
             Button button = prefab.GetComponent<Button>();
             button.onClick.AddListener(() => { constructionCore.SelectData(data); });

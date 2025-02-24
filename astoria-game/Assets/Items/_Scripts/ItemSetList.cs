@@ -12,9 +12,9 @@ using UnityEngine;
 public class ItemSetList
 {
 	[Tooltip("The ItemSets in this ItemSetList. Each set contains an ItemData and a count of that item.")]	
-	public List<ItemSet> ItemSets;
+	public List<ItemSet> List;
 
-	public int Count => ItemSets.Count;
+	public int Count => List.Count;
 
 	/// <summary>
 	/// Returns true if input at least contains the ItemSet.Count of items matching ItemSet.Item. The ItemSet.ItemCount is scaled by multiplier.
@@ -23,7 +23,7 @@ public class ItemSetList
 	/// <param name="multiplier">An integer the count of each ItemSet is multiplied by before checking.</param>
 	/// <returns>Whether input at least contains the ItemSet.ItemCount of items matching ItemSet.Item.</returns>
 	public bool ContainedWithin(List<ItemInstance> input, int multiplier = 1) {
-		foreach (ItemSet itemSet in ItemSets) {
+		foreach (ItemSet itemSet in List) {
 			int itemTypeCount = itemSet.ItemCount * multiplier;
 
 			// Scan through input to find the items
@@ -47,13 +47,20 @@ public class ItemSetList
 	/// <param name="otherList">The ItemSetList to compare to.</param>
 	/// <returns>Whether the other list has the same sets in the same order as this one.</returns>
 	public bool IsEqualTo(ItemSetList otherList) {
-		if (ItemSets.Count != otherList.ItemSets.Count) return false;
-		for (int i = 0; i < ItemSets.Count; i++) {
-			if (!ItemSets[i].Equals(otherList.ItemSets[i])) return false;
+		if (List.Count != otherList.List.Count) return false;
+		for (int i = 0; i < List.Count; i++) {
+			if (!List[i].Equals(otherList.List[i])) return false;
 		}
 		return true;
 	}
 
+	/// <summary>
+	/// Constructs an empty ItemSetList.
+	/// </summary>
+	public ItemSetList() {
+		List = new();
+	}
+	
 	/// <summary>
 	/// Constructs an ItemSetList from a list of ItemInstances.
 	/// Will populate ItemSets with a new ItemSet for each unique ItemData in items, with the count of each item in the list.
@@ -72,7 +79,7 @@ public class ItemSetList
 			if (!found) newSets.Add(new ItemSet { ItemData = item.ItemData, ItemCount = 1 });
 		}
 
-		ItemSets = newSets;
+		List = newSets;
 	}
 
 	/// <summary>
@@ -82,7 +89,7 @@ public class ItemSetList
 	/// <returns>The list of ItemInstances converted from this ItemSetList.</returns>
 	public List<ItemInstance> ToItemsList() {
 		List<ItemInstance> items = new();
-		foreach (ItemSet set in ItemSets) {
+		foreach (ItemSet set in List) {
 			for (int i = 0; i < set.ItemCount; i++) {
 				items.Add(new ItemInstance(set.ItemData));
 			}
@@ -97,6 +104,6 @@ public class ItemSetList
 	/// </summary>
 	/// <returns>The list of the ItemDatas contained in ItemSets</returns>
 	public List<ItemData> ToDatasList() {
-		return ItemSets.Select(set => set.ItemData).ToList();
+		return List.Select(set => set.ItemData).ToList();
 	}
 }

@@ -7,7 +7,7 @@ using Image = UnityEngine.UI.Image;
 [RequireComponent(typeof(ClickableEvents))]
 public class InventoryEquipableSlot : MonoBehaviour
 {
-    [ReadOnly] public ItemInstance _heldItemInstance;
+    [ReadOnly] public ItemInstance HeldItem;
     [SerializeField] protected Image _itemImage;
     [SerializeField] protected TextMeshProUGUI _itemText;
     [ReadOnly][SerializeField] protected ClickableEvents _clickableEvents;
@@ -22,10 +22,10 @@ public class InventoryEquipableSlot : MonoBehaviour
     /// <param name="itemInstance">The item instance to put into the slot.</param>
     /// <returns>Whether the item was successfully added into the slot.</returns>
     public virtual bool TryAddToSlot(ItemInstance itemInstance) {
-        if (_heldItemInstance != null) {
+        if (HeldItem != null) {
             return false;
         }
-        _heldItemInstance = itemInstance;
+        HeldItem = itemInstance;
         _itemImage.sprite = itemInstance.ItemData.ItemIcon;
         _itemImage.type = Image.Type.Simple;
         _itemImage.preserveAspect = true;
@@ -36,26 +36,26 @@ public class InventoryEquipableSlot : MonoBehaviour
     }
     
     public virtual void OnPickup() {
-        if (_heldItemInstance == null) return;
-        InstantiateDraggedItem(_heldItemInstance);
+        if (HeldItem == null) return;
+        InstantiateDraggedItem(HeldItem);
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
-        OnItemRemoved.Invoke(_heldItemInstance);
-        _heldItemInstance = null;
+        OnItemRemoved.Invoke(HeldItem);
+        HeldItem = null;
     }
     
     /// <summary>
     /// Removes the item from the slot. Invokes OnItemRemoved and calls the item's OnItemDestruction method.
     /// </summary>
     public virtual void RemoveItem() {
-        if (_heldItemInstance == null) return;
+        if (HeldItem == null) return;
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";
-        OnItemRemoved.Invoke(_heldItemInstance);
-        _heldItemInstance.OnItemDestruction();
-        _heldItemInstance = null;
+        OnItemRemoved.Invoke(HeldItem);
+        HeldItem.OnItemDestruction();
+        HeldItem = null;
     }
     
     private void GetReferences() {
@@ -71,7 +71,7 @@ public class InventoryEquipableSlot : MonoBehaviour
 
     private void Start() {
         GetReferences();
-        _heldItemInstance = null;
+        HeldItem = null;
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
         _itemText.text = "";

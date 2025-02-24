@@ -219,7 +219,7 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	public bool AddItem(ItemInstance itemInstance) {
-		if (!InventoryData.TryAddItem(this, itemInstance, out Vector2Int slotIndexBL)) return false;
+		if (!InventoryData.TryAddItemSet(this, itemInstance, out Vector2Int slotIndexBL)) return false;
 		CreateItemPrefab(itemInstance, slotIndexBL);
 		return true;
 	}
@@ -238,7 +238,7 @@ public class InventoryComponent : MonoBehaviour
 		}
 
 		ItemInstance itemInstance = itemData.CreateItem();
-		if (!InventoryData.TryAddItem(this, itemInstance, out Vector2Int slotIndexBL)) {
+		if (!InventoryData.TryAddItemSet(this, itemInstance, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
 			SpawnDroppedItem(itemInstance);
 			return false;
@@ -375,7 +375,7 @@ public class InventoryComponent : MonoBehaviour
 		}
 
 		for (int i = 0; i < containersItemOverlaps.Count; i++) {
-			if (containersItemOverlaps[i].HeldItemInstance != null) {
+			if (containersItemOverlaps[i].HeldItemSetList != null) {
 				couldPlace = false;
 				break;
 			}

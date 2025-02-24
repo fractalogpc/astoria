@@ -15,14 +15,24 @@ public class ItemData : ScriptableObject
     public Sprite ItemIcon;
     [ColorUsage(true, false)] public Color ItemBGColor;
     public Vector2Int ItemSize = Vector2Int.one;
+    /// <summary>
+    /// Exposed for equality comparison only. Use StackLimit instead.
+    /// </summary>
     public bool IsStackable;
+    /// <summary>
+    /// Exposed for equality comparison only. Use StackLimit instead.
+    /// </summary>
     public int MaxStackSize = 8;
-    public GameObject DroppedItemPrefab;
+    public int StackLimit => IsStackable ? MaxStackSize : 1;
 
+    public GameObject DroppedItemPrefab;
     private void OnEnable() {
         if (ItemIcon == null) {
             ItemIcon = Resources.Load<Sprite>("DefaultItemAssets/NullImage");
         }
+        // if (DroppedItemPrefab == null) {
+        //     DroppedItemPrefab = Resources.Load<GameObject>("DefaultItemAssets/DefaultDroppedItemPrefab");
+        // }
     }
     
     public virtual ItemInstance CreateItem() {
