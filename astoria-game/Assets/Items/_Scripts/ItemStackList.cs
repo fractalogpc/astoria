@@ -9,10 +9,9 @@ using UnityEngine;
 [Serializable]
 public class ItemStackList
 {
-	[Tooltip("The ItemStacks in this ItemStackList.")]	
-	public List<ItemStack> List;
+	[SerializeField] private List<ItemStack> list;
 
-	public int Count => List.Count;
+	public int Count => list.Count;
 
 	/// <summary>
 	/// Constructs an empty ItemStackList.
@@ -34,7 +33,7 @@ public class ItemStackList
 			}
 			if (!found) newStacks.Add(new ItemStack(item.ItemData));
 		}
-		List = newStacks;
+		list = newStacks;
 	}
 
 	/// <summary>
@@ -44,7 +43,7 @@ public class ItemStackList
 	/// <returns>The list of ItemInstances converted from this ItemStackList.</returns>
 	public List<ItemInstance> ToItemsList() {
 		List<ItemInstance> items = new();
-		foreach (ItemStack stack in List) {
+		foreach (ItemStack stack in list) {
 			items.AddRange(stack.Items);
 		}
 		return items;
@@ -56,6 +55,26 @@ public class ItemStackList
 	/// </summary>
 	/// <returns>The list of the ItemDatas contained in ItemSets</returns>
 	public List<ItemData> ToDatasList() {
-		return List.Select(stack => stack.StackType).ToList();
+		return list.Select(stack => stack.StackType).ToList();
+	}
+	
+	public int IndexOf(ItemStack stack) {
+		return list.IndexOf(stack);
+	}
+	
+	public ItemStack StackContaining(ItemInstance item) {
+		return list.FirstOrDefault(stack => stack.Contains(item));
+	}
+	
+	public bool Contains(ItemStack other) {
+		return list.Any(stack => stack == other);
+	}
+	
+	public bool Add(ItemInstance item) {
+		foreach (ItemStack stack in list) {
+			if (stack.Push(item)) return true;
+		}
+		list.Add(new ItemStack(item.ItemData));
+		return true;
 	}
 }

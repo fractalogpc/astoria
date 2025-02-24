@@ -219,7 +219,7 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	public bool AddItem(ItemInstance itemInstance) {
-		if (!InventoryData.TryAddItemSet(this, itemInstance, out Vector2Int slotIndexBL)) return false;
+		if (!InventoryData.TryAddStack(this, itemInstance, out Vector2Int slotIndexBL)) return false;
 		CreateItemPrefab(itemInstance, slotIndexBL);
 		return true;
 	}
@@ -238,7 +238,7 @@ public class InventoryComponent : MonoBehaviour
 		}
 
 		ItemInstance itemInstance = itemData.CreateItem();
-		if (!InventoryData.TryAddItemSet(this, itemInstance, out Vector2Int slotIndexBL)) {
+		if (!InventoryData.TryAddStack(this, itemInstance, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
 			SpawnDroppedItem(itemInstance);
 			return false;
@@ -259,7 +259,7 @@ public class InventoryComponent : MonoBehaviour
 		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
 		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
 		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
-		bool couldPlace = InventoryData.TryAddItemAtPosition(this, itemInstance, index);
+		bool couldPlace = InventoryData.TryAddStackAtPosition(this, itemInstance, index);
 		if (couldPlace) {
 			CreateItemPrefab(itemInstance, index);
 			return true;
@@ -375,7 +375,7 @@ public class InventoryComponent : MonoBehaviour
 		}
 
 		for (int i = 0; i < containersItemOverlaps.Count; i++) {
-			if (containersItemOverlaps[i].HeldItemSetList != null) {
+			if (containersItemOverlaps[i].HeldStack != null) {
 				couldPlace = false;
 				break;
 			}

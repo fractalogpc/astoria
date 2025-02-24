@@ -12,9 +12,9 @@ using UnityEngine;
 public class InventoryData
 {
     public List<ItemInstance> Items {
-        get => _itemStacks.ToItemsList();
+        get => _stacks.ToItemsList();
     }
-    [SerializeField] private ItemStackList _itemStacks = new();
+    [SerializeField] private ItemStackList _stacks = new();
     public InventoryContainer[,] Containers { get; }
 
     public int Width => Containers.GetLength(0);
@@ -31,21 +31,18 @@ public class InventoryData
             }
         }
     }
-
+    
     /// <summary>
     /// Adds an item to the inventory if possible. Attempts to find a position for the item. Calls OnInventoryUpdate if successful.
     /// </summary>
     /// <param name="caller">The inventory component that is calling this method.</param>
-    /// <param name="itemSet">The item to add.</param>
+    /// <param name="itemInstance">The item to add.</param>
     /// <param name="slotIndex">The slot index the item is placed at.</param>
     /// <returns>Whether the placement was successful.</returns>
-    public bool TryAddItemSet(InventoryComponent caller, ItemSet itemSet, out Vector2Int slotIndex) {
+    public bool TryAddItem(InventoryComponent caller, ItemInstance itemInstance, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
-        if (_itemStacks.List.Contains(itemSet)) {
-            Debug.LogError("Exact same ItemInstance attempted to be added to inventory data. Check for logic errors in usages of TryAddItemSet.");    
-            return false; // Item already in inventory, how did this happen?
-        }
-        Vector2Int bounds = itemSet.;
+        if (Items.Contains(itemInstance)) return false;
+        Vector2Int bounds = itemInstance.I;
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
                 // if (Containers[x, y].HeldItem != null) continue;
@@ -57,14 +54,14 @@ public class InventoryData
                 bool successRotated;
                 
                 // Try normally
-                itemSet.Rotated = false;
-                successNormal = TryAddItemAtPosition(caller, itemSet, new Vector2Int(x, y));
+                itemInstance.Rotated = false;
+                successNormal = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successNormal) {
                     return true;
                 }
                 // Try Rotated
-                itemSet.Rotated = true;
-                successRotated = TryAddItemAtPosition(caller, itemSet, new Vector2Int(x, y));
+                itemInstance.Rotated = true;
+                successRotated = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successRotated) {
                     return true;
                 }
@@ -72,6 +69,7 @@ public class InventoryData
         }
         return false;
     }
+    
     /// <summary>
     /// Attempts to add an item to the inventory at a specific position. Calls OnInventoryUpdate if successful.
     /// </summary>
@@ -82,10 +80,10 @@ public class InventoryData
         if (Items.Contains(itemInstance)) return false;
         if (slotIndexBL.x < 0 || slotIndexBL.x >= Width || slotIndexBL.y < 0 || slotIndexBL.y >= Height) return false;
         Vector2Int bounds = itemInstance.Size;
-        if (!CornersWithinGrid(slotIndexBL, bounds)) return false;
+        if (!CornersWithinGrid(slotIndexBL, bounds) || !IsNotOverlapping(slotIndexBL, bounds)) return false;
         for (int y = slotIndexBL.y; y < slotIndexBL.y + bounds.y; y++) {
             for (int x = slotIndexBL.x; x < slotIndexBL.x + bounds.x; x++) {
-                Containers[x, y].HeldItemSetList = itemInstance;
+                Containers[x, y].HeldItemInstance = itemInstance;
             }
         }
         Items.Add(itemInstance);
@@ -106,7 +104,7 @@ public class InventoryData
     public bool IsNotOverlapping(Vector2Int slotIndexBL, Vector2Int size) {
         for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
             for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
-                if (Containers[x, y].HeldItemSetList != null) return false;
+                if (Containers[x, y].HeldItemInstance != null) return false;
             }
         }
         return true;
@@ -122,7 +120,7 @@ public class InventoryData
         Vector2Int bounds = itemInstance.Size;
         for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
             for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
-                Containers[x, y].HeldItemSetList = null;
+                Containers[x, y].HeldItemInstance = null;
             }
         }
         Items.Remove(itemInstance);
@@ -132,7 +130,7 @@ public class InventoryData
     public Vector2Int GetSlotIndexOf(ItemInstance itemInstance) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                if (Containers[x, y].HeldItemSetList == itemInstance) return new Vector2Int(x, y);
+                if (Containers[x, y].HeldItemInstance == itemInstance) return new Vector2Int(x, y);
             }
         }
         return new Vector2Int(-1, -1);
@@ -140,7 +138,6 @@ public class InventoryData
     public bool SlotIndexInBounds(Vector2Int slotIndex) {
         return slotIndex.x >= 0 && slotIndex.x < Width && slotIndex.y >= 0 && slotIndex.y < Height;
     }
-    
     public bool UpdateHighlight(ItemInstance itemInstance, Vector2Int bottomLeftContainerIndex) {
         Vector2Int bounds = itemInstance.Size;
         // Not at all within grid
@@ -162,7 +159,6 @@ public class InventoryData
         HighlightGreen(bottomLeftContainerIndex, bounds);
         return true;
     }
-    
     // These methods probably shouldn't iterate through the entire grid, but it's fine for now.
     private void HighlightRed(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
         for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {

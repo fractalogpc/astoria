@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// A class containing ItemInstances. 
@@ -11,16 +13,19 @@ public class ItemStack
 	/// The item data that this ItemStack holds.
 	/// </summary>
 	public ItemData StackType;
-	/// <summary>
-	/// The stack of ItemInstances in this ItemStack.
-	/// </summary>
-	private List<ItemInstance> _items;
-	/// <summary>
-	/// The count of ItemInstances in this ItemStack.
-	/// </summary>
-	public int StackCount => _items.Count;
-
 	public List<ItemInstance> Items => _items;
+	public int StackCount => _items.Count;
+	public bool Rotated;
+	public Vector2Int OriginalSize => StackType.ItemSize;
+	public Vector2Int Size {
+		get {
+			if (StackType == null) return Vector2Int.zero;
+			return Rotated
+				? new Vector2Int(StackType.ItemSize.y, StackType.ItemSize.x)
+				: StackType.ItemSize;
+		}
+	}
+	private List<ItemInstance> _items;
 	
 	/// <summary>
 	/// Constructs an empty ItemStack.
@@ -43,6 +48,19 @@ public class ItemStack
 	}
 	
 	/// <summary>
+	/// Attempts to push an entire list of ItemInstances to the stack. Fails if: the items in the list are not of the same type as the stack, the stack becomes full, or the item is not stackable.
+	/// </summary>
+	/// <param name="item">The ItemInstance list to push onto the stack.</param>
+	/// <returns>Whether the list was successfully pushed onto the stack.</returns>
+	public bool Push(List<ItemInstance> items) {
+		if (!CouldPush(items)) return false;
+		foreach (ItemInstance i in items) {
+			_items.Insert(0, i);
+		}
+		return true;
+	}
+	
+	/// <summary>
 	/// Indicates whether an ItemInstance could be pushed onto the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.
 	/// </summary>
 	/// <param name="item">The ItemInstance that would be pushed onto the stack</param>
@@ -51,6 +69,15 @@ public class ItemStack
 		if (!item.ItemData == StackType) return false;
 		if (StackCount >= StackType.StackLimit) return false;
 		return true;
+	}
+	
+	/// <summary>
+	/// Indicates whether an ItemInstance could be pushed onto the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.
+	/// </summary>
+	/// <param name="item">The ItemInstance that would be pushed onto the stack</param>
+	/// <returns>Whether the item could be pushed onto the stack.</returns>
+	public bool CouldPush(List<ItemInstance> items) {
+		return !items.Any(i => !CouldPush(i));
 	}
 	
 	/// <summary>
@@ -66,6 +93,10 @@ public class ItemStack
 		item = _items[0]; 
 		_items.RemoveAt(0);
 		return true;
+	}
+	
+	public bool Contains(ItemInstance item) {
+		return _items.Contains(item);
 	}
 	
 	/// <summary>

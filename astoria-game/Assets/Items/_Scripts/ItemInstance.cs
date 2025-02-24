@@ -11,28 +11,9 @@ using UnityEngine;
 public class ItemInstance
 {
 	public ItemData ItemData;
-	public bool Rotated;
 	
 	public ItemInstance(ItemData itemData) {
 		ItemData = itemData;
-	}
-
-	public Vector2Int OriginalSize => ItemData.ItemSize;
-	public Vector2Int Size {
-		get {
-			if (ItemData == null) return Vector2Int.zero;
-			return Rotated
-				? new Vector2Int(ItemData.ItemSize.y, ItemData.ItemSize.x)
-				: ItemData.ItemSize;
-		}
-	}
-	
-	public int StackCount { get; private set; }
-	public void AddToStack(int amount) {
-		if (!ItemData.IsStackable) {
-			Debug.LogError("Tried to add to stack of non-stackable item: " + ItemData.ItemName);
-		}
-		StackCount += amount;
 	}
 	
 	public virtual void OnItemDestruction() {
