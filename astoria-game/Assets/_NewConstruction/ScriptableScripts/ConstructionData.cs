@@ -10,4 +10,7 @@ public class ConstructionData : ScriptableObject {
 
     [Header("Placement Offsets")]
     public ConstructionOffset Offset;
+
+    public bool isHorizontal;
+    public bool isVertical;
 }

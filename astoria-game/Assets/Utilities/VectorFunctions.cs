@@ -19,4 +19,19 @@ public static class VectorFunctions
         }
         return false;
     }
+
+    public static float DistanceToLine(Vector3 pointOnLine, Vector3 planeNormal, Vector3 point)
+    {
+        // Ensure the normal is normalized
+        Vector3 n = planeNormal.normalized;
+
+        // Vector from the line's point to the second point
+        Vector3 pointToLine = point - pointOnLine;
+
+        // Project out the component along the normal (this gives the projection onto the plane)
+        Vector3 projected = pointToLine - Vector3.Dot(pointToLine, n) * n;
+
+        // The distance is the magnitude of this projection
+        return projected.magnitude;
+    }
 }

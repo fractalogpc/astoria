@@ -8,11 +8,11 @@ namespace Construction
     /// </summary>
     public class PreviewConstructionComponent : MonoBehaviour
     {
-        [Header("Settings")]
-        [Tooltip("The layer to sphere cast on to find nearby components to connect to.")]
-        [SerializeField] private LayerMask _checkLayer = default;
-
         public List<Edge> edges; // Public for editor
+
+        // Used for setting used on edges when placed
+        [SerializeField] private Edge? fromEdge = null;
+        [SerializeField] private Edge? toEdge = null;
 
         private PreviewObject previewObject;
 
@@ -26,7 +26,7 @@ namespace Construction
             // Render lines
             foreach (Edge edge in edges)
             {
-                Debug.DrawLine(transform.TransformPoint(edge.pointA), transform.TransformPoint(edge.pointB), Color.red);
+                Debug.DrawLine(transform.TransformPoint(edge.position), transform.TransformPoint(edge.position + edge.normal * 0.2f), Color.red);
             }
         }
 
@@ -42,78 +42,119 @@ namespace Construction
             // tryPosition += data.Offset.PositionOffset;
             // tryRotation *= Quaternion.Euler(data.Offset.RotationOffset);
 
-            switch (data.Type) {
-                case ConstructionComponentData.StructureType.Foundation:
-                    
-                    break;
-                case ConstructionComponentData.StructureType.Wall:
-                    
-                    break;
-                case ConstructionComponentData.StructureType.Floor:
-                    
-                    break;
-            }
-            // If can place component on ground
-            if (data.Type == ConstructionComponentData.StructureType.Foundation)
+            List<Transform> snappedTransforms; // Don't check collisions with the object we are snapping to
+
+            switch (data.Type)
             {
+                case ConstructionComponentData.StructureType.Foundation:
+                    // Don't check for collisions with the ground for foundations
+                    LayerMask foundationLayerMask = settings.CollisionLayerMask & ~settings.GroundLayerMask;
 
-                // Check if there are no nearby components, check for collision
-                if (Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, _checkLayer).Length == 0)
-                {
-
-                    if (previewObject.IsColliding(tryPosition, tryRotation, settings.CollisionLayerMask))
+                    // Check for nearby snapping
+                    if (HasAvailableConnection(tryPosition, tryRotation, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
                     {
-                        validPosition = false;
+                        // Check for collision
+                        if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
+                        {
+                            validPosition = false;
+                            Debug.Log("Colliding");
+                        }
+                        else
+                        {
+                            // Check for distance from ground
+                            if (Physics.Raycast(tryPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
+                            {
+                                if (hit.distance > settings.FoundationMaxDistanceFromGround + 10)
+                                {
+                                    // Too far from ground
+                                    validPosition = false;
+                                    Debug.Log("Too far from ground");
+                                }
+                                else
+                                {
+                                    // Valid position
+                                    validPosition = true;
+                                    Debug.Log("Valid position");
+                                }
+                            }
+                            else
+                            {
+                                // No ground found
+                                validPosition = false;
+                                Debug.Log("No ground found");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // No snapping found
                         finalPosition = tryPosition;
                         finalRotation = tryRotation;
-                        return false;
+
+                        // Check for collision
+                        if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
+                        {
+                            validPosition = false;
+                            Debug.Log("Colliding");
+                        }
+                        else
+                        {
+                            // Check for distance from ground
+                            if (Physics.Raycast(tryPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
+                            {
+                                if (hit.distance > settings.FoundationMaxDistanceFromGround + 10)
+                                {
+                                    // Too far from ground
+                                    validPosition = false;
+                                    Debug.Log("Too far from ground");
+                                }
+                                else
+                                {
+                                    // Valid position
+                                    validPosition = true;
+                                    Debug.Log("Valid position");
+                                }
+                            }
+                            else
+                            {
+                                // No ground found
+                                validPosition = false;
+                                Debug.Log("No ground found");
+                            }
+                        }
                     }
-
-                    validPosition = true;
-                    finalPosition = tryPosition;
-                    finalRotation = tryRotation;
-                    return true;
-                }
+                    return validPosition;
+                    break;
             }
-
-            // Snap to nearby component
-            List<Transform> snappedTransforms;
-            if (HasAvailableConnection(tryPosition, tryRotation, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
-            {
-                // Check for collision
-                if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
-                {
-                    validPosition = false;
-                    return false;
-                }
-                validPosition = true;
-                return true;
-            }
-
-            validPosition = false;
             finalPosition = tryPosition;
             finalRotation = tryRotation;
+            validPosition = false;
+
+            fromEdge = null;
+            toEdge = null;
             return false;
         }
 
         private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionData data, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
         {
-            List<(Edge, Edge, float, Transform)> compatibleEdges = new List<(Edge, Edge, float, Transform)>(); // List of compatible edges and their distance to the other component
+            snappedTransforms = new List<Transform>();
 
-            snappedTransforms = null;
-
-            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, _checkLayer))
+            List<(Edge, float, Transform)> possibleEdges = new();
+            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, settings.ConstructionLayerMask))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)
                 {
-                    // Check if the other component has a free connection
-                    foreach (Edge edge in edges)
+                    // Find the closest free edge that's in range
+                    foreach (Edge edge in otherComponent.edges)
                     {
-                        foreach (Edge otherEdge in otherComponent.edges)
+                        // Don't check for an edge if it is already used
+                        if (data.isHorizontal && edge.usedHorizontally || data.isVertical && edge.usedVertically) continue;
+
+                        float distance = edge.Distance(tryPosition, collider.transform);
+                        if (distance <= settings.StructurePlaceRadius)
                         {
-                            float distance = Edge.CalculateEdgeDistance(edge, otherEdge, tryPosition, tryRotation, otherComponent.transform.position, otherComponent.transform.rotation);
-                            compatibleEdges.Add((edge, otherEdge, distance, otherComponent.transform));
+                            possibleEdges.Add((edge, distance, collider.transform));
                         }
                     }
                 }
@@ -122,50 +163,75 @@ namespace Construction
             snappedPosition = Vector3.zero;
             snappedRotation = Quaternion.identity;
 
-            if (compatibleEdges.Count > 0)
+            Edge? edgeToSnapTo = null; // The other edge
+            Edge? edgeToSnapFrom = null; // The edge on this component
+            Transform otherTransform = null;
+            if (possibleEdges.Count > 0)
             {
-                compatibleEdges.Sort((x, y) => x.Item3.CompareTo(y.Item3));
+                // Sorts the list by distance
+                possibleEdges.Sort((x, y) => x.Item2.CompareTo(y.Item2));
 
-                // Put all items with the same distance in a list
-                List<(Edge, Edge, float, Transform)> closestEdges = new List<(Edge, Edge, float, Transform)>();
-                closestEdges.Add(compatibleEdges[0]);
-                for (int i = 1; i < compatibleEdges.Count; i++)
+                // I'm not sure it's important to use a foreach here, it's probably fine to just choose the closest edge
+                // There may be a case where we want to check multiple edges, but I can't think of one right now
+                foreach ((Edge, float, Transform) otherEdge in possibleEdges)
                 {
-                    if (Mathf.Abs(compatibleEdges[i].Item3 - closestEdges[0].Item3) < 0.1f)
+                    Vector3 edgeDirection = otherEdge.Item1.WorldSpaceRotation(otherEdge.Item3);
+
+                    List<(Edge, float)> possibleEdgesOnThisComponent = new();
+                    foreach (Edge tryEdge in edges)
                     {
-                        closestEdges.Add(compatibleEdges[i]);
+                        Vector3 tryEdgeNormal = tryEdge.WorldSpaceRotation(transform);
+
+                        float dot = Vector3.Dot(edgeDirection, tryEdgeNormal);
+                        possibleEdgesOnThisComponent.Add((tryEdge, dot));
+                    }
+
+                    // Sort by dot product
+                    if (possibleEdgesOnThisComponent.Count > 0)
+                    {
+                        possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+
+                        edgeToSnapTo = otherEdge.Item1;
+                        edgeToSnapFrom = possibleEdgesOnThisComponent[0].Item1;
+                        otherTransform = otherEdge.Item3;
+
+                        // Here we finally choose the edge we are snapping to and from.
+                        snappedTransforms.Add(otherTransform);
+                        break;
                     }
                 }
 
-                // Choose the edge attached to the furthest object from the initial preview object position
-                closestEdges.Sort((x, y) => Vector3.Distance(x.Item4.position, tryPosition).CompareTo(Vector3.Distance(y.Item4.position, tryPosition)));
-
-                Edge closestEdge = closestEdges[0].Item1;
-                Edge closestOtherEdge = closestEdges[0].Item2;
-                Transform otherTransform = closestEdges[0].Item4;
-
-                bool? doSnapping = null;
-                // Try to cast data to ConstructionComponentData
-                if (data is ConstructionComponentData componentData)
+                // Couldn't find compatible edges
+                if (edgeToSnapTo == null || edgeToSnapFrom == null || otherTransform == null)
                 {
-                    
-                    if (componentData.Type != ConstructionComponentData.StructureType.Foundation) {
-                        doSnapping = GlobalVariables.FlipRotation;
-                    }
+                    return false;
                 }
 
-                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge(closestEdge, closestOtherEdge, tryPosition, tryRotation, otherTransform.position, otherTransform.rotation, doSnapping);
+                bool flipRotation = false;
 
-                snappedPosition = tryPosition + snappedPositionOffset.Item1;
-                snappedRotation = tryRotation * snappedPositionOffset.Item2;
+                // Don't allow flipping if the component is horizontal
+                if (!data.isHorizontal)
+                {
+                    flipRotation = GlobalVariables.FlipRotation;
+                }
 
-                if (snappedTransforms == null) snappedTransforms = new List<Transform>();
-                snappedTransforms.Add(otherTransform); // This doesnt work
+
+                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge((Edge)edgeToSnapFrom, (Edge)edgeToSnapTo, transform, otherTransform, false);
+                snappedPosition = snappedPositionOffset.Item1;
+                snappedRotation = snappedPositionOffset.Item2;
+
+                fromEdge = (Edge)edgeToSnapFrom;
+                toEdge = (Edge)edgeToSnapTo;
 
                 return true;
             }
 
             return false;
+        }
+
+        public (Edge?, Edge?) GetCurrentlySnappingEdges() {
+            Debug.Log($"From edge: {fromEdge}, To edge: {toEdge}");
+            return (fromEdge, toEdge);
         }
 
     }

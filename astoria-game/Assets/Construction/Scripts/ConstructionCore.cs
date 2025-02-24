@@ -279,18 +279,32 @@ namespace Construction
                         testDirection.y = 0;
 
                         RaycastHit hit;
-                        Physics.SphereCast(ray, 0.4f, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
+                        // If the ray doesn't hit, sphere cast to find the nearest object
+                        if (!Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask))
+                        {
+                            Physics.SphereCast(ray, 0.4f, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
+                        }
 
                         // Check if the component can be placed
-                        constructionComponent.CanPlace(hit.transform == null ? transform.position + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
+                        constructionComponent.CanPlace(hit.transform == null ? ray.origin + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
+
+                        Debug.Log(validPosition);
 
                         // Check if player has required materials
-                        if (validPosition) {
-                            if (BackgroundInfo._infBuild) {
+                        if (validPosition)
+                        {
+                            if (BackgroundInfo._infBuild)
+                            {
                                 _canPlace = true;
-                            } else {
+                            }
+                            else
+                            {
                                 _canPlace = data.Cost.ContainedWithin(PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItems());
                             }
+                        }
+                        else
+                        {
+                            _canPlace = false;
                         }
 
                         RenderPreviewObject(position, rotation, _canPlace);
@@ -396,6 +410,11 @@ namespace Construction
                 case ConstructionState.PlacingStructure:
                     if (!_canPlace) break;
                     PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
+
+                    // Assign edges as used
+                    (Edge?, Edge?) edgePairs = _previewObject.GetComponent<PreviewConstructionComponent>().GetCurrentlySnappingEdges();
+                    if (edgePairs.Item1 != null) edgePairs.Item1.Value.SetUsedHorizontally(true);
+                    if (edgePairs.Item2 != null) edgePairs.Item2.Value.SetUsedHorizontally(true);
 
                     // Removing items
                     if (!BackgroundInfo._infBuild)
@@ -692,6 +711,10 @@ public class ConstructionSettings
     public LayerMask ConstructionLayerMask;
     [Tooltip("Layer that interferes with placing construction objects.")]
     public LayerMask CollisionLayerMask;
+    [Tooltip("The ground layer mask")]
+    public LayerMask GroundLayerMask;
+    [Tooltip("The max distance a foundation can be placed from the ground.")]
+    public float FoundationMaxDistanceFromGround = 2f;
 
     [Header("Normal settings")]
     // Angle from 0 to 180 degrees

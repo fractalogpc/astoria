@@ -83,12 +83,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   edges:
-  - pointA: {x: -1.5, y: 0, z: -0.86602545}
-    pointB: {x: 0, y: 0, z: 1.7320515}
-  - pointA: {x: 0, y: 0, z: 1.7320515}
-    pointB: {x: 1.5, y: 0, z: -0.86602545}
-  - pointA: {x: 1.5, y: 0, z: -0.86602545}
-    pointB: {x: -1.5, y: 0, z: -0.86602545}
+  - position: {x: 0, y: 0, z: -0.8660255}
+    normal: {x: 0, y: 0, z: -1}
+    usedHorizontally: 0
+    usedVertically: 0
+  - position: {x: 0.75, y: 0, z: 0.4330127}
+    normal: {x: 0.75, y: 0, z: 0.4330127}
+    usedHorizontally: 0
+    usedVertically: 0
+  - position: {x: -0.75, y: 0, z: 0.4330127}
+    normal: {x: -0.75, y: 0, z: 0.4330127}
+    usedHorizontally: 0
+    usedVertically: 0
 --- !u!114 &482936814199705953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,7 +348,7 @@ MonoBehaviour:
   customMaterial: {fileID: 0}
   terrainData: {fileID: 0}
   terrainMask: -1
-  debugData: <size=10>The element is disabled because the manager is missing</size>
+  debugData: <size=10><color=#e1f043>The element is inside the base distance bounds</color></size>
   materialData:
     shader: {fileID: 0}
     shaderName: 

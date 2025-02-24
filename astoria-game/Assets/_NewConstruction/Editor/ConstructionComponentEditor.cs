@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using Construction;
 
+
 [CustomEditor(typeof(ConstructionComponent))]
 public class ConstructionComponentEditor : Editor
 {
@@ -18,7 +19,7 @@ public class ConstructionComponentEditor : Editor
     DrawDefaultInspector();
 
     // Button to sync edges
-    if (GUILayout.Button("Sync Edges to Preview"))
+    if (GUILayout.Button("Sync Edges to Preview") && !EditorApplication.isPlaying)
     {
       SyncEdgesToPreview();
     }
@@ -43,6 +44,8 @@ public class ConstructionComponentEditor : Editor
 
   private void OnSceneGUI()
   {
+    if (EditorApplication.isPlaying) return;
+
     if (component.edges == null) return;
 
     Transform objectTransform = component.transform;
@@ -52,26 +55,22 @@ public class ConstructionComponentEditor : Editor
       Edge edge = component.edges[i];
 
       // Convert world positions to local space
-      Vector3 localPointA = objectTransform.InverseTransformPoint(edge.pointA);
-      Vector3 localPointB = objectTransform.InverseTransformPoint(edge.pointB);
+      Vector3 localPosition = objectTransform.InverseTransformPoint(edge.position);
 
       // Display handles in local space (without unnecessary transformations)
-      Vector3 newLocalPointA = Handles.PositionHandle(objectTransform.position + localPointA, Quaternion.identity);
-      Vector3 newLocalPointB = Handles.PositionHandle(objectTransform.position + localPointB, Quaternion.identity);
+      Vector3 newLocalPosition = Handles.PositionHandle(objectTransform.position + localPosition, Quaternion.identity);
 
       // Convert modified positions back to world space
-      Vector3 newWorldPointA = objectTransform.TransformPoint(newLocalPointA - objectTransform.position);
-      Vector3 newWorldPointB = objectTransform.TransformPoint(newLocalPointB - objectTransform.position);
+      Vector3 newWorldPoint = objectTransform.TransformPoint(newLocalPosition - objectTransform.position);
 
       // Update only if positions changed
-      if (newWorldPointA != edge.pointA || newWorldPointB != edge.pointB)
+      if (newWorldPoint != edge.position)
       {
         Undo.RecordObject(component, "Move Edge Point");
 
         // Copy edge and update list
         var edgeCopy = component.edges[i];
-        edgeCopy.pointA = newWorldPointA;
-        edgeCopy.pointB = newWorldPointB;
+        edgeCopy.position = newWorldPoint;
         component.edges[i] = edgeCopy;
 
         EditorUtility.SetDirty(component);
@@ -79,7 +78,7 @@ public class ConstructionComponentEditor : Editor
 
       // Draw a line between the points
       Handles.color = Color.cyan;
-      Handles.DrawLine(edge.pointA, edge.pointB, 1f);
+      Handles.DrawLine(edge.position, edge.position + edge.normal * 0.2f, 1f);
     }
 
     SceneView.RepaintAll();

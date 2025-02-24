@@ -27,7 +27,7 @@ public class PreviewConstructionComponentEditor : Editor
 
       // Draw a line between the points
       Handles.color = Color.cyan;
-      Handles.DrawLine(edge.pointA, edge.pointB, 1f);
+      Handles.DrawLine(edge.position, edge.position + edge.normal * 0.2f, 1f);
     }
   }
 }
