@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Vector2Int = UnityEngine.Vector2Int;
 
 [AddComponentMenu("")]
 public class InventoryItemDraggedUI : MonoBehaviour
@@ -17,8 +18,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	[SerializeField] private Image _itemIconImage;
 	[SerializeField] private InventoryComponent _currentInventoryAbove;
 	
-	private InventoryItemUI _originItemUI;
-	private InventoryComponent _startingInventory;
+	private Vector2Int _originSlotIndex;
+	private InventoryComponent _originInventory;
 	private InventoryEquipableSlot _originSlot;
 	private GraphicRaycaster _canvasGraphicRaycaster;
 	private PointerEventData _pointerEventData = new(EventSystem.current);
@@ -30,10 +31,10 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <param name="originalInventory">The inventory that the InventoryUI spawning the object belongs to.</param>
 	/// <param name="itemInstance">The item this draggable holds.</param>
 	/// <param name="itemUI">The InventoryUI that this object was spawned by.</param>
-	public void InitializeFromInventory(InventoryComponent originalInventory, ItemInstance itemInstance, InventoryItemUI itemUI) {
-		_originItemUI = itemUI;
+	public void InitializeFromInventory(InventoryComponent originalInventory, ItemInstance itemInstance, Vector2Int slotIndexBL) {
 		ItemInstance = itemInstance;
-		_startingInventory = originalInventory;
+		_originInventory = originalInventory;
+		_originSlotIndex = slotIndexBL;
 		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
 		SetVisualSize();
 		_followMouse = true;
@@ -53,7 +54,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		_canvasGroup.alpha = 0;
 	}
 	
-	// Look, I know its messy, but trust me, it makes sense. God help me if there are other kinds of slots.
+	// Look, I know its messy, but trust me, it makes sense.
 
 	/// <summary>
 	/// Called when the mouse is let go of.
@@ -65,51 +66,65 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
 		// Over another inventory
 		if (_currentInventoryAbove != null) {
-			_startingInventory?.ResetAllContainerHighlights();
+			_originInventory?.ResetAllContainerHighlights();
 			_currentInventoryAbove.ResetAllContainerHighlights();
-			// Started from an inventory, need to call right function to also delete InventoryItemUI from last inventory
-			if (_originItemUI != null) {
-				_originItemUI.MoveToInventoryAtPosition(_currentInventoryAbove, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
+			Vector2Int slotIndexBL = GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition);
+			if (_currentInventoryAbove.PlaceItem(ItemInstance, slotIndexBL)) {
+				Destroy(gameObject);
+				return true;
 			}
-			// Started from a slot, slot already removed the item
+			// Could not fit item over hover spot
+			Debug.LogWarning($"Could not move item {ItemInstance.ItemData.ItemName} to {_currentInventoryAbove.name} at position {slotIndexBL}.");
+			if (_originInventory != null) {
+				ReturnToOriginalInventory();
+			}
 			else {
-				Vector2Int slotIndex = GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition);
-				if (!_currentInventoryAbove.PlaceItem(ItemInstance, slotIndex))
-					if (!_originSlot.TryAddToSlot(ItemInstance))
-						Debug.LogError("InventoryItemDraggedUI: Could not return item to slot. Check for unexpected draggable or slot logic.");
+				ReturnToOriginalSlot();
 			}
-
-			Destroy(gameObject);
-			return true;
+			return false;
 		}
 
 		// Over an equipable slot
 		if (overSlot) {
-			if (slot.TryAddToSlot(ItemInstance)) {
-				_originItemUI?.DeleteSelfFromInventory();
+			if (!slot.TryAddToSlot(ItemInstance)) {
+				_originInventory?.ResetAllContainerHighlights();
+				ReturnToOriginalInventory();
 				Destroy(gameObject);
-				return true;
+				return false;
 			}
-
-			_startingInventory?.ResetAllContainerHighlights();
-			_originItemUI?.ResetToOriginalPosition();
 			Destroy(gameObject);
-			return false;
+			return true;
 		}
 		
 		// Over nothing, drop the item
-		_startingInventory?.ResetAllContainerHighlights();
-		_startingInventory?.SpawnDroppedItem(ItemInstance);
-		_originItemUI?.DeleteSelfFromInventory();
+		_originInventory?.ResetAllContainerHighlights();
+		_originInventory?.SpawnDroppedItem(ItemInstance);
 		Destroy(gameObject);
 		return false;
 	}
+	
+	/// <summary>
+	/// Uses the recorded parent inventory and initial position to try to put the item back where it was.
+	/// </summary>
+	private void ReturnToOriginalInventory() {
+		if (!_originInventory.PlaceItem(ItemInstance, _originSlotIndex)) {
+			Debug.LogError($"Could not put item {ItemInstance.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
+		}
+		Destroy(gameObject);
+	}
 
+	private void ReturnToOriginalSlot() {
+		if (!_originSlot.TryAddToSlot(ItemInstance)) {
+			Debug.LogError("InventoryItemDraggedUI: Could not return item to slot. Check for unexpected draggable or slot logic.");
+		}
+		Destroy(gameObject);
+	}
+	
 	private void OnValidate() {
 		_rectTransform = GetComponent<RectTransform>();
 		_rectTransform.anchorMin = Vector2.zero;
 	}
-
+	
 	private void Start() {
 		_canvasGraphicRaycaster = _rectTransform.GetComponentInParent<GraphicRaycaster>();
 		print($"graphic raycaster for {gameObject.name} is on {_canvasGraphicRaycaster.gameObject.name}");
@@ -126,10 +141,10 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		_rectTransform.anchoredPosition = Input.mousePosition;
 		GetInventoryUIHoveredOver(out _currentInventoryAbove);
 		if (_currentInventoryAbove != null) {
-			_startingInventory?.ResetAllContainerHighlights();
+			_originInventory?.ResetAllContainerHighlights();
 			_currentInventoryAbove.HighlightSlotsUnderItem(ItemInstance, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
-
+		if (Input.GetMouseButtonUp(0)) OnLetGoOfDraggedItem();
 		if (Input.GetKeyDown(KeyCode.R)) RotateItem();
 	}
 
@@ -139,10 +154,10 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	}
 	
 	private void SetVisualSize() {
-		if (_startingInventory != null) {
-			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits, ItemInstance.Size.y * _startingInventory.SlotSizeUnits);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits / 2, ItemInstance.Size.y * _startingInventory.SlotSizeUnits / 2);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * _startingInventory.SlotSizeUnits, ItemInstance.Size.y * _startingInventory.SlotSizeUnits);
+		if (_originInventory != null) {
+			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits, ItemInstance.Size.y * _originInventory.SlotSizeUnits);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits / 2, ItemInstance.Size.y * _originInventory.SlotSizeUnits / 2);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits, ItemInstance.Size.y * _originInventory.SlotSizeUnits);
 		}
 		else {
 			Debug.LogWarning("Make item slot size some kind of global variable, and make sure to refactor everything to use it when you do. Currently 96px.");

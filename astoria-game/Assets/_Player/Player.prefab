@@ -17944,6 +17944,7 @@ GameObject:
   - component: {fileID: 5201548541002407690}
   - component: {fileID: 7774407543730488737}
   - component: {fileID: 6580231562744375249}
+  - component: {fileID: 7974947843654446982}
   m_Layer: 8
   m_Name: Inventory
   m_TagString: Untagged
@@ -18090,6 +18091,37 @@ MonoBehaviour:
   _spawnInventoryWith:
   - {fileID: 11400000, guid: 9012168e6fe5a6847bf2c58376b8da98, type: 2}
   - {fileID: 11400000, guid: f8d9581525c1c024fb673118a87fdb06, type: 2}
+--- !u!114 &7974947843654446982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6287355034396083409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf649e9f66c50a479a5dee1d0d74516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHoverOn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverOff:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickDownAnywhere:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickUpAnywhere:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickDownSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickUpSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  _isHovering: 0
 --- !u!1 &6336928685461450730
 GameObject:
   m_ObjectHideFlags: 0
@@ -21575,8 +21607,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.47233322
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -26,12 +26,13 @@ public class ClickableEvents : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerDown(PointerEventData eventData) {
         OnClickDownAnywhere.Invoke();
-        if (!_isHovering) return; 
+        if (!_isHovering) return;
         OnClickDownSelected?.Invoke();
     }
 
     public void OnPointerUp(PointerEventData eventData) {
         OnClickUpAnywhere?.Invoke();
+        Debug.Log("Pointer up", gameObject);
         if (!_isHovering) return;
         OnClickUpSelected?.Invoke();
     }
