@@ -97,7 +97,7 @@ public class GunInstance : ViewmodelItemInstance
 		if (!Initialized) return;
 		// Call recoil on camera
 		if (SoundManager.Instance != null) {
-			SoundManager.Instance.EmitSound(new SoundEvent(GameObject.FindWithTag("Player").transform.position, 200f, "Gunshot"));
+			SoundManager.Instance.EmitSound(new SoundEvent(GameObject.FindWithTag("Player").transform.position, 800f, "Gunshot"));
 		}
 		else {
 			Debug.LogWarning("GunInstance: SoundManager.Instance not found! Gunshot sound will not alert SoundManager listeners.");
