@@ -33,7 +33,8 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
             _movement.Stop();
             _ragdoll.Ragdoll(true);
             _ragdoll.ApplyForce((transform.position - hitPosition).normalized * 1.0f);
-            Destroy(gameObject, 5.0f);
+            SoundManager.Instance.UnregisterListener(this);
+            Destroy(gameObject, 0f);
         }
     }
     private void OnValidate() {
@@ -130,11 +131,11 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
 
     public void OnSoundHeard(SoundEvent soundEvent) {
         float power = soundEvent.intensity / Mathf.Pow(Vector3.Distance(soundEvent.position, this.transform.position), 2);
-        Debug.Log("sound received");
+        Debug.Log("sound received: " + power);
          if (power > 0.2f) {
             Debug.Log("0.2 heard");
-            _state = State.Chasing;
             _currentPlayerTarget = GameObject.FindWithTag("Player");
+            _state = State.Chasing;
         } else if (power > 0.1f) {
             Debug.Log("0.1 heard");
             _state = State.Wandering;
