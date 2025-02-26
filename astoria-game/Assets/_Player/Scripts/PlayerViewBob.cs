@@ -6,6 +6,8 @@ public class PlayerViewBob : MonoBehaviour
 {
 
   [SerializeField] private PlayerController _playerController;
+  [SerializeField] private GameObject _footprintPrefab;
+  [SerializeField] private float _footprintStrideWidth = 0.5f;
   [SerializeField] private AnimationCurve _viewBobVerticalCurve;
   [SerializeField] private float _verticalMultiplier;
   [SerializeField] private AnimationCurve _viewBobHorizontalCurve;
@@ -54,6 +56,13 @@ public class PlayerViewBob : MonoBehaviour
           _timeSinceLastStep = 0;
           _currentCurvePosition = 0;
           _stepRight = !_stepRight;
+
+          if (_footprintPrefab != null) {
+            Quaternion rotation = Quaternion.LookRotation(_motor.CharacterForward, Vector3.up);
+            Vector3 position = _playerController.transform.position + (_stepRight ? _motor.CharacterRight : -_motor.CharacterRight) * _footprintStrideWidth;
+            GameObject footprint = Instantiate(_footprintPrefab, position, rotation);
+            Destroy(footprint, 10f);
+          }
         }
       }
     }
