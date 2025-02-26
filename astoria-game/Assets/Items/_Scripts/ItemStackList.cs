@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,6 @@ using UnityEngine;
 public class ItemStackList
 {
 	[SerializeField] private List<ItemStack> list;
-
 	public int Count => list.Count;
 
 	/// <summary>
@@ -58,6 +58,11 @@ public class ItemStackList
 		return list.Select(stack => stack.StackType).ToList();
 	}
 	
+	public ItemStack this[int index] {
+		get => list[index];
+		set => list[index] = value;
+	}
+	
 	public int IndexOf(ItemStack stack) {
 		return list.IndexOf(stack);
 	}
@@ -76,5 +81,9 @@ public class ItemStackList
 	
 	public void Add(ItemStack stack) {
 		list.Add(stack);
+	}
+	
+	public void Remove(ItemStack stack) {
+		list.Remove(stack);
 	}
 }

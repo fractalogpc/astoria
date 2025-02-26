@@ -14,6 +14,9 @@ public class InventoryData
     public List<ItemInstance> Items {
         get => _stacks.ToItemsList();
     }
+    public ItemStackList Stacks {
+        get => _stacks;
+    }
     [SerializeField] private ItemStackList _stacks = new();
     public InventoryContainer[,] Containers { get; }
 
@@ -36,14 +39,12 @@ public class InventoryData
     /// Adds an item to the inventory if possible. Attempts to find a position for the item. Calls OnInventoryUpdate if successful.
     /// </summary>
     /// <param name="caller">The inventory component that is calling this method.</param>
-    /// <param name="itemInstance">The item to add.</param>
+    /// <param name="itemStacknce">The item to add.</param>
     /// <param name="slotIndex">The slot index the item is placed at.</param>
     /// <returns>Whether the placement was successful.</returns>
-    public bool TryAddItem(InventoryComponent caller, ItemInstance itemInstance, out Vector2Int slotIndex) {
+    public bool TryAddStack(InventoryComponent caller, ItemStack itemStack, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
-        if (Items.Contains(itemInstance)) return false;
-        ItemStack itemStack = new(itemInstance);
-        Vector2Int bounds = itemStack.Size;
+        if (_stacks.Contains(itemStack)) return false;
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
                 slotIndex = new Vector2Int(x, y);
@@ -52,14 +53,14 @@ public class InventoryData
                 bool successRotated;
                 
                 // Try normally
-                itemInstance.Rotated = false;
-                successNormal = TryAddStackAtPosition(caller, itemInstance, new Vector2Int(x, y));
+                itemStack.Rotated = false;
+                successNormal = TryAddStackAtPosition(caller, itemStack, new Vector2Int(x, y));
                 if (successNormal) {
                     return true;
                 }
                 // Try Rotated
-                itemInstance.Rotated = true;
-                successRotated = TryAddStackAtPosition(caller, itemInstance, new Vector2Int(x, y));
+                itemStack.Rotated = true;
+                successRotated = TryAddStackAtPosition(caller, itemStack, new Vector2Int(x, y));
                 if (successRotated) {
                     return true;
                 }
@@ -79,13 +80,19 @@ public class InventoryData
         if (!SlotIndexInBounds(slotIndexBL)) return false;
         Vector2Int bounds = itemStack.Size;
         if (!CornersWithinGrid(slotIndexBL, bounds)) return false;
-
         if (OverlappingNothing(slotIndexBL, bounds)) {
             UpdateHeldStack(slotIndexBL, bounds, itemStack);
             _stacks.Add(itemStack);
             OnInventoryUpdate?.Invoke(caller);
+            return true;
         }
-        return true;
+        if (OverlappingStackAndCanAdd(slotIndexBL, bounds, itemStack)) {
+            ItemStack stack = Containers[slotIndexBL.x, slotIndexBL.y].HeldStack;
+            stack.Push(itemStack.Items);
+            OnInventoryUpdate?.Invoke(caller);
+            return true;
+        }
+        return false;
     }
     /// <summary>
     /// Removes an item from the inventory. Calls OnInventoryUpdate if successful.
@@ -94,48 +101,85 @@ public class InventoryData
     /// <returns>Whether the item was found and able to be removed.</returns>
     public bool RemoveItem(InventoryComponent caller, ItemInstance itemInstance) {
         if (!Items.Contains(itemInstance)) return false;
-        Vector2Int bottomLeftContainerIndex = GetSlotIndexOf(itemInstance);
-        Vector2Int bounds = itemInstance.Size;
-        for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
-            for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
-                Containers[x, y].HeldItemInstance = null;
-            }
+        Vector2Int indexBL = GetSlotIndexOf(itemInstance);
+        if (!Containers[indexBL.x, indexBL.y].HeldStack.Remove(itemInstance)) {
+            Debug.LogError($"InventoryData: Failed to remove item instance {itemInstance.ItemData.ItemName} from inventory.");
+            return false;
         }
-        Items.Remove(itemInstance);
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
+    /// <summary>
+    /// Removes an item from the inventory. Calls OnInventoryUpdate if successful.
+    /// </summary>
+    /// <param name="itemData">The item instance to remove.</param>
+    /// <returns>Whether the item was found and able to be removed.</returns>
+    public bool RemoveItem(InventoryComponent caller, ItemData itemData) {
+        if (!_stacks.ToDatasList().Contains(itemData)) return false;
+        Vector2Int indexBL = GetSlotIndexOf(itemData);
+        // If no more items left
+        if (!Containers[indexBL.x, indexBL.y].HeldStack.Pop(out _)) {
+            _stacks.Remove(Containers[indexBL.x, indexBL.y].HeldStack);
+            UpdateHeldStack(indexBL, Vector2Int.one, null);
+        }
+        OnInventoryUpdate?.Invoke(caller);
+        return true;
+    }
+
+    public bool RemoveStack(InventoryComponent caller, ItemStack stack) {
+        if (!_stacks.Contains(stack)) return false;
+        Vector2Int indexBL = GetSlotIndexOf(stack);
+        _stacks.Remove(stack);
+        UpdateHeldStack(indexBL, stack.Size, null);
+        OnInventoryUpdate?.Invoke(caller);
+        return true;
+    }
+
+    public bool PopItemFrom(InventoryComponent caller, ItemStack itemStack, out ItemInstance item, out bool itemsLeft) {
+        itemsLeft = true;
+        if (!_stacks.Contains(itemStack)) {
+            item = null;
+            return false;
+        }
+        if (!itemStack.Pop(out ItemInstance poppedItem)) {
+            Vector2Int indexBL = GetSlotIndexOf(itemStack);
+            _stacks.Remove(itemStack);
+            UpdateHeldStack(indexBL, Vector2Int.one, null);
+            itemsLeft = false;
+        }
+        item = poppedItem;
+        _stacks.Remove(itemStack);
+        OnInventoryUpdate?.Invoke(caller);
+        return true;
+    }
+    
+    public Vector2Int GetSlotIndexOf(ItemStack itemStack) {
+        for (int y = 0; y < Height; y++) {
+            for (int x = 0; x < Width; x++) {
+                if (Containers[x, y].HeldStack == itemStack) return new Vector2Int(x, y);
+            }
+        }
+        return new Vector2Int(-1, -1);
+    }
+
     public Vector2Int GetSlotIndexOf(ItemInstance itemInstance) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                if (Containers[x, y].HeldItemInstance == itemInstance) return new Vector2Int(x, y);
+                if (Containers[x, y].HeldStack.Contains(itemInstance)) return new Vector2Int(x, y);
+            }
+        }
+        return new Vector2Int(-1, -1);
+    }
+    public Vector2Int GetSlotIndexOf(ItemData itemData) {
+        for (int y = 0; y < Height; y++) {
+            for (int x = 0; x < Width; x++) {
+                if (Containers[x, y].HeldStack.StackType == itemData) return new Vector2Int(x, y);
             }
         }
         return new Vector2Int(-1, -1);
     }
     public bool SlotIndexInBounds(Vector2Int slotIndex) {
         return slotIndex.x >= 0 && slotIndex.x < Width && slotIndex.y >= 0 && slotIndex.y < Height;
-    }
-    public bool UpdateHighlight(ItemInstance itemInstance, Vector2Int bottomLeftContainerIndex) {
-        Vector2Int bounds = itemInstance.Size;
-        // Not at all within grid
-        if (!CornersWithinGrid(bottomLeftContainerIndex, Vector2Int.one)) {
-            ClearHighlights();
-            return false;
-        }
-        // Partly out of grid
-        if (!CornersWithinGrid(bottomLeftContainerIndex, bounds)) {
-            HighlightRed(bottomLeftContainerIndex, bounds);
-            return false;
-        }
-        // Overlapping
-        if (!OverlappingNothing(bottomLeftContainerIndex, bounds)) {
-            HighlightRed(bottomLeftContainerIndex, bounds);
-            return false;
-        }
-        // All good
-        HighlightGreen(bottomLeftContainerIndex, bounds);
-        return true;
     }
     private void UpdateHeldStack(Vector2Int slotIndexBL, Vector2Int size, ItemStack itemStack) {
         for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
@@ -163,6 +207,18 @@ public class InventoryData
         }
         return true;
     }
+    private bool OverlappingStackAndCanAdd(Vector2Int slotIndexBL, Vector2Int size, ItemStack stack) {
+        ItemStack itemStack = Containers[slotIndexBL.x, slotIndexBL.y].HeldStack;
+        if (itemStack == null) return false;
+        if (!itemStack.CouldPush(stack)) return false;
+        for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
+            for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
+                if (Containers[x, y].HeldStack != itemStack) return false;
+            }
+        }
+        return true;
+    }
+    
     // These methods probably shouldn't iterate through the entire grid, but it's fine for now.
     private void HighlightRed(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
         for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {

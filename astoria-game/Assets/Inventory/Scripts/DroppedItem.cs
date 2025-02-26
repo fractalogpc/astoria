@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class DroppedItem : Interactable
 {
 
-  [HideInInspector] public ItemInstance Item;
+  [HideInInspector] public ItemStack ItemStack;
   private bool _isBeingPickedUp = false;
   
   public override void Interact() {
     // Add the item to the player's inventory.
     InventoryComponent playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
-    if (playerInventory.AddItem(Item)) { 
+    if (playerInventory.AddStack(ItemStack)) { 
       _isBeingPickedUp = true;
       Destroy(gameObject);
     }
@@ -20,6 +20,8 @@ public class DroppedItem : Interactable
 
   private void OnDestroy() {
     if (_isBeingPickedUp) return;
-    Item.OnItemDestruction();
+    foreach (ItemInstance item in ItemStack.Items) {
+      item.OnItemDestruction();
+    }
   }
 }

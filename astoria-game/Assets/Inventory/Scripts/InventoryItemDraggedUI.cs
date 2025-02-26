@@ -11,7 +11,7 @@ using Vector2Int = UnityEngine.Vector2Int;
 [AddComponentMenu("")]
 public class InventoryItemDraggedUI : MonoBehaviour
 {
-	public ItemInstance ItemInstance { get; private set; }
+	public ItemStack ItemStack { get; private set; }
 
 	[SerializeField] private RectTransform _rectTransform;
 	[SerializeField] private CanvasGroup _canvasGroup;
@@ -31,11 +31,11 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <param name="originalInventory">The inventory that the InventoryUI spawning the object belongs to.</param>
 	/// <param name="itemInstance">The item this draggable holds.</param>
 	/// <param name="itemUI">The InventoryUI that this object was spawned by.</param>
-	public void InitializeFromInventory(InventoryComponent originalInventory, ItemInstance itemInstance, Vector2Int slotIndexBL, float slotSize) {
-		ItemInstance = itemInstance;
+	public void InitializeFromInventory(InventoryComponent originalInventory, ItemStack itemStack, Vector2Int slotIndexBL, float slotSize) {
+		ItemStack = itemStack;
 		_originInventory = originalInventory;
 		_originSlotIndex = slotIndexBL;
-		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
+		_itemIconImage.sprite = ItemStack.StackType.ItemIcon;
 		SetVisualSize();
 		_followMouse = true;
 		_canvasGroup.alpha = 0;
@@ -47,8 +47,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <param name="itemInstance">The item this draggable will hold.</param>
 	public void InitializeFromSlot(InventoryEquipableSlot slot, ItemInstance itemInstance) {
 		_originSlot = slot;
-		ItemInstance = itemInstance;
-		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
+		ItemStack = new ItemStack(itemInstance);
+		_itemIconImage.sprite = ItemStack.StackType.ItemIcon;
 		SetVisualSize();
 		_followMouse = true;
 		_canvasGroup.alpha = 0;
@@ -69,12 +69,12 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			_originInventory?.ResetAllContainerHighlights();
 			_currentInventoryAbove.ResetAllContainerHighlights();
 			Vector2Int slotIndexBL = GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition);
-			if (_currentInventoryAbove.PlaceItem(ItemInstance, slotIndexBL)) {
+			if (_currentInventoryAbove.PlaceStack(ItemStack, slotIndexBL)) {
 				Destroy(gameObject);
 				return true;
 			}
 			// Could not fit item over hover spot
-			Debug.LogWarning($"Could not move item {ItemInstance.ItemData.ItemName} to {_currentInventoryAbove.name} at position {slotIndexBL}.");
+			Debug.LogWarning($"Could not move item {ItemStack.StackType.ItemName} to {_currentInventoryAbove.name} at position {slotIndexBL}.");
 			if (_originInventory != null) {
 				ReturnToOriginalInventory();
 			}
@@ -86,11 +86,19 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
 		// Over an equipable slot
 		if (overSlot) {
-			if (!slot.TryAddToSlot(ItemInstance)) {
-				_originInventory?.ResetAllContainerHighlights();
-				ReturnToOriginalInventory();
+			bool itemsLeft = ItemStack.Pop(out ItemInstance item);
+			if (!slot.TryAddToSlot(item)) {
+				ItemStack.Push(item);
+			}
+			if (!itemsLeft) {
 				Destroy(gameObject);
-				return false;
+				return true;
+			}
+			if (_originInventory != null) {
+				ReturnToOriginalInventory();
+			}
+			else {
+				ReturnToOriginalSlot();
 			}
 			Destroy(gameObject);
 			return true;
@@ -98,7 +106,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		
 		// Over nothing, drop the item
 		_originInventory?.ResetAllContainerHighlights();
-		_originInventory?.SpawnDroppedItem(ItemInstance);
+		_originInventory?.SpawnDroppedItem(ItemStack);
 		Destroy(gameObject);
 		return false;
 	}
@@ -107,14 +115,17 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// Uses the recorded parent inventory and initial position to try to put the item back where it was.
 	/// </summary>
 	private void ReturnToOriginalInventory() {
-		if (!_originInventory.PlaceItem(ItemInstance, _originSlotIndex)) {
-			Debug.LogError($"Could not put item {ItemInstance.ItemData.ItemName} back in inventory. Check for unexpected inventory logic.");
+		if (!_originInventory.PlaceStack(ItemStack, _originSlotIndex)) {
+			Debug.LogError($"Could not put item {ItemStack.StackType.ItemName} back in inventory. Check for unexpected inventory logic.");
 		}
 		Destroy(gameObject);
 	}
 
 	private void ReturnToOriginalSlot() {
-		if (!_originSlot.TryAddToSlot(ItemInstance)) {
+		ItemStack.Pop(out ItemInstance item);
+		// If the item came from a slot, there couldn't be more than one item in the stack.
+		// This is bad, but later slots wont hold items anyways, so its fine.
+		if (!_originSlot.TryAddToSlot(item)) {
 			Debug.LogError("InventoryItemDraggedUI: Could not return item to slot. Check for unexpected draggable or slot logic.");
 		}
 		Destroy(gameObject);
@@ -142,35 +153,35 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		GetInventoryUIHoveredOver(out _currentInventoryAbove);
 		if (_currentInventoryAbove != null) {
 			_originInventory?.ResetAllContainerHighlights();
-			_currentInventoryAbove.HighlightSlotsUnderItem(ItemInstance, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
+			_currentInventoryAbove.HighlightSlotsUnderStack(ItemStack, GetSlotIndexInInventory(_currentInventoryAbove, _rectTransform.anchoredPosition));
 		}
 		if (Input.GetMouseButtonUp(0)) OnLetGoOfDraggedItem();
 		if (Input.GetKeyDown(KeyCode.R)) RotateItem();
 	}
 
 	private void RotateItem() {
-		ItemInstance.Rotated = !ItemInstance.Rotated;
+		ItemStack.Rotated = !ItemStack.Rotated;
 		SetVisualSize();
 	}
 	
 	private void SetVisualSize() {
 		if (_originInventory != null) {
-			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits, ItemInstance.Size.y * _originInventory.SlotSizeUnits);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits / 2, ItemInstance.Size.y * _originInventory.SlotSizeUnits / 2);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * _originInventory.SlotSizeUnits, ItemInstance.Size.y * _originInventory.SlotSizeUnits);
+			_rectTransform.sizeDelta = new Vector2(ItemStack.Size.x * _originInventory.SlotSizeUnits, ItemStack.Size.y * _originInventory.SlotSizeUnits);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemStack.Size.x * _originInventory.SlotSizeUnits / 2, ItemStack.Size.y * _originInventory.SlotSizeUnits / 2);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemStack.Size.x * _originInventory.SlotSizeUnits, ItemStack.Size.y * _originInventory.SlotSizeUnits);
 		}
 		else {
 			Debug.LogWarning("Make item slot size some kind of global variable, and make sure to refactor everything to use it when you do. Currently 96px.");
-			_rectTransform.sizeDelta = new Vector2(ItemInstance.Size.x * 96, ItemInstance.Size.y * 96);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemInstance.Size.x * 96f / 2f, ItemInstance.Size.y * 96f / 2f);
-			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemInstance.Size.x * 96, ItemInstance.Size.y * 96);
+			_rectTransform.sizeDelta = new Vector2(ItemStack.Size.x * 96, ItemStack.Size.y * 96);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(ItemStack.Size.x * 96f / 2f, ItemStack.Size.y * 96f / 2f);
+			_rectTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(ItemStack.Size.x * 96, ItemStack.Size.y * 96);
 		}
 		_itemIconImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
 		_itemIconImage.rectTransform.anchoredPosition = Vector2.zero;
-		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ItemInstance.ItemData.ItemSize.x * _originInventory.SlotSizeUnits);
-		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ItemInstance.ItemData.ItemSize.y * _originInventory.SlotSizeUnits);
-		_itemIconImage.sprite = ItemInstance.ItemData.ItemIcon;
-		_itemIconImage.rectTransform.rotation = ItemInstance.Rotated ? Quaternion.Euler(0, 0, 90) : Quaternion.identity;
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ItemStack.StackType.ItemSize.x * _originInventory.SlotSizeUnits);
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ItemStack.StackType.ItemSize.y * _originInventory.SlotSizeUnits);
+		_itemIconImage.sprite = ItemStack.StackType.ItemIcon;
+		_itemIconImage.rectTransform.rotation = ItemStack.Rotated ? Quaternion.Euler(0, 0, 90) : Quaternion.identity;
 	}
 
 	private bool GetInventoryUIHoveredOver(out InventoryComponent inventory) {
@@ -220,7 +231,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 
 	private Vector2Int GetSlotIndexInInventory(InventoryComponent inventory, Vector2 positionSS) {
 		// Add an offset to get the position of the bottom left grid slot of the item.
-		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / ItemInstance.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / ItemInstance.Size.y / 2);
+		positionSS += new Vector2(-_rectTransform.rect.width / 2 + _rectTransform.rect.width / ItemStack.Size.x / 2, -_rectTransform.rect.height / 2 + _rectTransform.rect.height / ItemStack.Size.y / 2);
 		RectTransform inventoryRect = inventory.GetComponent<RectTransform>();
 		Vector2 localPoint = inventoryRect.InverseTransformPoint(positionSS) + new Vector3(inventoryRect.sizeDelta.x / 2, inventoryRect.sizeDelta.y / 2, 0);
 		// print("item anchored pos" + positionSS);

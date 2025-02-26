@@ -10,8 +10,8 @@ public class InventoryUIItemEditor : Editor
 		base.OnInspectorGUI();
 		EditorGUILayout.Space();
 		InventoryItemUI script = (InventoryItemUI) target;
-		if (script.ItemInstance.Size != Vector2Int.zero) {
-			GUILayout.Label($"Prefab Dimensions: {script.ItemInstance.Size.x * 96} x {script.ItemInstance.Size.y * 96}");
+		if (script.ItemStack.Size != Vector2Int.zero) {
+			GUILayout.Label($"Prefab Dimensions: {script.ItemStack.Size.x * 96} x {script.ItemStack.Size.y * 96}");
 		}
 		else {
 			GUILayout.Label("Prefab Dimensions: No Item!");

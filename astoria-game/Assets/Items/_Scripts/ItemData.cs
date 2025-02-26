@@ -30,9 +30,9 @@ public class ItemData : ScriptableObject
         if (ItemIcon == null) {
             ItemIcon = Resources.Load<Sprite>("DefaultItemAssets/NullImage");
         }
-        // if (DroppedItemPrefab == null) {
-        //     DroppedItemPrefab = Resources.Load<GameObject>("DefaultItemAssets/DefaultDroppedItemPrefab");
-        // }
+        if (DroppedItemPrefab == null) {
+            DroppedItemPrefab = Resources.Load<GameObject>("DefaultItemAssets/DefaultDroppedItemPrefab");
+        }
     }
     
     public virtual ItemInstance CreateItem() {

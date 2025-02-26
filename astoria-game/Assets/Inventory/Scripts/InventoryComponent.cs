@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using FMOD;
 using UnityEngine;
 using UnityEngine.Events;
+using Debug = UnityEngine.Debug;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
 
@@ -14,11 +16,6 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Image))]
 public class InventoryComponent : MonoBehaviour
 {
-	/// <summary>
-	/// WARNING: DO NOT REFERENCE THIS OUTSIDE OF THE INVENTORY SYSTEM. THIS IS MEANT FOR INVENTORY SYSTEM USE ONLY.
-	/// </summary>
-	[HideInInspector] public InventoryData InventoryData = null;
-
 	public bool Initialized => InventoryData != null;
 
 	public Vector2Int AssignedInventorySize => _assignedInventorySize;
@@ -28,6 +25,8 @@ public class InventoryComponent : MonoBehaviour
 	/// Includes a list of the InventoryItems in the inventory.
 	/// </summary>
 	public UnityEvent<List<ItemInstance>> OnInventoryChange;
+
+	public InventoryData InventoryData { get; private set; }
 
 	[Header("Ensure that the object this is placed on is a direct child of an Overlay Canvas that has a Graphic Raycaster.")]
 	[Header("Ensure Slot Prefab is Square, and has InventoryContainerUI component.")]
@@ -143,11 +142,6 @@ public class InventoryComponent : MonoBehaviour
 		InstantiateInventoryItems(inventoryData);
 	}
 
-	private void Update() {
-		if (InventoryData == null) return;
-		ResetAllContainerHighlights();
-	}
-
 	public void CreateAndAttachContainersTo(InventoryData inventoryData) {
 		_slotPrefabInstances = new GameObject[inventoryData.Width, inventoryData.Height];
 		for (int y = 0; y < inventoryData.Height; y++) {
@@ -162,12 +156,6 @@ public class InventoryComponent : MonoBehaviour
 
 		_colliderImage = GetComponent<Image>();
 		_colliderImage.raycastTarget = true;
-	}
-
-	private void InstantiateInventoryItems(InventoryData inventoryData) {
-		foreach (ItemInstance item in inventoryData.Items) {
-			CreateItemPrefab(item, inventoryData.GetSlotIndexOf(item));
-		}
 	}
 
 	/// <summary>
@@ -217,11 +205,14 @@ public class InventoryComponent : MonoBehaviour
 		if (matchingItemInstances.Count < count) return false;
 		return true;
 	}
-
-	public bool AddItem(ItemInstance itemInstance) {
-		if (!InventoryData.TryAddStack(this, itemInstance, out Vector2Int slotIndexBL)) return false;
-		CreateItemPrefab(itemInstance, slotIndexBL);
+	
+	public bool AddStack(ItemStack itemStack) {
+		if (!InventoryData.TryAddStack(this, itemStack, out Vector2Int slotIndexBL)) return false;
+		CreateItemPrefab(itemStack, slotIndexBL);
 		return true;
+	}
+	public bool AddItem(ItemInstance itemInstance) {
+		return AddStack(new ItemStack(itemInstance));
 	}
 
 	/// <summary>
@@ -231,43 +222,26 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
-	public bool AddItemByData(ItemData itemData) {
+	public bool AddItemByData(ItemData itemData, int count = 1) {
 		if (!Initialized) {
 			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
 			return false;
 		}
-
-		ItemInstance itemInstance = itemData.CreateItem();
-		if (!InventoryData.TryAddStack(this, itemInstance, out Vector2Int slotIndexBL)) {
+		
+		ItemStack newStack = new(itemData);
+		for (int i = 0; i < count; i++) {
+			newStack.Push(itemData.CreateItem());
+		}
+		
+		if (!InventoryData.TryAddStack(this, newStack, out Vector2Int slotIndexBL)) {
 			Debug.Log("Item dropped");
-			SpawnDroppedItem(itemInstance);
+			SpawnDroppedItem(newStack);
 			return false;
 		}
 
-		CreateItemPrefab(itemInstance, slotIndexBL);
+		CreateItemPrefab(newStack, slotIndexBL);
 		return true;
 	}
-
-	/// <summary>
-	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
-	/// </summary>
-	/// <param name="itemInstance">The InventoryItem to place.</param>
-	/// <param name="positionSS">The position to place at in screen space.</param>
-	/// <returns></returns>
-	public bool PlaceItem(ItemInstance itemInstance, Vector2Int slotIndexBL) {
-		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
-		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
-		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
-		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
-		bool couldPlace = InventoryData.TryAddStackAtPosition(this, itemInstance, index);
-		if (couldPlace) {
-			CreateItemPrefab(itemInstance, index);
-			return true;
-		}
-
-		return false;
-	}
-
 	/// <summary>
 	/// Attempts to add the items to the inventory. If items are non-rectangular, this does not pack items very well. Use this when interacting with the inventory from non-inventory systems.
 	/// </summary>
@@ -288,6 +262,30 @@ public class InventoryComponent : MonoBehaviour
 		return items.Count - itemsPlaced;
 	}
 
+	/// <summary>
+	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
+	/// </summary>
+	/// <param name="itemStack">The InventoryItem to place.</param>
+	/// <param name="positionSS">The position to place at in screen space.</param>
+	/// <returns></returns>
+	public bool PlaceStack(ItemStack itemStack, Vector2Int slotIndexBL) {
+		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
+		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
+		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
+		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
+		bool couldPlace = InventoryData.TryAddStackAtPosition(this, itemStack, index);
+		if (couldPlace) {
+			CreateItemPrefab(itemStack, index);
+			return true;
+		}
+
+		return false;
+	}
+
+	public bool RemoveStack(ItemStack itemStack) {
+		return InventoryData.RemoveStack(this, itemStack);
+	}
+	
 	/// <summary>
 	/// Tries to remove count items from the inventory that match the ItemData.
 	/// </summary>
@@ -311,11 +309,20 @@ public class InventoryComponent : MonoBehaviour
 		return true;
 	}
 
+	public bool PopFrom(ItemStack itemStack, out ItemInstance item, out bool hasItemsLeft) {
+		hasItemsLeft = true;
+		item = null;
+		if (!InventoryData.Stacks.Contains(itemStack)) return false;
+		InventoryData.PopItemFrom(this, itemStack, out ItemInstance poppedItem, out hasItemsLeft);
+		item = poppedItem;
+		return true;
+	}
+	
 	public bool RemoveItem(ItemInstance item) {
-		InventoryItemUI itemUIScript = _inventoryItemPrefabInstances.Find(itemUI => itemUI.GetComponent<InventoryItemUI>().ItemInstance == item).GetComponent<InventoryItemUI>();
+		InventoryItemUI itemUIScript = _inventoryItemPrefabInstances.Find(itemUI => itemUI.GetComponent<InventoryItemUI>().ItemStack.Contains(item)).GetComponent<InventoryItemUI>();
 		if (itemUIScript == null) return false;
 		_inventoryItemPrefabInstances.Remove(itemUIScript.gameObject);
-		InventoryData.RemoveItem(this, itemUIScript.ItemInstance);
+		InventoryData.RemoveItem(this, item);
 		Destroy(itemUIScript.gameObject);
 		return true;
 	}
@@ -325,45 +332,26 @@ public class InventoryComponent : MonoBehaviour
 			RemoveItem(InventoryData.Items[i]);
 		}
 	}
-
-	private GameObject CreateItemPrefab(ItemInstance itemInstance, Vector2Int slotIndexBL) {
-		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
-		itemPrefab.name = itemInstance.ItemData.ItemName + Random.Range(0, 100000); // Doesn't actually need to be unique, just enough to identify during debugging
-		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
-		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
-		newItemUIScript.InitializeWithItem(this, itemInstance, slotIndexBL, SlotSizeUnits);
-		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
-		_inventoryItemPrefabInstances.Add(itemPrefab);
-		// Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");
-		return itemPrefab;
+	
+	public Vector2Int GetSlotIndexOf(ItemStack itemStack) {
+		return InventoryData.GetSlotIndexOf(itemStack);
 	}
 
-	private void DeleteChildrenOf(Transform parent) {
-		for (int i = parent.childCount - 1; i >= 0; i--) {
-			Destroy(parent.GetChild(i).gameObject);
-		}
-	}
-
-	public void SpawnDroppedItem(ItemInstance itemInstance) {
-		GameObject dropped = Instantiate(itemInstance.ItemData.DroppedItemPrefab);
+	public void SpawnDroppedItem(ItemStack itemStack) {
+		GameObject dropped = Instantiate(itemStack.StackType.DroppedItemPrefab);
 		Debug.LogWarning("Fix this localPlayer reference to reference using NetworkClient instead of GameObject.FindWithTag.");
 		GameObject localPlayer = GameObject.FindWithTag("Player");
 		dropped.transform.position = localPlayer.transform.position + Vector3.up * 2f;
 		dropped.GetComponentInChildren<Rigidbody>().AddForce(Vector3.down * 0.5f + localPlayer.transform.forward * 2.5f + RandomJitter(0.1f), ForceMode.Impulse);
 		dropped.GetComponentInChildren<Rigidbody>().AddTorque(localPlayer.transform.right * 0.5f + RandomJitter(0.1f), ForceMode.Impulse);
-		dropped.GetComponent<DroppedItem>().Item = itemInstance;
+		dropped.GetComponent<DroppedItem>().ItemStack = itemStack;
 	}
-
-	private Vector3 RandomJitter(float jitterAmount) {
-		return new Vector3(Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount));
-	}
-
-
-	public bool HighlightSlotsUnderItem(ItemInstance itemInstance, Vector2Int slotIndexBL) {
+	
+	public bool HighlightSlotsUnderStack(ItemStack itemStack, Vector2Int slotIndexBL) {
 		List<InventoryContainer> containersItemOverlaps = new();
 		bool couldPlace = true;
-		for (int y = slotIndexBL.y; y < slotIndexBL.y + itemInstance.Size.y; y++) {
-			for (int x = slotIndexBL.x; x < slotIndexBL.x + itemInstance.Size.x; x++) {
+		for (int y = slotIndexBL.y; y < slotIndexBL.y + itemStack.Size.y; y++) {
+			for (int x = slotIndexBL.x; x < slotIndexBL.x + itemStack.Size.x; x++) {
 				try {
 					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
 					containersItemOverlaps.Add(container);
@@ -398,7 +386,40 @@ public class InventoryComponent : MonoBehaviour
 			}
 		}
 	}
-
+	
+	private GameObject CreateItemPrefab(ItemStack itemStack, Vector2Int slotIndexBL) {
+		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
+		itemPrefab.name = itemStack.StackType.ItemName + Random.Range(0, 100000); // Doesn't actually need to be unique, just enough to identify during debugging
+		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
+		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
+		newItemUIScript.InitializeWithStack(this, itemStack, slotIndexBL, SlotSizeUnits);
+		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
+		_inventoryItemPrefabInstances.Add(itemPrefab);
+		// Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");
+		return itemPrefab;
+	}
+	
+	private void Update() {
+		if (InventoryData == null) return;
+		ResetAllContainerHighlights();
+	}
+	
+	private void DeleteChildrenOf(Transform parent) {
+		for (int i = parent.childCount - 1; i >= 0; i--) {
+			Destroy(parent.GetChild(i).gameObject);
+		}
+	}
+	
+	private Vector3 RandomJitter(float jitterAmount) {
+		return new Vector3(Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount));
+	}
+	
+	private void InstantiateInventoryItems(InventoryData inventoryData) {
+		ItemStackList stacks = inventoryData.Stacks;
+		for (int i = 0; i < stacks.Count; i++) {
+			CreateItemPrefab(stacks[i], inventoryData.GetSlotIndexOf(stacks[i]));
+		}
+	}
 	private void HighlightContainers(List<InventoryContainer> containers, ContainerHighlight highlight) {
 		ResetAllContainerHighlights();
 		for (int i = 0; i < containers.Count; i++) {

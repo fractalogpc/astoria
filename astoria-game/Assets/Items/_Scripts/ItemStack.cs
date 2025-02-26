@@ -81,6 +81,16 @@ public class ItemStack
 	}
 	
 	/// <summary>
+	/// Indicates whether an ItemStack could be pushed onto the stack. Fails if: the stack is not of the same type as this stack, this stack is full, or the item is not stackable.
+	/// </summary>
+	/// <param name="stack">The ItemStack that would be pushed onto the stack</param>
+	/// <returns>Whether the item could be pushed onto the stack.</returns>
+	public bool CouldPush(ItemStack stack) {
+		if (stack.StackType != StackType) return false;
+		return StackCount + stack.StackCount < StackType.StackLimit;
+	}
+	
+	/// <summary>
 	/// Indicates whether an ItemInstance could be pushed onto the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.
 	/// </summary>
 	/// <param name="item">The ItemInstance that would be pushed onto the stack</param>
@@ -101,6 +111,13 @@ public class ItemStack
 		}
 		item = _items[0]; 
 		_items.RemoveAt(0);
+		return true;
+	}
+
+	public bool Remove(ItemInstance itemInstance) {
+		int index = _items.IndexOf(itemInstance);
+		if (index == -1) return false;
+		_items.RemoveAt(index);
 		return true;
 	}
 	
