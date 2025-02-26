@@ -35,6 +35,15 @@ public class ItemStack
 		StackType = stackType;
 		_items = new List<ItemInstance>();
 	}
+
+	/// <summary>
+	/// Constructs an ItemStack containing and of the stack type of the given ItemInstance.
+	/// </summary>
+	/// <param name="item">The item to start the stack with.</param>
+	public ItemStack(ItemInstance item) {
+		StackType = item.ItemData;
+		_items = new List<ItemInstance> {item};
+	}
 	
 	/// <summary>
 	/// Attempts to push an ItemInstance to the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.

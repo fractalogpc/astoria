@@ -42,12 +42,10 @@ public class InventoryData
     public bool TryAddItem(InventoryComponent caller, ItemInstance itemInstance, out Vector2Int slotIndex) {
         slotIndex = new Vector2Int(-1, -1);
         if (Items.Contains(itemInstance)) return false;
-        Vector2Int bounds = itemInstance.I;
+        ItemStack itemStack = new(itemInstance);
+        Vector2Int bounds = itemStack.Size;
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                // if (Containers[x, y].HeldItem != null) continue;
-                // if (!CornersWithinGrid(new Vector2Int(x, y), bounds)) continue;
-                // if (!IsNotOverlapping(new Vector2Int(x, y), bounds)) continue;
                 slotIndex = new Vector2Int(x, y);
                 
                 bool successNormal;
@@ -55,13 +53,13 @@ public class InventoryData
                 
                 // Try normally
                 itemInstance.Rotated = false;
-                successNormal = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
+                successNormal = TryAddStackAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successNormal) {
                     return true;
                 }
                 // Try Rotated
                 itemInstance.Rotated = true;
-                successRotated = TryAddItemAtPosition(caller, itemInstance, new Vector2Int(x, y));
+                successRotated = TryAddStackAtPosition(caller, itemInstance, new Vector2Int(x, y));
                 if (successRotated) {
                     return true;
                 }
@@ -73,39 +71,19 @@ public class InventoryData
     /// <summary>
     /// Attempts to add an item to the inventory at a specific position. Calls OnInventoryUpdate if successful.
     /// </summary>
-    /// <param name="itemInstance">The item to add.</param>
+    /// <param name="itemStack">The item to add.</param>
     /// <param name="slotIndexBL">The slotIndex to add the item at.</param>
     /// <returns>Whether adding the item was successful.</returns>
-    public bool TryAddItemAtPosition(InventoryComponent caller, ItemInstance itemInstance, Vector2Int slotIndexBL) {
-        if (Items.Contains(itemInstance)) return false;
-        if (slotIndexBL.x < 0 || slotIndexBL.x >= Width || slotIndexBL.y < 0 || slotIndexBL.y >= Height) return false;
-        Vector2Int bounds = itemInstance.Size;
-        if (!CornersWithinGrid(slotIndexBL, bounds) || !IsNotOverlapping(slotIndexBL, bounds)) return false;
-        for (int y = slotIndexBL.y; y < slotIndexBL.y + bounds.y; y++) {
-            for (int x = slotIndexBL.x; x < slotIndexBL.x + bounds.x; x++) {
-                Containers[x, y].HeldItemInstance = itemInstance;
-            }
-        }
-        Items.Add(itemInstance);
-        OnInventoryUpdate?.Invoke(caller);
-        return true;
-    }
-    /// <summary>
-    /// Finds if an item at slotIndex with size is within the inventory bounds.
-    /// </summary>
-    /// <param name="slotIndexBL">The slotIndex to test the bounds from.</param>
-    /// <param name="size">The size of the bounds in slots.</param>
-    /// <returns>Whether the item bounds are within the inventory.</returns>
-    public bool CornersWithinGrid(Vector2Int slotIndexBL, Vector2Int size) {
-        bool bottomLeftInGrid = slotIndexBL.x >= 0 && slotIndexBL.y >= 0;
-        bool topRightInGrid = slotIndexBL.x + size.x <= Width && slotIndexBL.y + size.y <= Height;
-        return bottomLeftInGrid && topRightInGrid;
-    }
-    public bool IsNotOverlapping(Vector2Int slotIndexBL, Vector2Int size) {
-        for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
-            for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
-                if (Containers[x, y].HeldItemInstance != null) return false;
-            }
+    public bool TryAddStackAtPosition(InventoryComponent caller, ItemStack itemStack, Vector2Int slotIndexBL) {
+        if (_stacks.Contains(itemStack)) return false;
+        if (!SlotIndexInBounds(slotIndexBL)) return false;
+        Vector2Int bounds = itemStack.Size;
+        if (!CornersWithinGrid(slotIndexBL, bounds)) return false;
+
+        if (OverlappingNothing(slotIndexBL, bounds)) {
+            UpdateHeldStack(slotIndexBL, bounds, itemStack);
+            _stacks.Add(itemStack);
+            OnInventoryUpdate?.Invoke(caller);
         }
         return true;
     }
@@ -151,12 +129,38 @@ public class InventoryData
             return false;
         }
         // Overlapping
-        if (!IsNotOverlapping(bottomLeftContainerIndex, bounds)) {
+        if (!OverlappingNothing(bottomLeftContainerIndex, bounds)) {
             HighlightRed(bottomLeftContainerIndex, bounds);
             return false;
         }
         // All good
         HighlightGreen(bottomLeftContainerIndex, bounds);
+        return true;
+    }
+    private void UpdateHeldStack(Vector2Int slotIndexBL, Vector2Int size, ItemStack itemStack) {
+        for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
+            for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
+                Containers[x, y].HeldStack = itemStack;
+            }
+        }
+    }
+    /// <summary>
+    /// Finds if an item at slotIndex with size is within the inventory bounds.
+    /// </summary>
+    /// <param name="slotIndexBL">The slotIndex to test the bounds from.</param>
+    /// <param name="size">The size of the bounds in slots.</param>
+    /// <returns>Whether the item bounds are within the inventory.</returns>
+    private bool CornersWithinGrid(Vector2Int slotIndexBL, Vector2Int size) {
+        bool bottomLeftInGrid = slotIndexBL.x >= 0 && slotIndexBL.y >= 0;
+        bool topRightInGrid = slotIndexBL.x + size.x <= Width && slotIndexBL.y + size.y <= Height;
+        return bottomLeftInGrid && topRightInGrid;
+    }
+    private bool OverlappingNothing(Vector2Int slotIndexBL, Vector2Int size) {
+        for (int y = slotIndexBL.y; y < slotIndexBL.y + size.y; y++) {
+            for (int x = slotIndexBL.x; x < slotIndexBL.x + size.x; x++) {
+                if (Containers[x, y].HeldStack != null) return false;
+            }
+        }
         return true;
     }
     // These methods probably shouldn't iterate through the entire grid, but it's fine for now.

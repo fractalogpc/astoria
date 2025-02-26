@@ -70,11 +70,11 @@ public class ItemStackList
 		return list.Any(stack => stack == other);
 	}
 	
-	public bool Add(ItemInstance item) {
-		foreach (ItemStack stack in list) {
-			if (stack.Push(item)) return true;
-		}
-		list.Add(new ItemStack(item.ItemData));
-		return true;
+	public bool Contains(ItemInstance item) {
+		return list.Any(stack => stack.Contains(item));
+	}
+	
+	public void Add(ItemStack stack) {
+		list.Add(stack);
 	}
 }
