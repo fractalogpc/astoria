@@ -147,16 +147,16 @@ public class LightningMeshGeneration : MonoBehaviour {
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add(Vertex[i] + BiNormal);
-            vertices.Add(Vertex[i] + RotNormal);
-            vertices.Add(Vertex[i] - BiNormal);
-            vertices.Add(Vertex[i] - RotNormal);
+            vertices.Add((Vertex[i] - spawn.position) + BiNormal);
+            vertices.Add((Vertex[i] - spawn.position) + RotNormal);
+            vertices.Add((Vertex[i] - spawn.position) - BiNormal);
+            vertices.Add((Vertex[i] - spawn.position) - RotNormal);
         }
 
-        vertices.Add(goal.position + new Vector3(1, 0, 0));
-        vertices.Add(goal.position + new Vector3(0, 0, 1));
-        vertices.Add(goal.position + new Vector3(-1, 0, 0));
-        vertices.Add(goal.position + new Vector3(0, 0, -1));
+        vertices.Add((goal.position - spawn.position) + new Vector3(1, 0, 0));
+        vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, 1));
+        vertices.Add((goal.position - spawn.position) + new Vector3(-1, 0, 0));
+        vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -1));
 
         for (int i = 0; i < vertices.Count - 5; i++)
         {
