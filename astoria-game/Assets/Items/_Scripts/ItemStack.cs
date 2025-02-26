@@ -75,7 +75,7 @@ public class ItemStack
 	/// <param name="item">The ItemInstance that would be pushed onto the stack</param>
 	/// <returns>Whether the item could be pushed onto the stack.</returns>
 	public bool CouldPush(ItemInstance item) {
-		if (!item.ItemData == StackType) return false;
+		if (item.ItemData != StackType) return false;
 		if (StackCount >= StackType.StackLimit) return false;
 		return true;
 	}
@@ -83,11 +83,11 @@ public class ItemStack
 	/// <summary>
 	/// Indicates whether an ItemStack could be pushed onto the stack. Fails if: the stack is not of the same type as this stack, this stack is full, or the item is not stackable.
 	/// </summary>
-	/// <param name="stack">The ItemStack that would be pushed onto the stack</param>
+	/// <param name="other">The ItemStack that would be pushed onto the stack</param>
 	/// <returns>Whether the item could be pushed onto the stack.</returns>
-	public bool CouldPush(ItemStack stack) {
-		if (stack.StackType != StackType) return false;
-		return StackCount + stack.StackCount < StackType.StackLimit;
+	public bool CouldPush(ItemStack other) {
+		if (other.StackType != StackType) return false;
+		return StackCount + other.StackCount < StackType.StackLimit;
 	}
 	
 	/// <summary>
