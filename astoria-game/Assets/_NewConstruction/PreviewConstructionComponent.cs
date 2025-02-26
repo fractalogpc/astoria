@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Construction
@@ -57,7 +58,7 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
-                            Debug.Log("Colliding");
+                            // Debug.Log("Colliding");
                         }
                         else
                         {
@@ -68,20 +69,20 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
-                                    Debug.Log("Too far from ground");
+                                    // Debug.Log("Too far from ground");
                                 }
                                 else
                                 {
                                     // Valid position
                                     validPosition = true;
-                                    Debug.Log("Valid position");
+                                    // Debug.Log("Valid position");
                                 }
                             }
                             else
                             {
                                 // No ground found
                                 validPosition = false;
-                                Debug.Log("No ground found");
+                                // Debug.Log("No ground found");
                             }
                         }
                     }
@@ -95,7 +96,7 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
-                            Debug.Log("Colliding");
+                            // Debug.Log("Colliding");
                         }
                         else
                         {
@@ -106,20 +107,20 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
-                                    Debug.Log("Too far from ground");
+                                    // Debug.Log("Too far from ground");
                                 }
                                 else
                                 {
                                     // Valid position
                                     validPosition = true;
-                                    Debug.Log("Valid position");
+                                    // Debug.Log("Valid position");
                                 }
                             }
                             else
                             {
                                 // No ground found
                                 validPosition = false;
-                                Debug.Log("No ground found");
+                                // Debug.Log("No ground found");
                             }
                         }
                     }
@@ -229,9 +230,15 @@ namespace Construction
             return false;
         }
 
-        public (Edge?, Edge?) GetCurrentlySnappingEdges() {
-            Debug.Log($"From edge: {fromEdge}, To edge: {toEdge}");
-            return (fromEdge, toEdge);
+        public bool GetCurrentlySnappingEdges(out Edge edge1, out Edge edge2) {
+            if (fromEdge == null || toEdge == null) {
+                edge1 = new Edge();
+                edge2 = new Edge();
+                return false;
+            }
+            edge1 = (Edge)fromEdge;
+            edge2 = (Edge)toEdge;
+            return true;
         }
 
     }

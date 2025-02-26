@@ -8394,7 +8394,7 @@ MonoBehaviour:
     VerticalSubStep: 0.01
     UpwardCurveFactor: -0.5
     DensityFactor: -1
-    StructurePlaceRadius: 4
+    StructurePlaceRadius: 3
     PlacementLayerMask:
       serializedVersion: 2
       m_Bits: 266249
@@ -8403,7 +8403,11 @@ MonoBehaviour:
       m_Bits: 262208
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 333889
+      m_Bits: 333897
+    GroundLayerMask:
+      serializedVersion: 2
+      m_Bits: 8
+    FoundationMaxDistanceFromGround: 2
     MinGroundNormal: 0
     MaxGroundNormal: 30
     MinWallNormal: 60

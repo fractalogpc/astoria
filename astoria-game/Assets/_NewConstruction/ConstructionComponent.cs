@@ -29,12 +29,6 @@ namespace Construction
         [Tooltip("The health of this component, or how much damage it can take before it collapses.")]
         [SerializeField] private float maximumHealth = 100f;
 
-        [Header("Settings")]
-        [Tooltip("The distance to sphere cast to find nearby components to connect to from the transform 0,0.")]
-        [SerializeField] private float _sphereRadius = 2f;
-        [Tooltip("The layer to sphere cast on to find nearby components to connect to.")]
-        [SerializeField] private LayerMask _checkLayer = default;
-
         public List<Edge> edges; // Public for editor
         private Dictionary<Edge, List<ConstructionComponent>> connections = new Dictionary<Edge, List<ConstructionComponent>>();
         private float stability;
@@ -44,34 +38,67 @@ namespace Construction
         {
             health = maximumHealth;
 
-            TriggerNearbyImplicitConnections();
+            TriggerNearbyImplicitConnections(PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Settings);
             EvaluateStability();
         }
 
         // Try to add a connection explicitly (meant for construction by player)
-        public void AddConnection(Edge otherEdge, ConstructionComponent component)
+        public void AddConnections(ConstructionData data, ConstructionSettings settings)
         {
-            // Checks for valid edge
-            Edge? baseEdge = null;
             foreach (Edge edge in edges)
             {
-                if (edge.IsSame(otherEdge))
+                Vector3 worldSpacePosition = transform.position + transform.rotation * edge.position;
+
+                Collider[] colliders = Physics.OverlapSphere(worldSpacePosition, 0.1f, settings.ConstructionLayerMask);
+                if (colliders.Length > 0)
                 {
-                    baseEdge = edge;
-                    break;
+                    foreach (Collider collider in colliders)
+                    {
+                        ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
+                        if (otherComponent != null && otherComponent != this)
+                        {
+                            if (otherComponent.GetEdge(worldSpacePosition, collider.transform, out Edge otherEdge))
+                            {
+                                if (data.isHorizontal) // TODO: Fix this
+                                {
+                                    edge.SetUsedHorizontally(true);
+                                    otherEdge.SetUsedHorizontally(true);
+                                }
+                                if (data.isVertical)
+                                {
+                                    edge.SetUsedVertically(true);
+                                    otherEdge.SetUsedVertically(true);
+                                }
+
+                                Debug.Log($"Added connection between {gameObject.name} and {otherComponent.gameObject.name}");
+                                AddConnectionDirect(edge, otherComponent);
+                                otherComponent.AddConnectionDirect(otherEdge, this);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool GetEdge(Vector3 tryPosition, Transform edgeTransform, out Edge correctEdge, float threshold = 0.1f)
+        {
+            foreach (Edge edge in edges)
+            {
+                if (edge.IsSame(tryPosition, transform, edgeTransform, threshold))
+                {
+                    correctEdge = edge;
+                    return true;
                 }
             }
 
-            if (baseEdge == null) return;
-
-            // Add the connection
-            AddConnectionDirect(baseEdge.Value, component);
+            correctEdge = null;
+            return false;
         }
 
-        public void TriggerNearbyImplicitConnections()
+        public void TriggerNearbyImplicitConnections(ConstructionSettings settings)
         {
             // Sphere overlap nearby components and run DetermineImplicitConnections on them
-            foreach (Collider collider in Physics.OverlapSphere(transform.position, _sphereRadius, _checkLayer))
+            foreach (Collider collider in Physics.OverlapSphere(transform.position, settings.StructurePlaceRadius, settings.ConstructionLayerMask))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null && otherComponent != this)
@@ -145,7 +172,7 @@ namespace Construction
             if (baseEdge == null) return;
 
             // Remove the connection
-            RemoveConnectionDirect(baseEdge.Value, component);
+            RemoveConnectionDirect(baseEdge, component);
         }
 
         private void RemoveConnectionDirect(Edge edge, ConstructionComponent component)

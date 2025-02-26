@@ -7,20 +7,37 @@ namespace Construction
   /// Struct for handling edges between construction components.
   /// </summary>
   [System.Serializable]
-  public struct Edge
+  public class Edge
   {
     public Vector3 position;
     public Vector3 normal;
 
+    public Transform Transform;
+    public ConstructionData Data;
+
     public bool usedHorizontally; // If another component is connected to this edge horizontally
     public bool usedVertically; // If another component is connected to this edge vertically
 
-    public Edge(Vector3 position, Vector3 normal, bool usedHorizontally = false, bool usedVertically = false)
+    public Edge() {
+    }
+
+    public Edge(Vector3 position, Vector3 normal, Transform transform, ConstructionData data, bool usedHorizontally = false, bool usedVertically = false)
     {
       this.position = position;
       this.normal = normal;
+      this.Transform = transform;
+      this.Data = data;
       this.usedHorizontally = usedHorizontally;
       this.usedVertically = usedVertically;
+    }
+
+    public bool IsSame(Vector3 tryPosition, Transform thisTransform, Transform edgeTransform, float threshold = 0.1f)
+    {
+      Vector3 edgePosition = edgeTransform.position + edgeTransform.rotation * position;
+
+      Debug.Log($"EdgePoint: {tryPosition}, OtherPoint: {edgePosition}");
+
+      return VectorFunctions.Vector3Approximately(tryPosition, edgePosition, threshold);
     }
 
     public void SetUsedHorizontally(bool usedHorizontally)
@@ -33,12 +50,12 @@ namespace Construction
       this.usedVertically = usedVertically;
     }
 
-    public readonly bool IsSame(Edge otherEdge, float threshold = 0.1f)
+    public bool IsSame(Edge otherEdge, float threshold = 0.1f)
     {
       return VectorFunctions.Vector3Approximately(position, otherEdge.position, threshold);
     }
 
-    public readonly bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2, float threshold = 0.1f)
+    public bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2, float threshold = 0.1f)
     {
       Vector3 edge1Point = position1 + rotation1 * position;
       Vector3 edge2Point = position2 + rotation2 * otherEdge.position;

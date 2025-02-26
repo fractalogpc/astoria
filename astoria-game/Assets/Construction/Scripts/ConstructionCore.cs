@@ -288,8 +288,6 @@ namespace Construction
                         // Check if the component can be placed
                         constructionComponent.CanPlace(hit.transform == null ? ray.origin + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
 
-                        Debug.Log(validPosition);
-
                         // Check if player has required materials
                         if (validPosition)
                         {
@@ -409,17 +407,15 @@ namespace Construction
                     return true;
                 case ConstructionState.PlacingStructure:
                     if (!_canPlace) break;
-                    PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
+                    GameObject placedObject = PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
 
-                    // Assign edges as used
-                    (Edge?, Edge?) edgePairs = _previewObject.GetComponent<PreviewConstructionComponent>().GetCurrentlySnappingEdges();
-                    if (edgePairs.Item1 != null) edgePairs.Item1.Value.SetUsedHorizontally(true);
-                    if (edgePairs.Item2 != null) edgePairs.Item2.Value.SetUsedHorizontally(true);
+                    ConstructionComponentData data = _selectedData as ConstructionComponentData;
+
+                    placedObject.GetComponent<ConstructionComponent>().AddConnections(data, Settings);
 
                     // Removing items
                     if (!BackgroundInfo._infBuild)
                     {
-                        ConstructionComponentData data = _selectedData as ConstructionComponentData;
                         List<ItemInstance> cost = data.Cost.ToItemsList();
                         foreach (ItemInstance item in cost)
                         {
@@ -479,13 +475,15 @@ namespace Construction
             return placedObject;
         }
 
-        private void PlaceObject(Vector3 position, Quaternion rotation)
+        private GameObject PlaceObject(Vector3 position, Quaternion rotation)
         {
 
             // This is where weird server stuff would go
 
             // Instantiate the object on the server
             GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
+
+            return placedObject;
         }
 
         private ConstructionData TryDeleteObject()
