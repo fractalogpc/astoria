@@ -1000,6 +1000,98 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""Driving"",
+            ""id"": ""c2bec5b4-0beb-41b5-a556-322c9bb74852"",
+            ""actions"": [
+                {
+                    ""name"": ""Steer"",
+                    ""type"": ""Value"",
+                    ""id"": ""a4e1e36e-2a9e-4aa8-8a62-5aef96b6eaf9"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Accelerate"",
+                    ""type"": ""Value"",
+                    ""id"": ""34ee5107-3440-4f13-adcb-a8b6c467b022"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""bdda6636-2c32-40c7-855b-66c8f70c49a0"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""ea2530cc-5c7a-4e4a-b7c7-8614d1acb3a8"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""aa352baa-2149-4a4f-b602-6e764bc6b716"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""97a7fdda-1849-4660-8428-3ffebc04d9c6"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""051b2490-6de4-4725-8cb3-c9407735e3f4"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""8796b6bd-2fcf-4e6d-b1be-0b3cae9ada6a"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Accelerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
+        },
+        {
             ""name"": ""InventoryUI"",
             ""id"": ""fbfd8a9d-adba-420d-a9ff-f14fecedfde9"",
             ""actions"": [
@@ -2778,6 +2870,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Place = m_Player.FindAction("Place", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_FlipBuilding = m_Player.FindAction("FlipBuilding", throwIfNotFound: true);
+        // Driving
+        m_Driving = asset.FindActionMap("Driving", throwIfNotFound: true);
+        m_Driving_Steer = m_Driving.FindAction("Steer", throwIfNotFound: true);
+        m_Driving_Accelerate = m_Driving.FindAction("Accelerate", throwIfNotFound: true);
         // InventoryUI
         m_InventoryUI = asset.FindActionMap("InventoryUI", throwIfNotFound: true);
         m_InventoryUI_Navigate = m_InventoryUI.FindAction("Navigate", throwIfNotFound: true);
@@ -2825,6 +2921,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     ~@PlayerInputActions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInputActions.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Driving.enabled, "This will cause a leak and performance issues, PlayerInputActions.Driving.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_InventoryUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.InventoryUI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_BuildingUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.BuildingUI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_GenericUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.GenericUI.Disable() has not been called.");
@@ -3188,6 +3285,60 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Driving
+    private readonly InputActionMap m_Driving;
+    private List<IDrivingActions> m_DrivingActionsCallbackInterfaces = new List<IDrivingActions>();
+    private readonly InputAction m_Driving_Steer;
+    private readonly InputAction m_Driving_Accelerate;
+    public struct DrivingActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public DrivingActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Steer => m_Wrapper.m_Driving_Steer;
+        public InputAction @Accelerate => m_Wrapper.m_Driving_Accelerate;
+        public InputActionMap Get() { return m_Wrapper.m_Driving; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DrivingActions set) { return set.Get(); }
+        public void AddCallbacks(IDrivingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DrivingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DrivingActionsCallbackInterfaces.Add(instance);
+            @Steer.started += instance.OnSteer;
+            @Steer.performed += instance.OnSteer;
+            @Steer.canceled += instance.OnSteer;
+            @Accelerate.started += instance.OnAccelerate;
+            @Accelerate.performed += instance.OnAccelerate;
+            @Accelerate.canceled += instance.OnAccelerate;
+        }
+
+        private void UnregisterCallbacks(IDrivingActions instance)
+        {
+            @Steer.started -= instance.OnSteer;
+            @Steer.performed -= instance.OnSteer;
+            @Steer.canceled -= instance.OnSteer;
+            @Accelerate.started -= instance.OnAccelerate;
+            @Accelerate.performed -= instance.OnAccelerate;
+            @Accelerate.canceled -= instance.OnAccelerate;
+        }
+
+        public void RemoveCallbacks(IDrivingActions instance)
+        {
+            if (m_Wrapper.m_DrivingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDrivingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DrivingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DrivingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public DrivingActions @Driving => new DrivingActions(this);
 
     // InventoryUI
     private readonly InputActionMap m_InventoryUI;
@@ -3692,6 +3843,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnPlace(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnFlipBuilding(InputAction.CallbackContext context);
+    }
+    public interface IDrivingActions
+    {
+        void OnSteer(InputAction.CallbackContext context);
+        void OnAccelerate(InputAction.CallbackContext context);
     }
     public interface IInventoryUIActions
     {
