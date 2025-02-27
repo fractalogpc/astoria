@@ -70,7 +70,6 @@ namespace Construction
                                     otherEdge.SetUsedVertically(true);
                                 }
 
-                                Debug.Log($"Added connection between {gameObject.name} and {otherComponent.gameObject.name}");
                                 AddConnectionDirect(edge, otherComponent);
                                 otherComponent.AddConnectionDirect(otherEdge, this);
                             }
@@ -278,11 +277,19 @@ namespace Construction
 
         private void Collapse()
         {
+
             // Propagate collapse with stability
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
                 foreach (ConstructionComponent component in connection.Value)
                 {
+                    if (connection.Key.usedHorizontally) {
+                        component.edges.Find(x => x.IsSame(connection.Key)).SetUsedHorizontally(false);
+                    }
+                    if (connection.Key.usedVertically) {
+                        component.edges.Find(x => x.IsSame(connection.Key)).SetUsedVertically(false);
+                    }
+
                     component.RemoveConnectionDirect(connection.Key, this);
                 }
             }

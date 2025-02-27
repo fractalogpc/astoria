@@ -1,4 +1,3 @@
-using sc.terrain.proceduralpainter;
 using UnityEngine;
 
 namespace Construction
@@ -18,7 +17,8 @@ namespace Construction
     public bool usedHorizontally; // If another component is connected to this edge horizontally
     public bool usedVertically; // If another component is connected to this edge vertically
 
-    public Edge() {
+    public Edge()
+    {
     }
 
     public Edge(Vector3 position, Vector3 normal, Transform transform, ConstructionData data, bool usedHorizontally = false, bool usedVertically = false)
@@ -34,8 +34,6 @@ namespace Construction
     public bool IsSame(Vector3 tryPosition, Transform thisTransform, Transform edgeTransform, float threshold = 0.1f)
     {
       Vector3 edgePosition = edgeTransform.position + edgeTransform.rotation * position;
-
-      Debug.Log($"EdgePoint: {tryPosition}, OtherPoint: {edgePosition}");
 
       return VectorFunctions.Vector3Approximately(tryPosition, edgePosition, threshold);
     }
@@ -65,20 +63,24 @@ namespace Construction
 
     public float Distance(Vector3 tryPosition, Transform edgeParent)
     {
-      return Vector3.Distance(edgeParent.TransformPoint(position), tryPosition);
-      // return VectorFunctions.DistanceToLine(edgeParent.TransformPoint(position), edgeParent.rotation * normal, tryPosition);
+      // return Vector3.Distance(edgeParent.TransformPoint(position), tryPosition);
+      return VectorFunctions.DistanceToLine(edgeParent.TransformPoint(position), edgeParent.rotation * normal, tryPosition);
     }
 
     public Vector3 WorldSpaceRotation(Transform edgeParent)
     {
-      return edgeParent.rotation * normal;
+      Vector3 worldNormal = edgeParent.rotation * normal.normalized;
+
+      Debug.Log("World Normal: " + worldNormal);
+
+      return worldNormal;
     }
     public Quaternion WorldSpaceRotationQuaternion(Transform edgeParent)
     {
       return Quaternion.LookRotation(edgeParent.TransformDirection(normal));
     }
 
-    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge fromEdge, Edge toEdge, Transform fromEdgeTransform, Transform toEdgeTransform, bool flipRotation)
+    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge fromEdge, Edge toEdge, Transform fromEdgeTransform, Transform toEdgeTransform)
     {
       // Convert local positions and normals to world space
       Vector3 fromWorldPos = fromEdgeTransform.TransformPoint(fromEdge.position);
@@ -87,15 +89,16 @@ namespace Construction
       Vector3 toWorldPos = toEdgeTransform.TransformPoint(toEdge.position);
       Vector3 toWorldNormal = toEdgeTransform.rotation * toEdge.normal.normalized;
 
-      // If flipRotation is true, flip the fromEdge normal
-      if (flipRotation)
-        fromWorldNormal = -fromWorldNormal;
-
       // Calculate rotation to align fromEdge normal opposite to toEdge normal
-      Quaternion rotation = Quaternion.FromToRotation(fromWorldNormal, -toWorldNormal) * fromEdgeTransform.rotation;
+      Quaternion fullRotation = Quaternion.FromToRotation(fromWorldNormal, -toWorldNormal) * fromEdgeTransform.rotation;
 
-      // Recalculate fromWorldPos after applying the new rotation
-      Vector3 rotatedFromPos = rotation * (fromEdge.position); // Rotate local position
+      // Extract only the Y-axis rotation
+      Vector3 eulerAngles = fullRotation.eulerAngles;
+      Quaternion rotation = Quaternion.Euler(0, eulerAngles.y, 0); // Lock X and Z rotation
+
+      // --- 🔄 Fix Position Offset Calculation ---
+      // Rotate only the local position with the constrained rotation
+      Vector3 rotatedFromPos = rotation * fromEdge.position;
       Vector3 rotatedFromWorldPos = fromEdgeTransform.position + rotatedFromPos;
 
       // Calculate the translation needed to align rotated fromEdge to toEdge
@@ -106,5 +109,6 @@ namespace Construction
 
       return (finalPosition, rotation);
     }
+
   }
 }

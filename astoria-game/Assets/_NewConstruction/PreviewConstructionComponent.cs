@@ -11,9 +11,6 @@ namespace Construction
     {
         public List<Edge> edges; // Public for editor
 
-        // Used for setting used on edges when placed
-        [SerializeField] private Edge? fromEdge = null;
-        [SerializeField] private Edge? toEdge = null;
 
         private PreviewObject previewObject;
 
@@ -30,6 +27,8 @@ namespace Construction
                 Debug.DrawLine(transform.TransformPoint(edge.position), transform.TransformPoint(edge.position + edge.normal * 0.2f), Color.red);
             }
         }
+
+        bool doDebug = false; // This is purely for testing and me being lazy with commenting the debug messages
 
         // Called by construction system to see if this component can connect to another component
         public bool CanPlace(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionComponentData data, out Vector3 finalPosition, out Quaternion finalRotation, out bool validPosition)
@@ -52,13 +51,13 @@ namespace Construction
                     LayerMask foundationLayerMask = settings.CollisionLayerMask & ~settings.GroundLayerMask;
 
                     // Check for nearby snapping
-                    if (HasAvailableConnection(tryPosition, tryRotation, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
+                    if (HasAvailableConnection(tryPosition, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
                     {
                         // Check for collision
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
-                            // Debug.Log("Colliding");
+                            if (doDebug) Debug.Log("Colliding");
                         }
                         else
                         {
@@ -69,20 +68,20 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
-                                    // Debug.Log("Too far from ground");
+                                    if (doDebug) Debug.Log("Too far from ground");
                                 }
                                 else
                                 {
                                     // Valid position
                                     validPosition = true;
-                                    // Debug.Log("Valid position");
+                                    if (doDebug) Debug.Log("Valid position");
                                 }
                             }
                             else
                             {
                                 // No ground found
                                 validPosition = false;
-                                // Debug.Log("No ground found");
+                                if (doDebug) Debug.Log("No ground found");
                             }
                         }
                     }
@@ -96,7 +95,7 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
-                            // Debug.Log("Colliding");
+                            if (doDebug) Debug.Log($"Colliding");
                         }
                         else
                         {
@@ -107,41 +106,68 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
-                                    // Debug.Log("Too far from ground");
+                                    if (doDebug) Debug.Log("Too far from ground");
                                 }
                                 else
                                 {
                                     // Valid position
                                     validPosition = true;
-                                    // Debug.Log("Valid position");
+                                    if (doDebug) Debug.Log("Valid position");
                                 }
                             }
                             else
                             {
                                 // No ground found
                                 validPosition = false;
-                                // Debug.Log("No ground found");
+                                if (doDebug) Debug.Log("No ground found");
                             }
                         }
                     }
+                    return validPosition;
+                    break;
+                case ConstructionComponentData.StructureType.Wall:
+                    // Check for nearby snapping
+                    if (HasAvailableConnection(tryPosition, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
+                    {
+                        // Check for collision
+                        if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
+                        {
+                            validPosition = false;
+                            if (doDebug) Debug.Log("Colliding");
+                        }
+                        else
+                        {
+                            // Valid position
+                            validPosition = true;
+                            if (doDebug) Debug.Log("Valid position");
+                        }
+                    }
+                    else
+                    {
+
+                        if (doDebug) Debug.Log("Need a foundation to snap to");
+
+                        finalPosition = tryPosition;
+                        finalRotation = tryRotation;
+                        validPosition = false;
+                    }
+
                     return validPosition;
                     break;
             }
             finalPosition = tryPosition;
             finalRotation = tryRotation;
             validPosition = false;
-
-            fromEdge = null;
-            toEdge = null;
             return false;
         }
 
-        private bool HasAvailableConnection(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionData data, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
+        bool hasFlipped = false;
+        private bool HasAvailableConnection(Vector3 tryPosition, ConstructionSettings settings, ConstructionData data, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
         {
             snappedTransforms = new List<Transform>();
 
             List<(Edge, float, Transform)> possibleEdges = new();
-            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, settings.ConstructionLayerMask))
+            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, settings.ConstructionLayerMask, QueryTriggerInteraction.Ignore))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)
@@ -156,6 +182,7 @@ namespace Construction
                         if (distance <= settings.StructurePlaceRadius)
                         {
                             possibleEdges.Add((edge, distance, collider.transform));
+                            if (doDebug) Debug.Log($"Found possible edge: {edge.position} at distance {distance}");
                         }
                     }
                 }
@@ -183,14 +210,33 @@ namespace Construction
                     {
                         Vector3 tryEdgeNormal = tryEdge.WorldSpaceRotation(transform);
 
-                        float dot = Vector3.Dot(edgeDirection, tryEdgeNormal);
+                        float dot = Vector3.Dot(Vector3.forward, tryEdge.normal);
                         possibleEdgesOnThisComponent.Add((tryEdge, dot));
+
+                        if (doDebug) Debug.Log($"Found possible edge on this component: {tryEdge.position} with dot {dot}");
                     }
 
                     // Sort by dot product
                     if (possibleEdgesOnThisComponent.Count > 0)
                     {
-                        possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+                        if (GlobalVariables.FlipRotation)
+                        {
+                            possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2));
+                            // if (!hasFlipped)
+                            // {
+                            //     hasFlipped = true;
+                            //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending
+                            // }
+                            // else
+                            // {
+                            //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
+                            // }
+                        }
+                        else
+                        {
+                            hasFlipped = false;
+                            possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
+                        }
 
                         edgeToSnapTo = otherEdge.Item1;
                         edgeToSnapFrom = possibleEdgesOnThisComponent[0].Item1;
@@ -205,41 +251,22 @@ namespace Construction
                 // Couldn't find compatible edges
                 if (edgeToSnapTo == null || edgeToSnapFrom == null || otherTransform == null)
                 {
+                    if (doDebug) Debug.Log("Couldn't find compatible edges");
+                    hasFlipped = false;
                     return false;
                 }
 
-                bool flipRotation = false;
-
-                // Don't allow flipping if the component is horizontal
-                if (!data.isHorizontal)
-                {
-                    flipRotation = GlobalVariables.FlipRotation;
-                }
-
-
-                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge((Edge)edgeToSnapFrom, (Edge)edgeToSnapTo, transform, otherTransform, false);
+                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge((Edge)edgeToSnapFrom, (Edge)edgeToSnapTo, transform, otherTransform);
                 snappedPosition = snappedPositionOffset.Item1;
                 snappedRotation = snappedPositionOffset.Item2;
 
-                fromEdge = (Edge)edgeToSnapFrom;
-                toEdge = (Edge)edgeToSnapTo;
+
+                if (doDebug) Debug.Log($"Snapped to edge: {edgeToSnapTo.position} from edge: {edgeToSnapFrom.position}");
 
                 return true;
             }
 
             return false;
         }
-
-        public bool GetCurrentlySnappingEdges(out Edge edge1, out Edge edge2) {
-            if (fromEdge == null || toEdge == null) {
-                edge1 = new Edge();
-                edge2 = new Edge();
-                return false;
-            }
-            edge1 = (Edge)fromEdge;
-            edge2 = (Edge)toEdge;
-            return true;
-        }
-
     }
 }

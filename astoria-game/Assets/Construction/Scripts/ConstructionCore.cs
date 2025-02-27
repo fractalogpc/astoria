@@ -702,6 +702,8 @@ public class ConstructionSettings
     public int DensityFactor = 3;
     [Tooltip("The radius a structure checks for snapping with other structures.")]
     public float StructurePlaceRadius = 5f;
+    [Tooltip("The distance from a construction object that a new construction object can be placed.")]
+    public float ConstructionBufferDistance = 5f;
 
     [Tooltip("The layer that you can place things on. Should be ground, rocks, other construction etc.")]
     public LayerMask PlacementLayerMask;

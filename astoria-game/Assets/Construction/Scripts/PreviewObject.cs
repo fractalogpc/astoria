@@ -41,7 +41,7 @@ public class PreviewObject : MonoBehaviour
       Quaternion worldRotation = box.rotation * transform.rotation;
 
       // Perform the overlap box check with the corrected extents and world rotation
-      Collider[] hits = Physics.OverlapBox(worldPosition, scaledExtents, worldRotation, layer);
+      Collider[] hits = Physics.OverlapBox(worldPosition, scaledExtents, worldRotation, layer, QueryTriggerInteraction.Ignore);
 
       foreach (Collider hit in hits)
       {
@@ -67,11 +67,13 @@ public class PreviewObject : MonoBehaviour
       Quaternion worldRotation = rotation * box.rotation;
 
       // Perform the overlap box check with the corrected extents and world rotation
-      Collider[] hits = Physics.OverlapBox(worldPosition, scaledExtents, worldRotation, layer);
+      Collider[] hits = Physics.OverlapBox(worldPosition, scaledExtents, worldRotation, layer, QueryTriggerInteraction.Ignore);
 
       foreach (Collider hit in hits)
       {
         if (hit.transform == transform || (ignoreTransforms != null && ignoreTransforms.Contains(hit.transform))) continue;
+
+        // Debug.Log($"Colliding with {hit.name} at {hit.transform.position}");
         return true; // Collision detected
       }
     }
