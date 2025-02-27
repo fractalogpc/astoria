@@ -5,6 +5,7 @@ public class CarController : InputHandlerBase
 {
 
     public Wheel[] wheels;
+    [SerializeField] private Transform _steeringTransform;
 
     [SerializeField] private float _steeringSensitivity = 0.05f;
     [SerializeField] private float _force = 50f;
@@ -39,14 +40,47 @@ public class CarController : InputHandlerBase
 
     private void Steer()
     {
-        if (_deltaSteer == 0f) {
-            if (SteerAngle > 0f) {
-                SteerAngle -= _steeringSensitivity;
-            } else if (SteerAngle < 0f) {
-                SteerAngle += _steeringSensitivity;
+        float scaledSteer = _deltaSteer * _steeringSensitivity;
+
+        if (scaledSteer == 0f)
+        {
+            if (SteerAngle > 0f)
+            {
+                if (SteerAngle - _steeringSensitivity < 0f)
+                {
+                    SteerAngle = 0f;
+                }
+                else
+                {
+                    SteerAngle -= _steeringSensitivity;
+                }
             }
-        } else {
-            SteerAngle += _deltaSteer * _steeringSensitivity;
+            else if (SteerAngle < 0f)
+            {
+                if (SteerAngle + _steeringSensitivity > 0f)
+                {
+                    SteerAngle = 0f;
+                }
+                else
+                {
+                    SteerAngle += _steeringSensitivity;
+                }
+            }
+        }
+        else
+        {
+            if (SteerAngle + scaledSteer > 1f)
+            {
+                SteerAngle = 1f;
+            }
+            else if (SteerAngle + scaledSteer < -1f)
+            {
+                SteerAngle = -1f;
+            }
+            else
+            {
+                SteerAngle += scaledSteer;
+            }
         }
 
         foreach (var wheel in wheels)
@@ -56,13 +90,18 @@ public class CarController : InputHandlerBase
                 wheel.wheelCollider.steerAngle = SteerAngle * 45f;
             }
         }
+
+        _steeringTransform.localRotation = Quaternion.Euler(0f, SteerAngle * 90f, 0f);
     }
 
     private void Accelerate()
     {
         foreach (var wheel in wheels)
         {
-            wheel.wheelCollider.motorTorque = _acceleration * _force;
+            if (wheel.isFrontWheel)
+            {
+                wheel.wheelCollider.motorTorque = _acceleration * _force;
+            }
         }
     }
 
