@@ -98,7 +98,7 @@ public class CarController : InputHandlerBase
     {
         foreach (var wheel in wheels)
         {
-            if (wheel.isFrontWheel)
+            // if (wheel.isFrontWheel)
             {
                 wheel.wheelCollider.motorTorque = _acceleration * _force;
             }
