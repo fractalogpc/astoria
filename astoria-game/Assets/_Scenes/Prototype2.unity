@@ -31030,19 +31030,28 @@ MonoBehaviour:
   modifyHeightMap: 1
   width: 8
   smoothness: 15
-  trench: 0
+  trench: -100
   trenchCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: -0.3
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    - serializedVersion: 3
+      time: 0.1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 0
@@ -31055,7 +31064,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  useTrenchCurve: 0
+  useTrenchCurve: 1
   heightNoise:
     noiseType: 2
     noiseSpace: 0
