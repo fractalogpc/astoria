@@ -10,13 +10,14 @@ using UnityEngine;
 [Serializable]
 public class ItemStackList
 {
-	[SerializeField] private List<ItemStack> list;
-	public int Count => list.Count;
+	[SerializeField] private List<ItemStack> list = new();
+	public int StackCount => list.Count;
 
 	/// <summary>
 	/// Constructs an empty ItemStackList.
 	/// </summary>
-	public ItemStackList() {}
+	public ItemStackList() {
+	}
 	
 	/// <summary>
 	/// Constructs an ItemStackList from a list of ItemInstances.
@@ -28,10 +29,14 @@ public class ItemStackList
 		foreach (ItemInstance item in items) {
 			bool found = false;
 			foreach (ItemStack stack in newStacks) {
-				if (stack.Push(item)) found = true;
+				if (!stack.Push(item)) continue;
+				found = true;
 				break;
 			}
-			if (!found) newStacks.Add(new ItemStack(item.ItemData));
+			if (found) continue;
+			ItemStack newStack = new(item.ItemData);
+			newStack.Push(item);
+			newStacks.Add(newStack);
 		}
 		list = newStacks;
 	}

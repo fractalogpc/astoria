@@ -416,7 +416,7 @@ public class InventoryComponent : MonoBehaviour
 	
 	private void InstantiateInventoryItems(InventoryData inventoryData) {
 		ItemStackList stacks = inventoryData.Stacks;
-		for (int i = 0; i < stacks.Count; i++) {
+		for (int i = 0; i < stacks.StackCount; i++) {
 			CreateItemPrefab(stacks[i], inventoryData.GetSlotIndexOf(stacks[i]));
 		}
 	}

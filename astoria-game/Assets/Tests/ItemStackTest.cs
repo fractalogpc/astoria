@@ -22,7 +22,19 @@ public class ItemStackTest
 		Assert.AreEqual(stack.CouldPush(GetTestItemInstance(otherType)), false);
 	}
 	[Test]
-	public void RejectsFullStack() {
+	public void RejectsDifferentStack() {
+		ItemData stackType = GetTestItemData(5);
+		ItemStack stack = new(stackType);
+		ItemData otherStackType = GetTestItemData(7);
+		ItemStack otherStack = new(otherStackType);
+		stack.Push(GetTestItemInstance(stackType));
+		stack.Push(GetTestItemInstance(stackType));
+		otherStack.Push(GetTestItemInstance(otherStackType));
+		otherStack.Push(GetTestItemInstance(otherStackType));
+		Assert.AreEqual(stack.CouldPush(otherStack), false);
+	}
+	[Test]
+	public void RejectsFullStackAddingItem() {
 		ItemData stackType = GetTestItemData(2);
 		ItemStack stack = new(stackType);
 		stack.Push(GetTestItemInstance(stackType));
@@ -30,11 +42,45 @@ public class ItemStackTest
 		Assert.AreEqual(stack.CouldPush(GetTestItemInstance(stackType)), false);
 	}
 	[Test]
+	public void RejectsFullStackAddingStack() {
+		ItemData stackType = GetTestItemData(2);
+		ItemStack stack = new(stackType);
+		ItemStack otherStack = new(stackType);
+		stack.Push(GetTestItemInstance(stackType));
+		stack.Push(GetTestItemInstance(stackType));
+		otherStack.Push(GetTestItemInstance(stackType));
+		otherStack.Push(GetTestItemInstance(stackType));
+		Assert.AreEqual(stack.CouldPush(otherStack), false);
+	}
+	[Test]
 	public void RejectsUnstackable() {
 		ItemData stackType = GetTestItemData(10, false);
 		ItemStack stack = new(stackType);
 		stack.Push(GetTestItemInstance(stackType));
 		Assert.AreEqual(stack.CouldPush(GetTestItemInstance(stackType)), false);
+	}
+	[Test]
+	public void PopReturnsFalseIfEmpty() {
+		ItemData stackType = GetTestItemData();
+		ItemStack stack = new(stackType);
+		Assert.AreEqual(stack.Pop(out _), false);
+	}
+	[Test]
+	public void PopReturnsSamePushedItem() {
+		ItemData stackType = GetTestItemData();
+		ItemStack stack = new(stackType);
+		ItemInstance item = GetTestItemInstance(stackType);
+		stack.Push(item);
+		stack.Pop(out ItemInstance poppedItem);
+		Assert.AreEqual(poppedItem, item);
+	}
+	[Test]
+	public void ContainsFindsInstance() {
+		ItemData stackType = GetTestItemData();
+		ItemStack stack = new(stackType);
+		ItemInstance item = GetTestItemInstance(stackType);
+		stack.Push(item);
+		Assert.AreEqual(stack.Contains(item), true);
 	}
 	
 	// // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
