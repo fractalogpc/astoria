@@ -218,27 +218,27 @@ public class InventoryData
         }
         return true;
     }
-    
-    // These methods probably shouldn't iterate through the entire grid, but it's fine for now.
-    private void HighlightRed(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
-        for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
-            for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
-                Containers[x, y].Highlight = ContainerHighlight.Red;
-            }
-        }
-    }
-    private void HighlightGreen(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
-        for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
-            for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
-                Containers[x, y].Highlight = ContainerHighlight.Green;
-            }
-        }
-    }
-    private void ClearHighlights() {
-        for (int y = 0; y < Height; y++) {
-            for (int x = 0; x < Width; x++) {
-                Containers[x, y].Highlight = ContainerHighlight.None;
-            }
-        }
-    }
+    //
+    // // These methods probably shouldn't iterate through the entire grid, but it's fine for now.
+    // private void HighlightRed(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
+    //     for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
+    //         for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
+    //             Containers[x, y].Highlight = ContainerHighlight.Red;
+    //         }
+    //     }
+    // }
+    // private void HighlightGreen(Vector2Int bottomLeftContainerIndex, Vector2Int bounds) {
+    //     for (int y = bottomLeftContainerIndex.y; y < bottomLeftContainerIndex.y + bounds.y; y++) {
+    //         for (int x = bottomLeftContainerIndex.x; x < bottomLeftContainerIndex.x + bounds.x; x++) {
+    //             Containers[x, y].Highlight = ContainerHighlight.Green;
+    //         }
+    //     }
+    // }
+    // private void ClearHighlights() {
+    //     for (int y = 0; y < Height; y++) {
+    //         for (int x = 0; x < Width; x++) {
+    //             Containers[x, y].Highlight = ContainerHighlight.None;
+    //         }
+    //     }
+    // }
 }
