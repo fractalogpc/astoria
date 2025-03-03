@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FMOD;
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
@@ -11,7 +10,7 @@ using Random = UnityEngine.Random;
 /// Attach this script to RectTransforms to create Inventory UIs.
 /// </summary>
 [AddComponentMenu("Inventory/Inventory Component")]
-[RequireComponent(typeof(AutoRegister))]
+// [RequireComponent(typeof(AutoRegister))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
 public class InventoryComponent : MonoBehaviour

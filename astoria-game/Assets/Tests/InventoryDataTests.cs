@@ -7,7 +7,12 @@ using UnityEngine.UIElements;
 
 public class InventoryDataTests
 {
-	
+	[Test]
+	public void HasCorrectDimensionOnCreation() {
+		InventoryData inventory = new InventoryData(5, 5);
+		Assert.AreEqual(5, inventory.Width);
+		Assert.AreEqual(5, inventory.Height);
+	} 
 	
 	
 	
