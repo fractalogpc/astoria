@@ -5,6 +5,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
     public int SamplesPerFixedUpdate = 5;
     public float ProjectileLifetime = 20f;
     public GameObject ProjectilePrefab;
+    public GameObject HitEffectPrefab;
     public Transform ProjectileStart;
     private List<Projectile> _projectilesToTick = new List<Projectile>();
     public delegate void ProjectileHitHandler(RaycastHit hit);
@@ -92,12 +93,20 @@ public class ProjectileManager : Singleton<ProjectileManager>
             return hit;
         }
     }
+
     public void FireProjectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics, ProjectileHitHandler hitCallback) {
         _projectilesToTick.Add(new Projectile(ProjectileLifetime, hitCallback, damage, mass, startPosition, startVelocity, aerodynamics));
         if (_projectilesToTick.Count > 800) {
             Debug.Log($"ProjectileManager: Holds {_projectilesToTick.Count} projectiles. This could be a performance issue. Remind matthew to multithread this.");
         }
     }
+
+    private void SpawnHitEffect(RaycastHit hit) {
+        Vector3 normal = hit.normal;
+        GameObject hitEffect = Instantiate(HitEffectPrefab, hit.point, Quaternion.LookRotation(normal));
+        Destroy(hitEffect, 5f);
+    }
+
     private void FixedUpdate() {
         for (int i = _projectilesToTick.Count - 1; i >= 0; i--) {
             Projectile projectile = _projectilesToTick[i];
@@ -105,6 +114,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
                 RaycastHit hit = projectile.TickProjectile(Time.fixedDeltaTime / SamplesPerFixedUpdate);
                 if (hit.collider != null) {
                     projectile.Callback(hit);
+                    SpawnHitEffect(hit);
                     Destroy(projectile.Renderer.gameObject);
                     _projectilesToTick.Remove(projectile);
                     break;
