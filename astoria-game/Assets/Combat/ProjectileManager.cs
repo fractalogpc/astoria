@@ -4,6 +4,8 @@ public class ProjectileManager : Singleton<ProjectileManager>
 {
     public int SamplesPerFixedUpdate = 5;
     public float ProjectileLifetime = 20f;
+    public GameObject ProjectilePrefab;
+    public Transform ProjectileStart;
     private List<Projectile> _projectilesToTick = new List<Projectile>();
     public delegate void ProjectileHitHandler(RaycastHit hit);
 
@@ -47,6 +49,8 @@ public class ProjectileManager : Singleton<ProjectileManager>
         /// Seconds the projectile has left to live.
         /// </summary>
         public float TimeToLive;
+
+        public Transform Renderer;
         
         public ProjectileHitHandler Callback;
 	
@@ -58,6 +62,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
             Aerodynamics = aerodynamics;
             TimeToLive = timeToLive;
             Callback = callback;    
+            Renderer = Instantiate(Instance.ProjectilePrefab, Instance.ProjectileStart.position, Quaternion.identity).transform;
         }
         public RaycastHit TickProjectile(float deltaTime) {
             // Handle collision
@@ -76,6 +81,11 @@ public class ProjectileManager : Singleton<ProjectileManager>
 
             // Update position based on new velocity
             Position += Velocity * deltaTime;
+
+            // Set renderer position
+            Renderer.position = Vector3.Lerp(Renderer.position, Position, 0.5f);
+            // Set renderer rotation
+            Renderer.rotation = Quaternion.LookRotation(Velocity.normalized);
             
             TimeToLive -= deltaTime;
             
@@ -95,11 +105,13 @@ public class ProjectileManager : Singleton<ProjectileManager>
                 RaycastHit hit = projectile.TickProjectile(Time.fixedDeltaTime / SamplesPerFixedUpdate);
                 if (hit.collider != null) {
                     projectile.Callback(hit);
+                    Destroy(projectile.Renderer.gameObject);
                     _projectilesToTick.Remove(projectile);
                     break;
                 }
                 if (projectile.TimeToLive <= 0) {
                     Debug.Log("Projectile expired");
+                    Destroy(projectile.Renderer.gameObject);
                     _projectilesToTick.Remove(projectile);
                     break;
                 }
