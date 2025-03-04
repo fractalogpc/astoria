@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GroundHarvestable : MonoBehaviour
+public class GroundHarvestable : Interactable
 {
     
     [System.Serializable]
@@ -16,6 +16,19 @@ public class GroundHarvestable : MonoBehaviour
 
     [SerializeField] private HarvestDropData[] harvestDrops;
 
+    public override void Interact()
+    {
+        base.Interact();
+        (ItemData, int)[] harvestedItems = Harvest();
+        foreach ((ItemData item, int amount) in harvestedItems) {
+          for (int i = 0; i < amount; i++) {
+            PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(item);
+          }
+        }
+
+        Destroy(gameObject);
+    }
+
     public (ItemData, int)[] Harvest()
     {
         List<(ItemData, int)> items = new List<(ItemData, int)>();
@@ -25,7 +38,6 @@ public class GroundHarvestable : MonoBehaviour
             items.Add((drop.item, amount));
         }
 
-        Destroy(gameObject);
         return items.ToArray();
     }
 
