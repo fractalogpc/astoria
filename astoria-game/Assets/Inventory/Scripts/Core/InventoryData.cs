@@ -66,6 +66,7 @@ public class InventoryData
                 }
             }
         }
+        slotIndex = new Vector2Int(-1, -1);
         return false;
     }
     

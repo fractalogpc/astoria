@@ -100,11 +100,12 @@ public class InventoryDataTests
 		InventoryComponent component = CreateInventoryComponent();
 		data.TryAddStack(component, stack, out _);
 		ItemStack newStack = CreateStackWith(itemData, 2);
-		data.TryAddStack(component, newStack, out _);
+		Assert.IsTrue(data.TryAddStack(component, newStack, out _));
 		Assert.AreEqual(data.Items.Count, 4);
 		Assert.AreEqual(data.Containers[0, 0].HeldStack, stack);
 		Assert.AreEqual(data.Containers[0, 1].HeldStack, stack);
-		Assert.IsFalse(data.Stacks.Contains(newStack));
+		Assert.AreEqual(data.Containers[0, 2].HeldStack, null);
+		Assert.IsFalse(data.Stacks.Contains(newStack));	
 	}
 	
 	[Test]

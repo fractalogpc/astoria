@@ -87,7 +87,7 @@ public class ItemStack
 	/// <returns>Whether the item could be pushed onto the stack.</returns>
 	public bool CouldPush(ItemStack other) {
 		if (other.StackType != StackType) return false;
-		return StackCount + other.StackCount < StackType.MaxStackSize;
+		return StackCount + other.StackCount <= StackType.MaxStackSize;
 	}
 	
 	/// <summary>
