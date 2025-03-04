@@ -47,6 +47,10 @@ public class LightningMeshGeneration : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             FormMesh();
+            for (int i = 0; i < SubVertexStart.Count(); i++)
+            {
+                FormSubMesh(i);
+            }
         }
         
 
@@ -185,6 +189,14 @@ public class LightningMeshGeneration : MonoBehaviour {
         mesh.triangles = triangles.ToArray();
         
         GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+    void FormSubMesh(int index) {
+        //subvertex[index] is the vertex set I'm working with
+        //set up a list of the vertices
+        //run through SubVertex[index][i] and add them to the list like I do in FormMesh()
+        //then generate the triangles
+        //then send those to the mesh
     }
     
 }
