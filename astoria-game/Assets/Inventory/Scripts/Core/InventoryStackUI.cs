@@ -11,7 +11,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 [RequireComponent(typeof(CanvasRenderer))]
 [RequireComponent(typeof(ClickableEvents))]
-public class InventoryItemUI : MonoBehaviour
+public class InventoryStackUI : MonoBehaviour
 {
 	[Header("Data")]
 	public ItemStack ItemStack;

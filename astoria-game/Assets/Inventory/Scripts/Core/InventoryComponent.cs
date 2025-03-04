@@ -40,7 +40,7 @@ public class InventoryComponent : MonoBehaviour
 	[SerializeField] private Vector2Int _assignedInventorySize;
 	[SerializeField] private List<ItemData> _spawnInventoryWith;
 
-	private List<GameObject> _inventoryItemPrefabInstances = new();
+	private List<GameObject> _stackPrefabInstances = new();
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
 	private GameObject[,] _slotPrefabInstances;
@@ -111,7 +111,7 @@ public class InventoryComponent : MonoBehaviour
 	public int CreateInvFromItemDatas(List<ItemData> itemDatas, Vector2Int inventorySize) {
 		AttachToInventoryData(new InventoryData(inventorySize.x, inventorySize.y));
 		CreateAndAttachContainersTo(InventoryData);
-		_inventoryItemPrefabInstances = new List<GameObject>();
+		_stackPrefabInstances = new List<GameObject>();
 		List<ItemInstance> items = new();
 		foreach (ItemData itemData in itemDatas) {
 			items.Add(itemData.CreateItem());
@@ -162,7 +162,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	public void DestroyInventoryContainersAndItems() {
 		_slotPrefabInstances = null;
-		_inventoryItemPrefabInstances.Clear();
+		_stackPrefabInstances.Clear();
 		DeleteChildrenOf(_rect.transform);
 	}
 
@@ -207,11 +207,16 @@ public class InventoryComponent : MonoBehaviour
 	
 	public bool AddStack(ItemStack itemStack) {
 		if (!InventoryData.TryAddStack(this, itemStack, out Vector2Int slotIndexBL)) return false;
-		CreateItemPrefab(itemStack, slotIndexBL);
+		CreateInvFromInventoryData(InventoryData);
 		return true;
 	}
 	public bool AddItem(ItemInstance itemInstance) {
-		return AddStack(new ItemStack(itemInstance));
+		if (!InventoryData.TryAddStack(this, new ItemStack(itemInstance), out Vector2Int slotIndexBL)) {
+			SpawnDroppedItem(new ItemStack(itemInstance));
+			return false;
+		}
+		CreateInvFromInventoryData(InventoryData);
+		return true;
 	}
 
 	/// <summary>
@@ -226,19 +231,9 @@ public class InventoryComponent : MonoBehaviour
 			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
 			return false;
 		}
-		
-		ItemStack newStack = new(itemData);
 		for (int i = 0; i < count; i++) {
-			newStack.Push(itemData.CreateItem());
+			AddItem(itemData.CreateItem());
 		}
-		
-		if (!InventoryData.TryAddStack(this, newStack, out Vector2Int slotIndexBL)) {
-			Debug.Log("Item dropped");
-			SpawnDroppedItem(newStack);
-			return false;
-		}
-
-		CreateItemPrefab(newStack, slotIndexBL);
 		return true;
 	}
 	/// <summary>
@@ -254,10 +249,8 @@ public class InventoryComponent : MonoBehaviour
 				Debug.LogWarning($"Could not add item {item.ItemName} to {gameObject.name}.");
 				continue;
 			}
-
 			itemsPlaced++;
 		}
-
 		return items.Count - itemsPlaced;
 	}
 
@@ -265,25 +258,22 @@ public class InventoryComponent : MonoBehaviour
 	/// Tries to place the item with the bottom left at the slot position closest to positionSS.
 	/// </summary>
 	/// <param name="itemStack">The InventoryItem to place.</param>
-	/// <param name="positionSS">The position to place at in screen space.</param>
+	/// <param name="slotIndexBL">The bottom left slot index to place at.</param>
 	/// <returns></returns>
 	public bool PlaceStack(ItemStack itemStack, Vector2Int slotIndexBL) {
-		if (!InventoryData.SlotIndexInBounds(slotIndexBL)) return false;
-		GameObject cntrSlot = _slotPrefabInstances[slotIndexBL.x, slotIndexBL.y];
-		InventoryContainerUI cntrSlotScript = cntrSlot.GetComponent<InventoryContainerUI>();
-		Vector2Int index = cntrSlotScript.AttachedContainer.Index;
-		bool couldPlace = InventoryData.TryAddStackAtPosition(this, itemStack, index);
-		if (couldPlace) {
-			CreateItemPrefab(itemStack, index);
-			return true;
-		}
-
-		return false;
+		if (!InventoryData.TryAddStackAtPosition(this, itemStack, slotIndexBL)) return false;
+		CreateInvFromInventoryData(InventoryData);
+		return true;
 	}
-
 	public bool RemoveStack(ItemStack itemStack) {
-		return InventoryData.RemoveStack(this, itemStack);
+		InventoryData.RemoveStack(this, itemStack);
+		CreateInvFromInventoryData(InventoryData);
+		return true;
 	}
+	
+	
+	// TODO: Ensure public functions after this point properly CreateInvFromInventoryData after modifying the InventoryData.
+	
 	
 	/// <summary>
 	/// Tries to remove count items from the inventory that match the ItemData.
@@ -318,11 +308,8 @@ public class InventoryComponent : MonoBehaviour
 	}
 	
 	public bool RemoveItem(ItemInstance item) {
-		InventoryItemUI itemUIScript = _inventoryItemPrefabInstances.Find(itemUI => itemUI.GetComponent<InventoryItemUI>().ItemStack.Contains(item)).GetComponent<InventoryItemUI>();
-		if (itemUIScript == null) return false;
-		_inventoryItemPrefabInstances.Remove(itemUIScript.gameObject);
+		if (!InventoryData.Items.Contains(item)) return false;
 		InventoryData.RemoveItem(this, item);
-		Destroy(itemUIScript.gameObject);
 		return true;
 	}
 
@@ -390,10 +377,10 @@ public class InventoryComponent : MonoBehaviour
 		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
 		itemPrefab.name = itemStack.StackType.ItemName + Random.Range(0, 100000); // Doesn't actually need to be unique, just enough to identify during debugging
 		RectTransform itemRect = itemPrefab.GetComponent<RectTransform>();
-		InventoryItemUI newItemUIScript = itemPrefab.GetComponent<InventoryItemUI>();
-		newItemUIScript.InitializeWithStack(this, itemStack, slotIndexBL, SlotSizeUnits);
+		InventoryStackUI newStackUIScript = itemPrefab.GetComponent<InventoryStackUI>();
+		newStackUIScript.InitializeWithStack(this, itemStack, slotIndexBL, SlotSizeUnits);
 		// print($"Item {item.ItemData.ItemName} placed at {slotIndexBL} in {gameObject.name}. Size: {itemRect.rect.size}. Position: {itemRect.anchoredPosition}");
-		_inventoryItemPrefabInstances.Add(itemPrefab);
+		_stackPrefabInstances.Add(itemPrefab);
 		// Debug.Log($"ItemUI Created with name {itemPrefab.name}, in inventory {gameObject.transform.parent.name}. Clickable events null: {itemPrefab.GetComponent<ClickableEvents>() == null}");
 		return itemPrefab;
 	}

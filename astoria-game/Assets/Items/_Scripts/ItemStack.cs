@@ -111,7 +111,7 @@ public class ItemStack
 		}
 		item = _items[0]; 
 		_items.RemoveAt(0);
-		return true;
+		return StackCount > 0;
 	}
 
 	public bool Remove(ItemInstance itemInstance) {

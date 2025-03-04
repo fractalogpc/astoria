@@ -12,6 +12,10 @@ public class ItemInstance
 {
 	public ItemData ItemData;
 	
+	/// <summary>
+	/// Do not use this constructor for creating items. Use CreateItem() from the corresponding ItemData instead.
+	/// </summary>
+	/// <param name="itemData"></param>
 	public ItemInstance(ItemData itemData) {
 		ItemData = itemData;
 	}

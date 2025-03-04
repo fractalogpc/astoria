@@ -62,7 +62,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	/// <returns>Returns whether the item was successfully transferred.</returns>
 	public bool OnLetGoOfDraggedItem() {
 		bool overSlot = GetEquipableSlotHoveredOver(out InventoryEquipableSlot slot);
-		bool overItemUI = GetItemUIHoveredOver(out InventoryItemUI itemUI);
+		bool overItemUI = GetItemUIHoveredOver(out InventoryStackUI itemUI);
 
 		// Over another inventory
 		if (_currentInventoryAbove != null) {
@@ -89,6 +89,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 			bool itemsLeft = ItemStack.Pop(out ItemInstance item);
 			if (!slot.TryAddToSlot(item)) {
 				ItemStack.Push(item);
+				itemsLeft = true;
 			}
 			if (!itemsLeft) {
 				Destroy(gameObject);
@@ -178,8 +179,12 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		}
 		_itemIconImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
 		_itemIconImage.rectTransform.anchoredPosition = Vector2.zero;
-		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ItemStack.StackType.ItemSize.x * _originInventory.SlotSizeUnits);
-		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ItemStack.StackType.ItemSize.y * _originInventory.SlotSizeUnits);
+
+		float slotSizeUnits = _originInventory != null ? _originInventory.SlotSizeUnits : _originSlot.SlotSizeUnits;
+		
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ItemStack.StackType.ItemSize.x * slotSizeUnits);
+		_itemIconImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ItemStack.StackType.ItemSize.y * slotSizeUnits);
+		
 		_itemIconImage.sprite = ItemStack.StackType.ItemIcon;
 		_itemIconImage.rectTransform.rotation = ItemStack.Rotated ? Quaternion.Euler(0, 0, 90) : Quaternion.identity;
 	}
@@ -214,18 +219,18 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		return false;
 	}
 	
-	private bool GetItemUIHoveredOver(out InventoryItemUI itemUI) {
+	private bool GetItemUIHoveredOver(out InventoryStackUI stackUI) {
 		List<RaycastResult> raycastHits = new();
 		_pointerEventData.position = Input.mousePosition;
 		_canvasGraphicRaycaster.Raycast(_pointerEventData, raycastHits);
 		foreach (RaycastResult hit in raycastHits) {
-			if (hit.gameObject.TryGetComponent(out InventoryItemUI itemUIScript)) {
-				itemUI = itemUIScript;
+			if (hit.gameObject.TryGetComponent(out InventoryStackUI itemUIScript)) {
+				stackUI = itemUIScript;
 				return true;
 			}
 		}
 
-		itemUI = null;
+		stackUI = null;
 		return false;
 	}
 

@@ -1,4 +1,6 @@
 using Construction;
+using Mirror.BouncyCastle.Asn1;
+using UnityEngine;
 
 public class PropInstance : ItemInstance
 {
@@ -14,6 +16,7 @@ public class PropInstance : ItemInstance
     private bool _selected = false;
     
     public override void OnHotbarSelected() {
+        Debug.Log("prop instance hotbar selected called");
         base.OnHotbarSelected();
         _selected = true;
         _constructionCore.SelectData(ItemData.ConstructionData);

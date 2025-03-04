@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Mirror;
 
-public class PlayerInteractor : InputHandlerBase, IStartExecution
+public class PlayerInteractor : InputHandlerBase
 {
   [SerializeField] private float _interactDistance = 4f;
   [SerializeField] private float _interactRadius = 0.2f;
@@ -16,7 +16,7 @@ public class PlayerInteractor : InputHandlerBase, IStartExecution
     RegisterAction(_inputActions.Player.Interact, _ => Interact());
   }
 
-  public void InitializeStart() {
+  public void Start() {
     _camera = Camera.main;
   }
 

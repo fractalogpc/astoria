@@ -8,13 +8,15 @@ using Image = UnityEngine.UI.Image;
 public class InventoryEquipableSlot : MonoBehaviour
 {
     [ReadOnly] public ItemInstance HeldItem;
+    public UnityEvent<ItemInstance> OnItemAdded;
+    public UnityEvent<ItemInstance> OnItemRemoved;
+    [ReadOnly] public float SlotSizeUnits => _inventorySlotPrefab.GetComponent<RectTransform>().rect.width;
     [SerializeField] protected Image _itemImage;
     [SerializeField] protected TextMeshProUGUI _itemText;
     [ReadOnly][SerializeField] protected ClickableEvents _clickableEvents;
     [ReadOnly][SerializeField] protected GameObject _draggablePrefab;
     protected GameObject _draggedInstance;
-    public UnityEvent<ItemInstance> OnItemAdded;
-    public UnityEvent<ItemInstance> OnItemRemoved;
+    [SerializeField] private GameObject _inventorySlotPrefab;
     
     /// <summary>
     /// Puts an item into the slot, if an item isn't in there already. Invokes OnItemAdded.
