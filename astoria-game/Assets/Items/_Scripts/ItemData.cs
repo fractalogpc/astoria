@@ -15,16 +15,8 @@ public class ItemData : ScriptableObject
     public Sprite ItemIcon;
     [ColorUsage(true, false)] public Color ItemBGColor;
     public Vector2Int ItemSize = Vector2Int.one;
-    /// <summary>
-    /// Exposed for equality comparison only. Use StackLimit instead.
-    /// </summary>
-    public bool IsStackable;
-    /// <summary>
-    /// Exposed for equality comparison only. Use StackLimit instead.
-    /// </summary>
+    [Tooltip("If 0 or 1, the item will not stack.")]
     public int MaxStackSize = 8;
-    public int StackLimit => IsStackable ? MaxStackSize : 1;
-
     public GameObject DroppedItemPrefab;
     private void OnEnable() {
         if (ItemIcon == null) {
@@ -46,7 +38,7 @@ public class ItemData : ScriptableObject
         if (other.ItemIcon != ItemIcon) return false;
         if (other.ItemBGColor != ItemBGColor) return false;
         if (other.ItemSize != ItemSize) return false;
-        if (other.IsStackable != IsStackable) return false;
+        if (other.MaxStackSize != MaxStackSize) return false;
         if (other.DroppedItemPrefab != DroppedItemPrefab) return false;
         return true;
     }

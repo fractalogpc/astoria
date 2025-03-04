@@ -76,7 +76,7 @@ public class ItemStack
 	/// <returns>Whether the item could be pushed onto the stack.</returns>
 	public bool CouldPush(ItemInstance item) {
 		if (item.ItemData != StackType) return false;
-		if (StackCount >= StackType.StackLimit) return false;
+		if (StackCount >= StackType.MaxStackSize) return false;
 		return true;
 	}
 	
@@ -87,7 +87,7 @@ public class ItemStack
 	/// <returns>Whether the item could be pushed onto the stack.</returns>
 	public bool CouldPush(ItemStack other) {
 		if (other.StackType != StackType) return false;
-		return StackCount + other.StackCount < StackType.StackLimit;
+		return StackCount + other.StackCount < StackType.MaxStackSize;
 	}
 	
 	/// <summary>

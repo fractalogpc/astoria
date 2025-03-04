@@ -54,7 +54,7 @@ public class ItemStackTest
 	}
 	[Test]
 	public void RejectsUnstackable() {
-		ItemData stackType = GetTestItemData(10, false);
+		ItemData stackType = GetTestItemData(1);
 		ItemStack stack = new(stackType);
 		stack.Push(GetTestItemInstance(stackType));
 		Assert.AreEqual(stack.CouldPush(GetTestItemInstance(stackType)), false);
@@ -92,11 +92,10 @@ public class ItemStackTest
 	// 	yield return null;
 	// }
 
-	private ItemData GetTestItemData(int stackLimit = 10, bool stackable = true) {
+	private ItemData GetTestItemData(int stackLimit = 10) {
 		ItemData itemData = ScriptableObject.CreateInstance<ItemData>();
 		itemData.ItemName = "Test Item";
 		itemData.MaxStackSize = stackLimit;
-		itemData.IsStackable = stackable;
 		itemData.ItemSize = new Vector2Int(1, 1);
 		return itemData;
 	}

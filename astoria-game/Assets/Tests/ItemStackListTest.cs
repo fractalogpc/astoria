@@ -18,7 +18,7 @@ public class ItemStackListTest
 	
 	[Test]
 	public void ConstructorSeparatesNonStackableItems() {
-		List<ItemInstance> items = GetTestItemInstances(GetTestItemData(1, false), 15);
+		List<ItemInstance> items = GetTestItemInstances(GetTestItemData(1), 15);
 		ItemStackList stackList = new(items);
 		Assert.AreEqual(items.Count, stackList.StackCount);
 	}
@@ -38,7 +38,7 @@ public class ItemStackListTest
 	[Test]
 	public void ToDatasListReturnsCorrectDatas() {
 		List<ItemInstance> items = new();
-		ItemData data0 = GetTestItemData(1, false);
+		ItemData data0 = GetTestItemData(1);
 		ItemData data1 = GetTestItemData(5);
 		ItemData data2 = GetTestItemData(10);
 
@@ -58,7 +58,7 @@ public class ItemStackListTest
 	[Test]
 	public void ReturnsCorrectContainingStack() {
 		ItemStackList stackList = new();
-		ItemData data0 = GetTestItemData(1, false);
+		ItemData data0 = GetTestItemData(1);
 		ItemData data1 = GetTestItemData(5);
 		stackList.Add(CreateStackWith(data0, 1));
 		stackList.Add(CreateStackWith(data1, 5));
@@ -82,11 +82,10 @@ public class ItemStackListTest
 		return stack;
 	}
 
-	private ItemData GetTestItemData(int stackLimit = 10, bool stackable = true) {
+	private ItemData GetTestItemData(int stackLimit = 10) {
 		ItemData itemData = ScriptableObject.CreateInstance<ItemData>();
 		itemData.ItemName = "Test Item";
 		itemData.MaxStackSize = stackLimit;
-		itemData.IsStackable = stackable;
 		itemData.ItemSize = new Vector2Int(1, 1);
 		return itemData;
 	}
