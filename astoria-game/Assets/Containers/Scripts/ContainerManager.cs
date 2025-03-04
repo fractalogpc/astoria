@@ -37,7 +37,7 @@ public class ContainerManager : InputHandlerBase
 				return;
 			}
 		}
-		if (_playerInvDisplay.InventoryData == null) _playerInvDisplay.CreateInvFromInventoryData(_playerInventory.InventoryData);
+		if (!_playerInvDisplay.Initialized) _playerInvDisplay.CreateInvFromInventoryData(_playerInventory.InventoryData);
 		
 		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;

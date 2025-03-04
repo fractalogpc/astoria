@@ -98,7 +98,7 @@ public class CraftingStationNetworked : MonoBehaviour
 	{
 		if (BackgroundInfo._infCraft)
 		{
-			foreach (ItemSet resultSet in recipe._resultSetList.ItemSets)
+			foreach (ItemSet resultSet in recipe._resultSetList.List)
 			{
 				int outputItems = resultSet.ItemCount * craftCount;
 				for (int j = 0; j < outputItems; j++)
@@ -110,7 +110,7 @@ public class CraftingStationNetworked : MonoBehaviour
 		}
 
 		if (!CanCraftRecipe(recipe, craftCount)) return false;
-		foreach (ItemSet ingredientSet in recipe._ingredientSetList.ItemSets)
+		foreach (ItemSet ingredientSet in recipe._ingredientSetList.List)
 		{
 			int itemsNeeded = ingredientSet.ItemCount * craftCount;
 			for (int i = 0; i < itemsNeeded; i++)
@@ -118,7 +118,7 @@ public class CraftingStationNetworked : MonoBehaviour
 				_playerInventory.RemoveItemByData(ingredientSet.ItemData);
 			}
 		}
-		foreach (ItemSet resultSet in recipe._resultSetList.ItemSets)
+		foreach (ItemSet resultSet in recipe._resultSetList.List)
 		{
 			int outputItems = resultSet.ItemCount * craftCount;
 			for (int j = 0; j < outputItems; j++)

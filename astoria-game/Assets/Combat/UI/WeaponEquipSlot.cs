@@ -8,7 +8,7 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 	[SerializeField] private CombatCore _combatCore;
 	
 	public override bool TryAddToSlot(ItemInstance itemInstance) {
-		if (_heldItemInstance != null) {
+		if (HeldItem != null) {
 			Debug.Log("WeaponEquipSlot: Slot already has an item instance.");
 			return false;
 		}
@@ -17,7 +17,7 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 			return false;
 		}
 		GunInstance gunInstance = (GunInstance)itemInstance;
-		_heldItemInstance = gunInstance;
+		HeldItem = gunInstance;
 		_itemImage.sprite = gunInstance.ItemData.ItemIcon;
 		_itemImage.type = Image.Type.Simple;
 		_itemImage.preserveAspect = true;
@@ -29,12 +29,12 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 	}
 
 	public override void OnPickup() {
-		if (_heldItemInstance == null) return;
-		InstantiateDraggedItem(_heldItemInstance);
+		if (HeldItem == null) return;
+		InstantiateDraggedItem(HeldItem);
 		_itemImage.sprite = null;
 		_itemImage.color = Color.clear;
 		_itemText.text = "";
-		OnItemRemoved.Invoke(_heldItemInstance);
-		_heldItemInstance = null;
+		OnItemRemoved.Invoke(HeldItem);
+		HeldItem = null;
 	}
 }

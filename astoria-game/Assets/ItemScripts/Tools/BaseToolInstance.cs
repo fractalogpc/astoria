@@ -15,13 +15,13 @@ public class BaseToolInstance : ViewmodelItemInstance
 		_viewmodelManager = viewmodelManager;
 	}
 
-	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
-		base.OnHotbarSelected(hotbarSlot);
+	public override void OnHotbarSelected() {
+		base.OnHotbarSelected();
 		Debug.Log(_toolCore == null);
 		_toolCore.EquipTool(this);
 	}
-	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
-		base.OnHotbarDeselected(hotbarSlot);
+	public override void OnHotbarDeselected() {
+		base.OnHotbarDeselected();
 		_toolCore.UnequipTool();
 	}
 

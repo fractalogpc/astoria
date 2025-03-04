@@ -3,15 +3,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(InventoryItemUI))]
+[CustomEditor(typeof(InventoryStackUI))]
 public class InventoryUIItemEditor : Editor
 {
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
 		EditorGUILayout.Space();
-		InventoryItemUI script = (InventoryItemUI) target;
-		if (script.ItemInstance.Size != Vector2Int.zero) {
-			GUILayout.Label($"Prefab Dimensions: {script.ItemInstance.Size.x * 96} x {script.ItemInstance.Size.y * 96}");
+		InventoryStackUI script = (InventoryStackUI) target;
+		if (script.ItemStack.Size != Vector2Int.zero) {
+			GUILayout.Label($"Prefab Dimensions: {script.ItemStack.Size.x * 96} x {script.ItemStack.Size.y * 96}");
 		}
 		else {
 			GUILayout.Label("Prefab Dimensions: No Item!");

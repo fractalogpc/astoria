@@ -33,7 +33,7 @@ public class CraftingRecipeUI : MonoBehaviour
 
 	public void UpdateInteractivity() {
 		Debug.Log("Can change this to be a specific icon in the recipe data later.");
-		_recipeIcon.sprite = _recipe._resultSetList.ItemSets[0].ItemData.ItemIcon;
+		_recipeIcon.sprite = _recipe._resultSetList.List[0].ItemData.ItemIcon;
 		_recipeIcon.preserveAspect = true;
 		if (_craftingStation.CanCraftRecipe(_recipe, 1)) {
 			_recipeIconCanvasGroup.alpha = 1;

@@ -7,10 +7,9 @@ public class ConsumableInstance : ItemInstance
 	public ConsumableInstance(ItemData itemData) : base(itemData) {
 		
 	}
-	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
-		base.OnHotbarSelected(hotbarSlot);
+	public override void OnHotbarSelected( ) {
+		base.OnHotbarSelected();
 		Use();
-		hotbarSlot.AttachedSlot.RemoveItem();
 	}
 	protected virtual void Use() {
 		throw new NotImplementedException();

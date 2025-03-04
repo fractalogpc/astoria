@@ -74,14 +74,14 @@ public class GunInstance : ViewmodelItemInstance
 		}
 	}
 
-	public override void OnHotbarSelected(InventoryHotbarSlot hotbarSlot) {
-		base.OnHotbarSelected(hotbarSlot);
+	public override void OnHotbarSelected() {
+		base.OnHotbarSelected();
 		Debug.Log("Combat Core is null: " + (_combatCore == null));
 		_combatCore.EquipWeapon(this);
 	}
 	
-	public override void OnHotbarDeselected(InventoryHotbarSlot hotbarSlot) {
-		base.OnHotbarDeselected(hotbarSlot);
+	public override void OnHotbarDeselected( ) {
+		base.OnHotbarDeselected();
 		_combatCore.UnequipWeapon();
 	}
 
