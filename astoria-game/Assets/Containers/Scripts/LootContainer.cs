@@ -16,7 +16,7 @@ public class LootContainer : ContainerManager
 		List<ItemData> loot = LootTable.GenerateLoot();
 		foreach (ItemData item in loot) {
 			if (_containerInventory.AddItemByData(item)) {
-				Debug.Log("Added " + item.ItemName + " to container.");
+				// Debug.Log("Added " + item.ItemName + " to container.");
 			}
 			else {
 				Debug.Log("Failed to add " + item.ItemName + " to container. Either the container is full or the item is not stackable.");

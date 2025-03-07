@@ -407,7 +407,7 @@ namespace Construction
                     return true;
                 case ConstructionState.PlacingStructure:
                     if (!_canPlace) break;
-                    Debug.Log("Placing structure");
+                    // Debug.Log("Placing structure");
                     GameObject placedObject = PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
 
                     ConstructionComponentData data = _selectedData as ConstructionComponentData;
