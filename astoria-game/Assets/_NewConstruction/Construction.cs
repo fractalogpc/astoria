@@ -61,11 +61,48 @@ namespace Construction
       return VectorFunctions.Vector3Approximately(edge1Point, edge2Point, threshold);
     }
 
-    public float Distance(Vector3 tryPosition, Transform edgeParent)
+
+
+    public float DistanceFromEdge(Vector3 tryPosition, Transform edgeTransform, float edgeWidth, float threshold)
     {
-      // return Vector3.Distance(edgeParent.TransformPoint(position), tryPosition);
-      return VectorFunctions.DistanceToLine(edgeParent.TransformPoint(position), edgeParent.rotation * normal, tryPosition);
+      Vector3 edgePosition = position;
+
+      // Convert edge position to world space
+      Vector3 worldEdgePosition = edgeTransform.TransformPoint(edgePosition);
+
+      // Convert normal to world space and ensure it remains in the XZ plane
+      Vector3 worldNormal = edgeTransform.TransformDirection(normal);
+      worldNormal = new Vector3(worldNormal.x, 0, worldNormal.z).normalized;
+
+      // Compute the edge's tangent direction (perpendicular to the normal in the XZ plane)
+      Vector3 worldTangent = new Vector3(-worldNormal.z, 0, worldNormal.x); // Rotate 90 degrees
+
+      // Compute the vector from the edge center to the point
+      Vector3 toPoint = tryPosition - worldEdgePosition;
+      toPoint.y = 0;
+
+      // Project the point onto the tangent direction to find its relative position along the edge
+      float tangentDistance = Vector3.Dot(toPoint, worldTangent);
+
+      // Clamp the tangent distance to stay within the finite edge width
+      float halfWidth = edgeWidth * 0.5f;
+      float clampedTangentDistance = Mathf.Clamp(tangentDistance, -halfWidth, halfWidth);
+
+      // Compute the closest point on the edge
+      Vector3 closestPointOnEdge = worldEdgePosition + worldTangent * clampedTangentDistance;
+
+      // Compute the actual signed distance from the closest point on the edge
+      float signedDistance = Vector3.Distance(tryPosition, closestPointOnEdge);
+
+      if (signedDistance > threshold)
+      {
+        return -1f;
+      }
+
+      return signedDistance;
     }
+
+
 
     public Vector3 WorldSpaceRotation(Transform edgeParent)
     {

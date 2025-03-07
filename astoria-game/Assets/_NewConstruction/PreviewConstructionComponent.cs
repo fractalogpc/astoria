@@ -167,7 +167,7 @@ namespace Construction
             snappedTransforms = new List<Transform>();
 
             List<(Edge, float, Transform)> possibleEdges = new();
-            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructurePlaceRadius, settings.ConstructionLayerMask, QueryTriggerInteraction.Ignore))
+            foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructureCheckRadius, settings.ConstructionLayerMask, QueryTriggerInteraction.Ignore))
             {
                 ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)
@@ -178,7 +178,8 @@ namespace Construction
                         // Don't check for an edge if it is already used
                         if (data.isHorizontal && edge.usedHorizontally || data.isVertical && edge.usedVertically) continue;
 
-                        float distance = edge.Distance(tryPosition, collider.transform);
+                        float distance = edge.DistanceFromEdge(tryPosition, collider.transform, 1.5f, settings.StructurePlaceRadius);
+                        if (distance == -1f) continue; // Edge was too far away
                         if (distance <= settings.StructurePlaceRadius)
                         {
                             possibleEdges.Add((edge, distance, collider.transform));

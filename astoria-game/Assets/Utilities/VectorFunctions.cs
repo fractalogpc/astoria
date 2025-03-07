@@ -19,17 +19,4 @@ public static class VectorFunctions
         }
         return false;
     }
-
-    public static float DistanceToLine(Vector3 pointOnLine, Vector3 planeNormal, Vector3 point)
-    {
-        Vector3 line = point - pointOnLine;
-
-        Vector3 lineProjection = Vector3.Project(line, planeNormal);
-
-        Debug.DrawLine(pointOnLine, pointOnLine + lineProjection, Color.yellow);
-
-        Debug.DrawLine(pointOnLine, point);
-
-        return lineProjection.magnitude;
-    }
 }

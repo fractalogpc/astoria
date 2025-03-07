@@ -701,8 +701,10 @@ public class ConstructionSettings
     public float UpwardCurveFactor = -0.5f;
     [Tooltip("The density of the number of points. Lower number means less points. -1 means all points.")]
     public int DensityFactor = 3;
+    [Tooltip("This radius a structure checks for raycasts with other structures.")]
+    public float StructureCheckRadius = 3f;
     [Tooltip("The radius a structure checks for snapping with other structures.")]
-    public float StructurePlaceRadius = 5f;
+    public float StructurePlaceRadius = 1f;
     [Tooltip("The distance from a construction object that a new construction object can be placed.")]
     public float ConstructionBufferDistance = 5f;
 
