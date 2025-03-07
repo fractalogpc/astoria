@@ -71,7 +71,7 @@ namespace Construction
     {
       Vector3 worldNormal = edgeParent.rotation * normal.normalized;
 
-      Debug.Log("World Normal: " + worldNormal);
+      // Debug.Log("World Normal: " + worldNormal);
 
       return worldNormal;
     }

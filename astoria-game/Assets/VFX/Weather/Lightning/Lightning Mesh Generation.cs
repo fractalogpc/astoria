@@ -47,6 +47,10 @@ public class LightningMeshGeneration : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             FormMesh();
+            for (int i = 0; i < SubVertexStart.Count(); i++)
+            {
+                FormSubMesh(i);
+            }
         }
         
 
@@ -183,6 +187,57 @@ public class LightningMeshGeneration : MonoBehaviour {
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        
+        GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+    void FormSubMesh(int index) {
+        //subvertex[index] is the vertex set I'm working with
+        //set up a list of the vertices
+        //run through SubVertex[index][i] and add them to the list like I do in FormMesh()
+        //then generate the triangles
+        //then send those to the mesh
+        //we have to start at Vertices.Count
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
+        
+        for (int i = 0; i < SubVertex[index].Length; i++)
+        {
+            Vector3 nextVertex = i < SubVertex[index].Length - 1 ? SubVertex[index][i + 1] : SubVertexGoal[index];
+            Vector3 Tangent = nextVertex - SubVertex[index][i];
+            Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
+            Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
+
+            vertices.Add((SubVertex[index][i] - spawn.position) + BiNormal);
+            vertices.Add((SubVertex[index][i] - spawn.position) + RotNormal);
+            vertices.Add((SubVertex[index][i] - spawn.position) - BiNormal);
+            vertices.Add((SubVertex[index][i] - spawn.position) - RotNormal);
+        }
+
+        for (int i = vertices.Count + 1; i < (vertices.Count + SubVertex[index].Length - 5); i++)
+        {
+            if (i % 4 == 3)
+            {
+                triangles.Add(i);
+                triangles.Add(i + 4);
+                triangles.Add(i + 1);
+                triangles.Add(i);
+                triangles.Add(i + 1);
+                triangles.Add(i - 3);
+            }
+            else
+            {
+                triangles.Add(i);
+                triangles.Add(i + 4);
+                triangles.Add(i + 5);
+                triangles.Add(i);
+                triangles.Add(i + 5);
+                triangles.Add(i + 1);    
+            }
+        }
+
+        mesh.vertices = mesh.vertices.Concat(vertices).ToArray();
+        mesh.triangles = mesh.triangles.Concat(triangles).ToArray();
         
         GetComponent<MeshFilter>().mesh = mesh;
     }

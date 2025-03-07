@@ -219,24 +219,26 @@ namespace Construction
                     // Sort by dot product
                     if (possibleEdgesOnThisComponent.Count > 0)
                     {
-                        if (GlobalVariables.FlipRotation)
-                        {
-                            possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2));
-                            // if (!hasFlipped)
-                            // {
-                            //     hasFlipped = true;
-                            //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending
-                            // }
-                            // else
-                            // {
-                            //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
-                            // }
-                        }
-                        else
-                        {
-                            hasFlipped = false;
-                            possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
-                        }
+                        // if (GlobalVariables.FlipRotation)
+                        // {
+                        //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2));
+                        //     // if (!hasFlipped)
+                        //     // {
+                        //     //     hasFlipped = true;
+                        //     //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending
+                        //     // }
+                        //     // else
+                        //     // {
+                        //     //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
+                        //     // }
+                        // }
+                        // else
+                        // {
+                        //     hasFlipped = false;
+                        //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
+                        // }
+
+                        possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
 
                         edgeToSnapTo = otherEdge.Item1;
                         edgeToSnapFrom = possibleEdgesOnThisComponent[0].Item1;

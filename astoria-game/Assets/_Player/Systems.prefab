@@ -49,6 +49,51 @@ MonoBehaviour:
   blendDistance: 0
   weight: 0
   sharedProfile: {fileID: 11400000, guid: ff42965969e64314f9e2e33a3088f8e7, type: 2}
+--- !u!1 &2405855486075664122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155795341740207444}
+  - component: {fileID: 669846809838952682}
+  m_Layer: 0
+  m_Name: SpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &155795341740207444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2405855486075664122}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 916802654918332166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &669846809838952682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2405855486075664122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55c64bcdf65cee4eaa23aebc33c801e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wandererPrefab: {fileID: 6358995176421208112, guid: 5ec6d214e09b9e24a96d607e92163f2a, type: 3}
 --- !u!1 &3038588117632083682
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startGameHour: 6
-  _dayCycleInMinutes: 10
+  _dayCycleInMinutes: 15
   _daysStartAtZero: 1
   TimeOfDay:
     _day: 0
@@ -332,10 +377,34 @@ MonoBehaviour:
       m_Calls: []
   OnNight:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 669846809838952682}
+        m_TargetAssemblyTypeName: SpawnManager, Assembly-CSharp
+        m_MethodName: OnNight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDay:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 669846809838952682}
+        m_TargetAssemblyTypeName: SpawnManager, Assembly-CSharp
+        m_MethodName: OnDay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3629593839374956622
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,6 +445,8 @@ Transform:
   - {fileID: 8947737752910830774}
   - {fileID: 2127186655774025340}
   - {fileID: 4865391219141531170}
+  - {fileID: 8390351186170655325}
+  - {fileID: 155795341740207444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8850651522397073974
@@ -502,6 +573,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SamplesPerFixedUpdate: 5
   ProjectileLifetime: 20
+  ProjectilePrefab: {fileID: 7008315763908440191, guid: 991aaa35e5c847f4ba3d39e2784124d6, type: 3}
+  HitEffectPrefab: {fileID: 4527976402538143393, guid: 45a19e43e0a466647aed39c306e8fa6b, type: 3}
+  ProjectileStart: {fileID: 0}
 --- !u!1 &4948529184640967634
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,6 +652,50 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!1 &5335055859416972957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8390351186170655325}
+  - component: {fileID: 3287192314161409542}
+  m_Layer: 0
+  m_Name: SoundSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8390351186170655325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335055859416972957}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 916802654918332166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3287192314161409542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335055859416972957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24f4904078c304d88ebd7381518030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5498155869474461310
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,7 +1337,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6181296407976898512}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7438f7d49d4be244dbee4baf86ee5c77, type: 3}
   m_Name: 
@@ -1231,7 +1349,7 @@ MonoBehaviour:
     wetnessIntensity: 0
     drynessIntensity: 0
     windSpeed: 0.2
-    weight: 1
+    weight: 0
     onEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -1257,7 +1375,7 @@ MonoBehaviour:
     wetnessIntensity: 0
     drynessIntensity: 0
     windSpeed: 0.2
-    weight: 1
+    weight: 0
     onEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -1270,7 +1388,20 @@ MonoBehaviour:
     wetnessIntensity: 0
     drynessIntensity: 1
     windSpeed: 0.2
-    weight: 1
+    weight: 0
+    onEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: Stormy
+    volume: {fileID: 4242252307891928557}
+    snowIntensity: 0
+    wetnessIntensity: 0.5
+    drynessIntensity: 0
+    windSpeed: 1
+    weight: 0
     onEnter:
       m_PersistentCalls:
         m_Calls: []
