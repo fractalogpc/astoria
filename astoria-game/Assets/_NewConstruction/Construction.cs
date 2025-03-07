@@ -70,6 +70,9 @@ namespace Construction
       // Convert edge position to world space
       Vector3 worldEdgePosition = edgeTransform.TransformPoint(edgePosition);
 
+      // Ignore the Y component of the edge position
+      tryPosition.y = worldEdgePosition.y;
+
       // Convert normal to world space and ensure it remains in the XZ plane
       Vector3 worldNormal = edgeTransform.TransformDirection(normal);
       worldNormal = new Vector3(worldNormal.x, 0, worldNormal.z).normalized;
@@ -79,7 +82,6 @@ namespace Construction
 
       // Compute the vector from the edge center to the point
       Vector3 toPoint = tryPosition - worldEdgePosition;
-      toPoint.y = 0;
 
       // Project the point onto the tangent direction to find its relative position along the edge
       float tangentDistance = Vector3.Dot(toPoint, worldTangent);
@@ -117,7 +119,7 @@ namespace Construction
       return Quaternion.LookRotation(edgeParent.TransformDirection(normal));
     }
 
-    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge fromEdge, Edge toEdge, Transform fromEdgeTransform, Transform toEdgeTransform)
+    public static (Vector3, Quaternion) SnapEdgeToEdge(Edge fromEdge, Edge toEdge, Transform fromEdgeTransform, Transform toEdgeTransform, bool flipNormal, bool useCameraRotation = false)
     {
       // Convert local positions and normals to world space
       Vector3 fromWorldPos = fromEdgeTransform.TransformPoint(fromEdge.position);
@@ -125,6 +127,25 @@ namespace Construction
 
       Vector3 toWorldPos = toEdgeTransform.TransformPoint(toEdge.position);
       Vector3 toWorldNormal = toEdgeTransform.rotation * toEdge.normal.normalized;
+
+      // If using the camera rotation, select the normal that's closest to the camera's forward direction
+      if (useCameraRotation)
+      {
+        Vector3 cameraForward = Camera.main.transform.forward; // This isn't great practice
+
+        float forwardDot = Vector3.Dot(toWorldNormal, cameraForward);
+
+        if (forwardDot < 0)
+        {
+          fromWorldNormal = -fromWorldNormal;
+        }
+      }
+
+      // Flip the normal if needed
+      if (flipNormal)
+      {
+        fromWorldNormal = -fromWorldNormal;
+      }
 
       // Calculate rotation to align fromEdge normal opposite to toEdge normal
       Quaternion fullRotation = Quaternion.FromToRotation(fromWorldNormal, -toWorldNormal) * fromEdgeTransform.rotation;

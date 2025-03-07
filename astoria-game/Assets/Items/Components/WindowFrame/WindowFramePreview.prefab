@@ -105,7 +105,7 @@ MonoBehaviour:
   Data: {fileID: 0}
   xRotation: 0
   boxes:
-  - position: {x: 0, y: 0, z: 0}
+  - position: {x: 0, y: 1.5, z: 0}
     size: {x: 2.6, y: 0.1, z: 2.6}
     rotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
     isExpanded: 1
@@ -122,14 +122,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f638e15d46af4c4095f966f71c22ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _checkLayer:
-    serializedVersion: 2
-    m_Bits: 262144
   edges:
-  - pointA: {x: 1.5, y: 1.5, z: 0}
-    pointB: {x: -1.5, y: 1.5, z: 0}
-  - pointA: {x: -1.5, y: -1.5, z: 0}
-    pointB: {x: 1.5, y: -1.5, z: 0}
+  - position: {x: 0, y: 0, z: 0}
+    normal: {x: 0, y: 0, z: 1}
+    Transform: {fileID: 0}
+    Data: {fileID: 0}
+    usedHorizontally: 0
+    usedVertically: 0
+  - position: {x: 0, y: 3, z: 0}
+    normal: {x: 0, y: 0, z: 1}
+    Transform: {fileID: 0}
+    Data: {fileID: 0}
+    usedHorizontally: 0
+    usedVertically: 0
 --- !u!1001 &1458393053595648140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -210,7 +215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f5fd7c15831dec342905956d1692612b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f5fd7c15831dec342905956d1692612b, type: 3}
       propertyPath: m_LocalPosition.z

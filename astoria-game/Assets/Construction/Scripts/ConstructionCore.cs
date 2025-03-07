@@ -551,7 +551,6 @@ namespace Construction
             switch (State)
             {
                 case ConstructionState.None:
-                    GlobalVariables.FlipRotation = true;
                     break;
             }
         }

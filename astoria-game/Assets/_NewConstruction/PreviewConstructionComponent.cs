@@ -28,7 +28,7 @@ namespace Construction
             }
         }
 
-        bool doDebug = false; // This is purely for testing and me being lazy with commenting the debug messages
+        bool doDebug = true; // This is purely for testing and me being lazy with commenting the debug messages
 
         // Called by construction system to see if this component can connect to another component
         public bool CanPlace(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionComponentData data, out Vector3 finalPosition, out Quaternion finalRotation, out bool validPosition)
@@ -51,7 +51,7 @@ namespace Construction
                     LayerMask foundationLayerMask = settings.CollisionLayerMask & ~settings.GroundLayerMask;
 
                     // Check for nearby snapping
-                    if (HasAvailableConnection(tryPosition, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
+                    if (HasAvailableConnection(tryPosition, settings, data, false, out finalPosition, out finalRotation, out snappedTransforms))
                     {
                         // Check for collision
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
@@ -127,7 +127,7 @@ namespace Construction
                     break;
                 case ConstructionComponentData.StructureType.Wall:
                     // Check for nearby snapping
-                    if (HasAvailableConnection(tryPosition, settings, data, out finalPosition, out finalRotation, out snappedTransforms))
+                    if (HasAvailableConnection(tryPosition, settings, data, true, out finalPosition, out finalRotation, out snappedTransforms))
                     {
                         // Check for collision
                         if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
@@ -161,8 +161,7 @@ namespace Construction
             return false;
         }
 
-        bool hasFlipped = false;
-        private bool HasAvailableConnection(Vector3 tryPosition, ConstructionSettings settings, ConstructionData data, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
+        private bool HasAvailableConnection(Vector3 tryPosition, ConstructionSettings settings, ConstructionData data, bool useCameraRotationForSnapping, out Vector3 snappedPosition, out Quaternion snappedRotation, out List<Transform> snappedTransforms)
         {
             snappedTransforms = new List<Transform>();
 
@@ -220,25 +219,6 @@ namespace Construction
                     // Sort by dot product
                     if (possibleEdgesOnThisComponent.Count > 0)
                     {
-                        // if (GlobalVariables.FlipRotation)
-                        // {
-                        //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2));
-                        //     // if (!hasFlipped)
-                        //     // {
-                        //     //     hasFlipped = true;
-                        //     //     possibleEdgesOnThisComponent.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending
-                        //     // }
-                        //     // else
-                        //     // {
-                        //     //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
-                        //     // }
-                        // }
-                        // else
-                        // {
-                        //     hasFlipped = false;
-                        //     possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
-                        // }
-
                         possibleEdgesOnThisComponent.Sort((x, y) => x.Item2.CompareTo(y.Item2)); // Ascending
 
                         edgeToSnapTo = otherEdge.Item1;
@@ -255,11 +235,10 @@ namespace Construction
                 if (edgeToSnapTo == null || edgeToSnapFrom == null || otherTransform == null)
                 {
                     if (doDebug) Debug.Log("Couldn't find compatible edges");
-                    hasFlipped = false;
                     return false;
                 }
 
-                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge((Edge)edgeToSnapFrom, (Edge)edgeToSnapTo, transform, otherTransform);
+                (Vector3, Quaternion) snappedPositionOffset = Edge.SnapEdgeToEdge((Edge)edgeToSnapFrom, (Edge)edgeToSnapTo, transform, otherTransform, (data.canBeFlipped && GlobalVariables.FlipRotation), useCameraRotationForSnapping);
                 snappedPosition = snappedPositionOffset.Item1;
                 snappedRotation = snappedPositionOffset.Item2;
 

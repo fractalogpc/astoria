@@ -58,7 +58,7 @@ MonoBehaviour:
   previewComponent: {fileID: 7775519575857303430, guid: 6198c62e7fd9cc645addff30571e2d00, type: 3}
   neighborStabilityContributionUpwards: 0.1
   neighborStabilityContributionDownwards: 0
-  neighborStabilityContributionHorizontal: 0.05
+  neighborStabilityContributionHorizontal: 0.1
   inherentStability: 0.1
   minimumStability: 0.2
   stabilityHealthCurve:
@@ -87,26 +87,14 @@ MonoBehaviour:
     m_RotationOrder: 4
   maximumHealth: 100
   edges:
-  - position: {x: 0, y: 0, z: -1.5}
+  - position: {x: 0, y: 0, z: 0}
     normal: {x: 0, y: 0, z: 1}
     Transform: {fileID: 0}
     Data: {fileID: 0}
     usedHorizontally: 0
     usedVertically: 0
-  - position: {x: 0, y: 0, z: -1.5}
-    normal: {x: 0, y: 0, z: -1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 0, y: 3, z: 1.5}
+  - position: {x: 0, y: 3, z: 3}
     normal: {x: 0, y: 0, z: 1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 0, y: 3, z: 1.5}
-    normal: {x: 0, y: 0, z: -1}
     Transform: {fileID: 0}
     Data: {fileID: 0}
     usedHorizontally: 0
@@ -147,7 +135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f797a42a273df324b9d7947ffcd93e6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f797a42a273df324b9d7947ffcd93e6b, type: 3}
       propertyPath: m_LocalRotation.w
