@@ -38,7 +38,6 @@ public class BuildToolInstance : BaseToolInstance
 	}
 	public override void OnAltUseDown() {
 		base.OnAltUseDown();
-
 		_viewmodelManager.PlayUseSecondary();
 	}
 	public override void OnAltUseUp() {

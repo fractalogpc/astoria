@@ -9,4 +9,8 @@ public class ViewmodelItemInstance : ItemInstance
 	public ViewmodelItemInstance(ItemData itemData) : base(itemData) {
 		
 	}
+
+	public override void OnHotbarSelected() {
+		base.OnHotbarSelected();
+	}
 }

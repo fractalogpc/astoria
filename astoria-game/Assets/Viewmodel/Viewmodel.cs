@@ -3,36 +3,30 @@
 public class Viewmodel : MonoBehaviour
 {
 	[SerializeField] protected Animator _animator;
-	[SerializeField] protected AnimationClip _idleAnimation;
-	[SerializeField] protected AnimationClip _walkAnimation;
-	[SerializeField] protected AnimationClip _sprintAnimation;
-	[SerializeField] private AnimationClip _equipAnimation;
-	[SerializeField] private AnimationClip _unequipAnimation;
+	[SerializeField] protected Transform _itemHolder;
 	
-	private Vector2 inputVector;
-	
-	protected void Update() {
-		Debug.LogWarning("Problems with viewmodel animation during movement? Check this line, it uses hardcoded input.");
-		inputVector.x = Input.GetAxisRaw("Horizontal");
-		inputVector.y = Input.GetAxisRaw("Vertical");
-		_animator.SetFloat("InputMagnitude", inputVector.magnitude);
-		_animator.SetBool("SprintDown", Input.GetKey(KeyCode.LeftShift));
+	public void PlayAnimation(AnimationClip clip) {
+		_animator.Play(clip.name);
 	}
 	
-	/// <summary>
-	/// Fires the trigger of the relevant animation of the attached animator.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float SetTriggerUnequip() {
-		_animator.SetTrigger("Unequip");
-		return _unequipAnimation.length;    
+	public void SetItemTo(GameObject itemPrefab) {
+		if (_itemHolder.childCount > 0) {
+			Destroy(_itemHolder.GetChild(0).gameObject);
+		}
+		Instantiate(itemPrefab, _itemHolder);
 	}
-	/// <summary>
-	/// Fires the trigger of the relevant animation of the attached animator.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float SetTriggerEquip() {
-		_animator.SetTrigger("Equip");
-		return _equipAnimation.length;    
+	
+	public void UnsetItem() {
+		if (_itemHolder.childCount > 0) {
+			DestroyAllChildren(_itemHolder);
+		}
 	}
+	
+	private void DestroyAllChildren(Transform parent) {
+		for (int i = parent.childCount - 1; i >= 0; i--) {
+			Destroy(parent.GetChild(i).gameObject);
+		}
+	}
+	
+	
 }

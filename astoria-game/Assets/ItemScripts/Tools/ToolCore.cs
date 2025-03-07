@@ -13,13 +13,13 @@ public class ToolCore : InputHandlerBase
 	
 	public void EquipTool(BaseToolInstance toolInstance) {
 		toolInstance.Initialize(this, _viewmodelManager);
-		_viewmodelManager.SetViewmodelFor(toolInstance);
+		_viewmodelManager.SetItemTo(toolInstance.ItemData.HeldItemPrefab);
 		CurrentTool = toolInstance;
 		CurrentTool.OnEquip();
 	}
 	public void UnequipTool() {
-		_viewmodelManager.PlayUnequip();
-		_viewmodelManager.RemoveViewmodel();
+		_viewmodelManager.PlayAnimation(CurrentTool.ItemData.UnequipAnimation);
+		_viewmodelManager.UnsetItem();
 		CurrentTool.OnUnequip();
 		CurrentTool = null;
 	}

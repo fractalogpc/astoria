@@ -40,7 +40,7 @@ public class CombatCore : InputHandlerBase
 	public void EquipWeapon(GunInstance instance) {
 		CurrentGunInstance = instance;
 		if (instance.Initialized == false) instance.InitializeWeapon(this, _viewmodelManager, _playerInventory);
-		_viewmodelManager.SetViewmodelFor(instance);
+		_viewmodelManager.SetItemTo(instance.ItemData.HeldItemPrefab);
 		instance.AmmoChanged += OnInstanceAmmoChanged;
 		OnEquipWeapon?.Invoke(CurrentGunInstance);
 	}
@@ -50,7 +50,7 @@ public class CombatCore : InputHandlerBase
 		CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
 		CurrentGunInstance.Unequip();
 		// StartCoroutine(UnequipWeaponCoroutine());
-		_viewmodelManager.RemoveViewmodel();
+		_viewmodelManager.UnsetItem();
 		CurrentGunInstance = null;
 		OnUnequipWeapon?.Invoke();
 	}
@@ -77,8 +77,9 @@ public class CombatCore : InputHandlerBase
 	}
 
 	private IEnumerator UnequipWeaponCoroutine() {
-		yield return new WaitForSeconds(_viewmodelManager.PlayUnequip());
-		_viewmodelManager.RemoveViewmodel();
+		_viewmodelManager.PlayAnimation(CurrentGunInstance.ItemData.UnequipAnimation);
+		yield return new WaitForSeconds(CurrentGunInstance.ItemData.UnequipAnimation.length);
+		_viewmodelManager.UnsetItem();
 	}
 
 	private void Update() {
