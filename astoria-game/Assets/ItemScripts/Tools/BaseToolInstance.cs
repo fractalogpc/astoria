@@ -7,7 +7,7 @@ public class BaseToolInstance : ViewmodelItemInstance
 	protected new ViewmodelManager _viewmodelManager;
 	
 	public BaseToolInstance(ItemData itemData) : base(itemData) {
-		Debug.Log("Toolcore assigned");
+		// Debug.Log("Toolcore assigned");
 		_toolCore = ToolCore.Instance;
 	}
 

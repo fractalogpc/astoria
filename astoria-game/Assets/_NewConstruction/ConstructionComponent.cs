@@ -7,7 +7,7 @@ namespace Construction
     /// Goes on the construction component object.
     /// Handles placing and snapping of components on eachother.
     /// </summary>
-    public class ConstructionComponent : MonoBehaviour
+    public class ConstructionComponent : MonoBehaviour, IDamageable
     {
         [Tooltip("Optional preview component for syncing data.")]
         public PreviewConstructionComponent previewComponent;
@@ -36,6 +36,12 @@ namespace Construction
 
         private void Awake()
         {
+            // Assign edge transforms
+            foreach (Edge edge in edges)
+            {
+                edge.Transform = transform;
+            }
+
             health = maximumHealth;
 
             TriggerNearbyImplicitConnections(PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Settings);
@@ -83,7 +89,7 @@ namespace Construction
         {
             foreach (Edge edge in edges)
             {
-                if (edge.IsSame(tryPosition, transform, edgeTransform, threshold))
+                if (edge.IsSame(tryPosition, threshold))
                 {
                     correctEdge = edge;
                     return true;
@@ -119,7 +125,7 @@ namespace Construction
                 foreach (Edge otherEdge in otherComponent.edges)
                 {
                     // Debug.Log("Checking edge: " + edge.pointA + " " + edge.pointB + " against " + otherEdge.pointA + " " + otherEdge.pointB);
-                    if (edge.IsSame(otherEdge, transform.position, otherComponent.transform.position, transform.rotation, otherComponent.transform.rotation))
+                    if (edge.IsSame(otherEdge))
                     {
                         // Debug.Log("Found implicit connection");
                         implicitConnections.Add(edge);
@@ -155,24 +161,24 @@ namespace Construction
             }
         }
 
-        public void RemoveConnection(Edge otherEdge, ConstructionComponent component)
-        {
-            // Checks for valid edge
-            Edge? baseEdge = null;
-            foreach (Edge edge in edges)
-            {
-                if (edge.IsSame(otherEdge))
-                {
-                    baseEdge = edge;
-                    break;
-                }
-            }
+        // public void RemoveConnection(Edge otherEdge, ConstructionComponent component)
+        // {
+        //     // Checks for valid edge
+        //     Edge? baseEdge = null;
+        //     foreach (Edge edge in edges)
+        //     {
+        //         if (edge.IsSame(otherEdge))
+        //         {
+        //             baseEdge = edge;
+        //             break;
+        //         }
+        //     }
 
-            if (baseEdge == null) return;
+        //     if (baseEdge == null) return;
 
-            // Remove the connection
-            RemoveConnectionDirect(baseEdge, component);
-        }
+        //     // Remove the connection
+        //     RemoveConnectionDirect(baseEdge, component);
+        // }
 
         private void RemoveConnectionDirect(Edge edge, ConstructionComponent component)
         {
@@ -295,6 +301,17 @@ namespace Construction
             }
 
             Destroy(gameObject);
+        }
+
+        public void TakeDamage(float damage, Vector3 hitPosition)
+        {
+            health -= damage;
+
+            if (health <= 0)
+            {
+                Collapse();
+                return;
+            }
         }
     }
 }

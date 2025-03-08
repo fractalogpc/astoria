@@ -31,12 +31,12 @@ namespace Construction
       this.usedVertically = usedVertically;
     }
 
-    public bool IsSame(Vector3 tryPosition, Transform thisTransform, Transform edgeTransform, float threshold = 0.1f)
-    {
-      Vector3 edgePosition = edgeTransform.position + edgeTransform.rotation * position;
+    // public bool IsSame(Vector3 tryPosition, Transform edgeTransform, float threshold = 0.1f)
+    // {
+    //   Vector3 edgePosition = edgeTransform.position + edgeTransform.rotation * position;
 
-      return VectorFunctions.Vector3Approximately(tryPosition, edgePosition, threshold);
-    }
+    //   return VectorFunctions.Vector3Approximately(tryPosition, edgePosition, threshold);
+    // }
 
     public void SetUsedHorizontally(bool usedHorizontally)
     {
@@ -50,31 +50,39 @@ namespace Construction
 
     public bool IsSame(Edge otherEdge, float threshold = 0.1f)
     {
-      return VectorFunctions.Vector3Approximately(position, otherEdge.position, threshold);
+      Vector3 firstPosition = Transform.position + Transform.rotation * position;
+      Vector3 secondPosition = otherEdge.Transform.position + otherEdge.Transform.rotation * otherEdge.position;
+      return VectorFunctions.Vector3Approximately(firstPosition, secondPosition, threshold);
     }
 
-    public bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2, float threshold = 0.1f)
+    public bool IsSame(Vector3 tryPosition, float threshold = 0.1f)
     {
-      Vector3 edge1Point = position1 + rotation1 * position;
-      Vector3 edge2Point = position2 + rotation2 * otherEdge.position;
-
-      return VectorFunctions.Vector3Approximately(edge1Point, edge2Point, threshold);
+      Vector3 firstPosition = Transform.position + Transform.rotation * position;
+      return VectorFunctions.Vector3Approximately(firstPosition, tryPosition, threshold);
     }
 
+    // public bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2, float threshold = 0.1f)
+    // {
+    //   Vector3 edge1Point = position1 + rotation1 * position;
+    //   Vector3 edge2Point = position2 + rotation2 * otherEdge.position;
+
+    //   return VectorFunctions.Vector3Approximately(edge1Point, edge2Point, threshold);
+    // }
 
 
-    public float DistanceFromEdge(Vector3 tryPosition, Transform edgeTransform, float edgeWidth, float threshold)
+
+    public float DistanceFromEdge(Vector3 tryPosition, float edgeWidth, float threshold)
     {
       Vector3 edgePosition = position;
 
       // Convert edge position to world space
-      Vector3 worldEdgePosition = edgeTransform.TransformPoint(edgePosition);
+      Vector3 worldEdgePosition = Transform.TransformPoint(edgePosition);
 
       // Ignore the Y component of the edge position
       tryPosition.y = worldEdgePosition.y;
 
       // Convert normal to world space and ensure it remains in the XZ plane
-      Vector3 worldNormal = edgeTransform.TransformDirection(normal);
+      Vector3 worldNormal = Transform.TransformDirection(normal);
       worldNormal = new Vector3(worldNormal.x, 0, worldNormal.z).normalized;
 
       // Compute the edge's tangent direction (perpendicular to the normal in the XZ plane)
@@ -106,17 +114,17 @@ namespace Construction
 
 
 
-    public Vector3 WorldSpaceRotation(Transform edgeParent)
+    public Vector3 WorldSpaceRotation()
     {
-      Vector3 worldNormal = edgeParent.rotation * normal.normalized;
+      Vector3 worldNormal = Transform.rotation * normal.normalized;
 
       // Debug.Log("World Normal: " + worldNormal);
 
       return worldNormal;
     }
-    public Quaternion WorldSpaceRotationQuaternion(Transform edgeParent)
+    public Quaternion WorldSpaceRotationQuaternion()
     {
-      return Quaternion.LookRotation(edgeParent.TransformDirection(normal));
+      return Quaternion.LookRotation(Transform.TransformDirection(normal));
     }
 
     public static (Vector3, Quaternion) SnapEdgeToEdge(Edge fromEdge, Edge toEdge, Transform fromEdgeTransform, Transform toEdgeTransform, bool flipNormal, bool useCameraRotation = false)

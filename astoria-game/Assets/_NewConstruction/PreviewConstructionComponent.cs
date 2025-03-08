@@ -16,6 +16,12 @@ namespace Construction
 
         private void Awake()
         {
+            // Assign edge transforms
+            foreach (Edge edge in edges)
+            {
+                edge.Transform = transform;
+            }
+
             previewObject = GetComponent<PreviewObject>();
         }
 
@@ -28,7 +34,7 @@ namespace Construction
             }
         }
 
-        bool doDebug = true; // This is purely for testing and me being lazy with commenting the debug messages
+        bool doDebug = false; // This is purely for testing and me being lazy with commenting the debug messages
 
         // Called by construction system to see if this component can connect to another component
         public bool CanPlace(Vector3 tryPosition, Quaternion tryRotation, ConstructionSettings settings, ConstructionComponentData data, out Vector3 finalPosition, out Quaternion finalRotation, out bool validPosition)
@@ -177,7 +183,7 @@ namespace Construction
                         // Don't check for an edge if it is already used
                         if (data.isHorizontal && edge.usedHorizontally || data.isVertical && edge.usedVertically) continue;
 
-                        float distance = edge.DistanceFromEdge(tryPosition, collider.transform, 1.5f, settings.StructurePlaceRadius);
+                        float distance = edge.DistanceFromEdge(tryPosition, 1.5f, settings.StructurePlaceRadius);
                         if (distance == -1f) continue; // Edge was too far away
                         if (distance <= settings.StructurePlaceRadius)
                         {
@@ -203,12 +209,12 @@ namespace Construction
                 // There may be a case where we want to check multiple edges, but I can't think of one right now
                 foreach ((Edge, float, Transform) otherEdge in possibleEdges)
                 {
-                    Vector3 edgeDirection = otherEdge.Item1.WorldSpaceRotation(otherEdge.Item3);
+                    Vector3 edgeDirection = otherEdge.Item1.WorldSpaceRotation();
 
                     List<(Edge, float)> possibleEdgesOnThisComponent = new();
                     foreach (Edge tryEdge in edges)
                     {
-                        Vector3 tryEdgeNormal = tryEdge.WorldSpaceRotation(transform);
+                        Vector3 tryEdgeNormal = tryEdge.WorldSpaceRotation();
 
                         float dot = Vector3.Dot(Vector3.forward, tryEdge.normal);
                         possibleEdgesOnThisComponent.Add((tryEdge, dot));
