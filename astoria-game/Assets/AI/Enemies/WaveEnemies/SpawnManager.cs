@@ -15,6 +15,7 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private Enemy[] _enemies;
     [SerializeField] private float _spawnRadius = 100;
+    [SerializeField] private Transform _enemyContainer;
     [SerializeField] private LayerMask _groundLayer;
 
     [Header("Difficulty scaling, into function y = ax^2 + b")]
@@ -22,12 +23,12 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _difficultyCurveBTerm = 10f;
     [SerializeField] private float _maxProportionPerEnemy = 0.4f;
 
-    private GameObject _core;
+    [SerializeField] private GameObject _core;
     private List<GameObject> _monsters;
     private int _nightsSurvived = 0;
 
     void Start() {
-        _core = GameObject.FindWithTag("Core");
+        // _core = GameObject.FindWithTag("Core");
     }
 
     void Update() {
@@ -36,7 +37,9 @@ public class SpawnManager : MonoBehaviour
 
     public GameObject SpawnWanderer(Vector3 position, GameObject _enemyToSpawn) {
         // Debug.Log("Spawning enemy at " + position);
-        GameObject wanderer = Instantiate(_enemyToSpawn, position, Quaternion.identity);
+        GameObject wanderer = Instantiate(_enemyToSpawn, position, Quaternion.identity, _enemyContainer);
+        wanderer.GetComponent<EnemyCore>().SetCore(_core.transform);
+        wanderer.GetComponent<EnemyCore>().SetPlayer(GameObject.FindWithTag("Player").transform);
         return wanderer;
     }
 

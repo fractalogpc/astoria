@@ -126,6 +126,8 @@ public class TimeCycleCore : MonoBehaviour
 
 	public static TimeCycleCore Instance;
 
+	private float _lastHour;
+
 	private void Awake() {
 		Singleton();
 	}
@@ -139,6 +141,22 @@ public class TimeCycleCore : MonoBehaviour
 	private void Update() {
 		_networkTime = Time.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24);
 		TimeOfDay.SetTime((float)_networkTime);
+		
+		if (TimeOfDay.GameHour != _lastHour) {
+			if (TimeOfDay.IsNight) {
+				OnNight.Invoke();
+			}
+			else {
+				OnDay.Invoke();
+			}
+
+			if (TimeOfDay.GameHour == 0) {
+				OnDayChanged.Invoke();
+			}
+			
+			_lastHour = TimeOfDay.GameHour;
+			OnHourChanged.Invoke();
+		}
 	}
 
 	private void Singleton() {

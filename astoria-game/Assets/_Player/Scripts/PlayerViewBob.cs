@@ -8,6 +8,7 @@ public class PlayerViewBob : MonoBehaviour
   [SerializeField] private PlayerController _playerController;
   [SerializeField] private GameObject _footprintPrefab;
   [SerializeField] private float _footprintStrideWidth = 0.5f;
+  [SerializeField] private Transform _footprintContainer;
   [SerializeField] private AnimationCurve _viewBobVerticalCurve;
   [SerializeField] private float _verticalMultiplier;
   [SerializeField] private AnimationCurve _viewBobHorizontalCurve;
@@ -60,7 +61,7 @@ public class PlayerViewBob : MonoBehaviour
           if (_footprintPrefab != null) {
             Quaternion rotation = Quaternion.LookRotation(_motor.CharacterForward, Vector3.up);
             Vector3 position = _playerController.transform.position + (_stepRight ? _motor.CharacterRight : -_motor.CharacterRight) * _footprintStrideWidth;
-            GameObject footprint = Instantiate(_footprintPrefab, position, rotation);
+            GameObject footprint = Instantiate(_footprintPrefab, position, rotation, _footprintContainer);
             Destroy(footprint, 10f);
           }
         }
