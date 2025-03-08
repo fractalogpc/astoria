@@ -22,13 +22,17 @@ public class GroundMeleeEnemy : EnemyCore
 
   private void Start() {
     // Animator needs getting
+    agent = GetComponent<NavMeshAgent>();
   }
 
   public override void Navigate(Transform core, Transform player) {
     // Pick between player and core based on player proximity
     float playerDistance = Vector3.Distance(player.position, transform.position);
     Transform goal = core;
-    if (playerDistance < playerFocusRadius) goal = player;
+    if (playerDistance < playerFocusRadius) {
+      goal = player;
+      target = player;
+    }
 
     // Find any obstacles between the enemy and the goal
     RaycastHit hit;
@@ -43,6 +47,7 @@ public class GroundMeleeEnemy : EnemyCore
   }
 
   public override void Attack() {
+    if (target == null) return;
     attackTimer += Time.deltaTime;
     if (attackTimer < attackSpeed) {
       return;

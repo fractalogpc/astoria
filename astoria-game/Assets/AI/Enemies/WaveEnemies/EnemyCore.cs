@@ -14,6 +14,14 @@ public abstract class EnemyCore : MonoBehaviour
     Attack();
   }
 
+  public void SetCore(Transform core) {
+    _core = core;
+  }
+
+  public void SetPlayer(Transform player) {
+    _player = player;
+  }
+
   protected void DamageTarget(GameObject target, float damage, Vector3 position) {
     // See if the target has a player or building health component
     target.TryGetComponent<HealthInterface>(out HealthInterface health);
