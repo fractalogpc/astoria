@@ -9,7 +9,7 @@ public class ViewmodelManager : MonoBehaviour {
 	[Tooltip("The transform all viewmodels will be parented to.")]
 	[SerializeField] protected Transform _viewmodelParent;
 	[Tooltip("The current viewmodel being used.")]
-	[SerializeField][Mirror.ReadOnly] protected Viewmodel _currentViewmodel;
+	[SerializeField] protected Viewmodel _currentViewmodel;
 	[Tooltip("The current item being held.")]
 	[SerializeField] protected GameObject _currentItem;
 	

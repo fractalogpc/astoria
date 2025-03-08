@@ -15,7 +15,6 @@ public class AxeInstance : BaseToolInstance
 	
 	public override void OnEquip() {
 		base.OnEquip();
-		Debug.Log("Axe equipped");
 	}
 	public override void OnUnequip() {
 		base.OnUnequip();
@@ -28,12 +27,10 @@ public class AxeInstance : BaseToolInstance
 		_timeSinceLastDownChop += Time.deltaTime;
 	}
 	public override void OnUseDown() {
-		Debug.Log("Called input");
 		if (!_canChop) return;
 		base.OnUseDown();
 		_timeSinceLastSideChop = 0;
-		_viewmodelManager.PlayToolUse();
-		Debug.Log("Axe used");
+		_viewmodelManager.PlayAnimation(ItemData.UseAnimation);
 		DelayChop(_toolCore, ItemData.SideChopCooldown);
 	}
 	public override void OnUseUp() {
@@ -46,7 +43,7 @@ public class AxeInstance : BaseToolInstance
 		if (!_canChop) return;
 		base.OnAltUseDown();
 		_timeSinceLastDownChop = 0;
-		_viewmodelManager.PlayUseSecondary();
+		_viewmodelManager.PlayAnimation(ItemData.DownChopAnimation);
 	}
 	public override void OnAltUseUp() {
 		base.OnAltUseUp();

@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Axe", menuName = "Scriptable Objects/AxeData")]
 public class AxeData : BaseToolData
 {
+	[Header("Animations")]
+	public AnimationClip DownChopAnimation;
+	
+	[Header("Axe Properties")]
 	// TODO: Make this a random range
 	[Tooltip("The value subtracted from the tree's health when chopping.")]
 	public int ChopDamage = 50;

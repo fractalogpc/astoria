@@ -6,20 +6,16 @@ public class ToolCore : InputHandlerBase
 	public static ToolCore Instance; // Singleton
 	public BaseToolInstance CurrentTool { get; private set; }
 	
-	[SerializeField] private ViewmodelManager _viewmodelManager;
+	public ViewmodelManager ViewmodelManager;
 	
 	private bool _useDown;
 	private bool _altUseDown;
 	
-	public void EquipTool(BaseToolInstance toolInstance) {
-		toolInstance.Initialize(this, _viewmodelManager);
-		_viewmodelManager.SetItemTo(toolInstance.ItemData.HeldItemPrefab);
+	public void AttachToInputs(BaseToolInstance toolInstance) {
 		CurrentTool = toolInstance;
 		CurrentTool.OnEquip();
 	}
-	public void UnequipTool() {
-		_viewmodelManager.PlayAnimation(CurrentTool.ItemData.UnequipAnimation);
-		_viewmodelManager.UnsetItem();
+	public void DetachFromInputs() {
 		CurrentTool.OnUnequip();
 		CurrentTool = null;
 	}

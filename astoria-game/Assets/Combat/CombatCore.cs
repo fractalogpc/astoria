@@ -18,10 +18,12 @@ using UnityEngine.PlayerLoop;
 /// </summary>
 public class CombatCore : InputHandlerBase
 {
-	[SerializeField] private InventoryComponent _playerInventory;
-	[SerializeField] private ViewmodelManager _viewmodelManager;
+	public static CombatCore Instance { get; private set; }
+	
+	public InventoryComponent PlayerInventory;
+	public ViewmodelManager ViewmodelManager;
 	public GunInstance CurrentGunInstance { get; private set; }
-
+	
 	/// <summary>
 	/// Fires when the equipped weapon changes. The parameter is the new weapon.
 	/// </summary>
@@ -36,27 +38,23 @@ public class CombatCore : InputHandlerBase
 	/// Fires when the ammo of the equipped weapon changes. The first parameter is the current ammo, the second is the max ammo.
 	/// </summary>
 	public UnityEvent<int, int> OnAmmoChanged;
-
-	public void EquipWeapon(GunInstance instance) {
+	
+	public void AttachToInputs(GunInstance instance) {
 		CurrentGunInstance = instance;
-		if (instance.Initialized == false) instance.InitializeWeapon(this, _viewmodelManager, _playerInventory);
-		_viewmodelManager.SetItemTo(instance.ItemData.HeldItemPrefab);
-		instance.AmmoChanged += OnInstanceAmmoChanged;
 		OnEquipWeapon?.Invoke(CurrentGunInstance);
+		CurrentGunInstance.AmmoChanged += OnInstanceAmmoChanged;
 	}
 
-	public void UnequipWeapon() {
-		if (CurrentGunInstance == null) return;
+	public void DetachFromInputs() {
 		CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
-		CurrentGunInstance.Unequip();
-		// StartCoroutine(UnequipWeaponCoroutine());
-		_viewmodelManager.UnsetItem();
 		CurrentGunInstance = null;
 		OnUnequipWeapon?.Invoke();
-	}
-
-	public void InitializeWeapon(GunInstance instance) {
-		instance.InitializeWeapon(this, _viewmodelManager, _playerInventory);
+		// if (CurrentGunInstance == null) return;
+		// CurrentGunInstance.Unequip();
+		// // StartCoroutine(UnequipWeaponCoroutine());
+		// _viewmodelManager.UnsetItem();
+		// CurrentGunInstance = null;
+		// OnUnequipWeapon?.Invoke();
 	}
 
 	protected override void InitializeActionMap() {
@@ -72,14 +70,23 @@ public class CombatCore : InputHandlerBase
 		CurrentGunInstance.AmmoChanged -= OnInstanceAmmoChanged;
 	}
 
+	private void Awake() {
+		if (Instance != null) {
+			Debug.LogError("Multiple CombatCore instances detected!");
+			Destroy(this);
+			return;
+		}
+		Instance = this;
+	}
+
 	private void OnInstanceAmmoChanged(int old, int current) {
 		OnAmmoChanged?.Invoke(old, current);
 	}
 
 	private IEnumerator UnequipWeaponCoroutine() {
-		_viewmodelManager.PlayAnimation(CurrentGunInstance.ItemData.UnequipAnimation);
+		ViewmodelManager.PlayAnimation(CurrentGunInstance.ItemData.UnequipAnimation);
 		yield return new WaitForSeconds(CurrentGunInstance.ItemData.UnequipAnimation.length);
-		_viewmodelManager.UnsetItem();
+		ViewmodelManager.UnsetItem();
 	}
 
 	private void Update() {
