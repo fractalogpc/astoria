@@ -83,12 +83,6 @@ public class CombatCore : InputHandlerBase
 		OnAmmoChanged?.Invoke(old, current);
 	}
 
-	private IEnumerator UnequipWeaponCoroutine() {
-		ViewmodelManager.PlayAnimation(CurrentGunInstance.ItemData.UnequipAnimation);
-		yield return new WaitForSeconds(CurrentGunInstance.ItemData.UnequipAnimation.length);
-		ViewmodelManager.UnsetItem();
-	}
-
 	private void Update() {
 		if (CurrentGunInstance == null) return;
 		CurrentGunInstance.Tick();

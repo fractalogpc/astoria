@@ -102,12 +102,12 @@ public class GunInstance : ViewmodelItemInstance
 			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
 			}
-			_viewmodelManager.PlayAnimation(ItemData.FireAnimation);
+			_viewmodelManager.SetTrigger("Fire");
 			SetCurrentAmmoTo(CurrentAmmo - 1);
 		}
 		else {
 			ShootProjectile(GetRandomSpreadAngle());
-			_viewmodelManager.PlayAnimation(ItemData.FireAnimation);
+			_viewmodelManager.SetTrigger("Fire");
 			SetCurrentAmmoTo(CurrentAmmo - 1);
 		}
 	}
@@ -196,7 +196,7 @@ public class GunInstance : ViewmodelItemInstance
 				if (CurrentAmmo > ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is empty and chamber is empty
 				if (CurrentAmmo == 0) {
-					_viewmodelManager.PlayAnimation(ItemData.ReloadEmptyAnimation);
+					_viewmodelManager.SetTrigger("ReloadEmpty");
 					yield return new WaitForSeconds(ItemData.ReloadEmptyAnimation.length);
 					if (AmmoInInventory() < ItemData.MagazineSetting.MagazineCapacity) {
 						invAmmo = AmmoInInventory();
@@ -211,7 +211,7 @@ public class GunInstance : ViewmodelItemInstance
 				}
 				// One in chamber and magazine is not full
 				if (CurrentAmmo <= ItemData.MagazineSetting.MagazineCapacity) {
-					_viewmodelManager.PlayAnimation(ItemData.ReloadPartialAnimation);
+					_viewmodelManager.SetTrigger("ReloadPartial");
 					yield return new WaitForSeconds(ItemData.ReloadPartialAnimation.length);
 					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity + 1 - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
@@ -231,7 +231,7 @@ public class GunInstance : ViewmodelItemInstance
 				if (CurrentAmmo >= ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is not full
 				if (CurrentAmmo < ItemData.MagazineSetting.MagazineCapacity) {
-					_viewmodelManager.PlayAnimation(ItemData.ReloadPartialAnimation);
+					_viewmodelManager.SetTrigger("ReloadPartial");
 					yield return new WaitForSeconds(ItemData.ReloadPartialAnimation.length);
 					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {

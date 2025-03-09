@@ -21,7 +21,6 @@ public class BaseToolInstance : ViewmodelItemInstance
 	}
 	public override void OnHotbarDeselected() {
 		base.OnHotbarDeselected();
-		_viewmodelManager.PlayAnimation(ItemData.UnequipAnimation);
 		_toolCore.DetachFromInputs();
 		OnUnequip();
 	}

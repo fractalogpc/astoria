@@ -12,13 +12,13 @@ public class ViewmodelItemInstance : ItemInstance
 
 	public override void OnHotbarSelected() {
 		base.OnHotbarSelected();
-		_viewmodelManager.SetItemTo(ItemData.HeldItemPrefab);
-		_viewmodelManager.PlayAnimation(ItemData.EquipAnimation);
+		_viewmodelManager.SetItemTo(this);
+		_viewmodelManager.SetTrigger("Equip");
 	}
 	
 	public override void OnHotbarDeselected() {
 		base.OnHotbarDeselected();
-		_viewmodelManager.PlayAnimation(ItemData.UnequipAnimation);
+		_viewmodelManager.SetTrigger("Unequip");
 		_viewmodelManager.UnsetItem();
 	}
 }

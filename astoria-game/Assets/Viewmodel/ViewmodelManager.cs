@@ -11,7 +11,7 @@ public class ViewmodelManager : MonoBehaviour {
 	[Tooltip("The current viewmodel being used.")]
 	[SerializeField] protected Viewmodel _currentViewmodel;
 	[Tooltip("The current item being held.")]
-	[SerializeField] protected GameObject _currentItem;
+	[SerializeField] protected ViewmodelItemInstance _currentItem;
 	
 	public void SetViewmodelTo(GameObject viewmodelPrefab) {
 		RemoveViewmodel();
@@ -21,15 +21,17 @@ public class ViewmodelManager : MonoBehaviour {
 		}
 	}
 
-	public bool SetItemTo(GameObject itemPrefab) {
+	public bool SetItemTo(ViewmodelItemInstance item) {
 		if (_currentViewmodel == null) return false;
-		_currentViewmodel.SetItemTo(itemPrefab);
+		_currentViewmodel.SetItemTo(item);
+		_currentItem = item;
 		return true;
 	}
 	
 	public bool UnsetItem() {
 		if (_currentViewmodel == null) return false;
 		_currentViewmodel.UnsetItem();
+		_currentItem = null;
 		return true;
 	}
 	
@@ -37,9 +39,10 @@ public class ViewmodelManager : MonoBehaviour {
 		if (_currentViewmodel == null) return;
 		Destroy(_currentViewmodel.gameObject);
 		_currentViewmodel = null;
+		_currentItem = null;
 	}
-
-	public void PlayAnimation(AnimationClip clip) {
-		_currentViewmodel.PlayAnimation(clip);
+	
+	public void SetTrigger(string triggerName) {
+		_currentViewmodel.SetTrigger(triggerName);
 	}
 }

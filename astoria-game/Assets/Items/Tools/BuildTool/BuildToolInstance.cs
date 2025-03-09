@@ -20,7 +20,7 @@ public class BuildToolInstance : BaseToolInstance
 	}
 	public override void OnUseDown() {
 		base.OnUseDown();
-		_viewmodelManager.PlayAnimation(ItemData.UseAnimation);
+		_viewmodelManager.SetTrigger("Use");
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();

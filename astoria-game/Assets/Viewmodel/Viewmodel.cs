@@ -5,15 +5,16 @@ public class Viewmodel : MonoBehaviour
 	[SerializeField] protected Animator _animator;
 	[SerializeField] protected Transform _itemHolder;
 	
-	public void PlayAnimation(AnimationClip clip) {
-		_animator.Play(clip.name);
+	public void SetTrigger(string triggerName) {
+		_animator.SetTrigger(triggerName);
 	}
 	
-	public void SetItemTo(GameObject itemPrefab) {
+	public void SetItemTo(ViewmodelItemInstance item) {
 		if (_itemHolder.childCount > 0) {
 			Destroy(_itemHolder.GetChild(0).gameObject);
 		}
-		Instantiate(itemPrefab, _itemHolder);
+		Instantiate(item.ItemData.HeldItemPrefab, _itemHolder);
+		_animator.runtimeAnimatorController = item.ItemData.ItemAnimatorController;
 	}
 	
 	public void UnsetItem() {
