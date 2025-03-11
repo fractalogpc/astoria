@@ -1,31 +1,37 @@
 using UnityEngine;
 using Mirror;
 using Construction;
+using UnityEngine.Events;
 
 /// <summary>
 /// Handles the CORE prop. Not to be confused with ConstructionCore.
 /// </summary>
-public class CoreController : NetworkBehaviour
+public class CoreController : MonoBehaviour, IDamageable
 {
 
-    public float height;
-    public Vector3 position;
-    public Quaternion rotation;
-    public float scale;
+    [SerializeField] private float maxHealth = 100f;
 
-    private void OnEnable()
+    public UnityEvent OnCoreDestroyed;
+
+    private float health = 100f;
+
+    private void Start()
     {
-        if (PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Core != null)
-        {
-            Debug.LogError("Core already exists");
-            Destroy(gameObject);
-            return;
-        }
-
-        position = new Vector3(transform.position.x, height, transform.position.z);
-        rotation = transform.rotation;
-        scale = transform.localScale.x;
-
-        PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Core = this;
+        health = maxHealth;
     }
+
+    public void TakeDamage(float damage, Vector3 hitPoint)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            CoreDestroyed();
+        }
+    }
+
+    private void CoreDestroyed()
+    {
+        OnCoreDestroyed.Invoke();
+    }
+
 }
