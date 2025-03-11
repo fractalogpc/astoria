@@ -33,6 +33,11 @@ public abstract class EnemyCore : MonoBehaviour
     if (building != null) {
       building.Damage(damage);
     }
+
+    target.TryGetComponent<CoreController>(out CoreController core);
+    if (core != null) {
+      core.TakeDamage(damage, position);
+    }
   }
 
   public abstract void Navigate(Transform core, Transform player);
