@@ -29,6 +29,7 @@ public class GroundMeleeEnemy : EnemyCore
     // Pick between player and core based on player proximity
     float playerDistance = Vector3.Distance(player.position, transform.position);
     Transform goal = core;
+    target = core;
     if (playerDistance < playerFocusRadius) {
       goal = player;
       target = player;

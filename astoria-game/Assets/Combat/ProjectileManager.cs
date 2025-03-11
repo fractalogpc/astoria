@@ -67,11 +67,12 @@ public class ProjectileManager : Singleton<ProjectileManager>
         }
         public RaycastHit TickProjectile(float deltaTime) {
             // Handle collision
-            Physics.Raycast(Position, Velocity.normalized, out RaycastHit hit, Velocity.magnitude * deltaTime);
-            Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
+            Vector3 normVelocity = Vector3.Normalize(Velocity);
+            Physics.Raycast(Position, normVelocity, out RaycastHit hit, Velocity.magnitude * deltaTime);
+            // Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
             
             // Calculate drag force direction
-            Vector3 dragForceDirection = -Velocity.normalized;
+            Vector3 dragForceDirection = -normVelocity;
             // Calculate drag force magnitude
             float dragForceMagnitude = 0.5f * Aerodynamics.DragCoefficient * Aerodynamics.CrossSectionalArea * Aerodynamics._airDensity * Velocity.sqrMagnitude;
             // Compute drag acceleration
@@ -86,7 +87,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
             // Set renderer position
             Renderer.position = Vector3.Lerp(Renderer.position, Position, 0.5f);
             // Set renderer rotation
-            Renderer.rotation = Quaternion.LookRotation(Velocity.normalized);
+            Renderer.rotation = Quaternion.LookRotation(normVelocity);
             
             TimeToLive -= deltaTime;
             
