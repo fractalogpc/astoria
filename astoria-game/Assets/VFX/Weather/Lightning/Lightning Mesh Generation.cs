@@ -7,6 +7,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class LightningMeshGeneration : MonoBehaviour {
     public Transform spawn;
+    public GameObject light;
     public Transform goal;
 
     [SerializeField]
@@ -40,17 +41,19 @@ public class LightningMeshGeneration : MonoBehaviour {
             SubVertexStart.Clear();
             SubVertexGoal.Clear();
             SubVertex.Clear();
+            mesh.Clear();
             FormLightning();
             canDebug = true;
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            FormMesh();
-            for (int i = 0; i < SubVertexStart.Count(); i++)
+            FormMesh(Vertex);
+            for (int i = 0; i < SubVertex.Count; i++)
             {
-                FormSubMesh(i);
+                FormMesh(SubVertex[i]);
             }
+            light.SetActive(true);
         }
         
 
@@ -137,56 +140,114 @@ public class LightningMeshGeneration : MonoBehaviour {
         }
     }
 
-    void FormMesh() {
-        mesh = new Mesh {
-            name = "Procedural Mesh"
-        };
+    void FormMesh(Vector3[] Vectors) {
+        if (mesh.vertices.Length < 1)
+        {
+            mesh = new Mesh {
+                name = "Procedural Mesh"
+            };
+        }
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
+        int offset = mesh.vertices.Length;
 
-        for (int i = 0; i < Vertex.Length; i++)
+        for (int i = 0; i < Vectors.Length; i++)
         {
-            Vector3 nextVertex = i < Vertex.Length - 1 ? Vertex[i + 1] : goal.position;
-            Vector3 Tangent = nextVertex - Vertex[i];
+            Vector3 nextVertex = i < Vectors.Length - 1 ? Vectors[i + 1] : goal.position;
+            Vector3 Tangent = nextVertex - Vectors[i];
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add((Vertex[i] - spawn.position) + BiNormal);
-            vertices.Add((Vertex[i] - spawn.position) + RotNormal);
-            vertices.Add((Vertex[i] - spawn.position) - BiNormal);
-            vertices.Add((Vertex[i] - spawn.position) - RotNormal);
+            vertices.Add((Vectors[i] - spawn.position) + BiNormal);
+            vertices.Add((Vectors[i] - spawn.position) + RotNormal);
+            vertices.Add((Vectors[i] - spawn.position) - BiNormal);
+            vertices.Add((Vectors[i] - spawn.position) - RotNormal);
         }
 
-        vertices.Add((goal.position - spawn.position) + new Vector3(1, 0, 0));
-        vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, 1));
-        vertices.Add((goal.position - spawn.position) + new Vector3(-1, 0, 0));
-        vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -1));
+        if (offset < 1)
+        {
+            vertices.Add((goal.position - spawn.position) + new Vector3(.1f, 0, 0));
+            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, .1f));
+            vertices.Add((goal.position - spawn.position) + new Vector3(-.1f, 0, 0));
+            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -.1f));
+        }
+
 
         for (int i = 0; i < vertices.Count - 5; i++)
         {
             if (i % 4 == 3)
             {
-                triangles.Add(i);
-                triangles.Add(i + 4);
-                triangles.Add(i + 1);
-                triangles.Add(i);
-                triangles.Add(i + 1);
-                triangles.Add(i - 3);
+                triangles.Add(offset + i);
+                triangles.Add(offset + i + 4);
+                triangles.Add(offset + i + 1);
+                triangles.Add(offset + i);
+                triangles.Add(offset + i + 1);
+                triangles.Add(offset + i - 3);
             }
             else
             {
-                triangles.Add(i);
-                triangles.Add(i + 4);
-                triangles.Add(i + 5);
-                triangles.Add(i);
-                triangles.Add(i + 5);
-                triangles.Add(i + 1);    
+                triangles.Add(offset + i);
+                triangles.Add(offset + i + 4);
+                triangles.Add(offset + i + 5);
+                triangles.Add(offset + i);
+                triangles.Add(offset + i + 5);
+                triangles.Add(offset + i + 1);    
             }
             
         }
+        
+        
+        
+        /*bad, evil, no good code.
+        for (int i = 0; i < SubVertexStart.Count; i++)
+        {
+            for (int j = 0; j < vertices.Count; i++)
+            {
+                if (j % 4 == 3)
+                {
+                    triangles.Add(j);
+                    triangles.Add(j + 4);
+                    triangles.Add(j + 1);
+                    triangles.Add(j);
+                    triangles.Add(j + 1);
+                    triangles.Add(j - 3);
+                }
+                else
+                {
+                    triangles.Add(j);
+                    triangles.Add(j + 4);
+                    triangles.Add(j + 5);
+                    triangles.Add(j);
+                    triangles.Add(j + 5);
+                    triangles.Add(j + 1);    
+                }
+            }
+            
+            for (int j = 0; j < SubVertex[i].Length; j++)
+           {
+               Vector3 nextVertex = i < SubVertex[i].Length - 1 ? SubVertex[i][j + 1] : SubVertexGoal[i];
+               Vector3 Tangent = nextVertex - SubVertex[i][j];
+               Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
+               Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
+               vertices.Add((SubVertex[i][j] - spawn.position) + BiNormal);
+               vertices.Add((SubVertex[i][j] - spawn.position) + RotNormal);
+               vertices.Add((SubVertex[i][j] - spawn.position) - BiNormal);
+               vertices.Add((SubVertex[i][j] - spawn.position) - RotNormal);
+           }
+        }
+        */
+
+        if (mesh.vertices.Length < 1)
+        {
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = triangles.ToArray();
+        }
+        else
+        {
+            mesh.vertices = mesh.vertices.Concat(vertices).ToArray();
+            mesh.triangles = mesh.triangles.Concat(triangles).ToArray();
+        }
         
         GetComponent<MeshFilter>().mesh = mesh;
     }
@@ -214,7 +275,7 @@ public class LightningMeshGeneration : MonoBehaviour {
             vertices.Add((SubVertex[index][i] - spawn.position) - RotNormal);
         }
 
-        for (int i = vertices.Count + 1; i < (vertices.Count + SubVertex[index].Length - 5); i++)
+        for (int i = vertices.Count + 1; i < (SubVertex[index].Length - 5); i++)
         {
             if (i % 4 == 3)
             {
@@ -236,8 +297,7 @@ public class LightningMeshGeneration : MonoBehaviour {
             }
         }
 
-        mesh.vertices = mesh.vertices.Concat(vertices).ToArray();
-        mesh.triangles = mesh.triangles.Concat(triangles).ToArray();
+        
         
         GetComponent<MeshFilter>().mesh = mesh;
     }
