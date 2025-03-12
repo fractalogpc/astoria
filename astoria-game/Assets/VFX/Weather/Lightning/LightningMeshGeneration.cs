@@ -12,6 +12,11 @@ public class LightningMeshGeneration : MonoBehaviour {
 
     [SerializeField]
     public int numSegments = 30;
+    [SerializeField] private float meanSpawnTime = 1f;
+    [SerializeField] private float spawnTimeVariance = .5f;
+    [SerializeField] private float spawnHeight = 10f;
+    [SerializeField] private Transform spawnPositionCenter;
+    [SerializeField] private float spawnPositionRadius;
     
     public Vector3[] Vertex = new Vector3[30];
 
@@ -25,6 +30,9 @@ public class LightningMeshGeneration : MonoBehaviour {
     
     private bool canDebug = false;
 
+    private bool spawning = true;
+    private float spawnTimer = 0f;
+
     public Mesh mesh;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -32,29 +40,80 @@ public class LightningMeshGeneration : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
+    public void ActivateLightning() {
+        spawning = true;
+    }
+
+    public void DeactivateLightning() {
+        spawning = false;
+    }
+
+    private void SpawnLightning() {
+        Debug.Log("Spawning lightning");
+
+        SubVertexDirection.Clear();
+        SubVertexStart.Clear();
+        SubVertexGoal.Clear();
+        SubVertex.Clear();
+        mesh.Clear();
+        FormLightning();
+        FormMesh(Vertex);
+        for (int i = 0; i < SubVertex.Count; i++)
+        {
+            FormSubMesh(i);
+        }
+        light.SetActive(true);
+
+        // Random duration
+        float duration = Random.value + 1f;
+        Invoke("ClearLightning", duration);
+    }
+
+    private void ClearLightning() {
+        light.SetActive(false);
+        mesh.Clear();
+    }
+
     // Update is called once per frame
     void Update() {
+        if (spawning) {
+            spawnTimer -= Time.deltaTime;
+            if (spawnTimer <= 0) {
+                spawnTimer = meanSpawnTime + Random.Range(-spawnTimeVariance, spawnTimeVariance);
+                Vector3 spawnPosition = spawnPositionCenter.position + Random.insideUnitSphere * spawnPositionRadius;
+                spawnPosition.y = spawnHeight;
 
-        if (Input.anyKeyDown)
-        {
-            SubVertexDirection.Clear();
-            SubVertexStart.Clear();
-            SubVertexGoal.Clear();
-            SubVertex.Clear();
-            mesh.Clear();
-            FormLightning();
-            canDebug = true;
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FormMesh(Vertex);
-            for (int i = 0; i < SubVertex.Count; i++)
-            {
-                FormMesh(SubVertex[i]);
+                spawn.position = spawnPosition;
+
+                RaycastHit hit;
+                if (Physics.Raycast(spawn.position, Vector3.down, out hit)) {
+                    goal.position = hit.point;
+                } else return;
+
+                SpawnLightning();
             }
-            light.SetActive(true);
         }
+
+        // if (Input.anyKeyDown)
+        // {
+        //     SubVertexDirection.Clear();
+        //     SubVertexStart.Clear();
+        //     SubVertexGoal.Clear();
+        //     SubVertex.Clear();
+        //     mesh.Clear();
+        //     FormLightning();
+        //     canDebug = true;
+        // }
+        
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     FormMesh(Vertex);
+        //     for (int i = 0; i < SubVertex.Count; i++)
+        //     {
+        //         FormMesh(SubVertex[i]);
+        //     }
+        //     light.SetActive(true);
+        // }
         
 
         if (canDebug)
@@ -94,14 +153,14 @@ public class LightningMeshGeneration : MonoBehaviour {
             Vector3 line = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments), goal.position), .1f, 10);
             Vertex[i] = Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments) + new Vector3(line.x, Mathf.Abs(line.y), line.z);
             //Debug.DrawRay(Vertex[i], (goal.position - spawn.position) * 1 / numSegments, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
-            if (i > 0)
-            {
-                Debug.DrawRay(Vertex[i - 1], Vertex[i] - Vertex[i - 1], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
-            }
-            if (i == numSegments - 1)
-            {
-                Debug.DrawRay(Vertex[i], goal.position - Vertex[i], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
-            }
+            // if (i > 0)
+            // {
+            //     Debug.DrawRay(Vertex[i - 1], Vertex[i] - Vertex[i - 1], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+            // }
+            // if (i == numSegments - 1)
+            // {
+            //     Debug.DrawRay(Vertex[i], goal.position - Vertex[i], new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+            // }
 
             //create sub-branch
             if (i > 1)
