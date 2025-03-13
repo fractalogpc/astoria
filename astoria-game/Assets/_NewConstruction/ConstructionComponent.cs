@@ -13,26 +13,30 @@ namespace Construction
         [Tooltip("Optional preview component for syncing data.")]
         public PreviewConstructionComponent previewComponent;
         [Header("Stability")]
-        [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are above it)")]
-        [SerializeField] private float neighborStabilityContributionUpwards = 0.1f;
-        [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are below it)")]
-        [SerializeField] private float neighborStabilityContributionDownwards = 0.1f;
-        [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are to the sides of it)")]
-        [SerializeField] private float neighborStabilityContributionHorizontal = 0.1f;
-        [Tooltip("The stability this component has inherently, or how much it supports itself.")]
-        [SerializeField] private float inherentStability = 0.1f;
-        [Tooltip("The minimum stability this component can have before it collapses.")]
-        [SerializeField] private float minimumStability = 0.2f;
-        [Tooltip("The curve that determines the stability of this component (and contributed stability) based on its health.")]
-        [SerializeField] private AnimationCurve stabilityHealthCurve = AnimationCurve.Linear(0, 0, 1, 1);
-
+        // [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are above it)")]
+        // [SerializeField] private float neighborStabilityContributionUpwards = 0.1f;
+        // [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are below it)")]
+        // [SerializeField] private float neighborStabilityContributionDownwards = 0.1f;
+        // [Tooltip("The stability this component contributes to its neighbors, or how much it supports them. (When they are to the sides of it)")]
+        // [SerializeField] private float neighborStabilityContributionHorizontal = 0.1f;
+        // [Tooltip("The stability this component has inherently, or how much it supports itself.")]
+        // [SerializeField] private float inherentStability = 0.1f;
+        // [Tooltip("The minimum stability this component can have before it collapses.")]
+        // [SerializeField] private float minimumStability = 0.2f;
+        // [Tooltip("The curve that determines the stability of this component (and contributed stability) based on its health.")]
+        [Tooltip("This is sort of complicated. Ask Elliot if you want to know what it does.")]
+        [SerializeField] private float inherentStability = 0f;
+        [Tooltip("The minimum amount of stability this component can have before it collapses.")]
+        [SerializeField] private float minimumStability = 50f;
+        
         [Header("Health")]
         [Tooltip("The health of this component, or how much damage it can take before it collapses.")]
         [SerializeField] private float maximumHealth = 100f;
 
         public List<Edge> edges; // Public for editor
         private Dictionary<Edge, List<ConstructionComponent>> connections = new Dictionary<Edge, List<ConstructionComponent>>();
-        private float stability;
+        private float stability = 0f;
+        public float Stability => stability;
         private float health;
 
         private void Awake()
@@ -206,60 +210,57 @@ namespace Construction
 
         private void EvaluateStability()
         {
+            float stashedStability = stability;
             stability = CalculateStability();
             // Debug.Log("Stability: " + stability + " Health: " + health + " Identity: " + gameObject.name);
             if (stability < minimumStability)
             {
                 Collapse();
             }
+
+            // If stability has changed, evaluate stability of neighbors
+            if (stashedStability != stability)
+            {
+                // Evaluate stability of neighbors
+                foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
+                {
+                    foreach (ConstructionComponent component in connection.Value)
+                    {
+                        component.TriggerStabilityCheck();
+                    }
+                }
+            }
         }
 
         private float CalculateStability()
         {
+            // First we get the maximum stability from neighbors
+            float maximumNeighborStability = 0f;
 
-            // Debug.Log("Calculating stability for " + gameObject.name);
-            // Debug.Log("Connections: " + connections.Count);
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
                 // Debug.Log("Connection: " + connection.Key.pointA + " " + connection.Key.pointB);
                 foreach (ConstructionComponent component in connection.Value)
                 {
-                    // Debug.Log("Component: " + component.gameObject.name);
-                }
-            }
-            // Calculate stability based on connections
-            float stability = inherentStability * stabilityHealthCurve.Evaluate(health / maximumHealth);
-
-            // Add stability from neighbors
-            foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
-            {
-                foreach (ConstructionComponent component in connection.Value)
-                {
                     if (component == null) continue;
-                    // Determine the direction of the connection
-                    Vector3 direction = transform.position - component.transform.position;
-                    direction.Normalize();
 
                     // Determine the stability contribution based on the direction
-                    stability += component.GetStabilityContribution(direction);
+                    maximumNeighborStability = Mathf.Max(maximumNeighborStability, component.Stability);
                 }
             }
 
-            return stability;
-        }
-
-        public float GetStabilityContribution(Vector3 direction)
-        {
-            float stabilityMultiplier = stabilityHealthCurve.Evaluate(health / maximumHealth);
-            switch (direction.y > 0 ? 1 : direction.y < 0 ? -1 : 0)
-            {
-                case 1:
-                    return neighborStabilityContributionUpwards * stabilityMultiplier;
-                case -1:
-                    return neighborStabilityContributionDownwards * stabilityMultiplier;
-                default:
-                    return neighborStabilityContributionHorizontal * stabilityMultiplier;
+            // If this component has negative inherent stability, it will reduce the maximum neighbor stability
+            if (inherentStability < 0) {
+                return maximumNeighborStability + inherentStability;
             }
+
+            // If this component has a positive inherent stability, take the inherent stability as the stability
+            if (inherentStability > 0) {
+                return inherentStability;
+            }
+
+            // If this component has no inherent stability, take the maximum neighbor stability
+            return maximumNeighborStability;
         }
 
         public void Damage(float damage)
