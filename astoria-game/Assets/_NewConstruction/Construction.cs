@@ -76,13 +76,13 @@ namespace Construction
       Vector3 edgePosition = position;
 
       // Convert edge position to world space
-      Vector3 worldEdgePosition = Transform.TransformPoint(edgePosition);
+      Vector3 worldEdgePosition = Transform.position + Transform.rotation * edgePosition;
 
       // Ignore the Y component of the edge position
-      tryPosition.y = worldEdgePosition.y;
+      // tryPosition.y = worldEdgePosition.y;
 
       // Convert normal to world space and ensure it remains in the XZ plane
-      Vector3 worldNormal = Transform.TransformDirection(normal);
+      Vector3 worldNormal = Transform.rotation * normal.normalized;
       worldNormal = new Vector3(worldNormal.x, 0, worldNormal.z).normalized;
 
       // Compute the edge's tangent direction (perpendicular to the normal in the XZ plane)

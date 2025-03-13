@@ -160,6 +160,35 @@ namespace Construction
 
                     return validPosition;
                     break;
+                case ConstructionComponentData.StructureType.Floor:
+                    // Check for nearby snapping
+                    if (HasAvailableConnection(tryPosition, settings, data, true, out finalPosition, out finalRotation, out snappedTransforms))
+                    {
+                        // Check for collision
+                        if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask)) //, snappedTransforms))
+                        {
+                            validPosition = false;
+                            if (doDebug) Debug.Log("Colliding");
+                        }
+                        else
+                        {
+                            // Valid position
+                            validPosition = true;
+                            if (doDebug) Debug.Log("Valid position");
+                        }
+                    }
+                    else
+                    {
+
+                        if (doDebug) Debug.Log("Need a foundation to snap to");
+
+                        finalPosition = tryPosition;
+                        finalRotation = tryRotation;
+                        validPosition = false;
+                    }
+
+                    return validPosition;
+                    break;
             }
             finalPosition = tryPosition;
             finalRotation = tryRotation;

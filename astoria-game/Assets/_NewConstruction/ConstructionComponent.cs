@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mirror.BouncyCastle.Asn1.Misc;
 using UnityEngine;
 
 namespace Construction
@@ -45,6 +46,11 @@ namespace Construction
             health = maximumHealth;
 
             TriggerNearbyImplicitConnections(PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().Settings);
+            // EvaluateStability();
+        }
+
+        private void Start()
+        {
             EvaluateStability();
         }
 
@@ -63,7 +69,7 @@ namespace Construction
                         ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                         if (otherComponent != null && otherComponent != this)
                         {
-                            if (otherComponent.GetEdge(worldSpacePosition, collider.transform, out Edge otherEdge))
+                            if (otherComponent.GetEdge(worldSpacePosition, out Edge otherEdge))
                             {
                                 if (data.isHorizontal) // TODO: Fix this
                                 {
@@ -85,7 +91,7 @@ namespace Construction
             }
         }
 
-        public bool GetEdge(Vector3 tryPosition, Transform edgeTransform, out Edge correctEdge, float threshold = 0.1f)
+        public bool GetEdge(Vector3 tryPosition, out Edge correctEdge, float threshold = 0.1f)
         {
             foreach (Edge edge in edges)
             {
@@ -185,12 +191,16 @@ namespace Construction
             if (connections.ContainsKey(edge))
             {
                 connections[edge].Remove(component);
+                Debug.Log("Connection Removed");
+                
+                // If the connection list is empty, remove the key
                 if (connections[edge].Count == 0)
                 {
                     connections.Remove(edge);
-                    // Recalculate stability
-                    EvaluateStability();
                 }
+
+                EvaluateStability();
+
             }
         }
 
@@ -225,6 +235,7 @@ namespace Construction
             {
                 foreach (ConstructionComponent component in connection.Value)
                 {
+                    if (component == null) continue;
                     // Determine the direction of the connection
                     Vector3 direction = transform.position - component.transform.position;
                     direction.Normalize();
@@ -240,7 +251,7 @@ namespace Construction
         public float GetStabilityContribution(Vector3 direction)
         {
             float stabilityMultiplier = stabilityHealthCurve.Evaluate(health / maximumHealth);
-            switch (direction.y)
+            switch (direction.y > 0 ? 1 : direction.y < 0 ? -1 : 0)
             {
                 case 1:
                     return neighborStabilityContributionUpwards * stabilityMultiplier;
@@ -271,7 +282,7 @@ namespace Construction
             }
         }
 
-        public void Destroy()
+        public void DestroyComponent()
         {
             Damage(health);
         }
@@ -283,19 +294,24 @@ namespace Construction
 
         private void Collapse()
         {
+            Debug.Log("Collapsing " + gameObject.name);
 
             // Propagate collapse with stability
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
+
+                Debug.Log($"Component {gameObject.name} is collapsing, removing connection {connections.Count}");
                 foreach (ConstructionComponent component in connection.Value)
                 {
-                    if (connection.Key.usedHorizontally) {
+                    if (connection.Key.usedHorizontally)
+                    {
                         component.edges.Find(x => x.IsSame(connection.Key)).SetUsedHorizontally(false);
+                        Debug.Log("Removed horizontally");
                     }
-                    if (connection.Key.usedVertically) {
+                    if (connection.Key.usedVertically)
+                    {
                         component.edges.Find(x => x.IsSame(connection.Key)).SetUsedVertically(false);
                     }
-
                     component.RemoveConnectionDirect(connection.Key, this);
                 }
             }

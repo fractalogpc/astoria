@@ -318,8 +318,6 @@ namespace Construction
                         RaycastHit hit;
                         Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.ConstructionLayerMask);
 
-                        Debug.Log(hit.transform);
-
                         if (hit.transform != null)
                         {
                             if (hit.transform.GetComponentInParent<ConstructionObject>() != null)
