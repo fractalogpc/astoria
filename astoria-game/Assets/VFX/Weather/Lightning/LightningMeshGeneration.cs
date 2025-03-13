@@ -58,10 +58,10 @@ public class LightningMeshGeneration : MonoBehaviour {
         mesh.Clear();
         FormLightning();
         FormMesh(Vertex);
-        for (int i = 0; i < SubVertex.Count; i++)
-        {
-            FormSubMesh(i);
-        }
+        // for (int i = 0; i < SubVertex.Count; i++)
+        // {
+        //     FormMesh(SubVertex[i]);
+        // }
         light.SetActive(true);
 
         // Random duration
@@ -181,7 +181,9 @@ public class LightningMeshGeneration : MonoBehaviour {
         //sub-branch
         for (int i = 0; i < SubVertexDirection.Count; i++)
         {
-            SubVertexGoal.Add(SubVertexStart[i] + Random.insideUnitSphere * Vector3.Distance(goal.position, SubVertexStart[i]));
+            Vector3 randomPos = Random.insideUnitSphere;
+            randomPos.y = -Mathf.Abs(randomPos.y);
+            SubVertexGoal.Add(SubVertexStart[i] + randomPos * Vector3.Distance(goal.position, SubVertexStart[i]));
             for (int j = 0; j < 8; j++)
             {
                 //Random.seed = Mathf.FloorToInt(SubVertexStart[i].x + SubVertexStart[i].y + SubVertexStart[i].z * 20 + i) + 50 * j + 100;// + Time.frameCount;
@@ -191,7 +193,9 @@ public class LightningMeshGeneration : MonoBehaviour {
                 }
                 else
                 {
-                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(Random.onUnitSphere, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, 100f);
+                    Vector3 randomDirection = Random.onUnitSphere;
+                    randomDirection.y = -Mathf.Abs(randomDirection.y);
+                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(randomDirection, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, 100f);
                     SubVertex[i][j] = point; // Random.insideUnitSphere + line + SubVertexStart[i];
                 }
                 
