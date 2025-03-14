@@ -10,6 +10,8 @@ namespace Construction
     /// </summary>
     public class ConstructionComponent : MonoBehaviour, IDamageable
     {
+        [Tooltip("Required data for component.")]
+        public ConstructionData Data;
         [Tooltip("Optional preview component for syncing data.")]
         public PreviewConstructionComponent previewComponent;
         [Header("Stability")]
@@ -28,7 +30,7 @@ namespace Construction
         [SerializeField] private float inherentStability = 0f;
         [Tooltip("The minimum amount of stability this component can have before it collapses.")]
         [SerializeField] private float minimumStability = 50f;
-        
+
         [Header("Health")]
         [Tooltip("The health of this component, or how much damage it can take before it collapses.")]
         [SerializeField] private float maximumHealth = 100f;
@@ -45,6 +47,8 @@ namespace Construction
             foreach (Edge edge in edges)
             {
                 edge.Transform = transform;
+                edge.Data = GetComponent<ConstructionComponent>().Data;
+                Debug.Assert(edge.Data != null, "Assign a ConstructionData to the component!");
             }
 
             health = maximumHealth;
@@ -75,19 +79,20 @@ namespace Construction
                         {
                             if (otherComponent.GetEdge(worldSpacePosition, out Edge otherEdge))
                             {
-                                if (data.isHorizontal) // TODO: Fix this
+                                if (data.isHorizontal && otherEdge.Data.isHorizontal) // TODO: Fix this
                                 {
                                     edge.SetUsedHorizontally(true);
                                     otherEdge.SetUsedHorizontally(true);
                                 }
-                                if (data.isVertical)
+                                if (data.isVertical && otherEdge.Data.isVertical)
                                 {
                                     edge.SetUsedVertically(true);
                                     otherEdge.SetUsedVertically(true);
                                 }
 
                                 AddConnectionDirect(edge, otherComponent);
-                                otherComponent.AddConnectionDirect(otherEdge, this);
+                                // otherComponent.AddConnectionDirect(otherEdge, this);
+                                // Turns out that I forgot the other edge adds its own connections through DetermineImplicitConnections
                             }
                         }
                     }
@@ -168,27 +173,9 @@ namespace Construction
             else
             {
                 connections.Add(edge, new List<ConstructionComponent> { component });
+                Debug.Log("Added connection between " + gameObject.name + " and " + component.gameObject.name, gameObject);
             }
         }
-
-        // public void RemoveConnection(Edge otherEdge, ConstructionComponent component)
-        // {
-        //     // Checks for valid edge
-        //     Edge? baseEdge = null;
-        //     foreach (Edge edge in edges)
-        //     {
-        //         if (edge.IsSame(otherEdge))
-        //         {
-        //             baseEdge = edge;
-        //             break;
-        //         }
-        //     }
-
-        //     if (baseEdge == null) return;
-
-        //     // Remove the connection
-        //     RemoveConnectionDirect(baseEdge, component);
-        // }
 
         private void RemoveConnectionDirect(Edge edge, ConstructionComponent component)
         {
@@ -196,7 +183,7 @@ namespace Construction
             {
                 connections[edge].Remove(component);
                 Debug.Log("Connection Removed");
-                
+
                 // If the connection list is empty, remove the key
                 if (connections[edge].Count == 0)
                 {
@@ -206,62 +193,144 @@ namespace Construction
                 EvaluateStability();
 
             }
+            else
+            {
+                Debug.LogWarning("Connection not found! Something weird happened.");
+            }
         }
 
         private void EvaluateStability()
         {
             float stashedStability = stability;
             stability = CalculateStability();
-            // Debug.Log("Stability: " + stability + " Health: " + health + " Identity: " + gameObject.name);
+
             if (stability < minimumStability)
             {
                 Collapse();
+                return;
             }
 
             // If stability has changed, evaluate stability of neighbors
             if (stashedStability != stability)
             {
-                // Evaluate stability of neighbors
-                foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
+                List<Edge> edgesToRemove = new();
+
+                foreach (var connection in connections)
                 {
+                    if (connection.Value == null || connection.Value.Count == 0)
+                    {
+                        edgesToRemove.Add(connection.Key);
+                        continue;
+                    }
+
+                    List<ConstructionComponent> componentsToRemove = new();
+
                     foreach (ConstructionComponent component in connection.Value)
                     {
-                        component.TriggerStabilityCheck();
+                        if (component == null)
+                        {
+                            componentsToRemove.Add(component);
+                            continue;
+                        }
+
+                        // Trigger stability check on the next frame
+                        Invoke(nameof(DelayedStabilityCheck), 0f);
                     }
+
+                    // Remove null components after iteration
+                    foreach (var component in componentsToRemove)
+                    {
+                        connection.Value.Remove(component);
+                    }
+
+                    // Remove the edge if no valid components remain
+                    if (connection.Value.Count == 0)
+                    {
+                        edgesToRemove.Add(connection.Key);
+                    }
+                }
+
+                // Remove invalid edges after iteration
+                foreach (var edge in edgesToRemove)
+                {
+                    connections.Remove(edge);
                 }
             }
         }
+
+        // Helper method to trigger the stability check
+        private void DelayedStabilityCheck()
+        {
+            foreach (var connection in connections)
+            {
+                foreach (ConstructionComponent component in connection.Value)
+                {
+                    component?.TriggerStabilityCheck();
+                }
+            }
+        }
+
+
 
         private float CalculateStability()
         {
             // First we get the maximum stability from neighbors
             float maximumNeighborStability = 0f;
 
-            foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
+            // Collect edges and components to clean up
+            List<Edge> edgesToRemove = new();
+
+            foreach (var connection in connections)
             {
-                // Debug.Log("Connection: " + connection.Key.pointA + " " + connection.Key.pointB);
+                // Collect null components to remove
+                List<ConstructionComponent> componentsToRemove = new();
+
                 foreach (ConstructionComponent component in connection.Value)
                 {
-                    if (component == null) continue;
+                    if (component == null)
+                    {
+                        componentsToRemove.Add(component);
+                        continue;
+                    }
 
-                    // Determine the stability contribution based on the direction
                     maximumNeighborStability = Mathf.Max(maximumNeighborStability, component.Stability);
+                }
+
+                // Remove null components after iteration
+                foreach (var component in componentsToRemove)
+                {
+                    connection.Value.Remove(component);
+                }
+
+                // Mark edges for removal if no valid components remain
+                if (connection.Value.Count == 0)
+                {
+                    edgesToRemove.Add(connection.Key);
                 }
             }
 
+            // Remove invalid edges after the loop
+            foreach (var edge in edgesToRemove)
+            {
+                connections.Remove(edge);
+            }
+
             // If this component has negative inherent stability, it will reduce the maximum neighbor stability
-            if (inherentStability < 0) {
+            if (inherentStability < 0)
+            {
                 return maximumNeighborStability + inherentStability;
             }
 
             // If this component has a positive inherent stability, take the inherent stability as the stability
-            if (inherentStability > 0) {
+            if (inherentStability > 0)
+            {
                 return inherentStability;
             }
 
             // If this component has no inherent stability, take the maximum neighbor stability
             return maximumNeighborStability;
         }
+
 
         public void Damage(float damage)
         {
@@ -271,15 +340,6 @@ namespace Construction
             {
                 Collapse();
                 return;
-            }
-
-            // Evaluate stability of neighbors
-            foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
-            {
-                foreach (ConstructionComponent component in connection.Value)
-                {
-                    component.TriggerStabilityCheck();
-                }
             }
         }
 
@@ -297,24 +357,32 @@ namespace Construction
         {
             Debug.Log("Collapsing " + gameObject.name);
 
-            // Propagate collapse with stability
+            // Collect connections to be removed
+            List<(Edge, ConstructionComponent)> toRemove = new();
+
             foreach (KeyValuePair<Edge, List<ConstructionComponent>> connection in connections)
             {
-
-                Debug.Log($"Component {gameObject.name} is collapsing, removing connection {connections.Count}");
                 foreach (ConstructionComponent component in connection.Value)
                 {
                     if (connection.Key.usedHorizontally)
                     {
-                        component.edges.Find(x => x.IsSame(connection.Key)).SetUsedHorizontally(false);
+                        component.edges.Find(x => x.IsSame(connection.Key))?.SetUsedHorizontally(false);
                         Debug.Log("Removed horizontally");
                     }
                     if (connection.Key.usedVertically)
                     {
-                        component.edges.Find(x => x.IsSame(connection.Key)).SetUsedVertically(false);
+                        component.edges.Find(x => x.IsSame(connection.Key))?.SetUsedVertically(false);
                     }
-                    component.RemoveConnectionDirect(connection.Key, this);
+
+                    // Queue the connection for removal
+                    toRemove.Add((connection.Key, component));
                 }
+            }
+
+            // Remove the connections after iteration
+            foreach (var (edge, component) in toRemove)
+            {
+                component.RemoveConnectionDirect(edge, this);
             }
 
             Destroy(gameObject);

@@ -49,7 +49,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     }
 
     private void SpawnLightning() {
-        Debug.Log("Spawning lightning");
+        // Debug.Log("Spawning lightning");
 
         SubVertexDirection.Clear();
         SubVertexStart.Clear();

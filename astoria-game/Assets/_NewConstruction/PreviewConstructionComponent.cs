@@ -9,8 +9,8 @@ namespace Construction
     /// </summary>
     public class PreviewConstructionComponent : MonoBehaviour
     {
+        public ConstructionData Data;
         public List<Edge> edges; // Public for editor
-
 
         private PreviewObject previewObject;
 
@@ -20,6 +20,8 @@ namespace Construction
             foreach (Edge edge in edges)
             {
                 edge.Transform = transform;
+                edge.Data = Data;
+                Debug.Assert(edge.Data != null, "Assign a ConstructionData to the component!");
             }
 
             previewObject = GetComponent<PreviewObject>();
@@ -68,7 +70,7 @@ namespace Construction
                         else
                         {
                             // Check for distance from ground
-                            if (Physics.Raycast(tryPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
+                            if (Physics.Raycast(finalPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
                             {
                                 if (hit.distance > settings.FoundationMaxDistanceFromGround + 10)
                                 {
@@ -106,7 +108,7 @@ namespace Construction
                         else
                         {
                             // Check for distance from ground
-                            if (Physics.Raycast(tryPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
+                            if (Physics.Raycast(finalPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100f, settings.GroundLayerMask))
                             {
                                 if (hit.distance > settings.FoundationMaxDistanceFromGround + 10)
                                 {
