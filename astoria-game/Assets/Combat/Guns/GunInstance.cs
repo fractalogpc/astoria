@@ -37,7 +37,6 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
 	private CombatCore _combatCore;
-	private new ViewmodelManager _viewmodelManager;
 	private InventoryComponent _playerInventory;
 	private ProjectileManager _projectileManager;
 	private FireLogic _currentFireLogic;
