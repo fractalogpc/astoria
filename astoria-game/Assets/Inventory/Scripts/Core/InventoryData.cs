@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -39,7 +40,7 @@ public class InventoryData
     /// Adds an item to the inventory if possible. Attempts to find a position for the item. Calls OnInventoryUpdate if successful.
     /// </summary>
     /// <param name="caller">The inventory component that is calling this method.</param>
-    /// <param name="itemStacknce">The item to add.</param>
+    /// <param name="itemStack">The item to add.</param>
     /// <param name="slotIndex">The slot index the item is placed at.</param>
     /// <returns>Whether the placement was successful.</returns>
     public bool TryAddStack(InventoryComponent caller, ItemStack itemStack, out Vector2Int slotIndex) {
@@ -102,24 +103,34 @@ public class InventoryData
     /// <returns>Whether the item was found and able to be removed.</returns>
     public bool RemoveItem(InventoryComponent caller, ItemInstance itemInstance) {
         if (!Items.Contains(itemInstance)) return false;
-        Vector2Int indexBL = GetSlotIndexOf(itemInstance);
+        Vector2Int indexBL = SlotIndexOf(itemInstance);
         if (!Containers[indexBL.x, indexBL.y].HeldStack.Remove(itemInstance)) {
             Debug.LogError($"InventoryData: Failed to remove item instance {itemInstance.ItemData.ItemName} from inventory.");
             return false;
         }
+        if (Containers[indexBL.x, indexBL.y].HeldStack.StackCount <= 0) {
+            _stacks.Remove(Containers[indexBL.x, indexBL.y].HeldStack);
+            UpdateHeldStack(indexBL, Vector2Int.one, null);
+        }
+        // Debug.Log("Invoking OnInventoryUpdate in RemoveItem of InventoryData");
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
     /// <summary>
-    /// Removes an item from the inventory. Calls OnInventoryUpdate if successful.
+    /// Removes a specified amount of items from the inventory. Calls OnInventoryUpdate if successful.
     /// </summary>
-    /// <param name="itemData">The item instance to remove.</param>
-    /// <returns>Whether the item was found and able to be removed.</returns>
-    public bool RemoveItem(InventoryComponent caller, ItemData itemData) {
-        if (!_stacks.ToDatasList().Contains(itemData)) return false;
-        Vector2Int indexBL = GetSlotIndexOf(itemData);
-        // If no more items left
-        if (!Containers[indexBL.x, indexBL.y].HeldStack.Pop(out _)) {
+    /// <param name="itemData">The item data type to remove.</param>
+    /// <param name="count">The amount of items to remove.</param>
+    /// <returns>Whether the amount of items was found and able to be removed.</returns>
+    public bool RemoveItems(InventoryComponent caller, ItemData itemData, int count) {
+        if (_stacks.CountOf(itemData) < count) return false;
+        for (int i = 0; i < count; i++) {
+            Vector2Int indexBL = SlotIndexOf(itemData);
+            if (!Containers[indexBL.x, indexBL.y].HeldStack.Pop(out _)) {
+                Debug.LogError($"InventoryData: Failed to remove item of data {itemData.ItemName} from inventory.");
+                return false;
+            }
+            if (Containers[indexBL.x, indexBL.y].HeldStack.StackCount > 0) continue;
             _stacks.Remove(Containers[indexBL.x, indexBL.y].HeldStack);
             UpdateHeldStack(indexBL, Vector2Int.one, null);
         }
@@ -129,7 +140,7 @@ public class InventoryData
 
     public bool RemoveStack(InventoryComponent caller, ItemStack stack) {
         if (!_stacks.Contains(stack)) return false;
-        Vector2Int indexBL = GetSlotIndexOf(stack);
+        Vector2Int indexBL = SlotIndexOf(stack);
         _stacks.Remove(stack);
         UpdateHeldStack(indexBL, stack.Size, null);
         OnInventoryUpdate?.Invoke(caller);
@@ -143,7 +154,7 @@ public class InventoryData
             return false;
         }
         if (!itemStack.Pop(out ItemInstance poppedItem)) {
-            Vector2Int indexBL = GetSlotIndexOf(itemStack);
+            Vector2Int indexBL = SlotIndexOf(itemStack);
             _stacks.Remove(itemStack);
             UpdateHeldStack(indexBL, Vector2Int.one, null);
             itemsLeft = false;
@@ -153,27 +164,44 @@ public class InventoryData
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
-    
-    public Vector2Int GetSlotIndexOf(ItemStack itemStack) {
+    /// <summary>
+    /// Gets the first index where this stack is found, going from left to right, bottom to top.
+    /// </summary>
+    /// <param name="itemStack">The stack to search for.</param>
+    /// <returns>Whether the stack was found.</returns>
+    public Vector2Int SlotIndexOf(ItemStack itemStack) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
+                if (Containers[x, y].HeldStack == null) continue;
                 if (Containers[x, y].HeldStack == itemStack) return new Vector2Int(x, y);
             }
         }
         return new Vector2Int(-1, -1);
     }
-
-    public Vector2Int GetSlotIndexOf(ItemInstance itemInstance) {
+    /// <summary>
+    /// Gets the first index where this item is found, going from left to right, bottom to top.
+    /// </summary>
+    /// <param name="itemInstance">The item to search for.</param>
+    /// <returns>Whether the item was found.</returns>
+    public Vector2Int SlotIndexOf(ItemInstance itemInstance) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
-                if (Containers[x, y].HeldStack.Contains(itemInstance)) return new Vector2Int(x, y);
+                InventoryContainer container = Containers[x, y];
+                if (container.HeldStack == null) continue;
+                if (container.HeldStack.Contains(itemInstance)) return new Vector2Int(x, y);
             }
         }
         return new Vector2Int(-1, -1);
     }
-    public Vector2Int GetSlotIndexOf(ItemData itemData) {
+    /// <summary>
+    /// Gets the first index where this item data is found, going from left to right, bottom to top.
+    /// </summary>
+    /// <param name="itemData">The item data to search for.</param>
+    /// <returns>Whether the item data was found.</returns>
+    public Vector2Int SlotIndexOf(ItemData itemData) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {
+                if (Containers[x, y].HeldStack == null) continue;
                 if (Containers[x, y].HeldStack.StackType == itemData) return new Vector2Int(x, y);
             }
         }
