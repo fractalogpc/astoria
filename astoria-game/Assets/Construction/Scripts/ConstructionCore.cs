@@ -411,7 +411,7 @@ namespace Construction
                     ConstructionComponentData data = _selectedData as ConstructionComponentData;
 
                     // placedObject.GetComponent<ConstructionComponent>().AddConnections(data, Settings);
-                    NewConstructionComponent constructionComponent = placedObject.GetComponent<NewConstructionComponent>();
+                    ConstructionComponent constructionComponent = placedObject.GetComponent<ConstructionComponent>();
                     constructionComponent.SetData(data);
                     constructionComponent.CreateInitialConnections();
                     constructionComponent.EvaluateStability();

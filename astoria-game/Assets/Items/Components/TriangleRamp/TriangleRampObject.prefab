@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5946079619422861154}
   - component: {fileID: 6666949201643369300}
-  - component: {fileID: 5474610591850677452}
+  - component: {fileID: 1503046927697815729}
   m_Layer: 18
   m_Name: TriangleRampObject
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
     Data: {fileID: 0}
     usedHorizontally: 0
     usedVertically: 0
---- !u!114 &5474610591850677452
+--- !u!114 &1503046927697815729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,11 +73,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1839868237219429915}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8712d06f330a494b99c8823efd632b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 66f077d5c78cfe84c87daebee962b587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parents: []
-  children: []
+  previewComponent: {fileID: 8802408707026768891, guid: 1ccc5f7fb1cc7494783c5a2847453ac5, type: 3}
+  inherentStability: -30
+  minimumStability: 30
+  maximumHealth: 100
+  edges:
+  - position: {x: 0, y: 0, z: -1.5}
+    normal: {x: 0, y: 0, z: 1}
+    Transform: {fileID: 0}
+    Data: {fileID: 0}
+    usedHorizontally: 0
+    usedVertically: 0
+  - position: {x: 0, y: 0, z: -1.5}
+    normal: {x: 0, y: 0, z: 1}
+    Transform: {fileID: 0}
+    Data: {fileID: 0}
+    usedHorizontally: 0
+    usedVertically: 0
+  IsDeleted: 0
 --- !u!1001 &1645532138966129758
 PrefabInstance:
   m_ObjectHideFlags: 0

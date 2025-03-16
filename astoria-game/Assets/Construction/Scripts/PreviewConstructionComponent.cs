@@ -205,7 +205,7 @@ namespace Construction
             List<(Edge, float, Transform)> possibleEdges = new();
             foreach (Collider collider in Physics.OverlapSphere(tryPosition, settings.StructureCheckRadius, settings.ConstructionLayerMask, QueryTriggerInteraction.Ignore))
             {
-                NewConstructionComponent otherComponent = collider.GetComponentInParent<NewConstructionComponent>();
+                ConstructionComponent otherComponent = collider.GetComponentInParent<ConstructionComponent>();
                 if (otherComponent != null)
                 {
                     // Find the closest free edge that's in range

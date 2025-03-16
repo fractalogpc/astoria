@@ -29,7 +29,7 @@ public abstract class EnemyCore : MonoBehaviour
       health.TakeDamage(damage, position);
     }
 
-    target.TryGetComponent<NewConstructionComponent>(out NewConstructionComponent building);
+    target.TryGetComponent<ConstructionComponent>(out ConstructionComponent building);
     if (building != null) {
       building.TakeDamage(damage, position);
     }

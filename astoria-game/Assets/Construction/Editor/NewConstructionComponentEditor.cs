@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using Construction;
 
 
-[CustomEditor(typeof(NewConstructionComponent))]
-public class NewConstructionComponentEditor : Editor
+[CustomEditor(typeof(ConstructionComponent))]
+public class ConstructionComponentEditor : Editor
 {
-  private NewConstructionComponent component;
+  private ConstructionComponent component;
 
   private void OnEnable()
   {
-    component = (NewConstructionComponent)target;
+    component = (ConstructionComponent)target;
   }
 
   public override void OnInspectorGUI()

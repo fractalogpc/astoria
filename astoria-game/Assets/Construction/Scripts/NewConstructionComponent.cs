@@ -7,7 +7,7 @@ namespace Construction
     /// Goes on the construction component object.
     /// Handles placing and snapping of components on eachother.
     /// </summary>
-    public class NewConstructionComponent : MonoBehaviour, IDamageable
+    public class ConstructionComponent : MonoBehaviour, IDamageable
     {
 
         private ConstructionData data; // Assigned by ConstructionCore, used for various stuff
@@ -23,28 +23,31 @@ namespace Construction
         public float Stability => stability;
         private float health = 0f;
 
+        [HideInInspector] public bool IsDeleted = false;
+
 
         private void Start()
         {
-            foreach (Edge edge in edges)
-            {
-                edge.Transform = transform;
-                edge.Data = data;
-            }
-
             health = maximumHealth;
 
-            CreateInitialConnections();
+            // CreateInitialConnections();
         }
 
         public void SetData(ConstructionData data)
         {
             this.data = data;
+
+            foreach (Edge edge in edges)
+            {
+                edge.Transform = transform;
+                edge.Data = data;
+            }
         }
 
         // For each edge in the component, check if it is colliding with any other component's edge then create a connection between them
         public void CreateInitialConnections()
         {
+            // Debug.Log("Creating initial connections...");
 
             if (data == null)
             {
@@ -52,9 +55,12 @@ namespace Construction
                 return;
             }
 
+            // Debug.Log($"Checking {edges.Count} edges...");
+
             foreach (Edge edge in edges)
             {
-                List<NewConstructionComponent> nearbyComponents = edge.GetNearbyComponents(0.1f, new List<Transform> { transform });
+                // Debug.Log($"Checking edge {edge.position}");
+                List<ConstructionComponent> nearbyComponents = edge.GetNearbyComponents(0.1f, new List<Transform> { transform });
 
                 if (nearbyComponents.Count > 0)
                 {
@@ -62,16 +68,19 @@ namespace Construction
                     AddConnection(edge, nearbyComponents);
 
                     // Then add connections from the nearby components to this component
-                    foreach (NewConstructionComponent component in nearbyComponents)
+                    foreach (ConstructionComponent component in nearbyComponents)
                     {
-                        component.AddConnection(edge, this);
+                        Edge otherEdge = component.GetClosestEdge(edge.position);
+                        component.AddConnection(otherEdge, this);
                     }
+
+                    // Debug.Log($"Connected {gameObject.name} to {nearbyComponents.Count} components.");
                 }
             }
         }
 
         // Add a single connection to the dictionary
-        public void AddConnection(Edge edge, NewConstructionComponent component)
+        public void AddConnection(Edge edge, ConstructionComponent component)
         {
             if (connections.ContainsKey(edge))
             {
@@ -84,7 +93,7 @@ namespace Construction
         }
 
         // Add a list of connections to the dictionary
-        public void AddConnection(Edge edge, List<NewConstructionComponent> components)
+        public void AddConnection(Edge edge, List<ConstructionComponent> components)
         {
             if (connections.ContainsKey(edge))
             {
@@ -99,11 +108,14 @@ namespace Construction
         // Evaluate the stability of the component then updates neighbouring components if necessary
         public void EvaluateStability()
         {
+            // Debug.Log("Evaluating stability...");
             float currentStability = stability;
             stability = CalculateStability();
+            // Debug.Log($"Stability: {stability}");
 
             if (stability < minimumStability)
             {
+                // Debug.Log("Stability too low!");
                 Collapse();
                 return;
             }
@@ -122,13 +134,13 @@ namespace Construction
             List<Edge> edgesToRemove = new List<Edge>();
             foreach (Edge connectionEdge in connections.Keys)
             {
-                List<NewConstructionComponent> components = connections[connectionEdge].GetComponents();
+                List<ConstructionComponent> components = connections[connectionEdge].GetComponents();
                 if (components.Count == 0)
                 {
                     edgesToRemove.Add(connectionEdge);
                     continue;
                 }
-                foreach (NewConstructionComponent component in components)
+                foreach (ConstructionComponent component in components)
                 {
                     if (component.Stability > maximumNeighborStability)
                     {
@@ -137,11 +149,15 @@ namespace Construction
                 }
             }
 
+            /* 
+            This is causing issues with foreach loops, if this becomes an issue look here, otherwise it seems fine to have empty lists lying around.
+            
             // Clean up empty connections
             foreach (Edge edge in edgesToRemove)
             {
                 connections.Remove(edge);
             }
+            */
 
             // If this component has negative inherent stability, it will reduce the maximum neighbor stability
             if (inherentStability < 0)
@@ -152,7 +168,7 @@ namespace Construction
             // If this component has a positive inherent stability, take the inherent stability as the stability
             if (inherentStability > 0)
             {
-                return inherentStability;
+                return Mathf.Max(maximumNeighborStability, inherentStability);
             }
 
             // If this component has no inherent stability, take the maximum neighbor stability
@@ -164,22 +180,42 @@ namespace Construction
         {
             foreach (Edge connectionEdge in connections.Keys)
             {
-                List<NewConstructionComponent> components = connections[connectionEdge].GetComponents();
-                foreach (NewConstructionComponent component in components)
+                List<ConstructionComponent> components = connections[connectionEdge].GetComponents();
+                foreach (ConstructionComponent component in components)
                 {
                     component.EvaluateStability();
                 }
             }
         }
 
+        // Get the closest edge to a position
+        public Edge GetClosestEdge(Vector3 position)
+        {
+            Edge closestEdge = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (Edge edge in edges)
+            {
+                float distance = Vector3.Distance(edge.position, position);
+                if (distance < closestDistance)
+                {
+                    closestEdge = edge;
+                    closestDistance = distance;
+                }
+            }
+
+            return closestEdge;
+        }
+
         // Collapse the component
         private void Collapse()
         {
+            IsDeleted = true; // Mark the component as deleted to prevent issues with recursion
             stability = 0f;
             UpdateNeighbouringStability();
 
-            Debug.Log($"{gameObject.name} collapsed!");
-            Destroy(gameObject);
+            // Debug.Log($"{gameObject.name} collapsed!");
+            Invoke(nameof(DelayedDestroy), 0f);
         }
 
         public void TakeDamage(float damage, Vector3 hitPosition)
@@ -203,29 +239,34 @@ namespace Construction
         public void DestroyComponent() {
             Collapse();
         }
+
+        private void DelayedDestroy()
+        {
+            Destroy(gameObject);
+        }
     }
 
     public class Connection
     {
-        public List<NewConstructionComponent> components = new List<NewConstructionComponent>();
+        public List<ConstructionComponent> components = new List<ConstructionComponent>();
 
 
-        public Connection(NewConstructionComponent component)
+        public Connection(ConstructionComponent component)
         {
             components.Add(component);
         }
 
-        public Connection(List<NewConstructionComponent> components)
+        public Connection(List<ConstructionComponent> components)
         {
             this.components = components;
         }
 
-        public List<NewConstructionComponent> GetComponents()
+        public List<ConstructionComponent> GetComponents()
         {
-            List<NewConstructionComponent> validComponents = new List<NewConstructionComponent>();
-            foreach (NewConstructionComponent component in components)
+            List<ConstructionComponent> validComponents = new List<ConstructionComponent>();
+            foreach (ConstructionComponent component in components)
             {
-                if (component != null)
+                if (component != null && !component.IsDeleted)
                 {
                     validComponents.Add(component);
                 }
@@ -235,7 +276,7 @@ namespace Construction
             return components;
         }
 
-        public void AddComponent(NewConstructionComponent component)
+        public void AddComponent(ConstructionComponent component)
         {
             if (!components.Contains(component))
             {
@@ -247,9 +288,9 @@ namespace Construction
             }
         }
 
-        public void AddComponents(List<NewConstructionComponent> components)
+        public void AddComponents(List<ConstructionComponent> components)
         {
-            foreach (NewConstructionComponent component in components)
+            foreach (ConstructionComponent component in components)
             {
                 if (!components.Contains(component))
                 {

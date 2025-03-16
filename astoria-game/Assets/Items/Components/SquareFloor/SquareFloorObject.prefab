@@ -560,7 +560,6 @@ GameObject:
   - component: {fileID: 5404837727745277482}
   - component: {fileID: 4580841039868703385}
   - component: {fileID: 908028400292285203}
-  - component: {fileID: 4673460970429034823}
   - component: {fileID: -3828001426287972882}
   - component: {fileID: 5967240026993756437}
   m_Layer: 18
@@ -644,48 +643,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4673460970429034823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8513741646287064064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d30c23ccbeff4a4b8687a691b54fe93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: 6be556ff677cd51459c0de555fc514a3, type: 2}
-  previewComponent: {fileID: 7775519575857303430, guid: 937005e1d7f7abd40bf261a6d4d8eb80, type: 3}
-  inherentStability: 100
-  minimumStability: 100
-  maximumHealth: 100
-  edges:
-  - position: {x: -1.5, y: 0, z: 0}
-    normal: {x: -1, y: 0, z: 0}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 1.5, y: 0, z: 0}
-    normal: {x: 1, y: 0, z: 0}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 0, y: 0, z: -1.5}
-    normal: {x: 0, y: 0, z: -1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 0, y: 0, z: 1.5}
-    normal: {x: 0, y: 0, z: 1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
 --- !u!114 &-3828001426287972882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,13 +664,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8513741646287064064}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66f077d5c78cfe84c87daebee962b587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   previewComponent: {fileID: 7775519575857303430, guid: 937005e1d7f7abd40bf261a6d4d8eb80, type: 3}
-  inherentStability: 100
+  inherentStability: 200
   minimumStability: 100
   maximumHealth: 100
   edges:
@@ -741,6 +698,7 @@ MonoBehaviour:
     Data: {fileID: 0}
     usedHorizontally: 0
     usedVertically: 0
+  IsDeleted: 0
 --- !u!1001 &136878022136223138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -866,7 +824,7 @@ MonoBehaviour:
   OnHealthZero:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4673460970429034823}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
         m_MethodName: Destroy
         m_Mode: 1

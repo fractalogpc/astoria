@@ -166,17 +166,23 @@ namespace Construction
       return (finalPosition, rotation);
     }
 
-    public List<NewConstructionComponent> GetNearbyComponents(float distance, List<Transform> ignoreTransforms = null)
+    public List<ConstructionComponent> GetNearbyComponents(float distance, List<Transform> ignoreTransforms = null)
     {
-      List<NewConstructionComponent> nearbyComponents = new List<NewConstructionComponent>();
+      List<ConstructionComponent> nearbyComponents = new List<ConstructionComponent>();
 
       Collider[] hits = Physics.OverlapSphere(Transform.position + Transform.rotation * position, distance);
 
+      // Debug.Log($"Checking {hits.Length} hits.");
+
       foreach (Collider hit in hits)
       {
-        NewConstructionComponent component = hit.GetComponent<NewConstructionComponent>();
+        ConstructionComponent component = hit.GetComponentInParent<ConstructionComponent>();
+
+        // Debug.Log($"Found component: {component}");
 
         if (component == null || component.transform == Transform || (ignoreTransforms != null && ignoreTransforms.Contains(component.transform))) continue;
+
+        // Debug.Log($"Adding component: {component}");
 
         nearbyComponents.Add(component);
       }
