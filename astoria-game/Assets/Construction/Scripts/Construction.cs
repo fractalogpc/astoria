@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Construction
@@ -61,16 +63,6 @@ namespace Construction
       return VectorFunctions.Vector3Approximately(firstPosition, tryPosition, threshold);
     }
 
-    // public bool IsSame(Edge otherEdge, Vector3 position1, Vector3 position2, Quaternion rotation1, Quaternion rotation2, float threshold = 0.1f)
-    // {
-    //   Vector3 edge1Point = position1 + rotation1 * position;
-    //   Vector3 edge2Point = position2 + rotation2 * otherEdge.position;
-
-    //   return VectorFunctions.Vector3Approximately(edge1Point, edge2Point, threshold);
-    // }
-
-
-
     public float DistanceFromEdge(Vector3 tryPosition, float edgeWidth, float threshold)
     {
       Vector3 edgePosition = position;
@@ -111,8 +103,6 @@ namespace Construction
 
       return signedDistance;
     }
-
-
 
     public Vector3 WorldSpaceRotation()
     {
@@ -176,5 +166,22 @@ namespace Construction
       return (finalPosition, rotation);
     }
 
+    public List<NewConstructionComponent> GetNearbyComponents(float distance, List<Transform> ignoreTransforms = null)
+    {
+      List<NewConstructionComponent> nearbyComponents = new List<NewConstructionComponent>();
+
+      Collider[] hits = Physics.OverlapSphere(Transform.position + Transform.rotation * position, distance);
+
+      foreach (Collider hit in hits)
+      {
+        NewConstructionComponent component = hit.GetComponent<NewConstructionComponent>();
+
+        if (component == null || component.transform == Transform || (ignoreTransforms != null && ignoreTransforms.Contains(component.transform))) continue;
+
+        nearbyComponents.Add(component);
+      }
+
+      return nearbyComponents;
+    }
   }
 }

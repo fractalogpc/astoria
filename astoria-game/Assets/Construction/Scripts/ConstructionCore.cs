@@ -410,7 +410,11 @@ namespace Construction
 
                     ConstructionComponentData data = _selectedData as ConstructionComponentData;
 
-                    placedObject.GetComponent<ConstructionComponent>().AddConnections(data, Settings);
+                    // placedObject.GetComponent<ConstructionComponent>().AddConnections(data, Settings);
+                    NewConstructionComponent constructionComponent = placedObject.GetComponent<NewConstructionComponent>();
+                    constructionComponent.SetData(data);
+                    constructionComponent.CreateInitialConnections();
+                    constructionComponent.EvaluateStability();
 
                     // Removing items
                     if (!BackgroundInfo._infBuild)

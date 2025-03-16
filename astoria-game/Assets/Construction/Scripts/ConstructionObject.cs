@@ -17,8 +17,8 @@ public class ConstructionObject : MonoBehaviour {
 
   public void Delete() {
     Debug.Log("Try deleting");
-    if (GetComponent<ConstructionComponent>()) {
-      GetComponent<ConstructionComponent>().DestroyComponent();
+    if (GetComponent<NewConstructionComponent>()) {
+      GetComponent<NewConstructionComponent>().DestroyComponent();
     }
 
     Destroy(this.gameObject);
