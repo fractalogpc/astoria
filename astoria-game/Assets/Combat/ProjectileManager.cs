@@ -2,11 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 public class ProjectileManager : Singleton<ProjectileManager>
 {
+    [Tooltip("The amount of times the bullet path is stepped through per fixed update. If this is too low, bullets will follow a stepped arc.")]
     public int SamplesPerFixedUpdate = 5;
+    [Tooltip("The lifetime of a projectile in seconds. The projectile will be destroyed after this time.")]
     public float ProjectileLifetime = 20f;
-    public GameObject ProjectilePrefab;
+    [Tooltip("The prefab to use for the projectile. This will be lerped to the actual position of the projectile every frame.")]
+    public GameObject BulletPrefab;
+    [Tooltip("The prefab to use for the hit effect. This will be spawned at the hit point of the projectile.")]
     public GameObject HitEffectPrefab;
-    public Transform ProjectileStart;
+    [Tooltip("The transform to use as the start position for the cosmetic bullet. This can be used to make the projectile appear to come from a different position.")]
+    public Transform BulletStart;
     private List<Projectile> _projectilesToTick = new List<Projectile>();
     public delegate void ProjectileHitHandler(RaycastHit hit);
 
@@ -63,7 +68,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
             Aerodynamics = aerodynamics;
             TimeToLive = timeToLive;
             Callback = callback;    
-            Renderer = Instantiate(Instance.ProjectilePrefab, Instance.ProjectileStart.position, Quaternion.identity).transform;
+            Renderer = Instantiate(Instance.BulletPrefab, Instance.BulletStart.position, Quaternion.identity).transform;
         }
         public RaycastHit TickProjectile(float deltaTime) {
             // Handle collision

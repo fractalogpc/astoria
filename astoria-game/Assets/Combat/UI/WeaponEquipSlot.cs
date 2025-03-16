@@ -5,8 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(ClickableEvents))]
 public class WeaponEquipSlot : InventoryEquipableSlot
 {
-	[SerializeField] private CombatCore _combatCore;
-	
 	public override bool TryAddToSlot(ItemInstance itemInstance) {
 		if (HeldItem != null) {
 			Debug.Log("WeaponEquipSlot: Slot already has an item instance.");
@@ -23,7 +21,6 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 		_itemImage.preserveAspect = true;
 		_itemImage.color = Color.white;
 		_itemText.text = gunInstance.ItemData.ItemName;
-		_combatCore.InitializeWeapon(gunInstance);
 		OnItemAdded.Invoke(gunInstance);
 		return true;
 	}

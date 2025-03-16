@@ -5,150 +5,44 @@ using KinematicCharacterController;
 using Player;
 
 // public class ViewmodelManager : NetworkBehaviour
-public class ViewmodelManager : MonoBehaviour
-{
-	public Type ViewmodelType => _currentViewmodel.GetType();
-	
+public class ViewmodelManager : MonoBehaviour {
 	[Tooltip("The transform all viewmodels will be parented to.")]
 	[SerializeField] protected Transform _viewmodelParent;
 	[Tooltip("The current viewmodel being used.")]
-	[SerializeField][Mirror.ReadOnly] protected Viewmodel _currentViewmodel;
-	[Tooltip("The transform all props will be parented to.")]
-	[SerializeField] private Transform _propParent;
-	[Tooltip("The current prop being used.")]
-	[SerializeField] protected GameObject _currentProp;
-
-	[SerializeField] private Transform _viewmodelTransform;
-	[Tooltip("The velocity at which viewmodel offset is at its maximum.")]
-	[SerializeField] private float _maxVelocity = 10;
-	[Tooltip("The maximum offset of the viewmodel due to player velocity.")]
-	[SerializeField] private Vector3 _viewmodelVelocityOffsetMagnitude;
-	[Tooltip("The multiplier for the viewmodel's offset.")]
-	[SerializeField] private float _overallMultiplier = 1;
-	[Tooltip("The speed at which the viewmodel lerps to its target offset.")]
-	[SerializeField] private float _transitionSpeed = 10;
-	[Tooltip("The multiplier for the viewmodel's adoption of the camera's bobbing.")]
-	[SerializeField] private float _viewBobbingMultiplier = 1;
-	[SerializeField] private PlayerController _playerController;
-	[SerializeField] private PlayerViewBob _viewBob;
-
-	private KinematicCharacterMotor _motor;
-	private Vector3 _viewmodelVelocityOffset;
-	private Vector3 _viewmodelBobbingOffset;
-
-	private void Start() {
-		_motor = _playerController.Motor;
+	[SerializeField] protected Viewmodel _currentViewmodel;
+	[Tooltip("The current item being held.")]
+	[SerializeField] protected ViewmodelItemInstance _currentItem;
+	
+	public void SetViewmodelTo(GameObject viewmodelPrefab) {
+		RemoveViewmodel();
+		_currentViewmodel = Instantiate(viewmodelPrefab, _viewmodelParent).GetComponent<Viewmodel>();
+		if (_currentItem != null) {
+			_currentViewmodel.SetItemTo(_currentItem);
+		}
 	}
 
-	private void Update() {
-		UpdateViewmodelVelocity();
-		UpdateViewmodelBobbing();
-
-		_viewmodelTransform.localPosition = _viewmodelVelocityOffset + _viewmodelBobbingOffset;
-	}
-
-	private void UpdateViewmodelVelocity() {
-		Vector3 playerVelocity = _motor.BaseVelocity;
-
-		// Transform velocity into viewmodel's space
-		playerVelocity = _viewmodelTransform.InverseTransformDirection(playerVelocity);
-
-		Vector3 proportionalVelocity = new Vector3(
-			Mathf.Clamp(playerVelocity.x / _maxVelocity, -1, 1),
-			Mathf.Clamp(playerVelocity.y / _maxVelocity, -1, 1),
-			Mathf.Clamp(playerVelocity.z / _maxVelocity, -1, 1)
-		);
-
-		Vector3 viewmodelVelocityOffset = new Vector3(
-			_viewmodelVelocityOffsetMagnitude.x * proportionalVelocity.x,
-			_viewmodelVelocityOffsetMagnitude.y * proportionalVelocity.y,
-			_viewmodelVelocityOffsetMagnitude.z * proportionalVelocity.z
-		);
-
-		viewmodelVelocityOffset *= _overallMultiplier;
-
-		_viewmodelVelocityOffset = Vector3.Lerp(_viewmodelVelocityOffset, viewmodelVelocityOffset, Time.deltaTime * _transitionSpeed);
-	}
-
-	private void UpdateViewmodelBobbing() {
-		Vector3 cameraOffset = _viewBob.CameraOffset;
-		_viewmodelBobbingOffset = -cameraOffset * _viewBobbingMultiplier;
+	public bool SetItemTo(ViewmodelItemInstance item) {
+		if (_currentViewmodel == null) return false;
+		_currentViewmodel.SetItemTo(item);
+		_currentItem = item;
+		return true;
 	}
 	
-	public void SetViewmodelFor(ViewmodelItemInstance itemInstance) {
-		if (_currentViewmodel != null) {
-			Destroy(_currentViewmodel.gameObject);
-		}
-		_currentViewmodel = Instantiate(itemInstance.ItemData.ViewmodelPrefab, _viewmodelParent).GetComponent<Viewmodel>();
+	public bool UnsetItem() {
+		if (_currentViewmodel == null) return false;
+		_currentViewmodel.UnsetItem();
+		_currentItem = null;
+		return true;
 	}
 	
 	public void RemoveViewmodel() {
-		if (_currentViewmodel != null) {
-			Destroy(_currentViewmodel.gameObject);
-			_currentViewmodel = null;
-		}
+		if (_currentViewmodel == null) return;
+		Destroy(_currentViewmodel.gameObject);
+		_currentViewmodel = null;
+		_currentItem = null;
 	}
 	
-	// Global Viewmodel Animations
-	
-	/// <summary>
-	/// Calls the unequip trigger of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of unequip animation in seconds.</returns>
-	public float PlayUnequip() {
-		return _currentViewmodel.SetTriggerUnequip(); 
-	}
-	/// <summary>
-	/// Calls the equip trigger of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of equip animation in seconds.</returns>
-	public float PlayEquip() {
-		return _currentViewmodel.SetTriggerEquip(); 
-	}
-	
-	// Tool Viewmodel Animations
-	
-	/// <summary>
-	/// Calls the use trigger of the tool viewmodel. The viewmodel must be of type ToolViewmodel.
-	/// </summary>
-	/// <returns>The length of the use animation in seconds. -1 if the viewmodel is not a ToolViewmodel.</returns>
-	public float PlayToolUse() {
-		if (ViewmodelType != typeof(ToolViewmodel)) return -1;
-		return ((ToolViewmodel)_currentViewmodel).SetTriggerUse();
-	}
-	/// <summary>
-	/// Calls the use secondary trigger of the tool viewmodel. The viewmodel must be of type ToolViewmodel.
-	/// </summary>
-	/// <returns>The length of the use secondary animation in seconds. -1 if the viewmodel is not a ToolViewmodel.</returns>
-	public float PlayUseSecondary() {
-		if (ViewmodelType != typeof(ToolViewmodel)) return -1;
-		return ((ToolViewmodel)_currentViewmodel).SetTriggerUseSecondary();
-	}
-	
-	// Combat Viewmodel Animations
-	
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayFire() {
-		if (ViewmodelType != typeof(CombatViewmodel)) return -1;
-		return ((CombatViewmodel)_currentViewmodel).SetTriggerFire();
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayReloadEmpty() {
-		if (ViewmodelType != typeof(CombatViewmodel)) return -1;
-		return ((CombatViewmodel)_currentViewmodel).SetTriggerReloadEmpty(); 
-	}
-	/// <summary>
-	/// Calls the activation function of the relevant animation of the current viewmodel.
-	/// </summary>
-	/// <returns>Duration of triggered animation in seconds.</returns>
-	public float PlayReloadPartial() {
-		if (ViewmodelType != typeof(CombatViewmodel)) return -1;
-		return ((CombatViewmodel)_currentViewmodel).SetTriggerReloadPartial();
+	public void SetTrigger(string triggerName) {
+		_currentViewmodel.SetTrigger(triggerName);
 	}
 }
