@@ -14,7 +14,7 @@ public class BaseToolInstance : ViewmodelItemInstance
 
 	public override void OnHotbarSelected() {
 		base.OnHotbarSelected();
-		Debug.Log(_toolCore == null);
+		// Debug.Log(_toolCore == null);
 		_toolCore.AttachToInputs(this);
 		Initialize();
 		OnEquip();

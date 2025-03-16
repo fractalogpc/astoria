@@ -16,8 +16,8 @@ public class TogglePlayerBuildingUI : InputHandlerBase
 
     protected override void InitializeActionMap()
     {
-        RegisterAction(_inputActions.Player.Build, ctx => SetVisibility(true));
-        RegisterAction(_inputActions.BuildingUI.CloseMenu, ctx => SetVisibility(false));
+        // RegisterAction(_inputActions.Player.Build, ctx => SetVisibility(true));
+        // RegisterAction(_inputActions.BuildingUI.CloseMenu, ctx => SetVisibility(false));
     }
 
     public void SetVisibility(bool show)
