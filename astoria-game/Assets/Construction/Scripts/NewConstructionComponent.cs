@@ -10,7 +10,7 @@ namespace Construction
     public class ConstructionComponent : MonoBehaviour, IDamageable
     {
 
-        private ConstructionData data; // Assigned by ConstructionCore, used for various stuff
+        private ConstructionComponentData data; // Assigned by ConstructionCore, used for various stuff
         public PreviewConstructionComponent previewComponent;
 
         public float inherentStability = 0f;
@@ -35,7 +35,7 @@ namespace Construction
 
         public void SetData(ConstructionData data)
         {
-            this.data = data;
+            this.data = (ConstructionComponentData)data;
 
             foreach (Edge edge in edges)
             {
@@ -65,13 +65,13 @@ namespace Construction
                 if (nearbyComponents.Count > 0)
                 {
                     // If there are nearby components, add connections on THIS component
-                    AddConnection(edge, nearbyComponents);
+                    AddConnection(edge, nearbyComponents, data);
 
                     // Then add connections from the nearby components to this component
                     foreach (ConstructionComponent component in nearbyComponents)
                     {
                         Edge otherEdge = component.GetClosestEdge(edge.position);
-                        component.AddConnection(otherEdge, this);
+                        component.AddConnection(otherEdge, this, data);
                     }
 
                     // Debug.Log($"Connected {gameObject.name} to {nearbyComponents.Count} components.");
@@ -80,8 +80,18 @@ namespace Construction
         }
 
         // Add a single connection to the dictionary
-        public void AddConnection(Edge edge, ConstructionComponent component)
+        public void AddConnection(Edge edge, ConstructionComponent component, ConstructionComponentData data)
         {
+            if (data.isHorizontal && component.data.isHorizontal)
+            {
+                edge.usedHorizontally = true;
+            }
+
+            if (data.isVertical && component.data.isVertical)
+            {
+                edge.usedVertically = true;
+            }
+
             if (connections.ContainsKey(edge))
             {
                 connections[edge].AddComponent(component);
@@ -93,8 +103,22 @@ namespace Construction
         }
 
         // Add a list of connections to the dictionary
-        public void AddConnection(Edge edge, List<ConstructionComponent> components)
+        public void AddConnection(Edge edge, List<ConstructionComponent> components, ConstructionComponentData data)
         {
+            // Assign data related things
+            foreach (ConstructionComponent component in components)
+            {
+                if (data.isHorizontal && component.data.isHorizontal)
+                {
+                    edge.usedHorizontally = true;
+                }
+
+                if (data.isVertical && component.data.isVertical)
+                {
+                    edge.usedVertically = true;
+                }
+            }
+
             if (connections.ContainsKey(edge))
             {
                 connections[edge].AddComponents(components);
