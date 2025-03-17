@@ -7289,7 +7289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   constructionCore: {fileID: 6547859344957998441}
   togglePlayerBuildingUI: {fileID: 7753506192576928618}
-  prefabParentContent: {fileID: 6847233402077956102}
+  prefabParentContent: {fileID: 3497341077435863646}
   StructureObjectPrefab: {fileID: 4457531521449062155, guid: e65b6f1bc3fe17b4d905c628778fe37a, type: 3}
   ConstructableObjects:
   - {fileID: 11400000, guid: 6be556ff677cd51459c0de555fc514a3, type: 2}
@@ -7299,6 +7299,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8c3c1736ddea6e3489343576864d7e75, type: 2}
   - {fileID: 11400000, guid: c0beab63e7667e14ba0259d63f5670f1, type: 2}
   - {fileID: 11400000, guid: 7a58cf17d3517e4408bde4cccd799fd3, type: 2}
+  - {fileID: 11400000, guid: 94477d9b0d550784084c6d3a65109714, type: 2}
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -8579,15 +8580,15 @@ MonoBehaviour:
   HoldComponentAfterPlace: 1
   State: 0
   Settings:
-    MaxBuildDistance: 4
+    MaxBuildDistance: 3
     MaxLayers: 20
     HorizontalStep: 0.02
     VerticalStep: 0.04
     VerticalSubStep: 0.01
     UpwardCurveFactor: -0.5
     DensityFactor: -1
-    StructureCheckRadius: 3
-    StructurePlaceRadius: 1
+    StructureCheckRadius: 5
+    StructurePlaceRadius: 3
     ConstructionBufferDistance: 5
     PlacementLayerMask:
       serializedVersion: 2
@@ -8597,11 +8598,11 @@ MonoBehaviour:
       m_Bits: 262208
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 333897
+      m_Bits: 333889
     GroundLayerMask:
       serializedVersion: 2
       m_Bits: 8
-    FoundationMaxDistanceFromGround: 2
+    FoundationMaxDistanceFromGround: 3
     MinGroundNormal: 0
     MaxGroundNormal: 30
     MinWallNormal: 60
