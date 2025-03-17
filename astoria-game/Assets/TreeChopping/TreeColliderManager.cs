@@ -89,6 +89,8 @@ public class TreeColliderManager : MonoBehaviour
 
         for (int j = 0; j < gridCell.colliders.Length; j++) {
           if (gridCell.disabledColliders[j]) continue;
+
+          if (!_activeColliders.ContainsKey(position)) continue;
           if (gridCell.colliders[j] == position) {
             gridCell.disabledColliders[j] = true;
             if (!gridCell.active) break;
@@ -208,6 +210,8 @@ public class TreeColliderManager : MonoBehaviour
 
             for (int j = 0; j < gridCell.colliders.Length; j++) {
               if (gridCell.disabledColliders[j]) continue;
+
+              if (!_activeColliders.ContainsKey(gridCell.colliders[j])) continue;
 
               _unusedColliders.Add(_activeColliders[gridCell.colliders[j]]);
               _activeColliders.Remove(gridCell.colliders[j]);
