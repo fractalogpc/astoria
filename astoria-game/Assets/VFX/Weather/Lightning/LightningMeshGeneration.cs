@@ -68,6 +68,30 @@ public class LightningMeshGeneration : MonoBehaviour {
                 SpawnLightning();
             }
         }
+        
+        /*
+         * Bool firstCall = True;
+         * HitMean = 2.;
+         * HitOffset = .1;
+         * 
+         *
+         * SpawnMean = 5;
+         * SpawnOffset = 2;
+         * _SpawnTimer = SpawnMean + Random.Range(-SpawnOffset, SpawnOffset);
+         *
+         * if (_SpawnTimer > 0) {
+         *  HideLightning();
+         * _SpawnTimer -= Time.deltaTime;
+         * _HitTimer = HitMean + Random.Rane(-HitOffset, HitOffset);
+         * } else if (_hitTimer > 0) {
+         *  SetGoal();
+         *  SetSpawn();
+         *  SpawnLightning();
+         * _HitTimer -= Time.deltaTime;
+         * } else {
+         *  _SpawnTimer = SpawnMean + Random.Range(-SpawnOffset, SpawnOffset);
+         * }
+         */
 
         /*switch (spawnTimer)
         {
@@ -130,6 +154,8 @@ public class LightningMeshGeneration : MonoBehaviour {
         float duration = Random.value + 1f;
         Invoke("ClearLightning", duration);
     }
+    
+    
 
     private void ClearLightning() {
         light.SetActive(false);
