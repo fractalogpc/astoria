@@ -72,10 +72,9 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	private void UpdateInventory(InventoryComponent caller) {
-		if (caller != this) {
-			Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
-			CreateInvFromInventoryData(InventoryData);
-		}
+		Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
+		Debug.LogWarning("Rebuilding is expensive! When adding or removing a set of items, make sure to do it in a single InventoryComponent call. This will prevent the inventory from updating multiple times.");
+		CreateInvFromInventoryData(InventoryData);
 
 		OnInventoryChange.Invoke(InventoryData.Items);
 	}
@@ -172,11 +171,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to match against.</param>
 	/// <returns>A list of InventoryItem that match the ItemData.</returns>
 	public List<ItemInstance> GetItemsOfType(ItemData itemData) {
-		if (!Initialized) {
-			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
-			return new List<ItemInstance>();
-		}
-
+		if (!IsInitialized()) return new List<ItemInstance>();
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
 	}
 
@@ -185,11 +180,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <returns>A list of all the InventoryItems in the inventory.</returns>
 	public List<ItemInstance> GetItems() {
-		if (!Initialized) {
-			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
-			return new List<ItemInstance>();
-		}
-
+		if (!IsInitialized()) return new List<ItemInstance>();
 		return InventoryData.Items;
 	}
 
@@ -200,22 +191,23 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="count">The count of instances.</param>
 	/// <returns>True if there are count or more InventoryItems matching itemData.</returns>
 	public bool ItemCountOrMoreInInventory(ItemData itemData, int count = 1) {
+		if (!IsInitialized()) return false;
 		List<ItemInstance> matchingItemInstances = InventoryData.Items.FindAll(item => item.ItemData == itemData);
 		if (matchingItemInstances.Count < count) return false;
 		return true;
 	}
 	
 	public bool AddStack(ItemStack itemStack) {
+		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStack(this, itemStack, out Vector2Int slotIndexBL)) return false;
-		CreateInvFromInventoryData(InventoryData);
 		return true;
 	}
 	public bool AddItem(ItemInstance itemInstance) {
+		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStack(this, new ItemStack(itemInstance), out Vector2Int slotIndexBL)) {
 			SpawnDroppedItem(new ItemStack(itemInstance));
 			return false;
 		}
-		CreateInvFromInventoryData(InventoryData);
 		return true;
 	}
 
@@ -227,10 +219,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
 	public bool AddItemByData(ItemData itemData, int count = 1) {
-		if (!Initialized) {
-			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot add item. Check for initialization race conditions.", gameObject);
-			return false;
-		}
+		if (!IsInitialized()) return false;
 		for (int i = 0; i < count; i++) {
 			AddItem(itemData.CreateItem());
 		}
@@ -242,6 +231,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="items">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <returns>The amount of items left over.</returns>
 	public int AddItemsByData(List<ItemData> items) {
+		if (!IsInitialized()) return -1;
 		int itemsPlaced = 0;
 		if (items.Count == 0) return 0;
 		foreach (ItemData item in items) {
@@ -261,19 +251,15 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="slotIndexBL">The bottom left slot index to place at.</param>
 	/// <returns></returns>
 	public bool PlaceStack(ItemStack itemStack, Vector2Int slotIndexBL) {
+		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStackAtPosition(this, itemStack, slotIndexBL)) return false;
-		CreateInvFromInventoryData(InventoryData);
 		return true;
 	}
 	public bool RemoveStack(ItemStack itemStack) {
+		if (!IsInitialized()) return false;
 		InventoryData.RemoveStack(this, itemStack);
-		CreateInvFromInventoryData(InventoryData);
 		return true;
 	}
-	
-	
-	// TODO: Ensure public functions after this point properly CreateInvFromInventoryData after modifying the InventoryData.
-	
 	
 	/// <summary>
 	/// Tries to remove count items from the inventory that match the ItemData.
@@ -282,23 +268,17 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="count">The count of items to remove.</param>
 	/// <returns>Whether the count of matching items could be removed.</returns>
 	public bool RemoveItemByData(ItemData itemData, int count = 1) {
-		List<ItemInstance> itemsToRemove = new();
-		foreach (ItemInstance item in InventoryData.Items) {
-			if (itemsToRemove.Count == count) break;
-			if (item.ItemData == itemData) itemsToRemove.Add(item);
-		}
-		Debug.Log($"Found {itemsToRemove.Count} {itemData.ItemName} in {gameObject.name}. Trying to remove {count}.");
-		if (itemsToRemove.Count != count) return false;
-		// for future reference, if second term in the for loop == true, keep iterating
-		for (int i = itemsToRemove.Count - 1; i >= 0; i--) {
-			ItemInstance itemToRemove = itemsToRemove[i];
-			itemsToRemove.RemoveAt(i);
-			RemoveItem(itemToRemove);
-		}
-		return true;
+		if (!IsInitialized()) return false;
+		if (!ItemCountOrMoreInInventory(itemData, count)) return false;
+		return InventoryData.RemoveItems(this, itemData, count);;
 	}
 
 	public bool PopFrom(ItemStack itemStack, out ItemInstance item, out bool hasItemsLeft) {
+		if (!IsInitialized()) {
+			item = null;
+			hasItemsLeft = false;
+			return false;
+		}
 		hasItemsLeft = true;
 		item = null;
 		if (!InventoryData.Stacks.Contains(itemStack)) return false;
@@ -308,19 +288,22 @@ public class InventoryComponent : MonoBehaviour
 	}
 	
 	public bool RemoveItem(ItemInstance item) {
+		if (!IsInitialized()) return false;
 		if (!InventoryData.Items.Contains(item)) return false;
 		InventoryData.RemoveItem(this, item);
 		return true;
 	}
 
 	public void ClearItems() {
+		if (!IsInitialized()) return;
 		for (int i = InventoryData.Items.Count - 1; i >= 0; i--) {
 			RemoveItem(InventoryData.Items[i]);
 		}
 	}
 	
 	public Vector2Int GetSlotIndexOf(ItemStack itemStack) {
-		return InventoryData.GetSlotIndexOf(itemStack);
+		if (!IsInitialized()) return -Vector2Int.one;
+		return InventoryData.SlotIndexOf(itemStack);
 	}
 
 	public void SpawnDroppedItem(ItemStack itemStack) {
@@ -372,7 +355,15 @@ public class InventoryComponent : MonoBehaviour
 			}
 		}
 	}
-	
+
+	private bool IsInitialized() {
+		if (!Initialized) {
+			Debug.LogError("InventoryComponent: Inventory not initialized! Cannot run operation. Check for initialization race conditions.", gameObject);
+			return false;
+		}
+		return true;
+	}
+
 	private GameObject CreateItemPrefab(ItemStack itemStack, Vector2Int slotIndexBL) {
 		GameObject itemPrefab = Instantiate(_inventoryItemPrefab, _rect.transform);
 		itemPrefab.name = itemStack.StackType.ItemName + Random.Range(0, 100000); // Doesn't actually need to be unique, just enough to identify during debugging
@@ -403,7 +394,7 @@ public class InventoryComponent : MonoBehaviour
 	private void InstantiateInventoryItems(InventoryData inventoryData) {
 		ItemStackList stacks = inventoryData.Stacks;
 		for (int i = 0; i < stacks.StackCount; i++) {
-			CreateItemPrefab(stacks[i], inventoryData.GetSlotIndexOf(stacks[i]));
+			CreateItemPrefab(stacks[i], inventoryData.SlotIndexOf(stacks[i]));
 		}
 	}
 	private void HighlightContainers(List<InventoryContainer> containers, ContainerHighlight highlight) {

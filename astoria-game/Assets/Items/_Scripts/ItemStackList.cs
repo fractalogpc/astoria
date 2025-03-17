@@ -84,6 +84,10 @@ public class ItemStackList
 		return list.Any(stack => stack.Contains(item));
 	}
 	
+	public int CountOf(ItemData data) {
+		return list.Where(stack => stack.StackType == data).Sum(stack => stack.StackCount);
+	}
+	
 	public void Add(ItemStack stack) {
 		list.Add(stack);
 	}

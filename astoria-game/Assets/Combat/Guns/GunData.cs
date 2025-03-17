@@ -8,6 +8,11 @@ public class GunData : ViewmodelItemData
 	[Header("Ammo Item")]
 	public ItemData AmmoItem;
 
+	[Header("Animations")]
+	public AnimationClip FireAnimation;
+	public AnimationClip ReloadEmptyAnimation;
+	public AnimationClip ReloadPartialAnimation;
+	
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;
 	public RecoilSettings RecoilSettings;

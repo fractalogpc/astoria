@@ -28,7 +28,7 @@ public class PickaxeInstance : BaseToolInstance
 		if (!_canSwing) return;
 		base.OnUseDown();
 		_timeSinceLastSwing = 0;
-		_viewmodelManager.PlayToolUse();
+		_viewmodelManager.SetTrigger("Use");
 		DelaySwing(_toolCore, ItemData.SwingCooldown);
 	}
 	public override void OnUseUp() {

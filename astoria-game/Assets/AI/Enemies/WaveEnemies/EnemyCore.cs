@@ -31,7 +31,7 @@ public abstract class EnemyCore : MonoBehaviour
 
     target.TryGetComponent<ConstructionComponent>(out ConstructionComponent building);
     if (building != null) {
-      building.Damage(damage);
+      building.TakeDamage(damage, position);
     }
 
     target.TryGetComponent<CoreController>(out CoreController core);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -36,7 +37,6 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
 	private CombatCore _combatCore;
-	private new ViewmodelManager _viewmodelManager;
 	private InventoryComponent _playerInventory;
 	private ProjectileManager _projectileManager;
 	private FireLogic _currentFireLogic;
@@ -48,15 +48,13 @@ public class GunInstance : ViewmodelItemInstance
 	
 	// This constructor is called when the item is created in the inventory, it is not initialized yet
 	public GunInstance(GunData gunData) : base(gunData) {
+		_combatCore = CombatCore.Instance;
 	}
 	
-	// Assign any references that need to be attached when first equipped here
-	public void InitializeWeapon(CombatCore combatCore, ViewmodelManager viewmodelManager, InventoryComponent playerInventory) {
+	public void InitializeWeapon() {
 		Initialized = true;
-		_combatCore = combatCore;
-		_viewmodelManager = viewmodelManager;
-		_playerInventory = playerInventory;
 		_projectileManager = ProjectileManager.Instance;
+		_playerInventory = _combatCore.PlayerInventory;
 		switch (ItemData.FireCombination) {
 			case FireCombinations.Semi or FireCombinations.ShotgunSemi:
 				SetFireMode(FireMode.Semi);
@@ -76,18 +74,14 @@ public class GunInstance : ViewmodelItemInstance
 
 	public override void OnHotbarSelected() {
 		base.OnHotbarSelected();
-		Debug.Log("Combat Core is null: " + (_combatCore == null));
-		_combatCore.EquipWeapon(this);
+		_combatCore.AttachToInputs(this);
+		if (Initialized == false) InitializeWeapon();
 	}
 	
 	public override void OnHotbarDeselected( ) {
 		base.OnHotbarDeselected();
-		_combatCore.UnequipWeapon();
-	}
-
-	public void Unequip() {
-		_currentFireLogic.Cleanup();
-		Initialized = false;
+		_combatCore.DetachFromInputs();
+		Unequip();
 	}
 	
 	/// <summary>
@@ -107,32 +101,13 @@ public class GunInstance : ViewmodelItemInstance
 			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
 			}
-			_viewmodelManager.PlayFire();
+			_viewmodelManager.SetTrigger("Fire");
 			SetCurrentAmmoTo(CurrentAmmo - 1);
 		}
 		else {
 			ShootProjectile(GetRandomSpreadAngle());
-			_viewmodelManager.PlayFire();
+			_viewmodelManager.SetTrigger("Fire");
 			SetCurrentAmmoTo(CurrentAmmo - 1);
-		}
-	}
-
-	private void ShootProjectile(float spreadAngle = 0) {
-		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward * ItemData.InitialVelocityMS;
-		_projectileManager.FireProjectile(
-			ItemData.Damage, 
-			ItemData.BulletMassKg, 
-			Camera.main.transform.position,
-			direction, 
-			new ProjectileManager.Aerodynamics(ItemData.DragCoefficient, Mathf.Pow(ItemData.BulletDiameterM / 2, 2) * Mathf.PI, ItemData.AirDensityKgPerM), 
-			ProjectileCallback	
-		);
-	}
-
-	private void ProjectileCallback(RaycastHit hit) {
-		IDamageable damageable = hit.collider.gameObject.GetComponentInChildren<IDamageable>();
-		if (damageable != null) {
-			damageable.TakeDamage(ItemData.Damage, hit.point);
 		}
 	}
 	
@@ -159,6 +134,53 @@ public class GunInstance : ViewmodelItemInstance
 		if (!Initialized) return;
 		_currentFireLogic.OnFireUp();
 	}
+	
+	public void OnReloadDown() {
+		if (!Initialized) return;
+		if (!_isReloading) {
+			_reloadCoroutine = _combatCore.StartCoroutine(ReloadCoroutine());
+		}
+	}
+	public void OnReloadUp() {
+		if (!Initialized) return;
+		// _currentFireLogic.OnReloadUp();
+	}
+	public void OnAimDown() {
+		if (!Initialized) return;
+		_currentFireLogic.OnAimDown();
+	}
+	public void OnAimUp() {
+		if (!Initialized) return;
+		_currentFireLogic.OnAimUp();
+	}
+	public void Tick() {
+		if (!Initialized) return;
+		_currentFireLogic.Tick();
+	}
+
+	private void ShootProjectile(float spreadAngle = 0) {
+		Vector3 direction = Quaternion.Euler(spreadAngle, spreadAngle, 0) * Camera.main.transform.forward * ItemData.InitialVelocityMS;
+		_projectileManager.FireProjectile(
+			ItemData.Damage, 
+			ItemData.BulletMassKg, 
+			Camera.main.transform.position,
+			direction, 
+			new ProjectileManager.Aerodynamics(ItemData.DragCoefficient, Mathf.Pow(ItemData.BulletDiameterM / 2, 2) * Mathf.PI, ItemData.AirDensityKgPerM), 
+			ProjectileCallback	
+		);
+	}
+
+	private void ProjectileCallback(RaycastHit hit) {
+		IDamageable damageable = hit.collider.gameObject.GetComponentInChildren<IDamageable>();
+		if (damageable != null) {
+			damageable.TakeDamage(ItemData.Damage, hit.point);
+		}
+	}
+	
+	private void Unequip() {
+		_currentFireLogic.Cleanup();
+		Initialized = false;
+	}
 
 	private IEnumerator ReloadCoroutine() {
 		_isReloading = true;
@@ -173,7 +195,8 @@ public class GunInstance : ViewmodelItemInstance
 				if (CurrentAmmo > ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is empty and chamber is empty
 				if (CurrentAmmo == 0) {
-					yield return new WaitForSeconds(_viewmodelManager.PlayReloadEmpty());
+					_viewmodelManager.SetTrigger("ReloadEmpty");
+					yield return new WaitForSeconds(ItemData.ReloadEmptyAnimation.length);
 					if (AmmoInInventory() < ItemData.MagazineSetting.MagazineCapacity) {
 						invAmmo = AmmoInInventory();
 						RemoveAmmoFromInventory(CurrentAmmo);
@@ -187,7 +210,8 @@ public class GunInstance : ViewmodelItemInstance
 				}
 				// One in chamber and magazine is not full
 				if (CurrentAmmo <= ItemData.MagazineSetting.MagazineCapacity) {
-					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
+					_viewmodelManager.SetTrigger("ReloadPartial");
+					yield return new WaitForSeconds(ItemData.ReloadPartialAnimation.length);
 					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity + 1 - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
 						invAmmo = AmmoInInventory();
@@ -206,7 +230,8 @@ public class GunInstance : ViewmodelItemInstance
 				if (CurrentAmmo >= ItemData.MagazineSetting.MagazineCapacity) break;
 				// Magazine is not full
 				if (CurrentAmmo < ItemData.MagazineSetting.MagazineCapacity) {
-					yield return new WaitForSeconds(_viewmodelManager.PlayReloadPartial());
+					_viewmodelManager.SetTrigger("ReloadPartial");
+					yield return new WaitForSeconds(ItemData.ReloadPartialAnimation.length);
 					int ammoNeeded = ItemData.MagazineSetting.MagazineCapacity - CurrentAmmo;
 					if (AmmoInInventory() < ammoNeeded) {
 						SetCurrentAmmoTo(CurrentAmmo + AmmoInInventory());
@@ -241,29 +266,6 @@ public class GunInstance : ViewmodelItemInstance
 				break;
 		}
 		_isReloading = false;
-	}
-	
-	public void OnReloadDown() {
-		if (!Initialized) return;
-		if (!_isReloading) {
-			_reloadCoroutine = _combatCore.StartCoroutine(ReloadCoroutine());
-		}
-	}
-	public void OnReloadUp() {
-		if (!Initialized) return;
-		// _currentFireLogic.OnReloadUp();
-	}
-	public void OnAimDown() {
-		if (!Initialized) return;
-		_currentFireLogic.OnAimDown();
-	}
-	public void OnAimUp() {
-		if (!Initialized) return;
-		_currentFireLogic.OnAimUp();
-	}
-	public void Tick() {
-		if (!Initialized) return;
-		_currentFireLogic.Tick();
 	}
 	
 	private int AmmoInInventory() {

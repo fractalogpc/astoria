@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Construction;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class PreviewObject : MonoBehaviour
 {
+  [HideInInspector]
   public ConstructionData Data;
 
   [System.Serializable]
@@ -23,8 +25,9 @@ public class PreviewObject : MonoBehaviour
 
   [HideInInspector] public float heightOffset = 0f;
 
+    private void Start() => Data = GetComponent<PreviewConstructionComponent>().Data;
 
-  public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
   {
     transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, xRotation, 0));
   }

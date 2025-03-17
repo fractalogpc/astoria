@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5404837727745277482}
   - component: {fileID: 4580841039868703385}
   - component: {fileID: 908028400292285203}
-  - component: {fileID: 4673460970429034823}
   - component: {fileID: -3828001426287972882}
+  - component: {fileID: 528795631084354693}
   m_Layer: 18
   m_Name: SquareCeilingObject
   m_TagString: Untagged
@@ -89,7 +89,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4673460970429034823
+--- !u!114 &-3828001426287972882
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,7 +98,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 8513741646287064064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d30c23ccbeff4a4b8687a691b54fe93, type: 3}
+  m_Script: {fileID: 11500000, guid: a8712d06f330a494b99c8823efd632b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parents: []
+  children: []
+--- !u!114 &528795631084354693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513741646287064064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66f077d5c78cfe84c87daebee962b587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   previewComponent: {fileID: 7775519575857303430, guid: 25572bb4ff10d274cb026f8726df843c, type: 3}
@@ -130,20 +144,7 @@ MonoBehaviour:
     Data: {fileID: 0}
     usedHorizontally: 0
     usedVertically: 0
---- !u!114 &-3828001426287972882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8513741646287064064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8712d06f330a494b99c8823efd632b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parents: []
-  children: []
+  IsDeleted: 0
 --- !u!1001 &136878022136223138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -269,7 +270,7 @@ MonoBehaviour:
   OnHealthZero:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4673460970429034823}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
         m_MethodName: Destroy
         m_Mode: 1

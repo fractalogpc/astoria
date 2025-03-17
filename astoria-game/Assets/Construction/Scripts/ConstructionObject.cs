@@ -16,7 +16,7 @@ public class ConstructionObject : MonoBehaviour {
   }
 
   public void Delete() {
-    Debug.Log("Try deleting");
+    // Debug.Log("Try deleting");
     if (GetComponent<ConstructionComponent>()) {
       GetComponent<ConstructionComponent>().DestroyComponent();
     }

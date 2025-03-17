@@ -87,11 +87,18 @@ public class CompassDisplay : MonoBehaviour
     InitializeFillBars();
   }
 
+  private float stashedDirection = 0f;
   /// <summary>
   /// Updates the compass display each frame.
   /// </summary>
   private void Update()
   {
+    // Only update if the camera has rotated
+    if (stashedDirection != cameraTransform.eulerAngles.y) {
+      stashedDirection = cameraTransform.eulerAngles.y;
+    } else {
+      return;
+    }
     UpdateCardinalDirections();
     UpdateCompassIcons();
   }

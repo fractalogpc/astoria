@@ -16,8 +16,8 @@ public class TogglePlayerBuildingUI : InputHandlerBase
 
     protected override void InitializeActionMap()
     {
-        RegisterAction(_inputActions.Player.Build, ctx => SetVisibility(true));
-        RegisterAction(_inputActions.BuildingUI.CloseMenu, ctx => SetVisibility(false));
+        // RegisterAction(_inputActions.Player.Build, ctx => SetVisibility(true));
+        // RegisterAction(_inputActions.BuildingUI.CloseMenu, ctx => SetVisibility(false));
     }
 
     public void SetVisibility(bool show)
@@ -31,14 +31,16 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         {
             OnBuildingUIOpen?.Invoke();
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            InputReader.Instance.SwitchInputMap(InputMap.BuildingUI);
+            InputReader.Instance.InputActions.FindAction("Look").Disable();
+            Cursor.lockState = CursorLockMode.Confined;
+            // InputReader.Instance.SwitchInputMap(InputMap.BuildingUI);
         }
         else
         {
             Cursor.visible = false;
+            InputReader.Instance.InputActions.FindAction("Look").Enable();
             Cursor.lockState = CursorLockMode.Locked;
-            InputReader.Instance.SwitchInputMap(InputMap.Player);
+            // InputReader.Instance.SwitchInputMap(InputMap.Player);
         }
     }
 }
