@@ -11,6 +11,12 @@ public class GroundLauncherEnemy : EnemyCore
   [SerializeField] private float attackSpeed;
   [SerializeField] private float propulsionFactor;
   [SerializeField] private GameObject projectilePrefab;
+  
+  [Header("Targeting Settings")]
+  [SerializeField] private float playerFocusRadius;
+  [SerializeField] private float obstacleSphereCastRadius;
+  [SerializeField] private LayerMask obstacleMask;
+  [SerializeField] private float obstacleNoticeDistance;
 
   private NavMeshAgent agent;
   private Transform target;
@@ -29,8 +35,18 @@ public class GroundLauncherEnemy : EnemyCore
   }
 
   public override void Navigate(Transform core, Transform player) {
+    Transform goal = core;
     target = core;
-    agent.SetDestination(firingLocation);
+
+    RaycastHit hit;
+    if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, goal.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
+      // If there is an obstacle, navigate to it and destroy it
+      agent.SetDestination(hit.point);
+      target = hit.transform;
+      return;
+    }
+
+    agent.SetDestination(goal.position);
   }
 
   public override void Attack() {
@@ -39,11 +55,11 @@ public class GroundLauncherEnemy : EnemyCore
       return;
     }
 
-    if (Vector3.Distance(transform.position, firingLocation) < 3 && target) {
+    if (Vector3.Distance(transform.position, target.position) < 10 && target) {
       attackTimer = 0;
       transform.LookAt(target, Vector3.up);
-      GameObject projectile = Instantiate(projectilePrefab);
 
+      GameObject projectile = Instantiate(projectilePrefab);
       projectile.GetComponent<Rigidbody>().AddForce(transform.forward * propulsionFactor);
     }
   }
