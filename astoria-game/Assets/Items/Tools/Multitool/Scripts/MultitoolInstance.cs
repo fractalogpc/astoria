@@ -24,8 +24,6 @@ public class MultitoolInstance : BaseToolInstance
 	}
 	public override void OnUseDown()
 	{
-		Debug.Log("Alt use");
-
 		base.OnUseDown();
 	}
 	public override void OnUseUp()
@@ -38,7 +36,6 @@ public class MultitoolInstance : BaseToolInstance
 	}
 	public override void OnAltUseDown()
 	{
-		Debug.Log("Alt use");
 		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(true);
 
 		base.OnAltUseDown();

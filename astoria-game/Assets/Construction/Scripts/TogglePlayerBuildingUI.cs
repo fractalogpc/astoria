@@ -31,14 +31,16 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         {
             OnBuildingUIOpen?.Invoke();
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            InputReader.Instance.SwitchInputMap(InputMap.BuildingUI);
+            InputReader.Instance.InputActions.FindAction("Look").Disable();
+            Cursor.lockState = CursorLockMode.Confined;
+            // InputReader.Instance.SwitchInputMap(InputMap.BuildingUI);
         }
         else
         {
             Cursor.visible = false;
+            InputReader.Instance.InputActions.FindAction("Look").Enable();
             Cursor.lockState = CursorLockMode.Locked;
-            InputReader.Instance.SwitchInputMap(InputMap.Player);
+            // InputReader.Instance.SwitchInputMap(InputMap.Player);
         }
     }
 }
