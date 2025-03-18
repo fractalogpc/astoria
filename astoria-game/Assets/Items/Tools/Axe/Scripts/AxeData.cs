@@ -11,6 +11,8 @@ public class AxeData : BaseToolData
 	public float SideChopCooldown = 1f;
 	[Tooltip("The range in meters the axe can chop trees.")]
 	public float ChopRange = 4f;
+
+	public GameObject WoodHitDecalPrefab;
 	
 	public override ItemInstance CreateItem() {
 		return new AxeInstance(this);

@@ -74,6 +74,6 @@ public class AxeInstance : BaseToolInstance
 		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();
 		if (treeChoppable == null) return;
 		treeChoppable.Damage(ItemData.ChopDamage, hit.point);
-		
+		GameObject.Instantiate(ItemData.WoodHitDecalPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
 	}
 }
