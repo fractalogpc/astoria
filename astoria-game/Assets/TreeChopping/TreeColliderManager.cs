@@ -89,6 +89,8 @@ public class TreeColliderManager : MonoBehaviour
 
         for (int j = 0; j < gridCell.colliders.Length; j++) {
           if (gridCell.disabledColliders[j]) continue;
+
+          if (!_activeColliders.ContainsKey(position)) continue;
           if (gridCell.colliders[j] == position) {
             gridCell.disabledColliders[j] = true;
             if (!gridCell.active) break;
@@ -129,6 +131,11 @@ public class TreeColliderManager : MonoBehaviour
           if (!gridCell.disabledColliders[j]) continue;
           if (gridCell.colliders[j] == position) {
             gridCell.disabledColliders[j] = false;
+
+            if (_activeColliders.ContainsKey(gridCell.colliders[j])) {
+              _activeColliders[gridCell.colliders[j]].SetActive(true);
+              break;
+            }
             
             if (_unusedColliders.Count > 0) {
               GameObject collider = _unusedColliders[0];
@@ -178,7 +185,12 @@ public class TreeColliderManager : MonoBehaviour
             terrainTile.grid[i].active = true;
             for (int j = 0; j < gridCell.colliders.Length; j++) {
               if (gridCell.disabledColliders[j]) continue;
-              
+
+              if (_activeColliders.ContainsKey(gridCell.colliders[j])) {
+                _activeColliders[gridCell.colliders[j]].SetActive(true);
+                continue;
+              }
+
               if (_unusedColliders.Count > 0) {
                 GameObject collider = _unusedColliders[0];
                 _unusedColliders.RemoveAt(0);
@@ -186,6 +198,7 @@ public class TreeColliderManager : MonoBehaviour
                 collider.transform.position = gridCell.colliders[j];
                 _activeColliders.Add(gridCell.colliders[j], collider);
               } else {
+                
                 GameObject collider = Instantiate(_colliderPrefab, gridCell.colliders[j], Quaternion.identity, _colliderParent);
                 _activeColliders.Add(gridCell.colliders[j], collider);
               }
@@ -197,6 +210,8 @@ public class TreeColliderManager : MonoBehaviour
 
             for (int j = 0; j < gridCell.colliders.Length; j++) {
               if (gridCell.disabledColliders[j]) continue;
+
+              if (!_activeColliders.ContainsKey(gridCell.colliders[j])) continue;
 
               _unusedColliders.Add(_activeColliders[gridCell.colliders[j]]);
               _activeColliders.Remove(gridCell.colliders[j]);
@@ -213,11 +228,12 @@ public class TreeColliderManager : MonoBehaviour
     Vector3 terrainSize = terrainTile.terrainData.size;
     Vector3 terrainPosition = terrainTile.position;
     Vector3[] treeInstances = terrainTile.treeInstances;
+    float gridCellSize = terrainSize.x / _gridDivisions;
 
     for (int i = 0; i < _gridDivisions; i++) {
       for (int j = 0; j < _gridDivisions; j++) {
         ColliderGrid gridCell = new ColliderGrid();
-        gridCell.centerPosition = new Vector2(i * terrainSize.x / _gridDivisions, j * terrainSize.z / _gridDivisions) + new Vector2(terrainPosition.x, terrainPosition.z);
+        gridCell.centerPosition = new Vector2(i * gridCellSize + gridCellSize * 0.5f, j * gridCellSize + gridCellSize * 0.5f) + new Vector2(terrainPosition.x, terrainPosition.z);
         gridCell.active = false;
 
         // Get subset of tree instances within the grid cell
@@ -227,9 +243,8 @@ public class TreeColliderManager : MonoBehaviour
           Vector2 treePosition2D = new Vector2(treePosition.x, treePosition.z);
 
           Vector2 diff = treePosition2D - gridCell.centerPosition;
-          float gridCellSize = terrainSize.x / _gridDivisions;
 
-          if (Mathf.Max(Mathf.Abs(diff.x), Mathf.Abs(diff.y)) < gridCellSize / 2f) {
+          if (Mathf.Max(Mathf.Abs(diff.x), Mathf.Abs(diff.y)) < gridCellSize * 0.5f) {
             treeInstancesInCell.Add(treeInstances[k]);
           }
         }
@@ -239,6 +254,7 @@ public class TreeColliderManager : MonoBehaviour
 
         for (int k = 0; k < gridCell.colliders.Length; k++) {
           gridCell.colliders[k] = Vector3.Scale(treeInstancesInCell[k], terrainSize) + terrainPosition;
+          gridCell.disabledColliders[k] = false;
         }
 
         grid[i * _gridDivisions + j] = gridCell;

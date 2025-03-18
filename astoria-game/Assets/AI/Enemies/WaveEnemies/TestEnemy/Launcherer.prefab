@@ -8478,6 +8478,7 @@ GameObject:
   - component: {fileID: 6099493221479924515}
   - component: {fileID: 2103041005339455619}
   - component: {fileID: 2966122273284158685}
+  - component: {fileID: 2276646123431108130}
   m_Layer: 0
   m_Name: Launcherer
   m_TagString: Untagged
@@ -8539,6 +8540,35 @@ MonoBehaviour:
   attackSpeed: 3
   propulsionFactor: 8
   projectilePrefab: {fileID: 709371380102867736, guid: 963e224f27fc04b2b8bd3d3510f1092a, type: 3}
+  playerFocusRadius: 10
+  obstacleSphereCastRadius: 1
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 262144
+  obstacleNoticeDistance: 15
+--- !u!136 &2276646123431108130
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6358995176421208112}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 262144
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &6360313624243451534
 GameObject:
   m_ObjectHideFlags: 0
