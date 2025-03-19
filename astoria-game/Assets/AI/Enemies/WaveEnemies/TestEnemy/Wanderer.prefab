@@ -8479,6 +8479,7 @@ GameObject:
   - component: {fileID: 2103041005339455619}
   - component: {fileID: 7191328705035347949}
   - component: {fileID: 4871584071008460092}
+  - component: {fileID: 4439485171400352914}
   m_Layer: 0
   m_Name: Wanderer
   m_TagString: Untagged
@@ -8511,7 +8512,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6358995176421208112}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
@@ -8545,6 +8546,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   obstacleNoticeDistance: 15
+  _attacking: 0
 --- !u!136 &4871584071008460092
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8568,6 +8570,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4439485171400352914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6358995176421208112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebde91e630b88481bb027662e069b4ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 3271014839258385608}
+  _agent: {fileID: 2103041005339455619}
+  _core: {fileID: 7191328705035347949}
+  _runThreshold: 1
 --- !u!1 &6360313624243451534
 GameObject:
   m_ObjectHideFlags: 0
