@@ -12,6 +12,10 @@ public class GunData : ViewmodelItemData
 	public AnimationClip FireAnimation;
 	public AnimationClip ReloadEmptyAnimation;
 	public AnimationClip ReloadPartialAnimation;
+	public Vector3 AdsIkTarget;
+	public Vector3 AdsIkTargetRot;
+	public float AdsTransitionTimeIn;
+	public float AdsTransitionTimeOut;
 	
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;

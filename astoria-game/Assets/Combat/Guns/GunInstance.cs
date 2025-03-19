@@ -148,10 +148,16 @@ public class GunInstance : ViewmodelItemInstance
 	public void OnAimDown() {
 		if (!Initialized) return;
 		_currentFireLogic.OnAimDown();
+		if (ItemData.AdsIkTarget != Vector3.zero) {
+			_viewmodel.EnableAds(ItemData.AdsTransitionTimeIn);
+		}
 	}
 	public void OnAimUp() {
 		if (!Initialized) return;
 		_currentFireLogic.OnAimUp();
+		if (ItemData.AdsIkTarget != Vector3.zero) {
+			_viewmodel.DisableAds(ItemData.AdsTransitionTimeOut);
+		}
 	}
 	public void Tick() {
 		if (!Initialized) return;
