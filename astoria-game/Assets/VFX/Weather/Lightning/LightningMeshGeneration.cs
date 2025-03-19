@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using SteamAudio;
 using UnityEngine;
-using Color = UnityEngine.Color;
 using Vector3 = UnityEngine.Vector3;
 
 public class LightningMeshGeneration : MonoBehaviour {
@@ -13,9 +11,12 @@ public class LightningMeshGeneration : MonoBehaviour {
     [SerializeField] public int numSegments = 30;
     [SerializeField] private float meanSpawnTime = 1f;
     [SerializeField] private float spawnTimeVariance = .5f;
+    [SerializeField] private float hitMean = 2f;
+    [SerializeField] private float hitTimeVariance = .1f;
     [SerializeField] private float spawnHeight = 10f;
     [SerializeField] private Transform spawnPositionCenter;
     [SerializeField] private float spawnPositionRadius;
+    private bool firstCall = true;
     public Vector3 spawnPosition;
     public Vector3 goalPosition;
     public float downStrength;
@@ -32,7 +33,8 @@ public class LightningMeshGeneration : MonoBehaviour {
     private bool canDebug = false;
 
     private bool spawning = true;
-    private float spawnTimer = 0f;
+    [SerializeField] float spawnTimer;
+    [SerializeField] float hitTimer;
 
     public Mesh mesh;
 
@@ -40,98 +42,52 @@ public class LightningMeshGeneration : MonoBehaviour {
     void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+        spawnTimer = meanSpawnTime + Random.Range(spawnTimeVariance, -spawnTimeVariance);
     }
 
-    
-
+    private bool lightningIsSpawned = false;
     // Update is called once per frame
     void Update() {
         if (spawning)
         {
-            spawnTimer -= Time.deltaTime;
-            if (spawnTimer <= 0)
+            if (!lightningIsSpawned)
             {
-                spawnTimer = meanSpawnTime + Random.Range(-spawnTimeVariance, spawnTimeVariance);
-                spawnPosition = spawnPositionCenter.position + Random.insideUnitSphere * spawnPositionRadius;
-                spawnPosition.y = spawnHeight;
+                spawnTimer -= Time.deltaTime;
 
-                spawn.position = spawnPosition;
-
-                RaycastHit hit;
-                if (Physics.Raycast(spawnPositionCenter.position + Random.onUnitSphere * spawnPositionRadius, Vector3.down, out hit))
+                if (spawnTimer < 0) // Spawn
                 {
-                    goal.position = hit.point;
-                    goalPosition = goal.position;
-                }
-                else return;
+                    spawnPosition = spawnPositionCenter.position + Random.insideUnitSphere * spawnPositionRadius;
+                    spawnPosition.y = spawnHeight;
+                    spawn.position = spawnPosition;
 
-                SpawnLightning();
+                    RaycastHit hit;
+                    if (Physics.Raycast(spawnPositionCenter.position + Random.onUnitSphere * spawnPositionRadius, Vector3.down, out hit))
+                    {
+                        goal.position = hit.point;
+                        goalPosition = goal.position;
+                    }
+                    else return;
+
+                    SpawnLightning();
+
+                    lightningIsSpawned = true;
+
+                    hitTimer = hitMean + Random.Range(-hitTimeVariance, hitTimeVariance);
+                }
+            }
+            else
+            {
+                hitTimer -= Time.deltaTime;
+
+                if (hitTimer < 0)
+                {
+                    ClearLightning();
+                    lightningIsSpawned = false;
+                    spawnTimer = meanSpawnTime + Random.Range(spawnTimeVariance, -spawnTimeVariance);
+                }
             }
         }
-        
-        /*
-         * Bool firstCall = True;
-         * HitMean = 2.;
-         * HitOffset = .1;
-         * 
-         *
-         * SpawnMean = 5;
-         * SpawnOffset = 2;
-         * _SpawnTimer = SpawnMean + Random.Range(-SpawnOffset, SpawnOffset);
-         *
-         * if (_SpawnTimer > 0) {
-         *  HideLightning();
-         * _SpawnTimer -= Time.deltaTime;
-         * _HitTimer = HitMean + Random.Rane(-HitOffset, HitOffset);
-         * } else if (_hitTimer > 0) {
-         *  SetGoal();
-         *  SetSpawn();
-         *  SpawnLightning();
-         * _HitTimer -= Time.deltaTime;
-         * } else {
-         *  _SpawnTimer = SpawnMean + Random.Range(-SpawnOffset, SpawnOffset);
-         * }
-         */
 
-        /*switch (spawnTimer)
-        {
-            case float t when t > 0:
-                spawnTimer -= Time.deltaTime;
-                break;
-            default:
-                print("hi");
-                break;
-        }*/
-
-        // if (Input.anyKeyDown)
-        // {
-        //     SubVertexDirection.Clear();
-        //     SubVertexStart.Clear();
-        //     SubVertexGoal.Clear();
-        //     SubVertex.Clear();
-        //     mesh.Clear();
-        //     FormLightning();
-        //     canDebug = true;
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     FormMesh(Vertex);
-        //     for (int i = 0; i < SubVertex.Count; i++)
-        //     {
-        //         FormMesh(SubVertex[i]);
-        //     }
-        //     light.SetActive(true);
-        // }
-
-    }
-    
-    public void ActivateLightning() {
-        spawning = true;
-    }
-
-    public void DeactivateLightning() {
-        spawning = false;
     }
 
     private void SpawnLightning() {
@@ -151,8 +107,8 @@ public class LightningMeshGeneration : MonoBehaviour {
         light.SetActive(true);
 
         // Random duration
-        float duration = Random.value + 1f;
-        Invoke("ClearLightning", duration);
+        //float duration = Random.value + 1f;
+        //Invoke("ClearLightning", duration);
     }
     
     
@@ -189,7 +145,7 @@ public class LightningMeshGeneration : MonoBehaviour {
         {
             Vector3 randomPos = Random.insideUnitSphere;
             randomPos.y = -Mathf.Abs(randomPos.y);
-            randomPos = Vector3.Lerp(randomPos, Vector3.down, downStrength);
+            randomPos = Vector3.Lerp(randomPos, Vector3.Normalize(goal.position - spawn.position), downStrength);
             SubVertexGoal.Add(SubVertexStart[i] + randomPos * Vector3.Distance(goal.position, SubVertexStart[i]));
             for (int j = 0; j < 8; j++)
             {
@@ -228,10 +184,10 @@ public class LightningMeshGeneration : MonoBehaviour {
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add((Vectors[i] - spawn.position) + BiNormal);
-            vertices.Add((Vectors[i] - spawn.position) + RotNormal);
-            vertices.Add((Vectors[i] - spawn.position) - BiNormal);
-            vertices.Add((Vectors[i] - spawn.position) - RotNormal);
+            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * .5f));
+            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * .5f));
+            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * .5f));
+            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * .5f));
         }
 
         if (offset < 1)
