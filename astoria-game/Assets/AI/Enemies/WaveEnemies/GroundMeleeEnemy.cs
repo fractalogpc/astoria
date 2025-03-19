@@ -18,6 +18,7 @@ public class GroundMeleeEnemy : EnemyCore
   private NavMeshAgent agent;
   private Transform target;
   private float attackTimer;
+  public bool _attacking;
   // private Animator animator;
 
   private void Start() {
@@ -35,16 +36,18 @@ public class GroundMeleeEnemy : EnemyCore
       target = player;
     }
 
-    // Find any obstacles between the enemy and the goal
-    RaycastHit hit;
-    if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, goal.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
-      // If there is an obstacle, navigate to it and destroy it
-      agent.SetDestination(hit.point);
-      target = hit.transform;
-      return;
+    NavMeshPath path = new NavMeshPath();
+    if (!agent.CalculatePath(core.position, path)) {
+      // Find any obstacles between the enemy and the goal
+      RaycastHit hit;
+      if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, goal.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
+        // If there is an obstacle, navigate to it and destroy it
+        agent.SetDestination(hit.point);
+        target = hit.transform;
+        return;
+      }
     }
-
-    agent.SetDestination(goal.position);
+      agent.SetDestination(goal.position);
   }
 
   public override void Attack() {
@@ -57,8 +60,10 @@ public class GroundMeleeEnemy : EnemyCore
     if (Vector3.Distance(transform.position, target.position) <= attackRadius) {
       // Attack the target
       // animator.SetTrigger("Attack"); // Play attack animation
+      _attacking = true;
       attackTimer = 0;
       base.DamageTarget(target.gameObject, attackDamage, target.position);
+      _attacking = false;
     }
   }
 
