@@ -88,14 +88,18 @@ public class CompassDisplay : MonoBehaviour
   }
 
   private float stashedDirection = 0f;
+  private Vector3 stashedPosition = Vector3.zero;
   /// <summary>
   /// Updates the compass display each frame.
   /// </summary>
   private void Update()
   {
-    // Only update if the camera has rotated
+    // Only update if the camera has rotated or player has moved
     if (stashedDirection != cameraTransform.eulerAngles.y) {
       stashedDirection = cameraTransform.eulerAngles.y;
+    } else if (stashedPosition != cameraTransform.position)
+    { 
+      stashedPosition = cameraTransform.position;
     } else {
       return;
     }
