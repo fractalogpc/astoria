@@ -30,6 +30,7 @@ public class AxeInstance : BaseToolInstance
 		_timeSinceLastSideChop = 0;
 		_viewmodelManager.SetTrigger("Use");
 		DelayChop(_toolCore, ItemData.SideChopCooldown);
+		AudioManager.Instance.PlayOneShot(ItemData.SwingSound, _toolCore.transform.position);
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
