@@ -1,4 +1,5 @@
 using System.Collections;
+using FMODUnity;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class AxeInstance : BaseToolInstance
 	private float _timeSinceLastSideChop = float.MaxValue;
 	private bool _canChop => _timeSinceLastSideChop >= ItemData.SideChopCooldown;
 	private Coroutine _chopDelayCoroutine;
+	private Coroutine _soundDelayCoroutine;
 	
 	public AxeInstance(ItemData itemData) : base(itemData) {
 	}
@@ -18,6 +20,8 @@ public class AxeInstance : BaseToolInstance
 	public override void OnUnequip() {
 		base.OnUnequip();
 		if (_chopDelayCoroutine != null) _toolCore.StopCoroutine(_chopDelayCoroutine);
+		// Sound should probably play out
+		// if (_soundDelayCoroutine != null) _toolCore.StopCoroutine(_soundDelayCoroutine);
 	}
 
 	public override void OnTick() {
@@ -29,8 +33,8 @@ public class AxeInstance : BaseToolInstance
 		base.OnUseDown();
 		_timeSinceLastSideChop = 0;
 		_viewmodelManager.SetTrigger("Use");
-		DelayChop(_toolCore, ItemData.SideChopCooldown);
-		AudioManager.Instance.PlayOneShot(ItemData.SwingSound, _toolCore.transform.position);
+		DelayChop(_toolCore, ItemData.UseAnimation.length * ItemData.AnimChopMoment);
+		DelaySound(_toolCore, ItemData.SwingSoundDelay, ItemData.SwingSound);
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
@@ -51,11 +55,19 @@ public class AxeInstance : BaseToolInstance
 	private void DelayChop(MonoBehaviour holdingMonobehaviour, float delay) {
 		_chopDelayCoroutine = holdingMonobehaviour.StartCoroutine(DelayChopCoroutine(delay));
 	}
-
 	private IEnumerator DelayChopCoroutine(float delay) {
 		yield return new WaitForSeconds(delay);
 		ChopTree(ItemData.ChopRange);
 	}
+	private void DelaySound(MonoBehaviour holdingMonobehaviour, float delay, EventReference sound) {
+		_chopDelayCoroutine = holdingMonobehaviour.StartCoroutine(DelaySoundCoroutine(delay, sound));
+	}
+	private IEnumerator DelaySoundCoroutine(float delay, EventReference sound) {
+		yield return new WaitForSeconds(delay);
+		AudioManager.Instance.PlayOneShot(sound, _toolCore.transform.position);
+	}
+
+
 	private void ChopTree(float range) {
 		Camera mainCamera = Camera.main;
 		if (mainCamera == null) Debug.LogError("AxeInstance: Main camera not found!");

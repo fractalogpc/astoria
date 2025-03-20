@@ -8,6 +8,8 @@ public class AxeData : BaseToolData
 	// TODO: Make this a random range
 	[Tooltip("The value subtracted from the tree's health when chopping.")]
 	public int ChopDamage = 50;
+	[Tooltip("The normalized time in the swing animation when the axe hits the tree.")]
+	[Range(0, 1)] public float AnimChopMoment;
 	[Tooltip("Time in seconds axe cannot be used after a side chop is started.")]
 	public float SideChopCooldown = 1f;
 	[Tooltip("The range in meters the axe can chop trees.")]
@@ -16,6 +18,7 @@ public class AxeData : BaseToolData
 	public GameObject WoodHitDecalPrefab;
 	[Tooltip("The sound that plays when the axe is swung.")]
 	public EventReference SwingSound;
+	public float SwingSoundDelay;
 	[Tooltip("The sound that plays when the axe hits.")]
 	public EventReference HitSound;
 	
