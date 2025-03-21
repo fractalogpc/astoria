@@ -266,9 +266,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 10.67
+  m_Height: 36.252502
   m_Direction: 1
-  m_Center: {x: 0, y: 5.34, z: 0}
+  m_Center: {x: 0, y: 18.131252, z: 0}
 --- !u!114 &1156994452384530940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,9 +331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ac962f5563a084c97300465eaa36d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   OnHealthInitialize:
     m_PersistentCalls:
       m_Calls: []
@@ -349,9 +346,10 @@ MonoBehaviour:
   OnHeal:
     m_PersistentCalls:
       m_Calls: []
-  _currentHealth: 100
-  _maxHealth: 100
+  _currentHealth: 250
+  _maxHealth: 250
   _woodItem: {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
+  _amount: 10
   _fallingForce: 1000
 --- !u!1 &3302745967604263738
 GameObject:
