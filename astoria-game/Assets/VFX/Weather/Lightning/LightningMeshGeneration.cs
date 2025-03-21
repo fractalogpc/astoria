@@ -16,6 +16,8 @@ public class LightningMeshGeneration : MonoBehaviour {
     [SerializeField] private float spawnHeight = 10f;
     [SerializeField] private Transform spawnPositionCenter;
     [SerializeField] private float spawnPositionRadius;
+    [SerializeField] private float lightningSize = .1f;
+    [SerializeField] private Material lightningMaterial;
     private bool firstCall = true;
     public Vector3 spawnPosition;
     public Vector3 goalPosition;
@@ -105,6 +107,8 @@ public class LightningMeshGeneration : MonoBehaviour {
             FormMesh(SubVertex[i]);
         }
         light.SetActive(true);
+        lightningMaterial.SetFloat("SpawnHeight", spawnPosition.y);
+        lightningMaterial.SetFloat("SpawnTime", Time.time);
 
         // Random duration
         //float duration = Random.value + 1f;
@@ -184,10 +188,10 @@ public class LightningMeshGeneration : MonoBehaviour {
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * .5f));
+            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * lightningSize));
         }
 
         if (offset < 1)
