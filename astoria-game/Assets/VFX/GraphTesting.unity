@@ -1445,7 +1445,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d7853ce3a40ab43d1af1cee2d43063b4, type: 2}
+  - {fileID: 2100000, guid: cf00f501b5fa049a5abbbf24f3070b1b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1493,11 +1493,13 @@ MonoBehaviour:
   numSegments: 30
   meanSpawnTime: 1
   spawnTimeVariance: 0.5
-  hitMean: 20
+  hitMean: 0.2
   hitTimeVariance: 0.2
   spawnHeight: 1000
   spawnPositionCenter: {fileID: 1219285987}
   spawnPositionRadius: 1000
+  lightningSize: 0.1
+  lightningMaterial: {fileID: 2100000, guid: cf00f501b5fa049a5abbbf24f3070b1b, type: 2}
   spawnPosition: {x: 0, y: 0, z: 0}
   goalPosition: {x: 0, y: 0, z: 0}
   downStrength: 0.2
