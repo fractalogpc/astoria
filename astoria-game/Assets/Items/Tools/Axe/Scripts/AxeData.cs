@@ -7,7 +7,7 @@ public class AxeData : BaseToolData
 	[Header("Axe Properties")]
 	// TODO: Make this a random range
 	[Tooltip("The value subtracted from the tree's health when chopping.")]
-	public int ChopDamage = 50;
+	public Vector2 ChopDamage = new Vector2(10f, 20f);
 	[Tooltip("The normalized time in the swing animation when the axe hits the tree.")]
 	[Range(0, 1)] public float AnimChopMoment;
 	[Tooltip("Time in seconds axe cannot be used after a side chop is started.")]
