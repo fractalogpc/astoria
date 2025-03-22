@@ -49,6 +49,7 @@ namespace Console
                 new _InfBuildCommand(),
                 new _InfCraftCommand(),
                 new _InfAmmoCommand(),
+                new _ToggleBuildMenuCommand(),
                 // Cheat commands here
             };
 
