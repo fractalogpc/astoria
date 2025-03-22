@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Simply toggles building menu.
@@ -42,5 +39,10 @@ public class TogglePlayerBuildingUI : InputHandlerBase
             Cursor.lockState = CursorLockMode.Locked;
             // InputReader.Instance.SwitchInputMap(InputMap.Player);
         }
+    }
+
+    public void ToggleVisibility()
+    {
+        SetVisibility(!IsInventoryOpen);
     }
 }

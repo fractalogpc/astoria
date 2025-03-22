@@ -8,5 +8,6 @@ public static class BackgroundInfo
   public static bool _infBuild = true;
   public static bool _infCraft = true;
   public static bool _infAmmo = false;
+  public static bool _toggleBuildMenu = false;
 
 }
