@@ -68,6 +68,11 @@ public class HealthInterface : MonoBehaviour, IDamageable
     OnHealthChanged?.Invoke(initialHealth, _currentHealth, MaxHealth);
   }
 
+  public void SetHealthDirect(float health) {
+    _currentHealth = health;
+    OnHealthChanged?.Invoke(health, health, MaxHealth);
+  }
+
   public void TakeDamage(float damage, Vector3 hitPosition) {
     Damage(damage, hitPosition);
   }

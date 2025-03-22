@@ -64,6 +64,7 @@ public class PickaxeInstance : BaseToolInstance
 		GameObject rock = hit.collider.gameObject;
 		HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
 		if (harvestableRock == null) return;
-		harvestableRock.Damage(ItemData.SwingDamage, hit.point);
+		float damage = Random.Range(ItemData.SwingDamage.x, ItemData.SwingDamage.y);
+		harvestableRock.Damage(damage, hit.point);
 	}
 }
