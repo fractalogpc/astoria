@@ -4,10 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftingRecipeUI : MonoBehaviour
+public class StationRecipeUI : MonoBehaviour
 {
 	[SerializeField][ReadOnly] private RecipeData _recipe;
-	[SerializeField][ReadOnly] private CraftingStationNetworked _craftingStation;
+	[SerializeField][ReadOnly] private StationCore _station;
 	[SerializeField] private Image _recipeIcon;
 	[SerializeField] private CanvasGroup _recipeIconCanvasGroup;
 	[SerializeField] private Button _selectRecipeButton;
@@ -24,8 +24,8 @@ public class CraftingRecipeUI : MonoBehaviour
 		_selectRecipeButton.onClick.RemoveListener(OnSelectRecipe);
 	}
 
-	public void Initialize(CraftingStationNetworked craftingStation, RecipeData recipe, RecipeSelected onRecipeSelectedCallback) {
-		_craftingStation = craftingStation;
+	public void Initialize(StationCore station, RecipeData recipe, RecipeSelected onRecipeSelectedCallback) {
+		_station = station;
 		_recipe = recipe;
 		_callback = onRecipeSelectedCallback;
 		UpdateInteractivity();
@@ -35,7 +35,7 @@ public class CraftingRecipeUI : MonoBehaviour
 		Debug.Log("Can change this to be a specific icon in the recipe data later.");
 		_recipeIcon.sprite = _recipe._resultSetList.List[0].ItemData.ItemIcon;
 		_recipeIcon.preserveAspect = true;
-		if (_craftingStation.CanCraftRecipe(_recipe, 1)) {
+		if (_station.CanCraftRecipe(_recipe, 1)) {
 			_recipeIconCanvasGroup.alpha = 1;
 			_selectRecipeButton.interactable = true;
 			

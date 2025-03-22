@@ -15,12 +15,12 @@ using Mirror;
 /// </summary>
 [RequireComponent(typeof(Interactable))]
 // public class CraftingStationNetworked : NetworkBehaviour
-public class CraftingStationNetworked : MonoBehaviour
+public class StationCore : MonoBehaviour
 {
 	public RecipeLibrary Recipes;
-	public CraftingItemInfoUI ItemInfoUI;
-	public CraftingRecipeGridUI RecipeGridUI;
-	public CraftingCountUI CraftCountUI;
+	public StationItemInfoUI ItemInfoUI;
+	public StationRecipeGridUI RecipeGridUI;
+	public StationCountUI CraftCountUI;
 	[SerializeField, ReadOnly] private InventoryComponent _playerInventory;
 	[SerializeField] private Interactable _interactable;
 	[SerializeField] private Button _craftButton;
@@ -44,7 +44,7 @@ public class CraftingStationNetworked : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Should be called by a Interactor event.
+	/// Should be called by an Interactor event.
 	/// </summary>
 	public void OnInteract()
 	{

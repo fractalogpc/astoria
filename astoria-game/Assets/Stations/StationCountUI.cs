@@ -4,10 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftingCountUI : MonoBehaviour
+public class StationCountUI : MonoBehaviour
 {
     public bool Initialized = false;
-    [SerializeField][ReadOnly] private CraftingStationNetworked _craftingStation;
+    [SerializeField][ReadOnly] private StationCore _station;
     [SerializeField] private Button _increaseButton;
     [SerializeField] private Button _decreaseButton;
     [SerializeField] private TextMeshProUGUI _countText;
@@ -22,38 +22,38 @@ public class CraftingCountUI : MonoBehaviour
         _decreaseButton.onClick.RemoveListener(OnDecrease);
     }
     
-    public void Initialize(CraftingStationNetworked craftingStation) {
+    public void Initialize(StationCore station) {
         if (Initialized) return;
-        _craftingStation = craftingStation;
+        _station = station;
         Initialized = true;
     }
     
     public void OnIncrease() {
         // The button shouldn't be interactable if this is the case, but just in case.
-        if (!_craftingStation.CanCraftRecipe(_craftingStation.SelectedRecipe, _craftingStation.SelectedCraftCount + 1)) {
+        if (!_station.CanCraftRecipe(_station.SelectedRecipe, _station.SelectedCraftCount + 1)) {
             return;
         }
-        _craftingStation.SetCraftCount(_craftingStation.SelectedCraftCount + 1);
+        _station.SetCraftCount(_station.SelectedCraftCount + 1);
         UpdateUI();
     }
     
     public void OnDecrease() {
-        if (_craftingStation.SelectedCraftCount <= 1) {
+        if (_station.SelectedCraftCount <= 1) {
             return;
         }
-        _craftingStation.SetCraftCount(_craftingStation.SelectedCraftCount - 1);
+        _station.SetCraftCount(_station.SelectedCraftCount - 1);
         UpdateUI();
     }
     
     public void UpdateUI() {
-        if (_craftingStation.SelectedRecipe == null) {
+        if (_station.SelectedRecipe == null) {
             _increaseButton.interactable = false;
             _decreaseButton.interactable = false;
             _countText.text = "0";
             return;
         }
-        _decreaseButton.interactable = _craftingStation.SelectedCraftCount <= 1 ? false : true;
-        _increaseButton.interactable = _craftingStation.CanCraftRecipe(_craftingStation.SelectedRecipe, _craftingStation.SelectedCraftCount + 1) ? true : false;
-        _countText.text = _craftingStation.SelectedCraftCount.ToString();
+        _decreaseButton.interactable = _station.SelectedCraftCount <= 1 ? false : true;
+        _increaseButton.interactable = _station.CanCraftRecipe(_station.SelectedRecipe, _station.SelectedCraftCount + 1) ? true : false;
+        _countText.text = _station.SelectedCraftCount.ToString();
     }
 }

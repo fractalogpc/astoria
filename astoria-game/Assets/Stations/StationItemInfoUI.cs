@@ -3,20 +3,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CraftingItemInfoUI : MonoBehaviour
+public class StationItemInfoUI : MonoBehaviour
 {
 	public bool Initialized = false;
-	[SerializeField] [ReadOnly] private CraftingStationNetworked _craftingStation;
+	[SerializeField] [ReadOnly] private StationCore _station;
 	[SerializeField] private TextMeshProUGUI _itemName;
 	[SerializeField] private Image _itemImage;
 	[SerializeField] private TextMeshProUGUI _descriptionText;
 	[SerializeField] private Transform _ingredientList;
 	[SerializeField] private GameObject _ingredientPrefab;
 
-	public void Initialize(CraftingStationNetworked craftingStation) {
+	public void Initialize(StationCore station) {
 		if (Initialized) return;
 		ResetInfo();
-		_craftingStation = craftingStation;
+		_station = station;
 		Initialized = true;
 	}
 
@@ -29,8 +29,8 @@ public class CraftingItemInfoUI : MonoBehaviour
 		SetItemInfo(data._resultSetList.List[0].ItemData);
 		RemoveAllChildrenOfList();
 		foreach (ItemSet ingredient in data._ingredientSetList.List) {
-			CraftingIngredientUI ingredientUI = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<CraftingIngredientUI>();
-			ingredientUI.SetItem(ingredient.ItemData, ingredient.ItemCount * _craftingStation.SelectedCraftCount);
+			StationIngredientUI ingredientUI = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<StationIngredientUI>();
+			ingredientUI.SetItem(ingredient.ItemData, ingredient.ItemCount * _station.SelectedCraftCount);
 		}
 	}
 

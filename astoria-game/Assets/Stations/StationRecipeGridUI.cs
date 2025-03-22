@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public class CraftingRecipeGridUI : MonoBehaviour
+public class StationRecipeGridUI : MonoBehaviour
 {
 	public bool Initialized = false;
-	[SerializeField] [ReadOnly] private CraftingStationNetworked _craftingStation;
+	[SerializeField] [ReadOnly] private StationCore _station;
 	[SerializeField] private Transform _recipeGridParent;
 	[SerializeField] private GameObject _recipePrefab;
 
-	public void Initialize(CraftingStationNetworked craftingStation) {
+	public void Initialize(StationCore station) {
 		if (Initialized) return;
-		_craftingStation = craftingStation;
-		CreateRecipeGrid(_craftingStation.Recipes.GetRecipes());
+		_station = station;
+		CreateRecipeGrid(_station.Recipes.GetRecipes());
 		Initialized = true;
 	}
 	
@@ -22,18 +22,18 @@ public class CraftingRecipeGridUI : MonoBehaviour
 		}
 
 		foreach (RecipeData recipe in recipes) {
-			CraftingRecipeUI recipeUI = Instantiate(_recipePrefab, _recipeGridParent).GetComponent<CraftingRecipeUI>();
-			recipeUI.Initialize(_craftingStation, recipe, OnRecipeClicked);
+			StationRecipeUI recipeUI = Instantiate(_recipePrefab, _recipeGridParent).GetComponent<StationRecipeUI>();
+			recipeUI.Initialize(_station, recipe, OnRecipeClicked);
 		}
 	}
 	
 	private void OnRecipeClicked(RecipeData recipe) {
-		_craftingStation.SelectRecipe(recipe);
+		_station.SelectRecipe(recipe);
 	}
 	
 	public void UpdateRecipeGrid() {
 		for (int i = 0; i < _recipeGridParent.childCount; i++) {
-			CraftingRecipeUI recipeUI = _recipeGridParent.GetChild(i).GetComponent<CraftingRecipeUI>();
+			StationRecipeUI recipeUI = _recipeGridParent.GetChild(i).GetComponent<StationRecipeUI>();
 			recipeUI.UpdateInteractivity();
 		}
 	}
