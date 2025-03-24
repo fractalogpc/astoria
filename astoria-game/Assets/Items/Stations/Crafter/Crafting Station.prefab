@@ -454,7 +454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Initialized: 0
-  _station: {fileID: 0}
+  _crafter: {fileID: 0}
   _increaseButton: {fileID: 4047222600722646712}
   _decreaseButton: {fileID: 7398435775191021158}
   _countText: {fileID: 5401659154051798196}
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Initialized: 0
-  _station: {fileID: 0}
+  _crafter: {fileID: 0}
   _recipeGridParent: {fileID: 6267885930592098237}
   _recipePrefab: {fileID: 1225321691210335524, guid: b952cb0508dc7cb4a869acc1cc10c316, type: 3}
 --- !u!1 &1429598930369900073
@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Initialized: 0
-  _station: {fileID: 0}
+  _crafter: {fileID: 0}
   _itemName: {fileID: 1553263709408904307}
   _itemImage: {fileID: 4044146997794476815}
   _descriptionText: {fileID: 8299573954816848591}
@@ -889,7 +889,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00065612793}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2182241748561834554
@@ -1007,9 +1007,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2182241748561834554}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &4679638079706007376
 MonoBehaviour:
@@ -2646,7 +2646,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0003920863}
+  m_AnchoredPosition: {x: 0, y: 0.000123443}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &3545513290725570836
@@ -3351,7 +3351,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4218885488635774367
@@ -3544,9 +3544,7 @@ GameObject:
   - component: {fileID: 339768004933880402}
   - component: {fileID: 985247195799368935}
   - component: {fileID: 2643599505271922994}
-  - component: {fileID: 290190719103270760}
   - component: {fileID: 8817535362737160922}
-  - component: {fileID: 7031671859081130439}
   - component: {fileID: 1234376925203816394}
   - component: {fileID: -4736615238277901570}
   m_Layer: 6
@@ -3643,15 +3641,15 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4679638079706007376}
         m_TargetAssemblyTypeName: ToggleCanvasGroup, Assembly-CSharp
-        m_MethodName: ToggleVisibility
-        m_Mode: 1
+        m_MethodName: SetVisibility
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &2643599505271922994
 MonoBehaviour:
@@ -3665,23 +3663,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &290190719103270760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5197208939192662860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 2173955619
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!114 &8817535362737160922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3701,39 +3682,6 @@ MonoBehaviour:
   _playerInventory: {fileID: 0}
   _interactable: {fileID: 985247195799368935}
   _craftButton: {fileID: 6664946969758318980}
---- !u!114 &7031671859081130439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5197208939192662860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 7724588458372411583}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  timelineOffset: 1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 2
-  rotationSensitivity: 0.01
-  positionPrecision: 0.01
-  scalePrecision: 0.01
 --- !u!65 &1234376925203816394
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3964,8 +3912,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 815306399456507472}
   m_HandleRect: {fileID: 3435149406831589236}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4782,7 +4730,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 233560861215333983}
   m_HandleRect: {fileID: 1708397826248324121}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

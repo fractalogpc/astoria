@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StationIngredientUI : MonoBehaviour
+public class IngredientIcon : MonoBehaviour
 {
 	[SerializeField] private Image _itemIcon;
 	[SerializeField] private TextMeshProUGUI _itemCount;

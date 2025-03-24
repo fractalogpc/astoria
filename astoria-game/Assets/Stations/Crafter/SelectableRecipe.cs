@@ -4,10 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StationRecipeUI : MonoBehaviour
+public class SelectableRecipe : MonoBehaviour
 {
 	[SerializeField][ReadOnly] private RecipeData _recipe;
-	[SerializeField][ReadOnly] private StationCore _station;
+	[SerializeField][ReadOnly] private CrafterCore _crafter;
 	[SerializeField] private Image _recipeIcon;
 	[SerializeField] private CanvasGroup _recipeIconCanvasGroup;
 	[SerializeField] private Button _selectRecipeButton;
@@ -24,25 +24,21 @@ public class StationRecipeUI : MonoBehaviour
 		_selectRecipeButton.onClick.RemoveListener(OnSelectRecipe);
 	}
 
-	public void Initialize(StationCore station, RecipeData recipe, RecipeSelected onRecipeSelectedCallback) {
-		_station = station;
+	public void Initialize(CrafterCore crafter, RecipeData recipe, RecipeSelected onRecipeSelectedCallback) {
+		_crafter = crafter;
 		_recipe = recipe;
 		_callback = onRecipeSelectedCallback;
 		UpdateInteractivity();
 	}
 
 	public void UpdateInteractivity() {
-		Debug.Log("Can change this to be a specific icon in the recipe data later.");
-		_recipeIcon.sprite = _recipe._resultSetList.List[0].ItemData.ItemIcon;
+		_recipeIcon.sprite = _recipe.Icon;
 		_recipeIcon.preserveAspect = true;
-		if (_station.CanCraftRecipe(_recipe, 1)) {
+		if (_crafter.CanCraftRecipe(_recipe, 1)) {
 			_recipeIconCanvasGroup.alpha = 1;
-			_selectRecipeButton.interactable = true;
-			
 		} 
 		else {
 			_recipeIconCanvasGroup.alpha = _alphaWhenDisabled;
-			_selectRecipeButton.interactable = false;
 		}
 	}
 	

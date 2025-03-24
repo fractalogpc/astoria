@@ -15,12 +15,12 @@ using Mirror;
 /// </summary>
 [RequireComponent(typeof(Interactable))]
 // public class CraftingStationNetworked : NetworkBehaviour
-public class StationCore : MonoBehaviour
+public class CrafterCore : MonoBehaviour
 {
 	public RecipeLibrary Recipes;
-	public StationItemInfoUI ItemInfoUI;
-	public StationRecipeGridUI RecipeGridUI;
-	public StationCountUI CraftCountUI;
+	public CrafterItemInfoUI ItemInfoUI;
+	public CrafterRecipeGridUI RecipeGridUI;
+	public CrafterCountUI CraftCountUI;
 	[SerializeField, ReadOnly] private InventoryComponent _playerInventory;
 	[SerializeField] private Interactable _interactable;
 	[SerializeField] private Button _craftButton;
@@ -84,6 +84,7 @@ public class StationCore : MonoBehaviour
 		if (SelectedRecipe == null) return;
 		SelectedCraftCount = count;
 		if (SelectedCraftCount < 1) SelectedCraftCount = 1;
+		_craftButton.interactable = CanCraftRecipe(SelectedRecipe, SelectedCraftCount);
 	}
 
 	public void SelectRecipe(RecipeData recipe)
@@ -92,13 +93,14 @@ public class StationCore : MonoBehaviour
 		SelectedCraftCount = 1;
 		ItemInfoUI.SetRecipe(recipe);
 		CraftCountUI.UpdateUI();
+		_craftButton.interactable = CanCraftRecipe(SelectedRecipe, SelectedCraftCount);
 	}
 
 	public bool Craft(RecipeData recipe, int craftCount)
 	{
 		if (BackgroundInfo._infCraft)
 		{
-			foreach (ItemSet resultSet in recipe._resultSetList.List)
+			foreach (ItemSet resultSet in recipe.ResultSetList.List)
 			{
 				int outputItems = resultSet.ItemCount * craftCount;
 				for (int j = 0; j < outputItems; j++)
@@ -110,7 +112,7 @@ public class StationCore : MonoBehaviour
 		}
 
 		if (!CanCraftRecipe(recipe, craftCount)) return false;
-		foreach (ItemSet ingredientSet in recipe._ingredientSetList.List)
+		foreach (ItemSet ingredientSet in recipe.IngredientSetList.List)
 		{
 			int itemsNeeded = ingredientSet.ItemCount * craftCount;
 			for (int i = 0; i < itemsNeeded; i++)
@@ -118,7 +120,7 @@ public class StationCore : MonoBehaviour
 				_playerInventory.RemoveItemByData(ingredientSet.ItemData);
 			}
 		}
-		foreach (ItemSet resultSet in recipe._resultSetList.List)
+		foreach (ItemSet resultSet in recipe.ResultSetList.List)
 		{
 			int outputItems = resultSet.ItemCount * craftCount;
 			for (int j = 0; j < outputItems; j++)
@@ -132,6 +134,6 @@ public class StationCore : MonoBehaviour
 	public bool CanCraftRecipe(RecipeData recipe, int craftCount)
 	{
 		if (BackgroundInfo._infCraft) return true;
-		return recipe._ingredientSetList.ContainedWithin(_playerInventory.GetItems(), craftCount);
+		return recipe.IngredientSetList.ContainedWithin(_playerInventory.GetItems(), craftCount);
 	}
 }

@@ -3,20 +3,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class StationItemInfoUI : MonoBehaviour
+public class CrafterItemInfoUI : MonoBehaviour
 {
 	public bool Initialized = false;
-	[SerializeField] [ReadOnly] private StationCore _station;
+	[SerializeField] [ReadOnly] private CrafterCore _crafter;
 	[SerializeField] private TextMeshProUGUI _itemName;
 	[SerializeField] private Image _itemImage;
 	[SerializeField] private TextMeshProUGUI _descriptionText;
 	[SerializeField] private Transform _ingredientList;
 	[SerializeField] private GameObject _ingredientPrefab;
 
-	public void Initialize(StationCore station) {
+	public void Initialize(CrafterCore crafter) {
 		if (Initialized) return;
 		ResetInfo();
-		_station = station;
+		_crafter = crafter;
 		Initialized = true;
 	}
 
@@ -26,11 +26,11 @@ public class StationItemInfoUI : MonoBehaviour
 			return;
 		}
 
-		SetItemInfo(data._resultSetList.List[0].ItemData);
+		SetItemInfo(data.ResultSetList.List[0].ItemData);
 		RemoveAllChildrenOfList();
-		foreach (ItemSet ingredient in data._ingredientSetList.List) {
-			StationIngredientUI ingredientUI = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<StationIngredientUI>();
-			ingredientUI.SetItem(ingredient.ItemData, ingredient.ItemCount * _station.SelectedCraftCount);
+		foreach (ItemSet ingredient in data.IngredientSetList.List) {
+			IngredientIcon ingredientIcon = Instantiate(_ingredientPrefab, _ingredientList).GetComponent<IngredientIcon>();
+			ingredientIcon.SetItem(ingredient.ItemData, ingredient.ItemCount * _crafter.SelectedCraftCount);
 		}
 	}
 
