@@ -55,10 +55,9 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	public void Start() {
-		if (_useAssignedInventoryData) {
-			InventoryData = null;
-			CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
-		}
+		if (!_useAssignedInventoryData) return;
+		InventoryData = null;
+		CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
 	}
 
 	private void AttachToInventoryData(InventoryData inventoryData) {
@@ -76,7 +75,6 @@ public class InventoryComponent : MonoBehaviour
 		Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
 		Debug.LogWarning("Rebuilding is expensive! When adding or removing a set of items, make sure to do it in a single InventoryComponent call. This will prevent the inventory from updating multiple times.");
 		CreateInvFromInventoryData(InventoryData);
-
 		OnInventoryChange.Invoke(InventoryData.Items);
 	}
 
@@ -393,6 +391,12 @@ public class InventoryComponent : MonoBehaviour
 	}
 	
 	private void DeleteChildrenOf(Transform parent) {
+		for (int i = parent.childCount - 1; i >= 0; i--) {
+			Destroy(parent.GetChild(i).gameObject);
+		}
+	}
+	
+	private void ImmediateDeleteChildrenOf(Transform parent) {
 		for (int i = parent.childCount - 1; i >= 0; i--) {
 			DestroyImmediate(parent.GetChild(i).gameObject);
 		}
