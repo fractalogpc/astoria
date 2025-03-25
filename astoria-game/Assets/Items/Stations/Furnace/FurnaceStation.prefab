@@ -1,5 +1,145 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &438870004592784331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2724103302584519863}
+  - component: {fileID: 7909195761080148027}
+  - component: {fileID: 2062233724363968757}
+  m_Layer: 0
+  m_Name: Stats
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2724103302584519863
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438870004592784331}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6589850590976171684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 758, y: -244}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7909195761080148027
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438870004592784331}
+  m_CullTransparentMesh: 1
+--- !u!114 &2062233724363968757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438870004592784331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'Item:
+
+    Progress:
+
+    Fuel:ff'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: b03d2d1f027639a47b84068954a9fe32, type: 2}
+  m_sharedMaterial: {fileID: 901283256301641947, guid: b03d2d1f027639a47b84068954a9fe32, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 16
+  m_fontSizeBase: 16
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1624800654641284620
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,8 +151,10 @@ GameObject:
   - component: {fileID: 4999175020502212986}
   - component: {fileID: 3922541053359955369}
   - component: {fileID: 8525676378975172479}
+  - component: {fileID: 2201054195077749478}
   - component: {fileID: 3257804795171690857}
   - component: {fileID: 8170085118454059182}
+  - component: {fileID: 3976741747811075952}
   m_Layer: 0
   m_Name: FurnaceStation
   m_TagString: Untagged
@@ -91,6 +233,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2201054195077749478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624800654641284620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358627a2ec029804186ce4c4b82c6597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Notes: Fuel and smeltable items aren't automatically added to the filters on the
+    slots here. Make sure to hit the "add ____ to filter" button on the corrosponding
+    inventories (Input, Fuel) when new items are added.
 --- !u!114 &3257804795171690857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +296,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.048977, y: 1.2060876, z: 1.1260719}
   m_Center: {x: 0, y: 0.6030438, z: 0.038547426}
+--- !u!114 &3976741747811075952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624800654641284620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1718a5bbb5558c4ebaf527613f254fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputInv: {fileID: 7898148507345293879}
+  _fuelInv: {fileID: 3231160386612677216}
+  _outputInv: {fileID: 2564164810593147040}
+  _statsText: {fileID: 2062233724363968757}
+  _powerToggle: {fileID: 2513228932391857692}
+  _fuelUnitPerSec: 1
 --- !u!1 &1804320289424028309
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +325,7 @@ GameObject:
   - component: {fileID: 1424127937321240904}
   - component: {fileID: 189463904869033009}
   - component: {fileID: 7210501094367979785}
-  - component: {fileID: 6095196466248647147}
+  - component: {fileID: 2564164810593147040}
   m_Layer: 0
   m_Name: Output
   m_TagString: Untagged
@@ -215,7 +390,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6095196466248647147
+--- !u!114 &2564164810593147040
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,7 +399,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1804320289424028309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
+  m_Script: {fileID: 11500000, guid: f7495a31fcb74ecca98e9377a98e9ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnInventoryChange:
@@ -235,6 +410,8 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 4, y: 2}
   _spawnInventoryWith: []
+  _filterSetting: 0
+  _filter: []
 --- !u!1 &2682778880673622686
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,6 +532,7 @@ RectTransform:
   - {fileID: 7813467696522543189}
   - {fileID: 2274488661780328289}
   - {fileID: 7378881147641120369}
+  - {fileID: 2724103302584519863}
   m_Father: {fileID: 4999175020502212986}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -433,7 +611,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2820222956787536194}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -652,7 +830,7 @@ GameObject:
   - component: {fileID: 3712170031423916337}
   - component: {fileID: 9048244997841976250}
   - component: {fileID: 3371444407929916874}
-  - component: {fileID: 1471627420534668741}
+  - component: {fileID: 7898148507345293879}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -717,7 +895,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1471627420534668741
+--- !u!114 &7898148507345293879
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -726,7 +904,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4274009488189898874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
+  m_Script: {fileID: 11500000, guid: f7495a31fcb74ecca98e9377a98e9ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnInventoryChange:
@@ -737,6 +915,9 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 4, y: 2}
   _spawnInventoryWith: []
+  _filterSetting: 0
+  _filter:
+  - {fileID: 11400000, guid: a411b3598c02cfe44a312a1c337039d6, type: 2}
 --- !u!1 &4371520098179263682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1205,7 +1386,7 @@ GameObject:
   - component: {fileID: 7135366360586719242}
   - component: {fileID: 6481855024047922892}
   - component: {fileID: 2122189166993301289}
-  - component: {fileID: 5529188042025331487}
+  - component: {fileID: 3231160386612677216}
   m_Layer: 0
   m_Name: Fuel
   m_TagString: Untagged
@@ -1230,7 +1411,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 355, y: 0}
-  m_SizeDelta: {x: 192, y: 192}
+  m_SizeDelta: {x: 192, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6481855024047922892
 CanvasRenderer:
@@ -1270,7 +1451,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5529188042025331487
+--- !u!114 &3231160386612677216
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1279,7 +1460,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6287021795271329807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
+  m_Script: {fileID: 11500000, guid: f7495a31fcb74ecca98e9377a98e9ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnInventoryChange:
@@ -1288,8 +1469,11 @@ MonoBehaviour:
   _inventoryItemPrefab: {fileID: 5725654330234954917, guid: 13269b01671ab91489ae746ea711d4f0, type: 3}
   _slotPrefab: {fileID: 5178832468966602990, guid: bfabc93eda17f16429cc4f4944fb4008, type: 3}
   _useAssignedInventoryData: 1
-  _assignedInventorySize: {x: 2, y: 2}
+  _assignedInventorySize: {x: 2, y: 1}
   _spawnInventoryWith: []
+  _filterSetting: 0
+  _filter:
+  - {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}
 --- !u!1 &6926732014540368735
 GameObject:
   m_ObjectHideFlags: 0

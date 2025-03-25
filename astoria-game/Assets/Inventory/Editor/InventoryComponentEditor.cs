@@ -12,10 +12,10 @@ public class InventoryComponentEditor : AutoRegisterValidator
 			InventoryComponent inventoryComponent = (InventoryComponent) target;
 			inventoryComponent.CreateAndAttachContainersTo(new InventoryData(inventoryComponent.AssignedInventorySize.x, inventoryComponent.AssignedInventorySize.y));
 		}
-		EditorGUILayout.Space();
 		if (GUILayout.Button("Destroy Slots")) {
 			InventoryComponent inventoryComponent = (InventoryComponent) target;
 			inventoryComponent.DestroyInventoryContainersAndItems();
 		}
+		EditorGUILayout.Space();
 	}
 }

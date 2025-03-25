@@ -4,9 +4,9 @@ using UnityEngine;
 /// <summary>
 /// This class represents item data set at runtime. Inherit this class whenever you need new dev-time variables. Remember to also inherit ItemInstance.
 /// </summary>
-[CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/Items/ItemData")]
+[CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/Items/ItemData", order = 99)]
 [System.Serializable]
-public class ItemData : ScriptableObject
+public class ItemData : BaseItemData
 {
     public string ItemName = "New Item";
     public string ItemDescription = "Item Description";
@@ -27,7 +27,7 @@ public class ItemData : ScriptableObject
         }
     }
     
-    public virtual ItemInstance CreateItem() {
+    public override ItemInstance CreateItem() {
         return new ItemInstance(this);
     }
 

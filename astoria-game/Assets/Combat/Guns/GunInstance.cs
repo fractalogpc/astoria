@@ -275,7 +275,7 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	
 	private int AmmoInInventory() {
-		return _playerInventory.GetItemsOfType(ItemData.AmmoItem).Count;
+		return _playerInventory.GetItemsWithData(ItemData.AmmoItem).Count;
 	}
 	
 	private bool RemoveAmmoFromInventory(int amount) {

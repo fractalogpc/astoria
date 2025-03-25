@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mirror.BouncyCastle.Asn1.X509.Qualified;
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
@@ -35,7 +36,7 @@ public class InventoryComponent : MonoBehaviour
 	[SerializeField] private GameObject _slotPrefab;
 
 	[Header("If outside scripts initialize the inventory, don't use this.")]
-	[SerializeField] private bool _useAssignedInventoryData;
+	[SerializeField] private bool _useAssignedInventoryData = true;
 
 	[SerializeField] private Vector2Int _assignedInventorySize;
 	[SerializeField] private List<ItemData> _spawnInventoryWith;
@@ -166,19 +167,29 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Gets a list of all item instances that match the persistent ItemData.
+	/// Gets a list of all item instances whose ItemData matches the supplied ItemData.
 	/// </summary>
 	/// <param name="itemData">The ItemData to match against.</param>
-	/// <returns>A list of InventoryItem that match the ItemData.</returns>
-	public List<ItemInstance> GetItemsOfType(ItemData itemData) {
+	/// <returns>A list of ItemInstances that match the ItemData.</returns>
+	public List<ItemInstance> GetItemsWithData(ItemData itemData) {
 		if (!IsInitialized()) return new List<ItemInstance>();
 		return InventoryData.Items.FindAll(item => item.ItemData == itemData);
+	}
+	
+	/// <summary>
+	/// Gets a list of all item instances whose ItemData is of type T. Useful for getting all items of a certain type.
+	/// </summary>
+	/// <typeparam name="T">The ItemData type to search for.</typeparam>
+	/// <returns>A list of all the ItemInstances whose ItemData is of type T.</returns>
+	public List<ItemInstance> GetItemsOfDataType<T>() where T : ItemData {
+		if (!IsInitialized()) return new List<ItemInstance>();
+		return InventoryData.Items.FindAll(item => item.ItemData.GetType() == typeof(T));		
 	}
 
 	/// <summary>
 	/// Get all the item instances in the inventory.
 	/// </summary>
-	/// <returns>A list of all the InventoryItems in the inventory.</returns>
+	/// <returns>A list of all the ItemInstances in the inventory.</returns>
 	public List<ItemInstance> GetItems() {
 		if (!IsInitialized()) return new List<ItemInstance>();
 		return InventoryData.Items;
@@ -197,12 +208,12 @@ public class InventoryComponent : MonoBehaviour
 		return true;
 	}
 	
-	public bool AddStack(ItemStack itemStack) {
+	public virtual bool AddStack(ItemStack itemStack) {
 		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStack(this, itemStack, out Vector2Int slotIndexBL)) return false;
 		return true;
 	}
-	public bool AddItem(ItemInstance itemInstance) {
+	public virtual bool AddItem(ItemInstance itemInstance) {
 		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStack(this, new ItemStack(itemInstance), out Vector2Int slotIndexBL)) {
 			SpawnDroppedItem(new ItemStack(itemInstance));
@@ -218,7 +229,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemData">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <param name="count">The count of InventoryItems to instantiate.</param>
 	/// <returns>Whether adding all the items was successful.</returns>
-	public bool AddItemByData(ItemData itemData, int count = 1) {
+	public virtual bool AddItemByData(ItemData itemData, int count = 1) {
 		if (!IsInitialized()) return false;
 		for (int i = 0; i < count; i++) {
 			AddItem(itemData.CreateItem());
@@ -230,7 +241,7 @@ public class InventoryComponent : MonoBehaviour
 	/// </summary>
 	/// <param name="items">The ItemData to instantiate InventoryItems with, and add to the inventory.</param>
 	/// <returns>The amount of items left over.</returns>
-	public int AddItemsByData(List<ItemData> items) {
+	public virtual int AddItemsByData(List<ItemData> items) {
 		if (!IsInitialized()) return -1;
 		int itemsPlaced = 0;
 		if (items.Count == 0) return 0;
@@ -250,7 +261,7 @@ public class InventoryComponent : MonoBehaviour
 	/// <param name="itemStack">The InventoryItem to place.</param>
 	/// <param name="slotIndexBL">The bottom left slot index to place at.</param>
 	/// <returns></returns>
-	public bool PlaceStack(ItemStack itemStack, Vector2Int slotIndexBL) {
+	public virtual bool PlaceStack(ItemStack itemStack, Vector2Int slotIndexBL) {
 		if (!IsInitialized()) return false;
 		if (!InventoryData.TryAddStackAtPosition(this, itemStack, slotIndexBL)) return false;
 		return true;
@@ -316,36 +327,13 @@ public class InventoryComponent : MonoBehaviour
 		dropped.GetComponent<DroppedItem>().ItemStack = itemStack;
 	}
 	
-	public bool HighlightSlotsUnderStack(ItemStack itemStack, Vector2Int slotIndexBL) {
-		List<InventoryContainer> containersItemOverlaps = new();
-		bool couldPlace = true;
-		for (int y = slotIndexBL.y; y < slotIndexBL.y + itemStack.Size.y; y++) {
-			for (int x = slotIndexBL.x; x < slotIndexBL.x + itemStack.Size.x; x++) {
-				try {
-					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
-					containersItemOverlaps.Add(container);
-				}
-				catch (IndexOutOfRangeException) {
-					couldPlace = false;
-				}
-			}
-		}
-
-		for (int i = 0; i < containersItemOverlaps.Count; i++) {
-			if (containersItemOverlaps[i].HeldStack != null) {
-				couldPlace = false;
-				break;
-			}
-		}
-
-		if (couldPlace) {
+	public virtual void HighlightSlotsUnderStack(ItemStack itemStack, Vector2Int slotIndexBL) {
+		List<InventoryContainer> containersItemOverlaps = GetOverlappedContainers(itemStack, slotIndexBL);
+		if (InventoryData.CouldAddStackAtPosition(itemStack, slotIndexBL)) {
 			HighlightContainers(containersItemOverlaps, ContainerHighlight.Green);
-			return true;
+			return;
 		}
-		else {
-			HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
-			return false;
-		}
+		HighlightContainers(containersItemOverlaps, ContainerHighlight.Red);
 	}
 
 	public void ResetAllContainerHighlights() {
@@ -353,6 +341,29 @@ public class InventoryComponent : MonoBehaviour
 			for (int x = 0; x < InventoryData.Width; x++) {
 				InventoryData.Containers[x, y].Highlight = ContainerHighlight.None;
 			}
+		}
+	}
+
+	protected List<InventoryContainer> GetOverlappedContainers(ItemStack itemStack, Vector2Int slotIndexBL) {
+		List<InventoryContainer> containersItemOverlaps = new();
+		for (int y = slotIndexBL.y; y < slotIndexBL.y + itemStack.Size.y; y++) {
+			for (int x = slotIndexBL.x; x < slotIndexBL.x + itemStack.Size.x; x++) {
+				try {
+					InventoryContainer container = _slotPrefabInstances[x, y].GetComponent<InventoryContainerUI>().AttachedContainer;
+					containersItemOverlaps.Add(container);
+				}
+				catch (IndexOutOfRangeException) {
+					continue;
+				}
+			}
+		}
+		return containersItemOverlaps;
+	}
+
+	protected void HighlightContainers(List<InventoryContainer> containers, ContainerHighlight highlight) {
+		ResetAllContainerHighlights();
+		for (int i = 0; i < containers.Count; i++) {
+			containers[i].Highlight = highlight;
 		}
 	}
 
@@ -383,7 +394,7 @@ public class InventoryComponent : MonoBehaviour
 	
 	private void DeleteChildrenOf(Transform parent) {
 		for (int i = parent.childCount - 1; i >= 0; i--) {
-			Destroy(parent.GetChild(i).gameObject);
+			DestroyImmediate(parent.GetChild(i).gameObject);
 		}
 	}
 	
@@ -395,12 +406,6 @@ public class InventoryComponent : MonoBehaviour
 		ItemStackList stacks = inventoryData.Stacks;
 		for (int i = 0; i < stacks.StackCount; i++) {
 			CreateItemPrefab(stacks[i], inventoryData.SlotIndexOf(stacks[i]));
-		}
-	}
-	private void HighlightContainers(List<InventoryContainer> containers, ContainerHighlight highlight) {
-		ResetAllContainerHighlights();
-		for (int i = 0; i < containers.Count; i++) {
-			containers[i].Highlight = highlight;
 		}
 	}
 }
