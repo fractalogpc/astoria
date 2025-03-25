@@ -24,7 +24,7 @@ public abstract class EnemyCore : MonoBehaviour
 
   protected void DamageTarget(GameObject target, float damage, Vector3 position) {
     // See if the target has a player or building health component
-    target.TryGetComponent<HealthInterface>(out HealthInterface health);
+    target.TryGetComponent<HealthManager>(out HealthManager health);
     if (health != null) {
       health.TakeDamage(damage, position);
     }

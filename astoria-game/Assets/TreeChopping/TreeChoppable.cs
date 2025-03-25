@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class TreeChoppable : HealthInterface
+public class TreeChoppable : HealthManager
 {
 	[SerializeField] private ItemData _woodItem;
 	[SerializeField] private int _dropAmountOnFell = 10;

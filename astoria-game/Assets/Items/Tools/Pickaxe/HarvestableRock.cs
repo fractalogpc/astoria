@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HarvestableRock : HealthInterface
+public class HarvestableRock : HealthManager
 {
 	[SerializeField] private ItemData _stoneItem;
 	[SerializeField] private float _damagePerDrop = 10f;

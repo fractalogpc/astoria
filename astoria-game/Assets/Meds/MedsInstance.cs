@@ -8,13 +8,13 @@ public class MedsInstance : ConsumableInstance
 	}
 
 	protected override void Use() {
-		HealthInterface healthInterface = PlayerInstance.Instance.GetComponentInChildren<HealthInterface>();
+		HealthManager healthManager = PlayerInstance.Instance.GetComponentInChildren<HealthManager>();
 		InventoryHotbar hotbar = PlayerInstance.Instance.GetComponentInChildren<InventoryHotbar>();
-		if (healthInterface.CurrentHealth >= ItemData._healthThreshold) {
+		if (healthManager.CurrentHealth >= ItemData._healthThreshold) {
 			Debug.Log("Player is at too high health to use this item.");
 			return;
 		}
-		healthInterface.Heal(ItemData._healAmount);
+		healthManager.Heal(ItemData._healAmount);
 		hotbar.RemoveItem(this);
 	}
 }

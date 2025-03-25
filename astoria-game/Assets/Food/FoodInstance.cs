@@ -8,7 +8,7 @@ public class FoodInstance : ConsumableInstance
 	}
 
 	protected override void Use() {
-		PlayerInstance.Instance.GetComponentInChildren<PlayerNeeds>().AddHunger(ItemData._foodAmount);
-        PlayerInstance.Instance.GetComponentInChildren<PlayerNeeds>().AddThirst(ItemData._waterAmount);
+		PlayerInstance.Instance.GetComponentInChildren<PlayerHunger>().AddFood(ItemData._foodAmount);
+		PlayerInstance.Instance.GetComponentInChildren<PlayerThirst>().AddWater(ItemData._waterAmount);
 	}
 }
