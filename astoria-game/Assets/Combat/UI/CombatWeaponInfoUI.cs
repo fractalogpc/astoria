@@ -35,7 +35,7 @@ public class CombatWeaponInfoUI : MonoBehaviour
     _ammoText.text = "";
   }
   private void UpdateAmmoCount(int oldAmmo = 0, int newAmmo = 0) {
-    int ammoLeft = PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItemsOfType(_playerCombatCore.CurrentGunInstance.ItemData.AmmoItem).Count;
+    int ammoLeft = PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItemsWithData(_playerCombatCore.CurrentGunInstance.ItemData.AmmoItem).Count;
     _ammoText.text = $"{newAmmo} / {ammoLeft}";
   }
 }

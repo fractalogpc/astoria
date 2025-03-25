@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// A class containing an ItemData and a count of that ItemData. Used in ItemSetList.
