@@ -47,7 +47,7 @@ public class TreeChoppable : HealthManager
 			_chopped = true;
 			_rigidbody.isKinematic = false;
 			PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(_woodItem, _dropAmountOnFell);
-			_rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition + Vector3.up * 100, ForceMode.Impulse);
+			// _rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition + Vector3.up * 100, ForceMode.Impulse);
 			base.SetHealthDirect(_healthOnFell);
 			// This doesn't work because the force is applied on the first frame and the tree is still in the ground, either we need to fix this or animate it.
 			// I also tried adding torque:
