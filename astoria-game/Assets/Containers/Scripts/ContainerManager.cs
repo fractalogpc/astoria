@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(ToggleUIVisibility))]
 public class ContainerManager : Interactable
 {
 	public UnityEvent OnOpen;
@@ -16,10 +15,6 @@ public class ContainerManager : Interactable
 	[SerializeField] protected InventoryComponent _playerInvDisplay;
 
 	protected InventoryComponent _playerInventory;
-
-	private void OnValidate() {
-		_toggleUIVisibility = GetComponent<ToggleUIVisibility>();
-	}
 
 	public override void Interact() {
 		if (_playerInventory == null) {
