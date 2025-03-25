@@ -1445,8 +1445,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5931116057867239114}
   - component: {fileID: 8530974241645484876}
-  - component: {fileID: 242616872139370637}
   - component: {fileID: 6201027592569150219}
+  - component: {fileID: 6440930955224735656}
   m_Layer: 0
   m_Name: ViewCone
   m_TagString: Untagged
@@ -1491,23 +1491,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &242616872139370637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1028449564072710263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bdb6103034189a4eac5b725ca7c9332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _meshCollider: {fileID: 8530974241645484876}
-  _horizontalAngle: 120
-  _verticalHeight: 10
-  _distance: 60
-  _eyeHeight: 2
 --- !u!54 &6201027592569150219
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1535,6 +1518,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6440930955224735656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028449564072710263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67bfe0524348e4543a17cbda41f45980, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshCollider: {fileID: 8530974241645484876}
+  _horizontalAngle: 50.7
+  _verticalHeight: 10
+  _distance: 40
+  _eyeHeight: 2
 --- !u!1 &1034237569371319943
 GameObject:
   m_ObjectHideFlags: 0
@@ -8657,7 +8657,7 @@ MonoBehaviour:
   _fullHealth: 25
   _health: 25
   _movement: {fileID: 6763812922497581418}
-  _vision: {fileID: 242616872139370637}
+  _vision: {fileID: 6440930955224735656}
   _ragdoll: {fileID: 6103718032125682299}
   _playerLayerMask:
     serializedVersion: 2

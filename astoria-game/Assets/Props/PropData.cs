@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "New Prop", menuName = "Scriptable Objects/PropData")]
+[CreateAssetMenu(fileName = "New Prop", menuName = "Scriptable Objects/Items/Constructable/PropData")]
 public class PropData : ItemData
 {
     public ConstructionData ConstructionData;

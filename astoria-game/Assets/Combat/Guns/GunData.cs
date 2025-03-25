@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 // TODO: Make a custom editor that changes the exposed fields based on the weapon type
-[CreateAssetMenu(fileName = "GunData", menuName = "Scriptable Objects/GunData")]
+[CreateAssetMenu(fileName = "GunData", menuName = "Scriptable Objects/Items/Weapons/GunData")]
 public class GunData : ViewmodelItemData
 {
 	[Header("Ammo Item")]

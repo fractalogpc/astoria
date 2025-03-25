@@ -1,7 +1,7 @@
 using FMODUnity;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Axe", menuName = "Scriptable Objects/AxeData")]
+[CreateAssetMenu(fileName = "New Axe", menuName = "Scriptable Objects/Items/Tools/AxeData")]
 public class AxeData : BaseToolData
 {
 	[Header("Axe Properties")]

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Food", menuName = "Scriptable Objects/Consumables/FoodData")]
+[CreateAssetMenu(fileName = "New Food", menuName = "Scriptable Objects/Items/Consumables/FoodData")]
 public class FoodData : ConsumableData
 {
 	public float _foodAmount;

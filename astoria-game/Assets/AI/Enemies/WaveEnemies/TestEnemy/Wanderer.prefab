@@ -8480,6 +8480,7 @@ GameObject:
   - component: {fileID: 7191328705035347949}
   - component: {fileID: 4871584071008460092}
   - component: {fileID: 4439485171400352914}
+  - component: {fileID: 464064011165378785}
   m_Layer: 0
   m_Name: Wanderer
   m_TagString: Untagged
@@ -8586,6 +8587,47 @@ MonoBehaviour:
   _agent: {fileID: 2103041005339455619}
   _core: {fileID: 7191328705035347949}
   _runThreshold: 1
+--- !u!114 &464064011165378785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6358995176421208112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6358995176421208112}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 0
+  _maxHealth: 0
 --- !u!1 &6360313624243451534
 GameObject:
   m_ObjectHideFlags: 0

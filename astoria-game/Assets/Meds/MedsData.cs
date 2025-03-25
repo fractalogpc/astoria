@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Meds", menuName = "Scriptable Objects/Consumables/MedsData")]
+[CreateAssetMenu(fileName = "New Meds", menuName = "Scriptable Objects/Items/Consumables/MedsData")]
 public class MedsData : ConsumableData
 {
 	[Tooltip("The amount of health that the player will be healed by.")]
