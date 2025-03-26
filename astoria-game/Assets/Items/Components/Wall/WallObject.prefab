@@ -224,10 +224,10 @@ PrefabInstance:
       addedObject: {fileID: 6550637130937479280}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c314ec660aba40478f22c4967e10397, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4324821453811001183}
+      addedObject: {fileID: 7806684743576566368}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c314ec660aba40478f22c4967e10397, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7806684743576566368}
+      addedObject: {fileID: 1810447389082463744}
   m_SourcePrefab: {fileID: 100100000, guid: 1c314ec660aba40478f22c4967e10397, type: 3}
 --- !u!1 &367819807950052311 stripped
 GameObject:
@@ -256,47 +256,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8733429697405204941, guid: 1c314ec660aba40478f22c4967e10397, type: 3}
---- !u!114 &4324821453811001183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 367819807950052311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealthZero:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
-        m_MethodName: Destroy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamaged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _currentHealth: 100
-  _maxHealth: 100
 --- !u!208 &7806684743576566368
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -313,6 +272,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 1.5000001, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1810447389082463744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367819807950052311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1031626157327860077 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c314ec660aba40478f22c4967e10397, type: 3}
