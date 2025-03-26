@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirror;
@@ -28,11 +29,20 @@ public class FurnaceCore : MonoBehaviour
 		_powerToggle.isOn = on;
 	}
 
+	private void Start() {
+		_powerToggle.onValueChanged.AddListener(SetPower);
+	}
+
 	private void Update() {
 		// No smeltable
 		if (_currentSmeltable == null) {
-			SetPower(false); 
-			return;
+			print("Smeltable is null, checking for new one");
+			_currentSmeltable = FirstSmeltItemInSmeltInv();
+			if (_currentSmeltable == null) {
+				print("Still null, setting power off");
+				_statsText.text = "Furnace Off";
+				SetPower(false); 
+			}
 		}
 		// Not running
 		if (!IsPowered) {
@@ -57,9 +67,13 @@ public class FurnaceCore : MonoBehaviour
 				}
 			}
 		} // Fueled, move on
-		if (FuelItemsInFuelInv() > 0) {
+		else if (FuelItemsInFuelInv() > 0) {
 			FuelInstance item = PopFirstFuelItemInFuelInv();
 			_fuelUnits += item.ItemData.FuelValue;
+		}
+		else {
+			_statsText.text = "Furnace Off";
+			SetPower(false); // No fuel
 		}
 	}
 

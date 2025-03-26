@@ -310,7 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputInv: {fileID: 7898148507345293879}
   _fuelInv: {fileID: 3231160386612677216}
-  _outputInv: {fileID: 2564164810593147040}
+  _outputInv: {fileID: 9088779112958835678}
   _statsText: {fileID: 2062233724363968757}
   _powerToggle: {fileID: 2513228932391857692}
   _fuelUnitPerSec: 1
@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 1424127937321240904}
   - component: {fileID: 189463904869033009}
   - component: {fileID: 7210501094367979785}
-  - component: {fileID: 2564164810593147040}
+  - component: {fileID: 9088779112958835678}
   m_Layer: 0
   m_Name: Output
   m_TagString: Untagged
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2564164810593147040
+--- !u!114 &9088779112958835678
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1804320289424028309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7495a31fcb74ecca98e9377a98e9ec3, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f9337c7f8124c589bdad302d2cc404b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnInventoryChange:
@@ -410,8 +410,6 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 4, y: 2}
   _spawnInventoryWith: []
-  _filterSetting: 0
-  _filter: []
 --- !u!1 &2682778880673622686
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,7 +609,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2820222956787536194}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
