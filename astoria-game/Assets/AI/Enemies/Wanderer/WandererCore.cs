@@ -15,6 +15,7 @@ public class WandererCore : MonoBehaviour, IDamageable, IListener
 {
     [SerializeField] private float _fullHealth = 100.0f;
     [SerializeField] private float _health;
+    [SerializeField] private WandererAudio _audio;
     [SerializeField] private WandererMovement _movement;
     [SerializeField] private VisionCone _vision;
     [SerializeField] private RagdollToggle _ragdoll;

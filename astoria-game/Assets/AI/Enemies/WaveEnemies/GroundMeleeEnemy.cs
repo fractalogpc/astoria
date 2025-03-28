@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class GroundMeleeEnemy : EnemyCore
 {
-
+  public UnityEvent OnAttack;
+  
   [Header("Attack Settings")]
   [SerializeField] private float attackRadius;
   [SerializeField] private float attackDamage;
@@ -62,6 +64,7 @@ public class GroundMeleeEnemy : EnemyCore
       // animator.SetTrigger("Attack"); // Play attack animation
       _attacking = true;
       attackTimer = 0;
+      OnAttack?.Invoke();
       base.DamageTarget(target.gameObject, attackDamage, target.position);
       _attacking = false;
     }
