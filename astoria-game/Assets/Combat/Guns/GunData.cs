@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // TODO: Make a custom editor that changes the exposed fields based on the weapon type
 [CreateAssetMenu(fileName = "GunData", menuName = "Scriptable Objects/Items/Weapons/GunData")]
@@ -12,10 +13,17 @@ public class GunData : ViewmodelItemData
 	public AnimationClip FireAnimation;
 	public AnimationClip ReloadEmptyAnimation;
 	public AnimationClip ReloadPartialAnimation;
+	
+	[Header("ADS Settings")]
+	public bool CanAimDownSights = true;
 	public Vector3 AdsIkTarget;
 	public Vector3 AdsIkTargetRot;
-	public float AdsTransitionTimeIn;
-	public float AdsTransitionTimeOut;
+	[FormerlySerializedAs("AdsTransitionTimeIn")] 
+	public float AdsIKTransitionTimeIn;
+	[FormerlySerializedAs("AdsTransitionTimeOut")] 
+	public float AdsIKTransitionTimeOut;
+	public float AdsFov = 45f;
+	public float AdsZoomSpeed = 10f;
 	
 	[Header("Accuracy Settings")]
 	public AccuracySettings AccuracySetting;
@@ -52,12 +60,11 @@ public class GunData : ViewmodelItemData
 	[Header("Bullet Data")]
 	public float Damage = 30f;
 	[Header("Projectile Settings")]
-	public int SamplesPerFixedUpdate = 5;
 	public float InitialVelocityMS = 400f;
 	public float BulletMassKg = 0.007f;
 	public float BulletDiameterM = 0.009f;
-	public float AirDensityKgPerM = 1.1f;
 	public float DragCoefficient = 0.149f;
+	[HideInInspector] public float AirDensityKgPerM => 1.225f;
 	
 	public override ItemInstance CreateItem() {
 		return new GunInstance(this);
@@ -79,7 +86,6 @@ public struct RecoilSettings
 	public float NoiseMagnitude;
 	public float NoiseSpeed;
 	public float MainTransferToViewmodel;
-
 }
 
 

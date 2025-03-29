@@ -22,6 +22,8 @@ public class CombatCore : InputHandlerBase
 	
 	public InventoryComponent PlayerInventory;
 	public ViewmodelManager ViewmodelManager;
+	public Camera PlayerCamera;
+	public FadeElementInOut CrosshairFade;
 	public GunInstance CurrentGunInstance { get; private set; }
 	
 	/// <summary>

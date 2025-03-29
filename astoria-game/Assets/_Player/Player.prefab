@@ -1616,6 +1616,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerInventory: {fileID: 6580231562744375249}
   ViewmodelManager: {fileID: 9160868286085553714}
+  PlayerCamera: {fileID: 7446644550364225707}
+  CrosshairFade: {fileID: 4342786448607463395}
   OnEquipWeapon:
     m_PersistentCalls:
       m_Calls: []
@@ -15501,7 +15503,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -181.2948}
+  m_AnchoredPosition: {x: 0, y: 302.43097}
   m_SizeDelta: {x: 0, y: 604.8619}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &897427296216775721
@@ -22539,9 +22541,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5914340406558182400}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &5116732691968478430
 MonoBehaviour:
@@ -22558,12 +22560,30 @@ MonoBehaviour:
   _canvasGroup: {fileID: 3052565973955255061}
   _easingCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _inDuration: 0
-  _outDuration: 0
+  _inDuration: 0.1
+  _outDuration: 0.1
   _OnFadeComplete:
     m_PersistentCalls:
       m_Calls: []
@@ -22605,7 +22625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65505a8f5f856034f98ebb8572fcac32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapMenuCanvasGroup: {fileID: 0}
 --- !u!114 &181466425479808348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24922,6 +24941,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4810605694800526389}
   - component: {fileID: 5067956563317038083}
+  - component: {fileID: 6978759275657667181}
+  - component: {fileID: 4342786448607463395}
   m_Layer: 5
   m_Name: Crosshair
   m_TagString: Untagged
@@ -24957,6 +24978,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6839322895570805566}
   m_CullTransparentMesh: 1
+--- !u!225 &6978759275657667181
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839322895570805566}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4342786448607463395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839322895570805566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ff891348ff0e4428568029a933cf29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 6978759275657667181}
+  _easingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _inDuration: 0.1
+  _outDuration: 0.1
+  _OnFadeComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6848073005745893983
 GameObject:
   m_ObjectHideFlags: 0
@@ -27965,7 +28040,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227379885642886705}
   m_HandleRect: {fileID: 7855620645815828190}
   m_Direction: 2
-  m_Value: 0.7997291
+  m_Value: 0
   m_Size: 0.6024797
   m_NumberOfSteps: 0
   m_OnValueChanged:

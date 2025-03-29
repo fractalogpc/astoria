@@ -28,10 +28,13 @@ MonoBehaviour:
   FireAnimation: {fileID: 4062770341961378241, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
   ReloadEmptyAnimation: {fileID: -3112927333447624444, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
   ReloadPartialAnimation: {fileID: -3112927333447624444, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
+  CanAimDownSights: 1
   AdsIkTarget: {x: 0.124009, y: -0.2449728, z: 0.131068}
   AdsIkTargetRot: {x: -25.37, y: -128.267, z: -50.492}
-  AdsTransitionTimeIn: 0.1
-  AdsTransitionTimeOut: 0.2
+  AdsIKTransitionTimeIn: 0.1
+  AdsIKTransitionTimeOut: 0.2
+  AdsFov: 45
+  AdsZoomSpeed: 10
   AccuracySetting:
     EffectiveRange: 50
     PatternSpread: 0.5
@@ -92,9 +95,7 @@ MonoBehaviour:
   ChamberSetting:
     ChamberTime: 0
   Damage: 30
-  SamplesPerFixedUpdate: 5
   InitialVelocityMS: 253
   BulletMassKg: 0.014
   BulletDiameterM: 0.009
-  AirDensityKgPerM: 1.1
   DragCoefficient: 0.13
