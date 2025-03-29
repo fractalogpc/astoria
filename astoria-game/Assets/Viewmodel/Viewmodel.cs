@@ -1,16 +1,21 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 public class Viewmodel : MonoBehaviour
 {
-	[SerializeField] protected Animator _animator;
+	[SerializeField] protected Animator _viewmodelAnimator;
+	[SerializeField] protected Animator _itemAnimator;
 	[SerializeField] protected Transform _itemHolder;
+	
 	[SerializeField] private Transform _adsIkTarget;
 	[SerializeField] private Rig _adsRig;
 	
 	public void SetTrigger(string triggerName) {
-		_animator.SetTrigger(triggerName);
+		_viewmodelAnimator.SetTrigger(triggerName);
+		if (_itemAnimator == null) return;
+		_itemAnimator.SetTrigger(triggerName);
 	}
 	
 	public void SetItemTo(ViewmodelItemInstance item) {
@@ -18,8 +23,15 @@ public class Viewmodel : MonoBehaviour
 			Destroy(_itemHolder.GetChild(0).gameObject);
 		}
 		Instantiate(item.ItemData.HeldItemPrefab, _itemHolder);
-		_animator.runtimeAnimatorController = item.ItemData.ItemAnimatorController;
-		if (typeof(GunData).IsInstanceOfType(item.ItemData)) {
+		_viewmodelAnimator.runtimeAnimatorController = item.ItemData.ViewmodelAnimatorController;
+		if (ItemAnimationsValid(item)) {
+			_itemAnimator = _itemHolder.GetComponentInChildren<Animator>();
+			_itemAnimator.runtimeAnimatorController = item.ItemData.ItemAnimations;
+		}
+		else {
+			_itemAnimator = null;
+		}
+		if (item.ItemData is GunData) {
 			// Set IK target for ADS
 			item._viewmodel = this;
 			_adsIkTarget.localPosition = item.GetGunItemData().AdsIkTarget;
@@ -36,6 +48,12 @@ public class Viewmodel : MonoBehaviour
 		StopCoroutine("LerpAds");
 		StartCoroutine(LerpAds(transitionTime, false));
 	}
+	
+	public void UnsetItem() {
+		if (_itemHolder.childCount > 0) {
+			DestroyAllChildren(_itemHolder);
+		}
+	}
 
 	private IEnumerator LerpAds(float transitionTime, bool ads) {
 		float elapsedTime = 0;
@@ -50,10 +68,11 @@ public class Viewmodel : MonoBehaviour
 		_adsRig.weight = end;
 	}
 	
-	public void UnsetItem() {
-		if (_itemHolder.childCount > 0) {
-			DestroyAllChildren(_itemHolder);
-		}
+	private bool ItemAnimationsValid(ViewmodelItemInstance item) {
+		if (item == null) return false;
+		if (item.ItemData.ItemAnimations == null) return false;
+		if (item.ItemData.HeldItemPrefab.GetComponentInChildren<Animator>() == null) return false;
+		return true;
 	}
 	
 	private void DestroyAllChildren(Transform parent) {
@@ -61,6 +80,4 @@ public class Viewmodel : MonoBehaviour
 			Destroy(parent.GetChild(i).gameObject);
 		}
 	}
-	
-	
 }
