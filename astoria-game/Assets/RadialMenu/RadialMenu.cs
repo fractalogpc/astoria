@@ -18,8 +18,16 @@ public class RadialMenu : MonoBehaviour
 		public string ID;
 	}
 	
-	[SerializeField] private List<RadialMenuElement> _elements;
+	[Header("References")]
 	[SerializeField] private RectTransform _radialBackground;
+	[SerializeField] private RectTransform _selectorElement;
+	[SerializeField] private GameObject _elementPrefab;
 	[SerializeField] private TextMeshProUGUI _nameText;
 	[SerializeField] private TextMeshProUGUI _descriptionText;
+	
+	[SerializeField] private List<RadialMenuElement> _elements;
+	[SerializeField][Range(1, 12)] private int _slotCount;
+	[SerializeField] private float _offsetRadius;
+	
+	
 }
