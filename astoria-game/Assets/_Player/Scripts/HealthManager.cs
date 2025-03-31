@@ -34,6 +34,8 @@ public class OnHealthZeroEvent : UnityEvent {}
 public class HealthManager : PlayerVitalHandler, IDamageable
 {
 
+  public bool Invulnerable;
+
   public float CurrentHealth => _currentHealth;
   public float MaxHealth => _maxHealth;
   public bool IsDead => _currentHealth <= 0;
@@ -80,10 +82,14 @@ public class HealthManager : PlayerVitalHandler, IDamageable
   }
 
   public void TakeDamage(float damage, Vector3 hitPosition) {
+    if (Invulnerable) return;
+
     Damage(damage, hitPosition);
   }
 
   public virtual void Damage(float damagePoints, Vector3 hitPosition) {
+    if (Invulnerable) return;
+
     if (_currentHealth - damagePoints <= 0) {
       _currentHealth = 0;
       OnHealthZero?.Invoke();

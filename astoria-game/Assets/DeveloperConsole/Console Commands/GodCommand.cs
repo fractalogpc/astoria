@@ -32,11 +32,11 @@ namespace Console.Commands
             if (TryValue(value)) {
                 if (value == 1) {
                     _currentSuccessMessage = BuildSuccessMessage("enabled");
-                    BackgroundInfo._godMode = true;
+                    PlayerInstance.Instance.GetComponentInChildren<HealthManager>().Invulnerable = true;
                 }
                 else {
                     _currentSuccessMessage = BuildSuccessMessage("disabled");
-                    BackgroundInfo._godMode = false;
+                    PlayerInstance.Instance.GetComponentInChildren<HealthManager>().Invulnerable = false;
                 }
 
                 return true;
@@ -62,7 +62,7 @@ namespace Console.Commands
         }
 
         private string BuildCallbackMessage() =>
-            $"God mode is {(BackgroundInfo._godMode ? "enabled" : "disabled")}";
+            $"God mode is {(PlayerInstance.Instance.GetComponentInChildren<HealthManager>().Invulnerable ? "enabled" : "disabled")}";
     
         private string BuildSuccessMessage(string arg) =>
             $"{arg} god mode";
