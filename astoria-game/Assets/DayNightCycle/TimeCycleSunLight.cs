@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
 /*
@@ -21,12 +22,21 @@ public class TimeCycleSunLight : MonoBehaviour
 	[SerializeField] private float _newMoonIntensity = 0.5f;
 	[SerializeField] private float _moonPhaseOffset = 0.5f;
 	[SerializeField] private int _framesPerUpdate = 5;
-
+	
+	[Header("Fog Settings")]
+	[SerializeField] private AnimationCurve _fogDistanceCurve;
+	[SerializeField] private Volume _globalVolume;
+	// 8 AM - peak fog, starting to go down
+	// 2 PM - bottom fog, remains there
+	// 8 PM - fog increasing
+	// 2 AM - fog peak, remains there
 	private TimeCycleCore _timeCycleCore;
 	private int _frameCount = 0;
+	private Fog _fog;
 
 	private void Start() {
 		_timeCycleCore = TimeCycleCore.Instance;
+		_globalVolume.profile.TryGet(out _fog);
 	}
 
 	private void Update() {
@@ -45,5 +55,7 @@ public class TimeCycleSunLight : MonoBehaviour
 		_moonLight.intensity = Mathf.Lerp(_newMoonIntensity, _fullMoonIntensity, (moonPhase > 0.5f ? 1 - moonPhase : moonPhase) * 2);
 
 		_sunLight.colorTemperature = _sunTempCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength) * (_sunIntensityMax - _sunIntensityMin) + _sunIntensityMin;
+		Debug.Log(_fogDistanceCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength));
+		_fog.meanFreePath.value = _fogDistanceCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength);
 	}
 }
