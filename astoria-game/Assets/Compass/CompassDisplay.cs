@@ -53,15 +53,23 @@ public class CompassDisplay : MonoBehaviour
 
   [Tooltip("Animation curve for icon alpha based on distance.")]
   [SerializeField] private AnimationCurve iconAlphaCurve = AnimationCurve.Linear(0, 1, 1, 1);
+  [Tooltip("Animation curve for icon alpha based on distance when close.")]
+  [SerializeField] private AnimationCurve nearAlphaCurve = AnimationCurve.Linear(0, 1, 1, 1);
 
   [Tooltip("Maximum distance for alpha adjustment using the icon alpha curve.")]
   [SerializeField] private float maxAlphaDistance = 50f;
+
+  [Tooltip("Distance at which the near fade effect starts.")]
+  [SerializeField] private float distanceToStartNearFade = 5f;
 
   [Tooltip("If true, key item icons do not scale with distance.")]
   [SerializeField] private bool disableScaleWithDistanceForKeyItems = true;
 
   [Tooltip("If true, key item icons do not fade with distance.")]
   [SerializeField] private bool disableAlphaWithDistanceForKeyItems = true;
+
+  [Tooltip("If true, only apply near fade to key items.")]
+  [SerializeField] private bool onlyNearFadeOnKeyItems = true;
 
   [Tooltip("Array of cardinal directions with associated angles and icons.")]
   [SerializeField] private CardinalDirection[] cardinalDirections;
@@ -95,12 +103,16 @@ public class CompassDisplay : MonoBehaviour
   private void Update()
   {
     // Only update if the camera has rotated or player has moved
-    if (stashedDirection != cameraTransform.eulerAngles.y) {
+    if (stashedDirection != cameraTransform.eulerAngles.y)
+    {
       stashedDirection = cameraTransform.eulerAngles.y;
-    } else if (stashedPosition != cameraTransform.position)
-    { 
+    }
+    else if (stashedPosition != cameraTransform.position)
+    {
       stashedPosition = cameraTransform.position;
-    } else {
+    }
+    else
+    {
       return;
     }
     UpdateCardinalDirections();
@@ -128,24 +140,28 @@ public class CompassDisplay : MonoBehaviour
       forward.Normalize();
 
       UpdateIconPosition(forward, icon, directionHorizontalPositionScalar, false);
-      if (!direction.ignoreScale) {
+      if (!direction.ignoreScale)
+      {
         UpdateIconScaleAndAlpha(icon, 0, false, true);
       }
     }
   }
 
-  private void InitializeFillBars() {
-    for (int i = 0; i < _barCount; i++) {
+  private void InitializeFillBars()
+  {
+    for (int i = 0; i < _barCount; i++)
+    {
       GameObject bar = CreateCompassIcon(_barSprite, $"Bar_{i}", _barParent);
-      
+
       // Resize bar
       bar.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 5);
-      
+
       // Change the alpha of the bar
       bar.GetComponent<UnityEngine.UI.Image>().color = new Color(1, 1, 1, 0.3f);
 
       // We can pretend the bar is a cardinal direction for the sake of positioning
-      CardinalDirection barDirection = new CardinalDirection {
+      CardinalDirection barDirection = new CardinalDirection
+      {
         name = $"Bar_{i}",
         angle = i * (360 / _barCount) + (360 / _barCount / 4),
         sprite = _barSprite,
@@ -261,6 +277,7 @@ public class CompassDisplay : MonoBehaviour
       return;
     }
 
+    // Update scale
     if (!isKeyItem || !disableScaleWithDistanceForKeyItems)
     {
       float scale = iconScaleCurve.Evaluate(Mathf.Clamp01(distance / maxScaleDistance));
@@ -271,6 +288,7 @@ public class CompassDisplay : MonoBehaviour
       icon.transform.localScale = Vector3.one * defaultObjectIconScale;
     }
 
+    // Update alpha
     if (!isKeyItem || !disableAlphaWithDistanceForKeyItems)
     {
       float alpha = iconAlphaCurve.Evaluate(Mathf.Clamp01(distance / maxAlphaDistance));
@@ -282,6 +300,15 @@ public class CompassDisplay : MonoBehaviour
     {
       Color color = image.color;
       color.a = defaultObjectIconAlpha;
+      image.color = color;
+    }
+    if (!isKeyItem) return;
+    // If the distance is less than the near fade distance, override alpha to use the nearAlphaCurve
+    if (distance < distanceToStartNearFade)
+    {
+      float nearAlpha = nearAlphaCurve.Evaluate(1 - Mathf.Clamp01(distance / distanceToStartNearFade));
+      Color color = image.color;
+      color.a *= nearAlpha;
       image.color = color;
     }
   }

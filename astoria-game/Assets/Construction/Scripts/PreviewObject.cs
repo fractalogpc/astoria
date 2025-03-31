@@ -9,7 +9,8 @@ using UnityEngine;
 public class PreviewObject : MonoBehaviour
 {
   [HideInInspector]
-  public ConstructionData Data;
+  public ConstructionData Data { get { if (data == null) { Debug.LogWarning("No data found on PreviewObject"); return null;} else return data; } set => data = value; }
+  private ConstructionData data;
 
   [System.Serializable]
   public class BoxData
@@ -25,7 +26,14 @@ public class PreviewObject : MonoBehaviour
 
   [HideInInspector] public float heightOffset = 0f;
 
-    private void Start() => Data = GetComponent<PreviewConstructionComponent>().Data;
+    // Because I use PreviewObject for both props and components, I need to check if the component has a PreviewConstructionComponent attached to it
+    private void Start() {
+      TryGetComponent<PreviewConstructionComponent>(out PreviewConstructionComponent component);
+
+      if (component != null) {
+        Data = component.Data;
+      }
+    }
 
     public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
   {

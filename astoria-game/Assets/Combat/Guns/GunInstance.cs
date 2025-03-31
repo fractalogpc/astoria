@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro.EditorUtilities;
+using Unity.Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,22 @@ public class GunInstance : ViewmodelItemInstance
 	public new GunData ItemData => (GunData)base.ItemData;
 	public FireMode CurrentFireMode { get; private set; }
 	public int CurrentAmmo { get; private set; }
+	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
+	public delegate void AmmoChangedDelegate(int oldAmmo, int newAmmo);
+	public event AmmoChangedDelegate AmmoChanged;
+	private CombatCore _combatCore;
+	private InventoryComponent _playerInventory;
+	private ProjectileManager _projectileManager;
+	private FireLogic _currentFireLogic;
+	private Coroutine _reloadCoroutine;
+	private bool _isReloading;
+	private bool _isAds;
+	private float _startCameraFov;
+	
+	// This constructor is called when the item is created in the inventory, it is not initialized yet
+	public GunInstance(GunData gunData) : base(gunData) {
+		_combatCore = CombatCore.Instance;
+	}
 	public int GetMaxAmmo() {
 		switch (ItemData.ReloadType) {
 			case ReloadTypes.MagazineClosedBolt or ReloadTypes.MagazineOpenBolt:
@@ -31,30 +48,12 @@ public class GunInstance : ViewmodelItemInstance
 				return 0;
 		}
 	}
-	private void SetCurrentAmmoTo(int value) {
-		AmmoChanged?.Invoke(CurrentAmmo, value);
-		CurrentAmmo = value;
-	}
-	public bool HasAmmo => CurrentAmmo > 0 && !_isReloading;
-	private CombatCore _combatCore;
-	private InventoryComponent _playerInventory;
-	private ProjectileManager _projectileManager;
-	private FireLogic _currentFireLogic;
-	private Coroutine _reloadCoroutine;
-	private bool _isReloading;
-	
-	public delegate void AmmoChangedDelegate(int oldAmmo, int newAmmo);
-	public event AmmoChangedDelegate AmmoChanged;
-	
-	// This constructor is called when the item is created in the inventory, it is not initialized yet
-	public GunInstance(GunData gunData) : base(gunData) {
-		_combatCore = CombatCore.Instance;
-	}
 	
 	public void InitializeWeapon() {
 		Initialized = true;
 		_projectileManager = ProjectileManager.Instance;
 		_playerInventory = _combatCore.PlayerInventory;
+		_startCameraFov = _combatCore.PlayerCamera.fieldOfView;
 		switch (ItemData.FireCombination) {
 			case FireCombinations.Semi or FireCombinations.ShotgunSemi:
 				SetFireMode(FireMode.Semi);
@@ -148,20 +147,30 @@ public class GunInstance : ViewmodelItemInstance
 	public void OnAimDown() {
 		if (!Initialized) return;
 		_currentFireLogic.OnAimDown();
-		if (ItemData.AdsIkTarget != Vector3.zero) {
-			_viewmodel.EnableAds(ItemData.AdsTransitionTimeIn);
-		}
+		
+		if (!ItemData.CanAimDownSights) return;
+		_viewmodel.EnableAds(ItemData.AdsIKTransitionTimeIn);
+		_combatCore.CrosshairFade.FadeOut();
+		_isAds = true;
 	}
 	public void OnAimUp() {
 		if (!Initialized) return;
 		_currentFireLogic.OnAimUp();
-		if (ItemData.AdsIkTarget != Vector3.zero) {
-			_viewmodel.DisableAds(ItemData.AdsTransitionTimeOut);
-		}
+		if (!ItemData.CanAimDownSights) return;
+		_viewmodel.DisableAds(ItemData.AdsIKTransitionTimeOut);
+		_combatCore.CrosshairFade.FadeIn();
+		_isAds = false;
 	}
 	public void Tick() {
 		if (!Initialized) return;
 		_currentFireLogic.Tick();
+		if (!ItemData.CanAimDownSights) return; 
+		_combatCore.PlayerCamera.fieldOfView = Mathf.Lerp(_combatCore.PlayerCamera.fieldOfView, _isAds ? ItemData.AdsFov : _startCameraFov, ItemData.AdsZoomSpeed * Time.deltaTime);
+	}
+
+	private void SetCurrentAmmoTo(int value) {
+		AmmoChanged?.Invoke(CurrentAmmo, value);
+		CurrentAmmo = value;
 	}
 
 	private void ShootProjectile(float spreadAngle = 0) {
@@ -185,6 +194,7 @@ public class GunInstance : ViewmodelItemInstance
 	
 	private void Unequip() {
 		_currentFireLogic.Cleanup();
+		_combatCore.PlayerCamera.fieldOfView = _startCameraFov;
 		Initialized = false;
 	}
 
@@ -275,7 +285,7 @@ public class GunInstance : ViewmodelItemInstance
 	}
 	
 	private int AmmoInInventory() {
-		return _playerInventory.GetItemsOfType(ItemData.AmmoItem).Count;
+		return _playerInventory.GetItemsWithData(ItemData.AmmoItem).Count;
 	}
 	
 	private bool RemoveAmmoFromInventory(int amount) {

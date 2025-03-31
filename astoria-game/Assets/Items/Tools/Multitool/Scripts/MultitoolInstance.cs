@@ -36,13 +36,21 @@ public class MultitoolInstance : BaseToolInstance
 	}
 	public override void OnAltUseDown()
 	{
-		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(true);
 
+		if (BackgroundInfo._toggleBuildMenu) {
+			PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().ToggleVisibility();
+		} else {
+			PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(true);
+		}
+		
 		base.OnAltUseDown();
 	}
 	public override void OnAltUseUp()
 	{
-		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false);
+		if (!BackgroundInfo._toggleBuildMenu)
+		{
+			PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false);
+		}
 
 		base.OnAltUseUp();
 	}

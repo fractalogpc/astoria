@@ -219,8 +219,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3411328367939329048, guid: f5fd7c15831dec342905956d1692612b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4854899744958527006}
   m_SourcePrefab: {fileID: 100100000, guid: f5fd7c15831dec342905956d1692612b, type: 3}
+--- !u!1 &5093141058461133912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3411328367939329048, guid: f5fd7c15831dec342905956d1692612b, type: 3}
+  m_PrefabInstance: {fileID: 7636136693018718272}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4854899744958527006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5093141058461133912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7958907964852115371 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f5fd7c15831dec342905956d1692612b, type: 3}
@@ -295,7 +315,7 @@ PrefabInstance:
       addedObject: {fileID: 6051940959978584759}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3616791896411149349}
+      addedObject: {fileID: 452929020167492596}
   m_SourcePrefab: {fileID: 100100000, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}
 --- !u!1 &7056828235550781032 stripped
 GameObject:
@@ -324,7 +344,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7252661219181024154, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}
---- !u!114 &3616791896411149349
+--- !u!114 &452929020167492596
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,38 +353,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7056828235550781032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealthZero:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
-        m_MethodName: Destroy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamaged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _currentHealth: 100
-  _maxHealth: 100
 --- !u!4 &7684604726297703634 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 75f1bb9febf5978438391a30b8897ec0, type: 3}

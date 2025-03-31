@@ -31,6 +31,7 @@ public class FadeElementInOut : MonoBehaviour
   }
   
   public void FadeIn(bool resetAlpha = false) {
+    print("fadein called");
     _canvasGroup.interactable = true;
     _canvasGroup.blocksRaycasts = true;
     if (resetAlpha) {

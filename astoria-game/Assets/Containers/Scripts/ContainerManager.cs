@@ -4,32 +4,19 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Interactable))]
-public class ContainerManager : InputHandlerBase
+public class ContainerManager : Interactable
 {
 	public UnityEvent OnOpen;
 	public UnityEvent OnClose;
 	
-	[SerializeField] protected FadeElementInOut _fadeCanvas;
+	[SerializeField] protected ToggleUIVisibility _toggleUIVisibility;
 	[Header("Inventories")]
 	[SerializeField] protected InventoryComponent _containerInventory;
 	[SerializeField] protected InventoryComponent _playerInvDisplay;
 
 	protected InventoryComponent _playerInventory;
 
-	public void Close() {
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-		InputReader.Instance.SwitchInputMap(InputMap.Player);
-		_fadeCanvas.FadeOut();
-		OnClose?.Invoke();
-	}
-	
-	protected override void InitializeActionMap() {
-		RegisterAction(_inputActions.GenericUI.CloseUI, ctx => Close());
-	}
-
-	protected virtual void Interact() {
+	public override void Interact() {
 		if (_playerInventory == null) {
 			_playerInventory = PlayerInstance.Instance.gameObject.GetComponentInChildren<InventoryComponent>();
 			if (_playerInventory == null) {
@@ -38,12 +25,7 @@ public class ContainerManager : InputHandlerBase
 			}
 		}
 		if (!_playerInvDisplay.Initialized) _playerInvDisplay.CreateInvFromInventoryData(_playerInventory.InventoryData);
-		
-		Cursor.lockState = CursorLockMode.None;
-		Cursor.visible = true;
-		InputReader.Instance.SwitchInputMap(InputMap.GenericUI);
-		_fadeCanvas.FadeIn();
-		OnOpen?.Invoke();
+		_toggleUIVisibility.SetVisibility(true);
 	}
 	
 	protected virtual void Start() {

@@ -13,13 +13,18 @@ public class LightningMeshGeneration : MonoBehaviour {
     [SerializeField] private float spawnTimeVariance = .5f;
     [SerializeField] private float hitMean = 2f;
     [SerializeField] private float hitTimeVariance = .1f;
+    private float hitTimeMax;
     [SerializeField] private float spawnHeight = 10f;
     [SerializeField] private Transform spawnPositionCenter;
     [SerializeField] private float spawnPositionRadius;
+    [SerializeField] private float lightningSize = .1f;
+    [SerializeField] private Material lightningMaterial;
+    [SerializeField] private AnimationCurve animCurve;
     private bool firstCall = true;
     public Vector3 spawnPosition;
     public Vector3 goalPosition;
     public float downStrength;
+    public float brightness = 0;
 
     public Vector3[] Vertex = new Vector3[30];
 
@@ -73,11 +78,14 @@ public class LightningMeshGeneration : MonoBehaviour {
                     lightningIsSpawned = true;
 
                     hitTimer = hitMean + Random.Range(-hitTimeVariance, hitTimeVariance);
+                    hitTimeMax = hitTimer;
                 }
             }
             else
             {
                 hitTimer -= Time.deltaTime;
+                float normHitTime = 1 - (hitTimer / hitTimeMax);
+                brightness = animCurve.Evaluate(normHitTime);
 
                 if (hitTimer < 0)
                 {
@@ -105,6 +113,7 @@ public class LightningMeshGeneration : MonoBehaviour {
             FormMesh(SubVertex[i]);
         }
         light.SetActive(true);
+        lightningMaterial.SetFloat("Brightness", brightness);
 
         // Random duration
         //float duration = Random.value + 1f;
@@ -184,10 +193,10 @@ public class LightningMeshGeneration : MonoBehaviour {
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * .5f));
-            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * .5f));
+            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * lightningSize));
         }
 
         if (offset < 1)

@@ -20,17 +20,21 @@ MonoBehaviour:
   MaxStackSize: 1
   DroppedItemPrefab: {fileID: 3902591898328376640, guid: 26637b4828cf6e34e9ce870d92f0a46d, type: 3}
   HeldItemPrefab: {fileID: 4698845729484147788, guid: 22a257455639eaa49a5e05e870ebf946, type: 3}
-  ItemAnimatorController: {fileID: 9100000, guid: ead531de97360654ab8d06322235640b, type: 2}
-  EquipAnimation: {fileID: 7711004490689117645, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
-  UnequipAnimation: {fileID: 137905152921630556, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
+  ViewmodelAnimatorController: {fileID: 9100000, guid: ead531de97360654ab8d06322235640b, type: 2}
+  ItemAnimations: {fileID: 0}
+  VMEquipAnimation: {fileID: 7711004490689117645, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
+  VMUnequipAnimation: {fileID: 137905152921630556, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
   AmmoItem: {fileID: 11400000, guid: 59571990645bf0f49b240024940b6965, type: 2}
   FireAnimation: {fileID: 4062770341961378241, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
   ReloadEmptyAnimation: {fileID: -3112927333447624444, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
   ReloadPartialAnimation: {fileID: -3112927333447624444, guid: ed06ceca74a3560449eb26e2466b9cfc, type: 3}
+  CanAimDownSights: 1
   AdsIkTarget: {x: 0.124009, y: -0.2449728, z: 0.131068}
   AdsIkTargetRot: {x: -25.37, y: -128.267, z: -50.492}
-  AdsTransitionTimeIn: 0.1
-  AdsTransitionTimeOut: 0.2
+  AdsIKTransitionTimeIn: 0.1
+  AdsIKTransitionTimeOut: 0.2
+  AdsFov: 45
+  AdsZoomSpeed: 10
   AccuracySetting:
     EffectiveRange: 50
     PatternSpread: 0.5
@@ -91,9 +95,7 @@ MonoBehaviour:
   ChamberSetting:
     ChamberTime: 0
   Damage: 30
-  SamplesPerFixedUpdate: 5
   InitialVelocityMS: 253
   BulletMassKg: 0.014
   BulletDiameterM: 0.009
-  AirDensityKgPerM: 1.1
   DragCoefficient: 0.13

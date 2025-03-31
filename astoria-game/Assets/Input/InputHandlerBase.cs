@@ -53,6 +53,16 @@ public abstract class InputHandlerBase : MonoBehaviour, IOnEnableExecution
     _actionMap[action] = performCallback;
   }
 
+  protected void RegisterActionComplexCancel(InputAction action, Action<InputAction.CallbackContext> performCallback, Action<InputAction.CallbackContext> cancelCallback) {
+    action.performed += performCallback; // Add perform callback to action
+    if (cancelCallback != null) {
+      action.canceled += cancelCallback; // Add cancel callback if provided
+    }
+
+    // Store in dictionary for reference and easy unsubscription later
+    _actionMap[action] = performCallback;
+  }
+
   /// <summary>
   /// Unregisters an input action and its associated callbacks, removing it from the dictionary.
   /// This method is useful if specific actions need to be disabled or modified dynamically.

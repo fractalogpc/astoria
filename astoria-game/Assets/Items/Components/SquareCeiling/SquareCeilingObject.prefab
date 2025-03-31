@@ -218,7 +218,7 @@ PrefabInstance:
       addedObject: {fileID: 677589555276914901}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4dee76f57668e2f4da11fbba18916bf5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2035195866974020692}
+      addedObject: {fileID: 418072961434345831}
   m_SourcePrefab: {fileID: 100100000, guid: 4dee76f57668e2f4da11fbba18916bf5, type: 3}
 --- !u!4 &463009468209279561 stripped
 Transform:
@@ -252,7 +252,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3146900676439132084, guid: f4b50491c671b804bb6ebb814d07293c, type: 3}
---- !u!114 &2035195866974020692
+--- !u!114 &418072961434345831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -261,35 +261,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 947761448588798195}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealthZero:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
-        m_MethodName: Destroy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamaged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _currentHealth: 100
-  _maxHealth: 100

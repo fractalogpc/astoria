@@ -45,4 +45,6 @@ public class ViewmodelManager : MonoBehaviour {
 	public void SetTrigger(string triggerName) {
 		_currentViewmodel.SetTrigger(triggerName);
 	}
+
+
 }

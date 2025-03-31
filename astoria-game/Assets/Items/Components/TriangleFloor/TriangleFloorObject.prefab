@@ -154,7 +154,7 @@ PrefabInstance:
       addedObject: {fileID: 6145693526005020577}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 92aeab16bcb3e764da57ecd9007467cc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7040085200651632300}
+      addedObject: {fileID: 671729273529969718}
   m_SourcePrefab: {fileID: 100100000, guid: 92aeab16bcb3e764da57ecd9007467cc, type: 3}
 --- !u!1 &3690110746511818549 stripped
 GameObject:
@@ -183,7 +183,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4238851177484708453, guid: 92aeab16bcb3e764da57ecd9007467cc, type: 3}
---- !u!114 &7040085200651632300
+--- !u!114 &671729273529969718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,38 +192,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3690110746511818549}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnHealthInitialize:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealthZero:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
-        m_MethodName: Destroy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamaged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  _currentHealth: 100
-  _maxHealth: 100
 --- !u!4 &4070753239237158287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 92aeab16bcb3e764da57ecd9007467cc, type: 3}

@@ -84,12 +84,12 @@ namespace Construction
         {
             if (data.isHorizontal && component.data.isHorizontal)
             {
-                edge.usedHorizontally = true;
+                // edge.usedHorizontally = true;
             }
 
             if (data.isVertical && component.data.isVertical)
             {
-                edge.usedVertically = true;
+                // edge.usedVertically = true;
             }
 
             if (connections.ContainsKey(edge))
@@ -110,12 +110,12 @@ namespace Construction
             {
                 if (data.isHorizontal && component.data.isHorizontal)
                 {
-                    edge.usedHorizontally = true;
+                    // edge.usedHorizontally = true;
                 }
 
                 if (data.isVertical && component.data.isVertical)
                 {
-                    edge.usedVertically = true;
+                    // edge.usedVertically = true;
                 }
             }
 

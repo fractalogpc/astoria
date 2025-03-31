@@ -298,6 +298,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Map"",
+                    ""type"": ""Button"",
+                    ""id"": ""26a065c6-7bb0-414a-892d-a5be4ed9724c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Place"",
                     ""type"": ""Button"",
                     ""id"": ""f4144246-2cf2-4375-af10-aee91e2742b9"",
@@ -917,6 +926,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f4ed5df-85db-4bb6-a544-6e02677827f8"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2213,7 +2233,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -2222,7 +2242,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -2238,9 +2258,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Click"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""3c7022bf-7922-4f7c-a998-c437916075ad"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -2867,6 +2887,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_EquipSlotTen = m_Player.FindAction("EquipSlotTen", throwIfNotFound: true);
         m_Player_Noclip = m_Player.FindAction("Noclip", throwIfNotFound: true);
         m_Player_Console = m_Player.FindAction("Console", throwIfNotFound: true);
+        m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
         m_Player_Place = m_Player.FindAction("Place", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_FlipBuilding = m_Player.FindAction("FlipBuilding", throwIfNotFound: true);
@@ -3017,6 +3038,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_EquipSlotTen;
     private readonly InputAction m_Player_Noclip;
     private readonly InputAction m_Player_Console;
+    private readonly InputAction m_Player_Map;
     private readonly InputAction m_Player_Place;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_FlipBuilding;
@@ -3054,6 +3076,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @EquipSlotTen => m_Wrapper.m_Player_EquipSlotTen;
         public InputAction @Noclip => m_Wrapper.m_Player_Noclip;
         public InputAction @Console => m_Wrapper.m_Player_Console;
+        public InputAction @Map => m_Wrapper.m_Player_Map;
         public InputAction @Place => m_Wrapper.m_Player_Place;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @FlipBuilding => m_Wrapper.m_Player_FlipBuilding;
@@ -3156,6 +3179,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Console.started += instance.OnConsole;
             @Console.performed += instance.OnConsole;
             @Console.canceled += instance.OnConsole;
+            @Map.started += instance.OnMap;
+            @Map.performed += instance.OnMap;
+            @Map.canceled += instance.OnMap;
             @Place.started += instance.OnPlace;
             @Place.performed += instance.OnPlace;
             @Place.canceled += instance.OnPlace;
@@ -3259,6 +3285,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Console.started -= instance.OnConsole;
             @Console.performed -= instance.OnConsole;
             @Console.canceled -= instance.OnConsole;
+            @Map.started -= instance.OnMap;
+            @Map.performed -= instance.OnMap;
+            @Map.canceled -= instance.OnMap;
             @Place.started -= instance.OnPlace;
             @Place.performed -= instance.OnPlace;
             @Place.canceled -= instance.OnPlace;
@@ -3840,6 +3869,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnEquipSlotTen(InputAction.CallbackContext context);
         void OnNoclip(InputAction.CallbackContext context);
         void OnConsole(InputAction.CallbackContext context);
+        void OnMap(InputAction.CallbackContext context);
         void OnPlace(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnFlipBuilding(InputAction.CallbackContext context);
