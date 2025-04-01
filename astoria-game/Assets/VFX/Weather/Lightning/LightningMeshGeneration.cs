@@ -25,6 +25,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     public Vector3 goalPosition;
     public float downStrength;
     public float brightness = 0;
+    public float brightnessMultiplier = 1;
 
     public Vector3[] Vertex = new Vector3[30];
 
@@ -86,6 +87,7 @@ public class LightningMeshGeneration : MonoBehaviour {
                 hitTimer -= Time.deltaTime;
                 float normHitTime = 1 - (hitTimer / hitTimeMax);
                 brightness = animCurve.Evaluate(normHitTime);
+                brightness *= brightnessMultiplier;
 
                 if (hitTimer < 0)
                 {
@@ -93,6 +95,7 @@ public class LightningMeshGeneration : MonoBehaviour {
                     lightningIsSpawned = false;
                     spawnTimer = meanSpawnTime + Random.Range(spawnTimeVariance, -spawnTimeVariance);
                 }
+                lightningMaterial.SetFloat("_Brightness", brightness);
             }
         }
 
@@ -112,15 +115,14 @@ public class LightningMeshGeneration : MonoBehaviour {
         {
             FormMesh(SubVertex[i]);
         }
+
         light.SetActive(true);
-        lightningMaterial.SetFloat("Brightness", brightness);
+        lightningMaterial.SetFloat("_Brightness", brightness);
 
         // Random duration
         //float duration = Random.value + 1f;
         //Invoke("ClearLightning", duration);
     }
-    
-    
 
     private void ClearLightning() {
         light.SetActive(false);
