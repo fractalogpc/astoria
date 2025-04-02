@@ -26,12 +26,15 @@ public class LightningMeshGeneration : MonoBehaviour {
     public float downStrength;
     public float brightness = 0;
     public float brightnessMultiplier = 1;
+    public float goalPositionRandomStrength;
 
     public Vector3[] Vertex = new Vector3[30];
 
     public List<Vector3> SubVertexDirection;
     public List<Vector3> SubVertexStart;
     public List<Vector3> SubVertexGoal;
+    public float SubVertexMaxSize;
+    public float SubVertexRandomizationStrength;
     public List<Vector3[]> SubVertex = new List<Vector3[]>();
 
     [Range(0, 1)] public float lerp = .75f;
@@ -67,7 +70,7 @@ public class LightningMeshGeneration : MonoBehaviour {
                     spawn.position = spawnPosition;
 
                     RaycastHit hit;
-                    if (Physics.Raycast(spawnPositionCenter.position + Random.onUnitSphere * spawnPositionRadius, Vector3.down, out hit))
+                    if (Physics.Raycast(spawnPositionCenter.position + Random.onUnitSphere * goalPositionRandomStrength, Vector3.down, out hit))
                     {
                         goal.position = hit.point;
                         goalPosition = goal.position;
@@ -166,9 +169,9 @@ public class LightningMeshGeneration : MonoBehaviour {
                 }
                 else
                 {
-                    Vector3 randomDirection = Random.onUnitSphere;
+                    Vector3 randomDirection = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize) * SubVertexRandomizationStrength;
                     randomDirection.y = -Mathf.Abs(randomDirection.y);
-                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(randomDirection, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, 100f);
+                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(randomDirection, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize);
                     SubVertex[i][j] = point;
                 }
 
@@ -203,10 +206,10 @@ public class LightningMeshGeneration : MonoBehaviour {
 
         if (offset < 1)
         {
-            vertices.Add((goal.position - spawn.position) + new Vector3(.1f, 0, 0));
-            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, .1f));
-            vertices.Add((goal.position - spawn.position) + new Vector3(-.1f, 0, 0));
-            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -.1f));
+            vertices.Add((goal.position - spawn.position) + new Vector3(1f, 0, 0));
+            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, 1f));
+            vertices.Add((goal.position - spawn.position) + new Vector3(-1f, 0, 0));
+            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -1f));
         }
 
 
