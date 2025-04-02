@@ -24,10 +24,10 @@ public class RadialMenu : MonoBehaviour
 	[SerializeField] private GameObject _elementPrefab;
 	[SerializeField] private TextMeshProUGUI _nameText;
 	[SerializeField] private TextMeshProUGUI _descriptionText;
+	[Header("Settings")]
+	[SerializeField] private RadialMenuElement[] _radialMenuElements = new RadialMenuElement[SLOT_COUNT];
+	private static int SLOT_COUNT = 12;
 	
-	[SerializeField] private List<RadialMenuElement> _elements;
-	[SerializeField][Range(1, 12)] private int _slotCount;
-	[SerializeField] private float _offsetRadius;
 	
-	
+
 }
