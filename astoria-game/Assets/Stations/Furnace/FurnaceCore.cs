@@ -36,10 +36,8 @@ public class FurnaceCore : MonoBehaviour
 	private void Update() {
 		// No smeltable
 		if (_currentSmeltable == null) {
-			print("Smeltable is null, checking for new one");
 			_currentSmeltable = FirstSmeltItemInSmeltInv();
 			if (_currentSmeltable == null) {
-				print("Still null, setting power off");
 				_statsText.text = "Furnace Off";
 				SetPower(false); 
 			}
