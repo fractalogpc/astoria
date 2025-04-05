@@ -74,7 +74,7 @@ namespace Console.Commands
         }
 
         private string BuildCallbackMessage() =>
-            $"UI is {(PlayerInstance.Instance.transform.GetChild(6).gameObject.activeSelf ? "shown" : "hidden")}";
+            $"UI is {(PlayerInstance.Instance.transform.GetChild(8).gameObject.activeSelf ? "shown" : "hidden")}";
 
         private string BuildSuccessMessage(string arg) =>
             $"UI is {arg}";
