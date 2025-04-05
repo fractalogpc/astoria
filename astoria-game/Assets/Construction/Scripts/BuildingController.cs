@@ -16,26 +16,80 @@ public class BuildingController : MonoBehaviour, IStartExecution
     public GameObject StructureObjectPrefab;
 
     public ConstructionComponentData[] ConstructableObjects;
+    private ConstructionComponentData _selectedData;
+    public RadialMenu RadialMenu;
 
 
     public void InitializeStart()
     {
         togglePlayerBuildingUI.OnBuildingUIOpen.AddListener(OnBuildingUIOpen);
+        togglePlayerBuildingUI.OnBuildingUIClose.AddListener(OnBuildingUIClose);
 
-        foreach (ConstructionComponentData data in ConstructableObjects)
+        RadialMenu.OnElementHovered += OnElementHovered;
+
+        // foreach (ConstructionComponentData data in ConstructableObjects)
+        // {
+        //     GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
+        //     prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
+        //     // prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
+
+        //     Button button = prefab.GetComponent<Button>();
+        //     button.onClick.AddListener(() => { constructionCore.SelectData(data); });
+        //     button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
+        // }
+    }
+
+    private void OnDestroy()
+    {
+        togglePlayerBuildingUI.OnBuildingUIOpen.RemoveListener(OnBuildingUIOpen);
+        RadialMenu.OnElementHovered -= OnElementHovered;
+    }
+
+    public void OnElementHovered(RadialMenuElement element)
+    {
+        int index = element.Index;
+
+        // Not great to hard code this but it'll do
+        if (index < 10)
         {
-            GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
-            prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
-            // prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
+            if (index == 3 || index == 5 || index == 7 || index == 9)
+            {
+                return;
+            }
 
-            Button button = prefab.GetComponent<Button>();
-            button.onClick.AddListener(() => { constructionCore.SelectData(data); });
-            button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
+            constructionCore.CleanupPreviewObject();
+            constructionCore.SelectData(ConstructableObjects[index], true);
+            _selectedData = ConstructableObjects[index];
+        }
+        else if (index == 10)
+        {
+            // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Delete);
+        }
+        else if (index == 11)
+        {
+            // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
         }
     }
 
     private void OnBuildingUIOpen()
     {
-        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
+        RadialMenu.ResetLastSelected();
+        _selectedData = null;
+        constructionCore.SetDataToNull();
+        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.SelectingItem);
     }
+
+    private void OnBuildingUIClose()
+    {
+        if (_selectedData != null)
+        {
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.PlacingStructure);
+        }
+        else
+        {
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
+        }
+    }
+
+
 }
