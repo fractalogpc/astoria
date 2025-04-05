@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5946079619422861154}
-  - component: {fileID: 6666949201643369300}
   - component: {fileID: 1503046927697815729}
+  - component: {fileID: 8034016271769602745}
   m_Layer: 18
   m_Name: TriangleRampObject
   m_TagString: Untagged
@@ -34,36 +34,6 @@ Transform:
   - {fileID: 1251054834806553525}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6666949201643369300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1839868237219429915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d30c23ccbeff4a4b8687a691b54fe93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: 8c3c1736ddea6e3489343576864d7e75, type: 2}
-  previewComponent: {fileID: 8802408707026768891, guid: 1ccc5f7fb1cc7494783c5a2847453ac5, type: 3}
-  inherentStability: -30
-  minimumStability: 30
-  maximumHealth: 100
-  edges:
-  - position: {x: 0, y: 0, z: -1.5}
-    normal: {x: 0, y: 0, z: 1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
-  - position: {x: 0, y: 0, z: -1.5}
-    normal: {x: 0, y: 0, z: 1}
-    Transform: {fileID: 0}
-    Data: {fileID: 0}
-    usedHorizontally: 0
-    usedVertically: 0
 --- !u!114 &1503046927697815729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +64,18 @@ MonoBehaviour:
     usedHorizontally: 0
     usedVertically: 0
   IsDeleted: 0
+--- !u!114 &8034016271769602745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839868237219429915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1645532138966129758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -209,13 +191,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Invulnerable: 0
   OnHealthInitialize:
     m_PersistentCalls:
       m_Calls: []
   OnHealthZero:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6666949201643369300}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Construction.ConstructionComponent, Assembly-CSharp
         m_MethodName: Destroy
         m_Mode: 1

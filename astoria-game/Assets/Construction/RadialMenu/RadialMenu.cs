@@ -79,6 +79,7 @@ public class RadialMenu : InputHandlerBase
 			float angle = index * (360f / _radialMenuElements.Count);
 			rectTransform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * _elementCenterDist, Mathf.Sin(angle * Mathf.Deg2Rad) * _elementCenterDist, 0);
 			newElement.GetComponentInChildren<Image>().sprite = element.Icon == null ? Resources.Load<Sprite>("DefaultItemAssets/NullImage") : element.Icon;
+			newElement.GetComponentInChildren<Image>().preserveAspect = true;
 		}
 	}
 

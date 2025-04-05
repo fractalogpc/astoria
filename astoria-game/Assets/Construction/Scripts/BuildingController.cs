@@ -52,11 +52,6 @@ public class BuildingController : MonoBehaviour, IStartExecution
         // Not great to hard code this but it'll do
         if (index < 10)
         {
-            if (index == 3 || index == 5 || index == 7 || index == 9)
-            {
-                return;
-            }
-
             constructionCore.CleanupPreviewObject();
             constructionCore.SelectData(ConstructableObjects[index], true);
             _selectedData = ConstructableObjects[index];

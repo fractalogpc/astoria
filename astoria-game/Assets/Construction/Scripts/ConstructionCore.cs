@@ -642,6 +642,7 @@ namespace Construction
             switch (State)
             {
                 case ConstructionState.None:
+                    CleanupPreviewObject();
                     break;
                 case ConstructionState.PlacingStructure:
                     // This handles the case where the player had the radial menu open and is now closing it.
