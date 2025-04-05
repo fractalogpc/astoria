@@ -59,6 +59,7 @@ public class RadialMenu : InputHandlerBase
 	
 	protected override void InitializeActionMap() {
 		RegisterAction(_inputActions.GenericUI.Click, ctx => {
+			if (!Enabled) return;
 			if (!ctx.performed) return;
 			RadialMenuElement selected = GetSelectedElement();
 			OnElementSelected?.Invoke(selected);
