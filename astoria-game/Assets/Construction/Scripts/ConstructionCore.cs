@@ -3,6 +3,7 @@ using Construction;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
+using Mirror;
 
 namespace Construction
 {
@@ -18,6 +19,7 @@ namespace Construction
         public enum ConstructionState
         {
             None,
+            SelectingItem,
             PlacingProp,
             PlacingStructure,
             Deleting
@@ -46,7 +48,7 @@ namespace Construction
         public UnityEvent OnObjectDeleted;
 
         // Placing stuff
-        private ConstructionData _selectedData;
+        [SerializeField] private ConstructionData _selectedData;
         private GameObject _previewObject;
         public PreviewObject _previewObjectScript;
         private Vector3 _previewObjectPosition;
@@ -86,6 +88,70 @@ namespace Construction
 
             switch (State)
             {
+                case ConstructionState.SelectingItem:
+                    {
+                        if (Core == null && RequireCoreToPlaceStructures)
+                        {
+                            SetConstructionState(ConstructionState.None);
+
+                            break;
+                        }
+
+                        if (_selectedData == null) break;
+
+                        ConstructionComponentData data = _selectedData as ConstructionComponentData;
+
+                        bool validPosition = false;
+
+                        Vector3 position;
+                        Quaternion rotation;
+
+                        PreviewConstructionComponent constructionComponent = _previewObject.GetComponent<PreviewConstructionComponent>();
+                        if (constructionComponent == null)
+                        {
+                            Debug.LogError("PreviewConstructionComponent not found on preview object");
+                            SetConstructionState(ConstructionState.None);
+                            break;
+                        }
+
+
+                        // Get the initial ray direction (from the camera through the cursor)
+                        Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+                        Vector3 testDirection = ray.direction; // Initial ray direction
+                        testDirection.y = 0;
+
+                        RaycastHit hit;
+                        // If the ray doesn't hit, sphere cast to find the nearest object
+                        if (!Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask))
+                        {
+                            Physics.SphereCast(ray, 0.4f, out hit, Settings.MaxBuildDistance, Settings.PlacementLayerMask);
+                        }
+
+                        // Check if the component can be placed
+                        constructionComponent.CanPlace(hit.transform == null ? ray.origin + ray.direction * Settings.MaxBuildDistance : hit.point, Quaternion.LookRotation(testDirection), Settings, data, out position, out rotation, out validPosition);
+
+                        // Check if player has required materials
+                        if (validPosition)
+                        {
+                            if (BackgroundInfo._infBuild)
+                            {
+                                _canPlace = true;
+                            }
+                            else
+                            {
+                                _canPlace = data.Cost.ContainedWithin(PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItems());
+                            }
+                        }
+                        else
+                        {
+                            _canPlace = false;
+                        }
+
+                        RenderPreviewObject(position, rotation, _canPlace);
+
+                    }
+                    break;
+
                 case ConstructionState.PlacingProp:
                     {
                         ConstructionPropData data = _selectedData as ConstructionPropData;
@@ -366,7 +432,7 @@ namespace Construction
             _previewObjectScript.SetMaterial(mat);
         }
 
-        public bool SelectData(ConstructionData data)
+        public bool SelectData(ConstructionData data, bool fromMenu = false)
         {
             if (!ConstructionCoreLogic.ValidateData(data)) return false;
 
@@ -385,7 +451,11 @@ namespace Construction
             }
             else if (data.GetType() == typeof(ConstructionComponentData))
             {
-                SetConstructionState(ConstructionState.PlacingStructure);
+                if (fromMenu) {
+                    SetConstructionState(ConstructionState.SelectingItem);
+                } else {
+                    SetConstructionState(ConstructionState.PlacingStructure);
+                }
             }
 
             OnDataSelected?.Invoke(_selectedData);
@@ -441,7 +511,7 @@ namespace Construction
 
                     OnObjectDeleted?.Invoke();
 
-                    SetConstructionState(ConstructionState.None);
+                    // SetConstructionState(ConstructionState.None);
                     break;
 
             }
@@ -452,6 +522,8 @@ namespace Construction
 
         private GameObject CreatePreviewObject()
         {
+            if (_selectedData == null) return null;
+            Debug.Log("Creating preview object" + _selectedData.PreviewPrefab.name);
             GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab);
 
             _previewObjectScript = localPreviewObject.GetComponent<PreviewObject>();
@@ -494,7 +566,7 @@ namespace Construction
             return null;
         }
 
-        private void CleanupPreviewObject()
+        public void CleanupPreviewObject()
         {
             if (_previewObject != null)
             {
@@ -503,6 +575,7 @@ namespace Construction
 
             _previewObject = null;
             _previewObjectScript = null;
+            // _selectedData = null;
         }
 
         private void HighlightObject(GameObject obj)
@@ -531,15 +604,31 @@ namespace Construction
 
         public void SetConstructionState(ConstructionState state)
         {
+            ConstructionState stashedPreviousState = State;
+
+            if (state == State) return;
+
+            // If we are placing a structure and the selected data is null, we need to reset the state
+            // if (state == ConstructionState.PlacingStructure && _selectedData == null)
+            // {
+            //     SetConstructionState(ConstructionState.None);
+            //     return;
+            // }
 
             // Cleanup previous state
             switch (State)
             {
+                case ConstructionState.SelectingItem:
+                    CleanupPreviewObject();
+                    break;
                 case ConstructionState.PlacingProp:
                     CleanupPreviewObject();
                     break;
                 case ConstructionState.PlacingStructure:
-                    CleanupPreviewObject();
+                    if (state != ConstructionState.PlacingStructure)
+                    {
+                        CleanupPreviewObject();
+                    }
                     break;
                 case ConstructionState.Deleting:
                     UnhighlightObject(_highlightedForDeletionObject);
@@ -553,8 +642,24 @@ namespace Construction
             switch (State)
             {
                 case ConstructionState.None:
+                    CleanupPreviewObject();
+                    break;
+                case ConstructionState.PlacingStructure:
+                    // This handles the case where the player had the radial menu open and is now closing it.
+                    // I need to change states to PlacingStructure to allow for placing, however for security I first destroy the preview object
+                    // Then I reassign the preview object.
+                    if (stashedPreviousState == ConstructionState.SelectingItem) {
+                        ConstructionData stashedData = _selectedData;
+                        CleanupPreviewObject();
+                        _selectedData = stashedData;
+                        _previewObject = CreatePreviewObject();
+                    }
                     break;
             }
+        }
+
+        public void SetDataToNull() {
+            _selectedData = null;
         }
     }
 }

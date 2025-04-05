@@ -16,26 +16,86 @@ public class BuildingController : MonoBehaviour, IStartExecution
     public GameObject StructureObjectPrefab;
 
     public ConstructionComponentData[] ConstructableObjects;
+    private ConstructionComponentData _selectedData;
+    private bool deleting = false;
+    private bool editing = false;
+    public RadialMenu RadialMenu;
 
 
     public void InitializeStart()
     {
         togglePlayerBuildingUI.OnBuildingUIOpen.AddListener(OnBuildingUIOpen);
+        togglePlayerBuildingUI.OnBuildingUIClose.AddListener(OnBuildingUIClose);
 
-        foreach (ConstructionComponentData data in ConstructableObjects)
+        RadialMenu.OnElementHovered += OnElementHovered;
+
+        // foreach (ConstructionComponentData data in ConstructableObjects)
+        // {
+        //     GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
+        //     prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
+        //     // prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
+
+        //     Button button = prefab.GetComponent<Button>();
+        //     button.onClick.AddListener(() => { constructionCore.SelectData(data); });
+        //     button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
+        // }
+    }
+
+    private void OnDestroy()
+    {
+        togglePlayerBuildingUI.OnBuildingUIOpen.RemoveListener(OnBuildingUIOpen);
+        RadialMenu.OnElementHovered -= OnElementHovered;
+    }
+
+    public void OnElementHovered(RadialMenuElement element)
+    {
+        int index = element.Index;
+
+        // Not great to hard code this but it'll do
+        
+        // These are the components
+        if (index < 10)
         {
-            GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
-            prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
-            // prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
-
-            Button button = prefab.GetComponent<Button>();
-            button.onClick.AddListener(() => { constructionCore.SelectData(data); });
-            button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
+            constructionCore.CleanupPreviewObject();
+            constructionCore.SelectData(ConstructableObjects[index], true);
+            _selectedData = ConstructableObjects[index];
+        }
+        // Edit
+        else if (index == 10)
+        {
+            editing = true;
+            // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Delete);
+        }
+        // Delete
+        else if (index == 11)
+        {
+            deleting = true;
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Deleting);
         }
     }
 
     private void OnBuildingUIOpen()
     {
-        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
+        editing = false;
+        deleting = false;
+
+        RadialMenu.ResetLastSelected();
+        _selectedData = null;
+        constructionCore.SetDataToNull();
+        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.SelectingItem);
     }
+
+    private void OnBuildingUIClose()
+    {
+        if (_selectedData != null)
+        {
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.PlacingStructure);
+        }
+        else if (!editing && !deleting)
+        {
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
+        }
+    }
+
+
 }

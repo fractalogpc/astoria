@@ -55,7 +55,7 @@ public class TimeCycleSunLight : MonoBehaviour
 		_moonLight.intensity = Mathf.Lerp(_newMoonIntensity, _fullMoonIntensity, (moonPhase > 0.5f ? 1 - moonPhase : moonPhase) * 2);
 
 		_sunLight.colorTemperature = _sunTempCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength) * (_sunIntensityMax - _sunIntensityMin) + _sunIntensityMin;
-		Debug.Log(_fogDistanceCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength));
+		// Debug.Log(_fogDistanceCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength));
 		_fog.meanFreePath.value = _fogDistanceCurve.Evaluate(_timeCycleCore.TimeOfDay.SecsElapsed / _timeCycleCore.TimeOfDay.DayLength);
 	}
 }

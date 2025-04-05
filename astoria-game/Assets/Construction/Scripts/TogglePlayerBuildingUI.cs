@@ -7,6 +7,9 @@ using UnityEngine.Events;
 public class TogglePlayerBuildingUI : InputHandlerBase
 {
     public UnityEvent OnBuildingUIOpen;
+    public UnityEvent OnBuildingUIClose;
+
+    public RadialMenu RadialMenu;
 
     public bool IsInventoryOpen { get; private set; }
     [SerializeField] private CanvasGroup _inventoryCanvasGroup;
@@ -17,7 +20,12 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         // RegisterAction(_inputActions.BuildingUI.CloseMenu, ctx => SetVisibility(false));
     }
 
-    public void SetVisibility(bool show)
+  private void Start()
+  {
+    SetVisibility(false);
+  }
+
+  public void SetVisibility(bool show)
     {
         IsInventoryOpen = show;
         _inventoryCanvasGroup.alpha = show ? 1 : 0;
@@ -26,6 +34,7 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         IsInventoryOpen = show;
         if (show)
         {
+            RadialMenu.Enabled = true;
             OnBuildingUIOpen?.Invoke();
             Cursor.visible = true;
             InputReader.Instance.InputActions.FindAction("Look").Disable();
@@ -34,6 +43,8 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         }
         else
         {
+            RadialMenu.Enabled = false;
+            OnBuildingUIClose?.Invoke();
             Cursor.visible = false;
             InputReader.Instance.InputActions.FindAction("Look").Enable();
             Cursor.lockState = CursorLockMode.Locked;

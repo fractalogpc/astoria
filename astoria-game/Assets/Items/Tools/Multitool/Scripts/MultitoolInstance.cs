@@ -1,4 +1,5 @@
 using System.Collections;
+using Construction;
 using UnityEngine;
 
 public class MultitoolInstance : BaseToolInstance
@@ -14,6 +15,8 @@ public class MultitoolInstance : BaseToolInstance
 	}
 	public override void OnUnequip()
 	{
+		Debug.Log("Unequipping Multitool");
+		PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().SetConstructionState(ConstructionCore.ConstructionState.None);
 		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false);
 
 		base.OnUnequip();
