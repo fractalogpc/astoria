@@ -63,6 +63,9 @@ namespace Construction
 
         private bool _canPlace;
 
+        [SerializeField] private Transform _propParent;
+        [SerializeField] private Transform _structureParent;
+
         protected override void InitializeActionMap()
         {
             RegisterAction(_inputActions.Player.Place, _ => { OnClick(); });
@@ -557,6 +560,7 @@ namespace Construction
 
             // Instantiate the object on the server
             GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, position, rotation);
+            placedObject.transform.SetParent(_selectedData.GetType() == typeof(ConstructionPropData) ? _propParent : _structureParent);
 
             return placedObject;
         }
