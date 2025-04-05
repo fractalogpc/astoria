@@ -9557,6 +9557,7 @@ GameObject:
   - component: {fileID: 1345790810473838691}
   - component: {fileID: 7172625739382942218}
   - component: {fileID: 6707355517212156518}
+  - component: {fileID: 8663208013243165338}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -9719,6 +9720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Invulnerable: 0
   OnHealthInitialize:
     m_PersistentCalls:
       m_Calls: []
@@ -9824,6 +9826,33 @@ MonoBehaviour:
   _currentWater: 100
   _lossRate: 0.2
   _healthDamageRate: 6
+--- !u!114 &8663208013243165338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574363177667902295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9287c096fa32c4fb70dc7c68f45dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _disableOnCutscene:
+  - {fileID: 6707355517212156518}
+  - {fileID: 7172625739382942218}
+  - {fileID: 7651286900178554149}
+  - {fileID: 1033706171325523888}
+  - {fileID: 5077299882305822583}
+  - {fileID: 7927936991594916542}
+  - {fileID: 5077299882305822583}
+  - {fileID: 8455281219476358247}
+  - {fileID: 4774990378069910726}
+  - {fileID: 7623581840800741911}
+  - {fileID: 4774990378069910726}
+  _enableOnCutscene: []
+  _fadeOutOnCutscene:
+  - {fileID: 2811328391282275818}
 --- !u!1 &1619490454907605550
 GameObject:
   m_ObjectHideFlags: 0
@@ -11844,9 +11873,35 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  nearAlphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   maxAlphaDistance: 40
+  distanceToStartNearFade: 5
   disableScaleWithDistanceForKeyItems: 1
   disableAlphaWithDistanceForKeyItems: 1
+  onlyNearFadeOnKeyItems: 1
   cardinalDirections:
   - name: N
     angle: 0
@@ -12361,6 +12416,10 @@ MonoBehaviour:
   OnBuildingUIOpen:
     m_PersistentCalls:
       m_Calls: []
+  OnBuildingUIClose:
+    m_PersistentCalls:
+      m_Calls: []
+  RadialMenu: {fileID: 0}
   _inventoryCanvasGroup: {fileID: 1222717324559627723}
 --- !u!114 &2574421876848557191
 MonoBehaviour:
@@ -12387,6 +12446,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c0beab63e7667e14ba0259d63f5670f1, type: 2}
   - {fileID: 11400000, guid: 7a58cf17d3517e4408bde4cccd799fd3, type: 2}
   - {fileID: 11400000, guid: 94477d9b0d550784084c6d3a65109714, type: 2}
+  RadialMenu: {fileID: 0}
 --- !u!1 &2648006967258108883
 GameObject:
   m_ObjectHideFlags: 0
@@ -13719,6 +13779,7 @@ MonoBehaviour:
   OnObjectDeleted:
     m_PersistentCalls:
       m_Calls: []
+  _selectedData: {fileID: 0}
   _previewObjectScript: {fileID: 0}
   Core: {fileID: 0}
 --- !u!114 &4336861238717177521
@@ -22394,6 +22455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerController: {fileID: 1033706171325523888}
   _footstepDistance: 2
+  _kinematicCharacterMotor: {fileID: 3739774951926790246}
 --- !u!1 &5906821298328830481
 GameObject:
   m_ObjectHideFlags: 0

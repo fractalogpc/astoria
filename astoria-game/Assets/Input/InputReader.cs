@@ -70,6 +70,14 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Enable();
         break;
+      case InputMap.Cutscene:
+        InputActions.GenericUI.Disable();
+        InputActions.InventoryUI.Disable();
+        InputActions.Player.Disable();
+        InputActions.ConsoleUI.Disable();
+        InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Enable();
+        break;
       case InputMap.Null:
         InputActions.GenericUI.Disable();
         InputActions.InventoryUI.Disable();
@@ -95,5 +103,6 @@ public enum InputMap
   Player = 1,
   InventoryUI = 2,
   ConsoleUI = 3,
-  BuildingUI = 4
+  BuildingUI = 4,
+  Cutscene = 5,
 }

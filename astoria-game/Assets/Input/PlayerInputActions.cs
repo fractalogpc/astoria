@@ -2823,6 +2823,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Cutscene"",
+            ""id"": ""e5710bbf-8c48-4a3f-928d-0f2ed89423ae"",
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -2970,6 +2976,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // ConsoleUI
         m_ConsoleUI = asset.FindActionMap("ConsoleUI", throwIfNotFound: true);
         m_ConsoleUI_CloseConsole = m_ConsoleUI.FindAction("CloseConsole", throwIfNotFound: true);
+        // Cutscene
+        m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -2980,6 +2988,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_BuildingUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.BuildingUI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_GenericUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.GenericUI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_ConsoleUI.enabled, "This will cause a leak and performance issues, PlayerInputActions.ConsoleUI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Cutscene.enabled, "This will cause a leak and performance issues, PlayerInputActions.Cutscene.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -3825,6 +3834,44 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public ConsoleUIActions @ConsoleUI => new ConsoleUIActions(this);
+
+    // Cutscene
+    private readonly InputActionMap m_Cutscene;
+    private List<ICutsceneActions> m_CutsceneActionsCallbackInterfaces = new List<ICutsceneActions>();
+    public struct CutsceneActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public CutsceneActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CutsceneActions set) { return set.Get(); }
+        public void AddCallbacks(ICutsceneActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CutsceneActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CutsceneActionsCallbackInterfaces.Add(instance);
+        }
+
+        private void UnregisterCallbacks(ICutsceneActions instance)
+        {
+        }
+
+        public void RemoveCallbacks(ICutsceneActions instance)
+        {
+            if (m_Wrapper.m_CutsceneActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICutsceneActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CutsceneActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CutsceneActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CutsceneActions @Cutscene => new CutsceneActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -3957,5 +4004,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IConsoleUIActions
     {
         void OnCloseConsole(InputAction.CallbackContext context);
+    }
+    public interface ICutsceneActions
+    {
     }
 }
