@@ -8,7 +8,7 @@ public class Interactable : MonoBehaviour
     OnInteract?.Invoke();
 
     if (OnInteract.GetPersistentEventCount() == 0) {
-      Debug.Log("Interacted");
+      // Debug.Log("Interacted");
     }
   }
 }

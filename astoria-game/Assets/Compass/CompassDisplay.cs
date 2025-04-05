@@ -213,6 +213,19 @@ public class CompassDisplay : MonoBehaviour
     return true;
   }
 
+  public bool RemoveObjectFromCompass(GameObject gameObject) {
+    foreach (var pair in objectIcons)
+    {
+      if (pair.Key.transform.gameObject == gameObject)
+      {
+        return RemoveObjectFromCompass(pair.Key);
+      }
+    }
+
+    Debug.LogWarning($"GameObject {gameObject.name} does not exist in the compass.");
+    return false;
+  }
+
   private void UpdateIconPosition(Vector3 direction, GameObject icon, float scalar, bool isKeyItem)
   {
     direction.y = 0;

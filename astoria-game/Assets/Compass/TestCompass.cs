@@ -17,4 +17,14 @@ public class TestCompass : MonoBehaviour
         CompassIconObject compassObject = new CompassIconObject(this.gameObject, icon, keyItem);
         compassDisplay.AddObjectToCompass(compassObject);
     }
+
+    private void OnDisable() {
+        CompassDisplay compassDisplay = FindFirstObjectByType<CompassDisplay>();
+        if (compassDisplay == null) {
+            Debug.LogError("CompassDisplay not found in scene.");
+            return;
+        }
+
+        compassDisplay.RemoveObjectFromCompass(this.gameObject);
+    }
 }
