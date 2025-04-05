@@ -511,7 +511,7 @@ namespace Construction
 
                     OnObjectDeleted?.Invoke();
 
-                    SetConstructionState(ConstructionState.None);
+                    // SetConstructionState(ConstructionState.None);
                     break;
 
             }

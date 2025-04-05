@@ -17,6 +17,8 @@ public class BuildingController : MonoBehaviour, IStartExecution
 
     public ConstructionComponentData[] ConstructableObjects;
     private ConstructionComponentData _selectedData;
+    private bool deleting = false;
+    private bool editing = false;
     public RadialMenu RadialMenu;
 
 
@@ -50,24 +52,33 @@ public class BuildingController : MonoBehaviour, IStartExecution
         int index = element.Index;
 
         // Not great to hard code this but it'll do
+        
+        // These are the components
         if (index < 10)
         {
             constructionCore.CleanupPreviewObject();
             constructionCore.SelectData(ConstructableObjects[index], true);
             _selectedData = ConstructableObjects[index];
         }
+        // Edit
         else if (index == 10)
         {
+            editing = true;
             // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Delete);
         }
+        // Delete
         else if (index == 11)
         {
-            // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
+            deleting = true;
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Deleting);
         }
     }
 
     private void OnBuildingUIOpen()
     {
+        editing = false;
+        deleting = false;
+
         RadialMenu.ResetLastSelected();
         _selectedData = null;
         constructionCore.SetDataToNull();
@@ -80,7 +91,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
         {
             constructionCore.SetConstructionState(ConstructionCore.ConstructionState.PlacingStructure);
         }
-        else
+        else if (!editing && !deleting)
         {
             constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
         }
