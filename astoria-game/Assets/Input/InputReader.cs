@@ -41,6 +41,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.GenericUI.Enable();
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Disable();
         break;
       case InputMap.Player:
         InputActions.GenericUI.Disable();
@@ -48,6 +49,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.Player.Enable();
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Disable();
         break;
       case InputMap.InventoryUI:
         InputActions.Player.Disable();
@@ -55,6 +57,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.InventoryUI.Enable();
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Disable();
         break;
       case InputMap.ConsoleUI:
         InputActions.Player.Disable();
@@ -62,6 +65,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.InventoryUI.Disable();
         InputActions.ConsoleUI.Enable();
         InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Disable();
         break;
       case InputMap.BuildingUI:
         InputActions.Player.Disable();
@@ -69,6 +73,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.InventoryUI.Disable();
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Enable();
+        InputActions.Cutscene.Disable();
         break;
       case InputMap.Cutscene:
         InputActions.GenericUI.Disable();
@@ -84,6 +89,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
         InputActions.Player.Disable();
         InputActions.ConsoleUI.Disable();
         InputActions.BuildingUI.Disable();
+        InputActions.Cutscene.Disable();
         break;
       default:
         throw new ArgumentOutOfRangeException(nameof(newInputMap), newInputMap, null);
