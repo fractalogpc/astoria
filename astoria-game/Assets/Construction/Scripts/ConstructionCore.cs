@@ -595,6 +595,9 @@ namespace Construction
 
         private void UnhighlightObject(GameObject obj)
         {
+            if (obj == null) return;
+            if (_highlightedRenderers.Count == 0) return;
+
             for (int i = 0; i < _highlightedRenderers.Count; i++)
             {
                 _highlightedRenderers[i].material = _highlightedMaterials[i];
