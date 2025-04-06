@@ -29,7 +29,7 @@ public class PickaxeInstance : BaseToolInstance
 		base.OnUseDown();
 		_timeSinceLastSwing = 0;
 		_viewmodelManager.SetTrigger("Use");
-		DelaySwing(_toolCore, ItemData.SwingCooldown);
+		DelaySwing(_toolCore, ItemData.AnimationSwingDelay);
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
@@ -66,5 +66,8 @@ public class PickaxeInstance : BaseToolInstance
 		if (harvestableRock == null) return;
 		float damage = Random.Range(ItemData.SwingDamage.x, ItemData.SwingDamage.y);
 		harvestableRock.Damage(damage, hit.point);
+		GameObject particles = GameObject.Instantiate(ItemData.RockHitParticles, hit.point, Quaternion.LookRotation(-hit.normal));
+		GameObject decal = GameObject.Instantiate(ItemData.RockHitDecal, hit.point, Quaternion.LookRotation(-hit.normal));
+		decal.transform.SetParent(rock.transform);
 	}
 }

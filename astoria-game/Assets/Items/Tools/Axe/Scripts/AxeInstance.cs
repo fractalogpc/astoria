@@ -88,6 +88,7 @@ public class AxeInstance : BaseToolInstance
 		if (treeChoppable == null) return;
 		float damage = Random.Range(ItemData.ChopDamage.x, ItemData.ChopDamage.y);
 		treeChoppable.Damage(damage, hit.point);
+		GameObject particles = GameObject.Instantiate(ItemData.WoodHitParticles, hit.point, Quaternion.LookRotation(-hit.normal));
 		GameObject decal = GameObject.Instantiate(ItemData.WoodHitDecalPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
 		decal.transform.SetParent(tree.transform);
 		AudioManager.Instance.PlayOneShot(ItemData.HitSound, hit.point);
