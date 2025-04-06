@@ -10,7 +10,7 @@ namespace Construction
     public class ConstructionComponent : MonoBehaviour, IDamageable
     {
 
-        private ConstructionComponentData data; // Assigned by ConstructionCore, used for various stuff
+        [HideInInspector] public ConstructionComponentData data; // Assigned by ConstructionCore, used for various stuff
         public PreviewConstructionComponent previewComponent;
 
         public float inherentStability = 0f;

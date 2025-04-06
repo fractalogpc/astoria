@@ -1,9 +1,7 @@
 using UnityEngine;
-using Construction;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
-using Mirror;
 
 namespace Construction
 {
@@ -22,6 +20,8 @@ namespace Construction
             SelectingItem,
             PlacingProp,
             PlacingStructure,
+            WantingToEdit,
+            EditingStructure,
             Deleting
         }
         public ConstructionData DebugData;
@@ -34,9 +34,20 @@ namespace Construction
         [Header("Placement Settings")]
         public ConstructionSettings Settings;
 
+        // Editing stuff
+        [SerializeField] private List<SelectedComponent> _selectedComponents = new List<SelectedComponent>(); // List of selected components and their canvas groups
+
+        [Serializable]
+        public class SelectedComponent
+        {
+            public List<ConstructionRadialMenuElement> ComponentData;
+            public CanvasGroup CanvasGroup;
+        }
+
         [SerializeField] private float _previewObjectLerpSpeed = 10f;
         [SerializeField] private Material _previewValidMaterial;
         [SerializeField] private Material _previewInvalidMaterial;
+        [SerializeField] private Material _editingMaterial;
         [SerializeField] private Material _deletingMaterial;
 
         [Header("References")]
@@ -76,6 +87,19 @@ namespace Construction
         private void Start()
         {
             SetConstructionState(ConstructionState.None);
+
+            PopulateData();
+        }
+
+        private void PopulateData()
+        {
+            for (int i = 0; i < _selectedComponents.Count; i++)
+            {
+                _selectedComponents[i].CanvasGroup.GetComponent<ConstructionEditRadialMenu>().PopulateData(_selectedComponents[i].ComponentData);
+                _selectedComponents[i].CanvasGroup.alpha = 0f;
+                _selectedComponents[i].CanvasGroup.interactable = false;
+                _selectedComponents[i].CanvasGroup.blocksRaycasts = false;
+            }
         }
 
         private void Update()
@@ -379,6 +403,37 @@ namespace Construction
                     }
                     break;
 
+                case ConstructionState.WantingToEdit:
+                    {
+                        // Get the initial ray direction (from the camera through the cursor)
+                        Ray ray = _cameraTransform.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+
+                        RaycastHit hit;
+                        Physics.Raycast(ray, out hit, Settings.MaxBuildDistance, Settings.ConstructionLayerMask);
+
+                        if (hit.transform != null)
+                        {
+                            if (hit.transform.GetComponentInParent<ConstructionObject>() != null)
+                            {
+                                GameObject highlightedObject = hit.transform.GetComponentInParent<ConstructionObject>().gameObject;
+
+                                if (_highlightedForDeletionObject == highlightedObject) break;
+                                if (_highlightedForDeletionObject != null) UnhighlightObject(_highlightedForDeletionObject);
+
+                                _highlightedForDeletionObject = highlightedObject;
+                                HighlightObject(highlightedObject, _editingMaterial);
+                            }
+                        }
+                        else
+                        {
+                            if (_highlightedForDeletionObject != null)
+                            {
+                                UnhighlightObject(_highlightedForDeletionObject);
+                            }
+                        }
+                    }
+                    break;
+
                 case ConstructionState.Deleting:
                     {
                         // Get the initial ray direction (from the camera through the cursor)
@@ -397,7 +452,7 @@ namespace Construction
                                 if (_highlightedForDeletionObject != null) UnhighlightObject(_highlightedForDeletionObject);
 
                                 _highlightedForDeletionObject = highlightedObject;
-                                HighlightObject(highlightedObject);
+                                HighlightObject(highlightedObject, _deletingMaterial);
                             }
                         }
                         else
@@ -406,6 +461,16 @@ namespace Construction
                             {
                                 UnhighlightObject(_highlightedForDeletionObject);
                             }
+                        }
+                    }
+                    break;
+
+                case ConstructionState.None:
+                    {
+                        if (_previewObject != null)
+                        {
+                            Destroy(_previewObject);
+                            _previewObject = null;
                         }
                     }
                     break;
@@ -454,9 +519,12 @@ namespace Construction
             }
             else if (data.GetType() == typeof(ConstructionComponentData))
             {
-                if (fromMenu) {
+                if (fromMenu)
+                {
                     SetConstructionState(ConstructionState.SelectingItem);
-                } else {
+                }
+                else
+                {
                     SetConstructionState(ConstructionState.PlacingStructure);
                 }
             }
@@ -476,6 +544,7 @@ namespace Construction
                     SetConstructionState(ConstructionState.None);
                     OnObjectPlaced?.Invoke(_selectedData);
                     return true;
+
                 case ConstructionState.PlacingStructure:
                     if (!_canPlace) break;
                     // Debug.Log("Placing structure");
@@ -507,6 +576,33 @@ namespace Construction
                         SelectData(_selectedData);
                     }
                     return true;
+
+                case ConstructionState.WantingToEdit:
+                    if (_highlightedForDeletionObject == null) break;
+
+                    ConstructionComponentData dataToEdit = _highlightedForDeletionObject.GetComponent<ConstructionComponent>().data;
+
+                    bool found = false;
+                    for (int i = 0; i < _selectedComponents.Count && !found; i++)
+                    {
+                        if (_selectedComponents[i].ComponentData.Exists(element => element.Data == dataToEdit))
+                        {
+                            // Edit the first component
+                            _selectedComponents[i].CanvasGroup.alpha = 1f;
+                            _selectedComponents[i].CanvasGroup.interactable = true;
+                            _selectedComponents[i].CanvasGroup.blocksRaycasts = true;
+
+                            _selectedComponents[i].CanvasGroup.GetComponent<ConstructionEditRadialMenu>().Activate(_highlightedForDeletionObject);
+
+                            found = true;
+                        }
+                    }
+
+                    if (found == false) break;
+
+                    // SetConstructionState(ConstructionState.None);
+                    break;
+
                 case ConstructionState.Deleting:
                     if (_highlightedForDeletionObject == null) break;
 
@@ -522,11 +618,10 @@ namespace Construction
             return false;
         }
 
-
         private GameObject CreatePreviewObject()
         {
             if (_selectedData == null) return null;
-            Debug.Log("Creating preview object" + _selectedData.PreviewPrefab.name);
+            // Debug.Log("Creating preview object" + _selectedData.PreviewPrefab.name);
             GameObject localPreviewObject = Instantiate(_selectedData.PreviewPrefab);
 
             _previewObjectScript = localPreviewObject.GetComponent<PreviewObject>();
@@ -551,6 +646,21 @@ namespace Construction
             GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
 
             return placedObject;
+        }
+
+        public GameObject ReplaceObject(GameObject objectToDestroy, ConstructionComponentData newObject)
+        {
+            // Create the new object
+            GameObject newPlacedObject = Instantiate(newObject.PlacedPrefab, objectToDestroy.transform.position, objectToDestroy.transform.rotation);
+            newPlacedObject.transform.SetParent(_structureParent);
+
+            // Destroy the old object
+            Destroy(objectToDestroy);
+
+            newPlacedObject.GetComponent<ConstructionComponent>().SetData(newObject);
+            newPlacedObject.GetComponent<ConstructionComponent>().CreateInitialConnections();
+
+            return newPlacedObject;
         }
 
         private GameObject PlaceObject(Vector3 position, Quaternion rotation)
@@ -582,14 +692,14 @@ namespace Construction
             // _selectedData = null;
         }
 
-        private void HighlightObject(GameObject obj)
+        private void HighlightObject(GameObject obj, Material mat)
         {
             _highlightedRenderers = new List<Renderer>(obj.GetComponentsInChildren<Renderer>());
             foreach (Renderer r in _highlightedRenderers)
             {
                 _highlightedMaterials.Add(r.material);
 
-                r.material = _deletingMaterial;
+                r.material = mat;
             }
         }
 
@@ -637,6 +747,10 @@ namespace Construction
                         CleanupPreviewObject();
                     }
                     break;
+                case ConstructionState.WantingToEdit:
+                    UnhighlightObject(_highlightedForDeletionObject);
+                    _highlightedForDeletionObject = null;
+                    break;
                 case ConstructionState.Deleting:
                     UnhighlightObject(_highlightedForDeletionObject);
                     _highlightedForDeletionObject = null;
@@ -655,7 +769,8 @@ namespace Construction
                     // This handles the case where the player had the radial menu open and is now closing it.
                     // I need to change states to PlacingStructure to allow for placing, however for security I first destroy the preview object
                     // Then I reassign the preview object.
-                    if (stashedPreviousState == ConstructionState.SelectingItem) {
+                    if (stashedPreviousState == ConstructionState.SelectingItem)
+                    {
                         ConstructionData stashedData = _selectedData;
                         CleanupPreviewObject();
                         _selectedData = stashedData;
@@ -665,7 +780,8 @@ namespace Construction
             }
         }
 
-        public void SetDataToNull() {
+        public void SetDataToNull()
+        {
             _selectedData = null;
         }
     }

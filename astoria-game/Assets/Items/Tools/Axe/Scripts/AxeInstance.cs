@@ -76,12 +76,12 @@ public class AxeInstance : BaseToolInstance
 		if (hit.collider.gameObject == null) return;
 		GameObject tree;
 		if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tree")) {
-			Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
+			// Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
 			if (TreeChopping.Instance == null) Debug.LogError("AxeInstance: TreeChopping instance not found!");
 			tree = TreeChopping.Instance.RealizeTree(hit.point);
 		}
 		else {
-			Debug.Log("Hit non tree layer object: " + hit.collider.gameObject.name);
+			// Debug.Log("Hit non tree layer object: " + hit.collider.gameObject.name);
 			tree = hit.collider.gameObject;
 		}
 		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();

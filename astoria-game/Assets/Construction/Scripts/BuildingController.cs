@@ -51,7 +51,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
         {
             _selectedData = null;
             editing = true;
-            // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Delete);
+            constructionCore.SetConstructionState(ConstructionCore.ConstructionState.WantingToEdit);
         }
         // Delete
         else if (index == 11)

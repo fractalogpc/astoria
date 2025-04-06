@@ -153,7 +153,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	private void Start()
 	{
 		_canvasGraphicRaycaster = _rectTransform.GetComponentInParent<GraphicRaycaster>();
-		print($"graphic raycaster for {gameObject.name} is on {_canvasGraphicRaycaster.gameObject.name}");
+		// print($"graphic raycaster for {gameObject.name} is on {_canvasGraphicRaycaster.gameObject.name}");
 	}
 
 	private void Update()

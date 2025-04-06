@@ -84,6 +84,26 @@ public class RadialMenu : InputHandlerBase
 		}
 	}
 
+	public void CreateElements(List<RadialMenuElement> elements) {
+		for (int index = 0; index < elements.Count; index++) {
+			
+			RadialMenuElement element = elements[index];
+			GameObject newElement = Instantiate(_elementPrefab, _elementsParent);
+			RectTransform rectTransform = newElement.GetComponent<RectTransform>();
+			if (rectTransform == null) {
+				Debug.LogError("RadialMenu: Element prefab does not have a RectTransform component. Cannot CreateElements.");
+				return;
+			}
+
+			float angle = index * (360f / elements.Count);
+			rectTransform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * _elementCenterDist, Mathf.Sin(angle * Mathf.Deg2Rad) * _elementCenterDist, 0);
+			newElement.GetComponentInChildren<Image>().sprite = element.Icon == null ? Resources.Load<Sprite>("DefaultItemAssets/NullImage") : element.Icon;
+			newElement.GetComponentInChildren<Image>().preserveAspect = true;
+		}
+
+		_radialMenuElements = elements;
+	}
+
 	private void Start() {
 		CreateElements();
 	}
