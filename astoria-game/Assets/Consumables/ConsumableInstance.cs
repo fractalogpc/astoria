@@ -7,7 +7,7 @@ public class ConsumableInstance : ItemInstance
 	public ConsumableInstance(ItemData itemData) : base(itemData) {
 		
 	}
-	public override void OnHotbarSelected( ) {
+	public override void OnHotbarSelected() {
 		base.OnHotbarSelected();
 		Use();
 	}
