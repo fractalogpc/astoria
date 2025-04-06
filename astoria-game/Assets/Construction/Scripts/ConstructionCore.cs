@@ -40,7 +40,7 @@ namespace Construction
         [Serializable]
         public class SelectedComponent
         {
-            public List<ConstructionComponentData> ComponentData;
+            public List<ConstructionRadialMenuElement> ComponentData;
             public CanvasGroup CanvasGroup;
         }
 
@@ -87,6 +87,19 @@ namespace Construction
         private void Start()
         {
             SetConstructionState(ConstructionState.None);
+
+            PopulateData();
+        }
+
+        private void PopulateData()
+        {
+            for (int i = 0; i < _selectedComponents.Count; i++)
+            {
+                _selectedComponents[i].CanvasGroup.GetComponent<ConstructionEditRadialMenu>().PopulateData(_selectedComponents[i].ComponentData);
+                _selectedComponents[i].CanvasGroup.alpha = 0f;
+                _selectedComponents[i].CanvasGroup.interactable = false;
+                _selectedComponents[i].CanvasGroup.blocksRaycasts = false;
+            }
         }
 
         private void Update()
@@ -569,81 +582,25 @@ namespace Construction
 
                     ConstructionComponentData dataToEdit = _highlightedForDeletionObject.GetComponent<ConstructionComponent>().data;
 
+                    bool found = false;
+                    for (int i = 0; i < _selectedComponents.Count && !found; i++)
+                    {
+                        if (_selectedComponents[i].ComponentData.Exists(element => element.Data == dataToEdit))
+                        {
+                            // Edit the first component
+                            _selectedComponents[i].CanvasGroup.alpha = 1f;
+                            _selectedComponents[i].CanvasGroup.interactable = true;
+                            _selectedComponents[i].CanvasGroup.blocksRaycasts = true;
 
-                    if (_selectedComponents[0].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the first component
-                        _selectedComponents[0].CanvasGroup.alpha = 1f;
-                        _selectedComponents[0].CanvasGroup.interactable = true;
-                        _selectedComponents[0].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[1].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the first component
-                        _selectedComponents[1].CanvasGroup.alpha = 1f;
-                        _selectedComponents[1].CanvasGroup.interactable = true;
-                        _selectedComponents[1].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[2].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the second component
-                        _selectedComponents[2].CanvasGroup.alpha = 1f;
-                        _selectedComponents[2].CanvasGroup.interactable = true;
-                        _selectedComponents[2].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[3].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the third component
-                        _selectedComponents[3].CanvasGroup.alpha = 1f;
-                        _selectedComponents[3].CanvasGroup.interactable = true;
-                        _selectedComponents[3].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[4].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the fourth component
-                        _selectedComponents[4].CanvasGroup.alpha = 1f;
-                        _selectedComponents[4].CanvasGroup.interactable = true;
-                        _selectedComponents[4].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[5].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the fifth component
-                        _selectedComponents[5].CanvasGroup.alpha = 1f;
-                        _selectedComponents[5].CanvasGroup.interactable = true;
-                        _selectedComponents[5].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[6].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the sixth component
-                        _selectedComponents[6].CanvasGroup.alpha = 1f;
-                        _selectedComponents[6].CanvasGroup.interactable = true;
-                        _selectedComponents[6].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[7].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the seventh component
-                        _selectedComponents[7].CanvasGroup.alpha = 1f;
-                        _selectedComponents[7].CanvasGroup.interactable = true;
-                        _selectedComponents[7].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[8].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the eighth component
-                        _selectedComponents[8].CanvasGroup.alpha = 1f;
-                        _selectedComponents[8].CanvasGroup.interactable = true;
-                        _selectedComponents[8].CanvasGroup.blocksRaycasts = true;
-                    }
-                    else if (_selectedComponents[8].ComponentData.Contains(dataToEdit))
-                    {
-                        // Edit the ninth component
-                        _selectedComponents[9].CanvasGroup.alpha = 1f;
-                        _selectedComponents[9].CanvasGroup.interactable = true;
-                        _selectedComponents[9].CanvasGroup.blocksRaycasts = true;
-                    } else {
-                        break;
+                            _selectedComponents[i].CanvasGroup.GetComponent<ConstructionEditRadialMenu>().Activate(_highlightedForDeletionObject);
+
+                            found = true;
+                        }
                     }
 
-                    SetConstructionState(ConstructionState.EditingStructure);
+                    if (found == false) break;
+
+                    // SetConstructionState(ConstructionState.None);
                     break;
 
                 case ConstructionState.Deleting:
@@ -660,7 +617,6 @@ namespace Construction
 
             return false;
         }
-
 
         private GameObject CreatePreviewObject()
         {
@@ -690,6 +646,21 @@ namespace Construction
             GameObject placedObject = Instantiate(_selectedData.PlacedPrefab, placedPosition, placedRotation);
 
             return placedObject;
+        }
+
+        public GameObject ReplaceObject(GameObject objectToDestroy, ConstructionComponentData newObject)
+        {
+            // Create the new object
+            GameObject newPlacedObject = Instantiate(newObject.PlacedPrefab, objectToDestroy.transform.position, objectToDestroy.transform.rotation);
+            newPlacedObject.transform.SetParent(_structureParent);
+
+            // Destroy the old object
+            Destroy(objectToDestroy);
+
+            newPlacedObject.GetComponent<ConstructionComponent>().SetData(newObject);
+            newPlacedObject.GetComponent<ConstructionComponent>().CreateInitialConnections();
+
+            return newPlacedObject;
         }
 
         private GameObject PlaceObject(Vector3 position, Quaternion rotation)
