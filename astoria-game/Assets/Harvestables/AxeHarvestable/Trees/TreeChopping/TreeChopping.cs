@@ -64,7 +64,7 @@ public class TreeChopping : MonoBehaviour
         Vector2 treePosition2D = new Vector2(treePosition.x, treePosition.z);
 
         if (Vector2.Distance(treePosition2D, position2D) < _treeSearchRadius) {
-          Debug.Log("Found tree at " + treePosition);
+          // Debug.Log("Found tree at " + treePosition);
           // Remove the tree instance
           TreeInstance _newInstance = new TreeInstance();
           TreeInstance oldInstance = terrainTile.treeInstances[i];

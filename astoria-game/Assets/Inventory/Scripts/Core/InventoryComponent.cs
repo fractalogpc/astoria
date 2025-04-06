@@ -72,8 +72,8 @@ public class InventoryComponent : MonoBehaviour
 	}
 
 	private void UpdateInventory(InventoryComponent caller) {
-		Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
-		Debug.LogWarning("Rebuilding is expensive! When adding or removing a set of items, make sure to do it in a single InventoryComponent call. This will prevent the inventory from updating multiple times.");
+		// Debug.Log($"Rebuilding inventory {gameObject.name}. Rebuilding caller was {caller.gameObject.name}.");
+		// Debug.LogWarning("Rebuilding is expensive! When adding or removing a set of items, make sure to do it in a single InventoryComponent call. This will prevent the inventory from updating multiple times.");
 		CreateInvFromInventoryData(InventoryData);
 		OnInventoryChange.Invoke(InventoryData.Items);
 	}
