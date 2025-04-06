@@ -21,7 +21,7 @@ public class TestCompass : MonoBehaviour
     private void OnDisable() {
         CompassDisplay compassDisplay = FindFirstObjectByType<CompassDisplay>();
         if (compassDisplay == null) {
-            Debug.LogError("CompassDisplay not found in scene.");
+            // Debug.LogError("CompassDisplay not found in scene.");
             return;
         }
 

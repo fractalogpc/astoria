@@ -12,9 +12,6 @@ public class BuildingController : MonoBehaviour, IStartExecution
     public ConstructionCore constructionCore;
     public TogglePlayerBuildingUI togglePlayerBuildingUI;
 
-    public GameObject prefabParentContent;
-    public GameObject StructureObjectPrefab;
-
     public ConstructionComponentData[] ConstructableObjects;
     private ConstructionComponentData _selectedData;
     private bool deleting = false;
@@ -28,17 +25,6 @@ public class BuildingController : MonoBehaviour, IStartExecution
         togglePlayerBuildingUI.OnBuildingUIClose.AddListener(OnBuildingUIClose);
 
         RadialMenu.OnElementHovered += OnElementHovered;
-
-        // foreach (ConstructionComponentData data in ConstructableObjects)
-        // {
-        //     GameObject prefab = Instantiate(StructureObjectPrefab, prefabParentContent.transform);
-        //     prefab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.name;
-        //     // prefab.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Cost: " + data.Cost.List[0].ItemCount;
-
-        //     Button button = prefab.GetComponent<Button>();
-        //     button.onClick.AddListener(() => { constructionCore.SelectData(data); });
-        //     button.onClick.AddListener(() => { togglePlayerBuildingUI.SetVisibility(false); });
-        // }
     }
 
     private void OnDestroy()
@@ -63,12 +49,14 @@ public class BuildingController : MonoBehaviour, IStartExecution
         // Edit
         else if (index == 10)
         {
+            _selectedData = null;
             editing = true;
             // constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Delete);
         }
         // Delete
         else if (index == 11)
         {
+            _selectedData = null;
             deleting = true;
             constructionCore.SetConstructionState(ConstructionCore.ConstructionState.Deleting);
         }
@@ -96,6 +84,4 @@ public class BuildingController : MonoBehaviour, IStartExecution
             constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
         }
     }
-
-
 }
