@@ -51,6 +51,11 @@ namespace Player
     public Transform MeshRoot;
     public float CrouchedCapsuleHeight = 1f;
 
+    public LayerMask WaterLayer;
+    public float WaterOffset = 0f;
+    public float Bouyancy = 10f;
+    public float WaterDrag = 0.5f;
+
     public CharacterState CurrentCharacterState { get; private set; }
     // field: at the beginning allows for properties to be serialized
     [field: SerializeField] public Vector3 MoveInputVector { get; private set; }
@@ -59,6 +64,7 @@ namespace Player
     public UnityEvent<SoundEvent> OnStep;
 
     private Collider[] _probedColliders = new Collider[8];
+    private Collider[] _testWaterColliders = new Collider[5];
     private RaycastHit[] _probedHits = new RaycastHit[8];
     private bool _jumpRequested = false;
     private bool _jumpConsumed = false;
@@ -377,6 +383,29 @@ namespace Player
             break;
           }
       }
+
+      // Test for water
+      if (CheckIsInWater()) {
+        // If in water, get the percentage of the character in water
+        if (!Physics.Raycast(Motor.TransientPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f, WaterLayer)) return;
+        float waterHeight = hit.point.y + WaterOffset;
+        float characterHeightWorldposition = Motor.InitialSimulationPosition.y;
+        float submergedPercentage = Mathf.Clamp01((waterHeight - characterHeightWorldposition) / (Motor.Capsule.height));
+
+        // Apply bouyancy to the character
+        currentVelocity += Vector3.up * Bouyancy * submergedPercentage * Time.deltaTime;
+        // Apply drag to the character
+        currentVelocity *= 1 - (submergedPercentage * WaterDrag * Time.deltaTime);
+
+        // Tell the player it isn't on stable ground
+        if (Motor.GroundingStatus.IsStableOnGround)
+        {
+          Motor.ForceUnground();
+        }
+
+        Debug.Log(submergedPercentage);
+        Debug.Log(currentVelocity);
+      }
     }
 
     /// <summary>
@@ -438,6 +467,23 @@ namespace Player
             break;
           }
       }
+    }
+
+    bool CheckIsInWater()
+    {
+      Vector3 position = Motor.TransientPosition;
+      Quaternion rotation = Motor.TransientRotation;
+      if (Motor.CharacterOverlap(
+        position, rotation,
+        _testWaterColliders,
+        WaterLayer,
+        QueryTriggerInteraction.Collide
+      ) > 0)
+      {
+        Debug.Log("In water");
+        return true;
+      }
+      return false;
     }
 
     public void PostGroundingUpdate(float deltaTime)
