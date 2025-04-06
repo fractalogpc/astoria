@@ -16,6 +16,7 @@ public class AxeData : BaseToolData
 	public float ChopRange = 4f;
 	[Tooltip("The prefab instantiated when the axe hits a tree. Used to add a hit decal to the tree.")]
 	public GameObject WoodHitDecalPrefab;
+	public GameObject WoodHitParticles;
 	[Tooltip("The sound that plays when the axe is swung.")]
 	public EventReference SwingSound;
 	public float SwingSoundDelay;
