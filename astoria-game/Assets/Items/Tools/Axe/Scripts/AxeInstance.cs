@@ -29,18 +29,17 @@ public class AxeInstance : BaseToolInstance
 		_timeSinceLastSideChop += Time.deltaTime;
 	}
 	public override void OnUseDown() {
-		if (!_canChop) return;
 		base.OnUseDown();
-		_timeSinceLastSideChop = 0;
-		_viewmodelManager.SetTrigger("Use");
-		DelayChop(_toolCore, ItemData.UseAnimation.length * ItemData.AnimChopMoment);
-		DelaySound(_toolCore, ItemData.SwingSoundDelay, ItemData.SwingSound);
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
 	}
 	public override void OnUseHold() {
-		base.OnUseHold();
+		if (!_canChop) return;
+		_timeSinceLastSideChop = 0;
+		_viewmodelManager.SetTrigger("Use");
+		DelayChop(_toolCore, ItemData.UseAnimation.length * ItemData.AnimChopMoment);
+		DelaySound(_toolCore, ItemData.SwingSoundDelay, ItemData.SwingSound);
 	}
 	public override void OnAltUseDown() {
 
