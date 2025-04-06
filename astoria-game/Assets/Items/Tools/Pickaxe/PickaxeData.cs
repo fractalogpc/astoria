@@ -8,6 +8,8 @@ public class PickaxeData : BaseToolData
 	public Vector2 SwingDamage = new Vector2(10f, 20f);
 	[Tooltip("Time in seconds axe cannot be used after a side chop is started.")]
 	public float SwingCooldown = 1f;
+	public GameObject RockHitDecal;
+	public GameObject RockHitParticles;
 	public float AnimationSwingDelay = 0.5f;
 	[Tooltip("The range in meters the pickaxe can harvest rocks and minerals.")]
 	public float SwingRange = 4f;

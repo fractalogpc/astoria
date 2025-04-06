@@ -62,9 +62,12 @@ public class PickaxeInstance : BaseToolInstance
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
 		GameObject rock = hit.collider.gameObject;
-	HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
+		HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
 		if (harvestableRock == null) return;
 		float damage = Random.Range(ItemData.SwingDamage.x, ItemData.SwingDamage.y);
 		harvestableRock.Damage(damage, hit.point);
+		GameObject particles = GameObject.Instantiate(ItemData.RockHitParticles, hit.point, Quaternion.LookRotation(-hit.normal));
+		GameObject decal = GameObject.Instantiate(ItemData.RockHitDecal, hit.point, Quaternion.LookRotation(-hit.normal));
+		decal.transform.SetParent(rock.transform);
 	}
 }
