@@ -29,7 +29,7 @@ public class PickaxeInstance : BaseToolInstance
 		base.OnUseDown();
 		_timeSinceLastSwing = 0;
 		_viewmodelManager.SetTrigger("Use");
-		DelaySwing(_toolCore, ItemData.SwingCooldown);
+		DelaySwing(_toolCore, ItemData.AnimationSwingDelay);
 	}
 	public override void OnUseUp() {
 		base.OnUseUp();
@@ -62,7 +62,7 @@ public class PickaxeInstance : BaseToolInstance
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
 		GameObject rock = hit.collider.gameObject;
-		HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
+	HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
 		if (harvestableRock == null) return;
 		float damage = Random.Range(ItemData.SwingDamage.x, ItemData.SwingDamage.y);
 		harvestableRock.Damage(damage, hit.point);
