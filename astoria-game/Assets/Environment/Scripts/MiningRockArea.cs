@@ -8,6 +8,7 @@ public class MiningRockArea : MonoBehaviour
     [SerializeField] private Transform[] rockSpawnPoints;
     [SerializeField] private int maxRocks = 5;
     [SerializeField] private float spawnTime = 300f;
+    [SerializeField] private LayerMask _groundLayer;
 
     private Dictionary<Transform, GameObject> spawnedRocks = new Dictionary<Transform, GameObject>();
     private float timeSinceLastSpawn = 0f;
@@ -71,6 +72,13 @@ public class MiningRockArea : MonoBehaviour
         {
             return;
         }
+        // Find y position of the spawn point
+        RaycastHit hit;
+        if (!Physics.Raycast(spawnPoint.position + Vector3.up * 25f, Vector3.down, out hit, 50f, _groundLayer))
+        {
+            return;
+        }
+        spawnPoint.position = hit.point;
         GameObject rock = Instantiate(rockPrefab, spawnPoint.position, spawnPoint.rotation);
         rock.transform.localScale = 1 / transform.localScale.x * rock.transform.localScale;
         spawnedRocks.Add(spawnPoint, rock);
