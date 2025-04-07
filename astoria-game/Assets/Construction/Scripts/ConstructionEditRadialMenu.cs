@@ -22,8 +22,6 @@ public class ConstructionEditRadialMenu : InputHandlerBase
     public void PopulateData(List<ConstructionRadialMenuElement> datas)
     {
         GetComponentInChildren<RadialMenu>().CreateElements(datas.ConvertAll(data => (RadialMenuElement)data));
-
-        Debug.Log("Populated Edit Menu Data");
     }
 
     private GameObject objectToDelete = null;

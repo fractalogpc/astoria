@@ -51,6 +51,9 @@ namespace Player
     public Transform MeshRoot;
     public float CrouchedCapsuleHeight = 1f;
 
+    public AnimationCurve FallDamageCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
+    public float _previousFrameFallSpeed = 0f;
+
     public LayerMask WaterLayer;
     public float WaterOffset = 0f;
     public float Bouyancy = 10f;
@@ -131,6 +134,9 @@ namespace Player
 
     private void Update()
     {
+      if (Motor.Velocity.y != 0)
+        _previousFrameFallSpeed = Motor.Velocity.y;
+
       HandleCharacterInput();
 
       if (CurrentCharacterState == CharacterState.Noclip)
@@ -385,7 +391,8 @@ namespace Player
       }
 
       // Test for water
-      if (CheckIsInWater()) {
+      if (CheckIsInWater())
+      {
         // If in water, get the percentage of the character in water
         if (!Physics.Raycast(Motor.TransientPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f, WaterLayer)) return;
         float waterHeight = hit.point.y + WaterOffset;
@@ -402,9 +409,6 @@ namespace Player
         {
           Motor.ForceUnground();
         }
-
-        Debug.Log(submergedPercentage);
-        Debug.Log(currentVelocity);
       }
     }
 
@@ -480,7 +484,6 @@ namespace Player
         QueryTriggerInteraction.Collide
       ) > 0)
       {
-        Debug.Log("In water");
         return true;
       }
       return false;
@@ -529,6 +532,12 @@ namespace Player
 
     protected void OnLanded()
     {
+      int fallDamage = (int)FallDamageCurve.Evaluate(-_previousFrameFallSpeed);
+
+      if (fallDamage != 0) {
+        PlayerInstance.Instance.GetComponent<IDamageable>().TakeDamage(fallDamage, Motor.TransientPosition);
+      }
+
     }
 
     protected void OnLeaveStableGround()
