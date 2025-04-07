@@ -8,6 +8,10 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private Transform[] _footTargetTrackers;
 
     [SerializeField] private Transform _body;
+    [SerializeField] private Transform _bodyTargetTracker;
+    [SerializeField] private Vector3 _bodyPositionOffset = new Vector3(0, 0.5f, 0);
+    [SerializeField] private float _bodyAdjustSpeed = 0.1f; // Speed of body adjustment
+    [SerializeField] private float _maxYawProportionality = 2f; // Maximum yaw proportionality for body rotation
 
     [SerializeField] private float _stepDistance = 0.5f;
     [SerializeField] private float _stepHeight = 0.2f;
@@ -16,19 +20,31 @@ public class SpiderWalking : MonoBehaviour
 
     [SerializeField] private Transform _targetTransform;
     [SerializeField] private float _moveSpeed = 1f;
+    [SerializeField] private AnimationCurve _stepCurve;
+    [SerializeField] private float _stepCooldownMean = 0.5f;
+    [SerializeField] private float _stepCooldownVariation = 0.2f;
+    [SerializeField] private float _tiltIntensity = 10f;
+    [SerializeField] private float _pitchIntensity = 10f;
+    [SerializeField] private float _bodyRotationSpeed = 0.1f; // Speed of body rotation towards target
+    [SerializeField] private float _rotationSpeed = 0.1f; // Speed of rotation towards target
 
     private Vector3[] _footPositions;
     private bool[] _isStepping;
+    private bool[] _hasSteppedThisCycle;
     private bool _allowingZeroIndex = true;
+    private float _bodyYaw = 0f; // Yaw rotation of the body
+    private float _trackerYaw = 0f; // Yaw rotation of the tracker
 
     private void Awake() {
         _footPositions = new Vector3[_footTargets.Length];
         _isStepping = new bool[_footTargets.Length];
+        _hasSteppedThisCycle = new bool[_footTargets.Length];
         for (int i = 0; i < _footTargets.Length; i++)
         {
             _footPositions[i] = _footTargets[i].position;
             _footTargetTrackers[i].position = _footTargets[i].position;
             _isStepping[i] = false;
+            _hasSteppedThisCycle[i] = false;
         }
     }
 
@@ -37,9 +53,91 @@ public class SpiderWalking : MonoBehaviour
         // Move body towards target transform
         if (_targetTransform != null) {
             Vector3 targetPosition = _targetTransform.position;
-            Vector3 direction = (targetPosition - _body.position).normalized;
-            _body.position += direction * _moveSpeed * Time.deltaTime;
+            Vector3 direction = (targetPosition - _bodyTargetTracker.position).normalized;
+            direction.y = 0; // Only move in the x-z plane because the trackers find height already
+            _bodyTargetTracker.position += direction * _moveSpeed * Time.deltaTime;
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float currentAngle = _trackerYaw;
+            // Figure out the shortest rotation direction
+            float angleDifference = Mathf.DeltaAngle(currentAngle, targetAngle);
+            if (angleDifference > 180f) angleDifference -= 360f;
+            if (angleDifference < -180f) angleDifference += 360f;
+            // Rotate towards the target direction
+            float toRotate = currentAngle + angleDifference * _rotationSpeed * Time.deltaTime;
+            _trackerYaw = toRotate; // Update tracker yaw
+            _bodyTargetTracker.rotation = Quaternion.Euler(0, _trackerYaw, 0); // Rotate tracker based on yaw
         }
+
+        // Update body height and rotation
+        Vector3 averagePos = Vector3.zero;
+        for (int i = 0; i < _footPositions.Length; i++)
+        {
+            averagePos += _footPositions[i];
+        }
+        averagePos /= _footPositions.Length;
+        Vector3 bodyDesiredPosition = averagePos + _bodyPositionOffset;
+        _body.position = Vector3.Lerp(_body.position, bodyDesiredPosition, Time.deltaTime * _bodyAdjustSpeed);
+        // Rotate body tilt and pitch based on foot heights
+        float avgHeightRight = 0f;
+        float avgHeightLeft = 0f;
+        for (int i = 0; i < _footPositions.Length; i++)
+        {
+            if (i < 4) // Left foot
+            {
+                avgHeightLeft += _footPositions[i].y;
+            }
+            else // Right foot
+            {
+                avgHeightRight += _footPositions[i].y;
+            }
+        }
+        avgHeightLeft /= 4f;
+        avgHeightRight /= 4f;
+        float tilt = avgHeightRight - avgHeightLeft;
+
+        float avgHeightFront = 0f;
+        float avgHeightBack = 0f;
+        bool[] frontPositions = new bool[8] { true, true, false, false, true, true, false, false};
+        for (int i = 0; i < _footPositions.Length; i++)
+        {
+            if (frontPositions[i]) // Front foot
+            {
+                avgHeightFront += _footPositions[i].y;
+            }
+            else // Back foot
+            {
+                avgHeightBack += _footPositions[i].y;
+            }
+        }
+        avgHeightFront /= 4f;
+        avgHeightBack /= 4f;
+        float pitch = avgHeightBack - avgHeightFront;
+
+        // Yaw rotates the body based on the difference in left and right leg positions
+        float avgProjectionLeft = 0f;
+        float avgProjectionRight = 0f;
+        // Measuring the average projection of the foot positions on the forward axis of the body
+        for (int i = 0; i < _footPositions.Length; i++)
+        {
+            Vector3 footPosition = _footPositions[i];
+            Vector3 bodyForward = _body.forward;
+            float projection = Vector3.Dot(footPosition, bodyForward);
+            if (i < 4) // Left foot
+            {
+                avgProjectionLeft += projection;
+            }
+            else // Right foot
+            {
+                avgProjectionRight += projection;
+            }
+        }
+        avgProjectionLeft /= 4f;
+        avgProjectionRight /= 4f;
+        float yaw = Mathf.Clamp(avgProjectionLeft - avgProjectionRight, -_maxYawProportionality, _maxYawProportionality);
+        
+        _bodyYaw += yaw * _bodyRotationSpeed; // Update body yaw
+        
+        _body.localRotation = Quaternion.Euler(pitch * _pitchIntensity, _bodyYaw, tilt * _tiltIntensity); // Rotate body based on foot heights
 
         for (int i = 0; i < _footTargets.Length; i++)
         {
@@ -63,13 +161,14 @@ public class SpiderWalking : MonoBehaviour
                 Vector3 direction = (footTargetTrackerPosition - footTargetPosition).normalized;
                 Vector3 targetPosition = footTargetPosition + direction * _stepDistance;
                 // Take a step
-                TakeStep(i, targetPosition, footTargetPosition);
+                TakeStep(i, footTargetTrackerPosition, footTargetPosition);
             }
         }
     }
 
     private void TakeStep(int footIndex, Vector3 footTargetTrackerPosition, Vector3 footTargetPosition) {
         if (_isStepping[footIndex]) return; // Already stepping
+        if (_hasSteppedThisCycle[footIndex]) return; // Already stepped this cycle
 
         // Only allow step if accomodates zigzag pattern
         if ((footIndex % 2 == 0 && !_allowingZeroIndex) || (footIndex % 2 == 1 && _allowingZeroIndex)) {
@@ -84,9 +183,16 @@ public class SpiderWalking : MonoBehaviour
                 }
             }
             if (anyStepping) return; // Skip even index if not allowing zero index
+            // When excepttion is met, switch to the other index
+            _allowingZeroIndex = !_allowingZeroIndex; // Toggle allowing zero index for zigzag pattern
+            for (int i = 0; i < _hasSteppedThisCycle.Length; i++)
+            {
+                _hasSteppedThisCycle[i] = false; // Reset stepped this cycle for all feet
+            }
         }
 
         _isStepping[footIndex] = true;
+        _hasSteppedThisCycle[footIndex] = true; // Mark as stepped this cycle
         StartCoroutine(StepCoroutine(footIndex, footTargetTrackerPosition, footTargetPosition));
     }
 
@@ -99,7 +205,8 @@ public class SpiderWalking : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / _stepSpeed);
             float height = Mathf.Sin(t * Mathf.PI) * _stepHeight;
-            Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, t) + new Vector3(0, height, 0);
+            float curveValue = _stepCurve.Evaluate(t);
+            Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, curveValue) + new Vector3(0, height, 0);
             _footPositions[footIndex] = newPosition;
             yield return null;
         }
@@ -120,8 +227,18 @@ public class SpiderWalking : MonoBehaviour
         if (allFeetStepped)
         {
             // Only toggle zero index if this foot belongs to the allowed zero index
-            if (!(footIndex % 2 == 0 && !_allowingZeroIndex) || (footIndex % 2 != 0 && _allowingZeroIndex)){
+            if (!(footIndex % 2 == 0 && !_allowingZeroIndex) || (footIndex % 2 != 0 && _allowingZeroIndex)) {
+                _isStepping[footIndex] = true; // Prevent exception from being triggered
+                // Randomize step cooldown
+                float stepCooldown = _stepCooldownMean + Random.Range(-_stepCooldownVariation, _stepCooldownVariation);
+                yield return new WaitForSeconds(stepCooldown);
+
+                for (int i = 0; i < _hasSteppedThisCycle.Length; i++)
+                {
+                    _hasSteppedThisCycle[i] = false; // Reset stepped this cycle for all feet
+                }
                 _allowingZeroIndex = !_allowingZeroIndex; // Toggle allowing zero index for zigzag pattern
+                _isStepping[footIndex] = false; // Allow stepping again
             }
         }
     }
