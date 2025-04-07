@@ -9,10 +9,16 @@ public class PlayerParticleDamage : MonoBehaviour
     public GameObject player; // Reference to the player object
     private float timeSinceLastDamage; // Time when the last damage was applied
     
+    private void Start() {
+        // Initialize the time since last damage to the damage interval to avoid immediate damage
+        timeSinceLastDamage = damageInterval;
+    }
+
     private void OnParticleTrigger() {
         // Damage player
+        // Debug.Log("PlayerParticleDamage: OnParticleTrigger called");
         if (timeSinceLastDamage >= damageInterval) {
-            // Assuming the player has a method to apply damage
+            // Debug.Log("PlayerParticleDamage: Damaging player");
             player.GetComponent<HealthManager>().Damage(damageAmount, transform.position);
             timeSinceLastDamage = 0f; // Reset the timer
         }
