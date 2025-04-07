@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 using System.Collections;
 
 public class SpiderWalking : MonoBehaviour
@@ -28,12 +29,27 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private float _bodyRotationSpeed = 0.1f; // Speed of body rotation towards target
     [SerializeField] private float _rotationSpeed = 0.1f; // Speed of rotation towards target
 
+    [SerializeField] private float _attackRange = 20f; // Range of the attack
+    [SerializeField] private float _attackDamage = 100f; // Damage of the attack
+    [SerializeField] private float _attackCooldown = 3f; // Cooldown time between attacks
+    [SerializeField] private float _attackSpeed = 1f; // Speed of the attack animation
+    [SerializeField] private float _attackDistanceForward = 1f; // Distance to the target for attack
+    [SerializeField] private float _attackDistanceSide = 1f; // Side distance for attack
+    [SerializeField] private float _attackHeight = 1f; // Height of the attack
+    [SerializeField] private float _attackNoticeDistance = 5f; // Distance to the target for attack notice
+    [SerializeField] private AnimationCurve _attackCurve; // Animation curve for the attack
+
+    [SerializeField] private GameObject _attackParticleEffect; // Particle effect for the attack
+    
     private Vector3[] _footPositions;
     private bool[] _isStepping;
     private bool[] _hasSteppedThisCycle;
     private bool _allowingZeroIndex = true;
     private float _bodyYaw = 0f; // Yaw rotation of the body
     private float _trackerYaw = 0f; // Yaw rotation of the tracker
+    private bool _lastAttackedWithRightLeg = false; // Track if the last attack was with the right leg
+    private bool _isAttacking = false; // Track if the spider is currently attacking
+    private float _attackCooldownTimer = 0f; // Timer for attack cooldown
 
     private void Awake() {
         _footPositions = new Vector3[_footTargets.Length];
@@ -49,9 +65,10 @@ public class SpiderWalking : MonoBehaviour
     }
 
     private void Update() {
+        _attackCooldownTimer -= Time.deltaTime; // Decrease attack cooldown timer
 
         // Move body towards target transform
-        if (_targetTransform != null) {
+        if (_targetTransform != null && !_isAttacking) {
             Vector3 targetPosition = _targetTransform.position;
             Vector3 direction = (targetPosition - _bodyTargetTracker.position).normalized;
             direction.y = 0; // Only move in the x-z plane because the trackers find height already
@@ -164,6 +181,71 @@ public class SpiderWalking : MonoBehaviour
                 TakeStep(i, footTargetTrackerPosition, footTargetPosition);
             }
         }
+
+        // Check if player is in attack range
+        if (_targetTransform != null) {
+            float distanceToTarget = Vector3.Distance(_body.position, _targetTransform.position);
+            if (distanceToTarget <= _attackNoticeDistance) {
+                // Attack the target
+                AttackTarget();
+            }
+        }
+    }
+
+    private void AttackTarget() {
+        if (_isAttacking) return; // Already attacking
+        if (_attackCooldownTimer > 0f) return; // Attack cooldown not finished
+        Debug.Log("Attacking target!");
+        _attackCooldownTimer += _attackCooldown;
+        _isAttacking = true; // Set attacking state
+        _lastAttackedWithRightLeg = !_lastAttackedWithRightLeg; // Toggle leg for next attack
+
+        StartCoroutine(AttackTargetCoroutine());
+    }
+
+    private IEnumerator AttackTargetCoroutine() {
+        float elapsedTime = 0f;
+        Vector3 startPosition = _footPositions[_lastAttackedWithRightLeg ? 5 : 0]; // Start position of the attack
+        Vector3 endPosition = startPosition + _body.forward * _attackDistanceForward + Vector3.up * _attackHeight + _body.right * _attackDistanceSide * (_lastAttackedWithRightLeg ? -1 : 1); // End position of the attack
+        while (elapsedTime < _attackSpeed / 2) {
+            elapsedTime += Time.deltaTime;
+            float t = _attackCurve.Evaluate(elapsedTime / (_attackSpeed / 2)); // Evaluate the attack curve
+            Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, t); // Move to end position
+            _footPositions[_lastAttackedWithRightLeg ? 5 : 0] = newPosition; // Update foot position for attack
+            yield return null;
+        }
+
+        // Spawn particle effect at foot location
+        GameObject particleEffect = Instantiate(_attackParticleEffect, _footPositions[_lastAttackedWithRightLeg ? 5 : 0], Quaternion.identity); // Instantiate particle effect at foot position
+        // Assign player collider to particle effect callback list
+        ParticleSystem particleEffectScript = particleEffect.GetComponent<ParticleSystem>();
+        if (particleEffectScript != null) {
+            particleEffectScript.trigger.AddCollider(_targetTransform.GetComponent<Collider>()); // Add player collider to particle effect callback list
+            particleEffect.GetComponent<PlayerParticleDamage>().player = _targetTransform.gameObject; // Assign player to particle effect script
+        }
+
+        // Damage player if in range
+        if (_targetTransform != null) {
+            float distanceToTarget = Vector3.Distance(_footPositions[_lastAttackedWithRightLeg ? 5 : 0], _targetTransform.position);
+            if (distanceToTarget <= _attackRange) {
+                // Apply damage to the target
+                if (_targetTransform.GetComponent<HealthManager>() != null) {
+                    _targetTransform.GetComponent<HealthManager>().Damage(_attackDamage, _footPositions[_lastAttackedWithRightLeg ? 5 : 0]);
+                }
+            }
+        }   
+
+        elapsedTime = 0f; // Reset elapsed time for attack animation
+        while (elapsedTime < _attackSpeed / 2) {
+            elapsedTime += Time.deltaTime;
+            float t = _attackCurve.Evaluate(1 - (elapsedTime / (_attackSpeed / 2))); // Evaluate the attack curve for return
+            Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, t); // Return to start position
+            _footPositions[_lastAttackedWithRightLeg ? 5 : 0] = newPosition; // Update foot position for attack
+            yield return null;
+        }
+
+        _footPositions[_lastAttackedWithRightLeg ? 5 : 0] = startPosition; // Reset foot position after attack
+        _isAttacking = false; // Reset attacking state
     }
 
     private void TakeStep(int footIndex, Vector3 footTargetTrackerPosition, Vector3 footTargetPosition) {
@@ -202,17 +284,21 @@ public class SpiderWalking : MonoBehaviour
         float elapsedTime = 0f;
 
         while (elapsedTime < _stepSpeed) {
-            elapsedTime += Time.deltaTime;
+            if (!(_isAttacking && footIndex != (_lastAttackedWithRightLeg ? 5 : 0))) elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / _stepSpeed);
             float height = Mathf.Sin(t * Mathf.PI) * _stepHeight;
             float curveValue = _stepCurve.Evaluate(t);
             Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, curveValue) + new Vector3(0, height, 0);
+            if (_isAttacking && footIndex == (_lastAttackedWithRightLeg ? 5 : 0)) {
+                // If attacking, ignore step logic
+                newPosition = _footPositions[_lastAttackedWithRightLeg ? 5 : 0];
+            }
             _footPositions[footIndex] = newPosition;
             yield return null;
         }
 
         _footPositions[footIndex] = footTargetTrackerPosition;
-        _isStepping[footIndex] = false;
+        _isStepping[footIndex] = false;        
 
         bool allFeetStepped = true;
         for (int i = 0; i < _footTargets.Length; i++)
