@@ -6,7 +6,7 @@ public class RecipeLibrary : ScriptableObject
 {
     public List<RecipeData> Recipes = new List<RecipeData>();
 
-    public List<RecipeData> GetRecipes()
+    public List<RecipeData> ToList()
     {
         return Recipes;
     }
