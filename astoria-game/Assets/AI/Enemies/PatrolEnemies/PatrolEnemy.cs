@@ -47,13 +47,13 @@ public class PatrolEnemy : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
         if (distanceToPlayer <= _playerDetectionDistance)
         {
-            Debug.Log("Player detected!");
+            // Debug.Log("Player detected!");
             ChasePlayer();
             _isPatrolling = false;
         }
         else
         {
-            Debug.Log("Player not detected!");
+            // Debug.Log("Player not detected!");
             Patrol();
             _isPatrolling = true;
         }
