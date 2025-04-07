@@ -195,8 +195,8 @@ public class SpiderWalking : MonoBehaviour
     private void AttackTarget() {
         if (_isAttacking) return; // Already attacking
         if (_attackCooldownTimer > 0f) return; // Attack cooldown not finished
-        Debug.Log("Attacking target!");
-        _attackCooldownTimer += _attackCooldown;
+        // Debug.Log("Attacking target!");
+        _attackCooldownTimer = _attackCooldown;
         _isAttacking = true; // Set attacking state
         _lastAttackedWithRightLeg = !_lastAttackedWithRightLeg; // Toggle leg for next attack
 
