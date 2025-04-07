@@ -80,8 +80,6 @@ namespace Player
 
     private float _currentMaxSpeed = 0f;
 
-    private Vector3 lastInnerNormal = Vector3.zero;
-    private Vector3 lastOuterNormal = Vector3.zero;
 
     // Input variables
     private Vector2 _moveInput;
@@ -186,10 +184,9 @@ namespace Player
           }
           else if (_isCrouching)
           {
-            _isCrouching = false;
             _shouldBeCrouching = false;
-            Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
-            MeshRoot.localScale = new Vector3(1, 1, 1);
+            // Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
+            // MeshRoot.localScale = new Vector3(1, 1, 1);
           }
 
           break;
@@ -230,7 +227,6 @@ namespace Player
       transform.rotation = PlayerCamera.PlayerYLookQuaternion;
     }
 
-    private Quaternion _nextFrameRotation = Quaternion.identity;
 
     /// <summary>
     /// (Called by KinematicCharacterMotor during its update cycle)
@@ -246,7 +242,6 @@ namespace Player
     /// <param name="rotation"></param>
     public void SetRotation(Quaternion rotation)
     {
-      _nextFrameRotation = rotation;
     }
 
     /// <summary>
@@ -273,6 +268,12 @@ namespace Player
     /// </summary>
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
+      if (resetVelocity)
+      {
+        currentVelocity = Vector3.zero;
+        resetVelocity = false;
+      }
+
       switch (CurrentCharacterState)
       {
         case CharacterState.Default:
@@ -534,7 +535,8 @@ namespace Player
     {
       int fallDamage = (int)FallDamageCurve.Evaluate(-_previousFrameFallSpeed);
 
-      if (fallDamage != 0) {
+      if (fallDamage != 0)
+      {
         PlayerInstance.Instance.GetComponent<IDamageable>().TakeDamage(fallDamage, Motor.TransientPosition);
       }
 
@@ -583,6 +585,7 @@ namespace Player
       }
     }
 
+    private bool resetVelocity = false;
     private void OnStateExit(CharacterState previousState, CharacterState newState)
     {
       switch (previousState)
@@ -600,6 +603,9 @@ namespace Player
 
           Motor.enabled = true;
           GetComponent<Collider>().enabled = true;
+
+          // Reset the player velocity
+          resetVelocity = true;
           break;
       }
     }
