@@ -10,6 +10,8 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private Transform _body;
     [SerializeField] private Transform _bodyTargetTracker;
     [SerializeField] private Vector3 _bodyPositionOffset = new Vector3(0, 0.5f, 0);
+    [SerializeField] private float _bodyAdjustSpeed = 0.1f; // Speed of body adjustment
+    [SerializeField] private float _maxYawProportionality = 2f; // Maximum yaw proportionality for body rotation
 
     [SerializeField] private float _stepDistance = 0.5f;
     [SerializeField] private float _stepHeight = 0.2f;
@@ -73,7 +75,8 @@ public class SpiderWalking : MonoBehaviour
             averagePos += _footPositions[i];
         }
         averagePos /= _footPositions.Length;
-        _body.position = averagePos + _bodyPositionOffset;
+        Vector3 bodyDesiredPosition = averagePos + _bodyPositionOffset;
+        _body.position = Vector3.Lerp(_body.position, bodyDesiredPosition, Time.deltaTime * _bodyAdjustSpeed);
         // Rotate body tilt and pitch based on foot heights
         float avgHeightRight = 0f;
         float avgHeightLeft = 0f;
@@ -130,11 +133,11 @@ public class SpiderWalking : MonoBehaviour
         }
         avgProjectionLeft /= 4f;
         avgProjectionRight /= 4f;
-        float yaw = avgProjectionLeft - avgProjectionRight;
+        float yaw = Mathf.Clamp(avgProjectionLeft - avgProjectionRight, -_maxYawProportionality, _maxYawProportionality);
         
         _bodyYaw += yaw * _bodyRotationSpeed; // Update body yaw
         
-        _body.rotation = Quaternion.Euler(pitch * _pitchIntensity, _bodyYaw, tilt * _tiltIntensity); // Rotate body based on foot heights
+        _body.localRotation = Quaternion.Euler(pitch * _pitchIntensity, _bodyYaw, tilt * _tiltIntensity); // Rotate body based on foot heights
 
         for (int i = 0; i < _footTargets.Length; i++)
         {
