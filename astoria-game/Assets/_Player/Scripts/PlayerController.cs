@@ -184,10 +184,9 @@ namespace Player
           }
           else if (_isCrouching)
           {
-            _isCrouching = false;
             _shouldBeCrouching = false;
-            Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
-            MeshRoot.localScale = new Vector3(1, 1, 1);
+            // Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
+            // MeshRoot.localScale = new Vector3(1, 1, 1);
           }
 
           break;
@@ -536,7 +535,8 @@ namespace Player
     {
       int fallDamage = (int)FallDamageCurve.Evaluate(-_previousFrameFallSpeed);
 
-      if (fallDamage != 0) {
+      if (fallDamage != 0)
+      {
         PlayerInstance.Instance.GetComponent<IDamageable>().TakeDamage(fallDamage, Motor.TransientPosition);
       }
 
