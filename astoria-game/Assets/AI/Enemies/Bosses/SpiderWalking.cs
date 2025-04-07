@@ -23,11 +23,15 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private float _stepCooldownVariation = 0.2f;
     [SerializeField] private float _tiltIntensity = 10f;
     [SerializeField] private float _pitchIntensity = 10f;
+    [SerializeField] private float _bodyRotationSpeed = 0.1f; // Speed of body rotation towards target
+    [SerializeField] private float _rotationSpeed = 0.1f; // Speed of rotation towards target
 
     private Vector3[] _footPositions;
     private bool[] _isStepping;
     private bool[] _hasSteppedThisCycle;
     private bool _allowingZeroIndex = true;
+    private float _bodyYaw = 0f; // Yaw rotation of the body
+    private float _trackerYaw = 0f; // Yaw rotation of the tracker
 
     private void Awake() {
         _footPositions = new Vector3[_footTargets.Length];
@@ -50,6 +54,16 @@ public class SpiderWalking : MonoBehaviour
             Vector3 direction = (targetPosition - _bodyTargetTracker.position).normalized;
             direction.y = 0; // Only move in the x-z plane because the trackers find height already
             _bodyTargetTracker.position += direction * _moveSpeed * Time.deltaTime;
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float currentAngle = _trackerYaw;
+            // Figure out the shortest rotation direction
+            float angleDifference = Mathf.DeltaAngle(currentAngle, targetAngle);
+            if (angleDifference > 180f) angleDifference -= 360f;
+            if (angleDifference < -180f) angleDifference += 360f;
+            // Rotate towards the target direction
+            float toRotate = currentAngle + angleDifference * _rotationSpeed * Time.deltaTime;
+            _trackerYaw = toRotate; // Update tracker yaw
+            _bodyTargetTracker.rotation = Quaternion.Euler(0, _trackerYaw, 0); // Rotate tracker based on yaw
         }
 
         // Update body height and rotation
@@ -96,7 +110,31 @@ public class SpiderWalking : MonoBehaviour
         avgHeightBack /= 4f;
         float pitch = avgHeightBack - avgHeightFront;
 
-        _body.rotation = Quaternion.Euler(pitch * _pitchIntensity, _body.rotation.eulerAngles.y, tilt * _tiltIntensity); // Rotate body based on foot heights
+        // Yaw rotates the body based on the difference in left and right leg positions
+        float avgProjectionLeft = 0f;
+        float avgProjectionRight = 0f;
+        // Measuring the average projection of the foot positions on the forward axis of the body
+        for (int i = 0; i < _footPositions.Length; i++)
+        {
+            Vector3 footPosition = _footPositions[i];
+            Vector3 bodyForward = _body.forward;
+            float projection = Vector3.Dot(footPosition, bodyForward);
+            if (i < 4) // Left foot
+            {
+                avgProjectionLeft += projection;
+            }
+            else // Right foot
+            {
+                avgProjectionRight += projection;
+            }
+        }
+        avgProjectionLeft /= 4f;
+        avgProjectionRight /= 4f;
+        float yaw = avgProjectionLeft - avgProjectionRight;
+        
+        _bodyYaw += yaw * _bodyRotationSpeed; // Update body yaw
+        
+        _body.rotation = Quaternion.Euler(pitch * _pitchIntensity, _bodyYaw, tilt * _tiltIntensity); // Rotate body based on foot heights
 
         for (int i = 0; i < _footTargets.Length; i++)
         {
@@ -120,7 +158,7 @@ public class SpiderWalking : MonoBehaviour
                 Vector3 direction = (footTargetTrackerPosition - footTargetPosition).normalized;
                 Vector3 targetPosition = footTargetPosition + direction * _stepDistance;
                 // Take a step
-                TakeStep(i, targetPosition, footTargetPosition);
+                TakeStep(i, footTargetTrackerPosition, footTargetPosition);
             }
         }
     }
