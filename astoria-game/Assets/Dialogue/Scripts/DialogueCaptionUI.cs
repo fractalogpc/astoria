@@ -4,28 +4,28 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DialogueCaptionUI : MonoBehaviour
+public class DialogueCaptionUI : MonoBehaviour, IDialogueReceiver
 {
-	[SerializeField] private DialogueReceiver _attachedReciever;
 	[SerializeField] private FadeElementInOut _fadeElement;
 	[SerializeField] private TextMeshProUGUI _captionText;
 	private Coroutine _displayCoroutine;
+	public event IDialogueReceiver.DialogueReceived OnDialogueReceived;
+	public void ReceiveDialogue(Dialogue dialogue) {
+		if (!dialogue.DialogueData.AlwaysCaption) {
+			// if (PlayerPrefs.GetInt("Subtitles") == 0) return;
+			Debug.Log("Add subtitling to options");
+		}
+		_captionText.text = dialogue.DialogueData.MessageText;
+		_fadeElement.FadeIn();
+		dialogue.OnDialogueEnd += OnDialogueEnd;
+	}
 	
 	private void Start() {
-		_attachedReciever.OnDialogueRecieved += OnDialogueReceived;
+		_fadeElement.Hide();
 	}
-	
-	private void OnDialogueReceived(Dialogue dialogue) {
-		if (!dialogue.DialogueData.AlwaysCaption) {
-			if (PlayerPrefs.GetInt("Subtitles") == 0) return;
-		}
-		_captionText.text = dialogue.DialogueData.MessageText[0];
-		_displayCoroutine = StartCoroutine(OnDialogueReceiveCoroutine(dialogue));
-	}
-	
-	private IEnumerator OnDialogueReceiveCoroutine(Dialogue dialogue) {
-		_fadeElement.FadeIn();
-		yield return new WaitForSeconds(dialogue.DialogueData.Duration);
+
+	private void OnDialogueEnd(Dialogue dialogue) {
+		dialogue.OnDialogueEnd -= OnDialogueEnd;
 		_fadeElement.FadeOut();
 	}
-}
+} 
