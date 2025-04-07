@@ -21,13 +21,15 @@ public class TreeChopping : MonoBehaviour
   [SerializeField] private GameObject[] _treePrefabs;
 
   private TerrainTile[] _terrainTiles;
+  private TreeInstance[][] _savedTreeInstances;
 
   public static TreeChopping Instance { get; private set; }
 
-  public void Start() {
+  private void Awake() {
     Instance = this;
 
     _terrainTiles = new TerrainTile[_terrainObjects.Length];
+    _savedTreeInstances = new TreeInstance[_terrainObjects.Length][];
     for (int i = 0; i < _terrainObjects.Length; i++) {
       Terrain terrain = _terrainObjects[i].GetComponent<Terrain>();
       _terrainTiles[i].terrainData = terrain.terrainData;
@@ -35,6 +37,8 @@ public class TreeChopping : MonoBehaviour
       _terrainTiles[i].position = terrain.transform.position;
       _terrainTiles[i].size = new Vector2(terrain.terrainData.size.x, terrain.terrainData.size.z);
       _terrainTiles[i].removedTreeInstances = new List<TreeInstance>();
+
+      _savedTreeInstances[i] = terrain.terrainData.treeInstances; // Save the original tree instances
     }
   }
 
@@ -129,6 +133,13 @@ public class TreeChopping : MonoBehaviour
           return;
         }
       }
+    }
+  }
+
+  private void OnApplicationQuit() {
+    // Restore all tree instances to their original state
+    for (int t = 0; t < _terrainTiles.Length; t++) {
+      _terrainTiles[t].terrainData.treeInstances = _savedTreeInstances[t];
     }
   }
 
