@@ -23,13 +23,12 @@ public class PatrolEnemy : MonoBehaviour
     private int _currentPatrolIndex = 0;
     private float _waitTime;
     private NavMeshAgent _navMeshAgent;
-    private bool _isPatrolling = true;
+    private bool _isPatrolling = false;
     private float _attackTimer = 0f;
 
     private void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        _navMeshAgent.speed = _patrolSpeed + Random.Range(-_speedVariation, _speedVariation);
         _waitTime = Random.Range(_patrolWaitTime - _timeVariation, _patrolWaitTime + _timeVariation);
     }
 
@@ -48,13 +47,13 @@ public class PatrolEnemy : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
         if (distanceToPlayer <= _playerDetectionDistance)
         {
-            //Debug.Log("Player detected!");
+            Debug.Log("Player detected!");
             ChasePlayer();
             _isPatrolling = false;
         }
         else
         {
-            //Debug.Log("Player not detected!");
+            Debug.Log("Player not detected!");
             Patrol();
             _isPatrolling = true;
         }
@@ -74,6 +73,7 @@ public class PatrolEnemy : MonoBehaviour
         Vector2 _targetPoint = new Vector2(targetPoint.position.x, targetPoint.position.z);
         Vector2 _currentPosition = new Vector2(transform.position.x, transform.position.z);
         float distanceToTarget = Vector2.Distance(_targetPoint, _currentPosition);
+        // Debug.Log($"Distance to target: {distanceToTarget}");
 
         if (distanceToTarget <= _strayDistance)
         {
@@ -83,6 +83,7 @@ public class PatrolEnemy : MonoBehaviour
                 _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPoints.Length;
                 _navMeshAgent.speed = _patrolSpeed + Random.Range(-_speedVariation, _speedVariation);
                 _waitTime = Random.Range(_patrolWaitTime - _timeVariation, _patrolWaitTime + _timeVariation);
+                targetPoint = _patrolPoints[_currentPatrolIndex];
                 _navMeshAgent.SetDestination(targetPoint.position);
             }
         }

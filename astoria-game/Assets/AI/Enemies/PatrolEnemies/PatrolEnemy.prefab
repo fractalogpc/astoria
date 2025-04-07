@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6342450877984005402}
   - component: {fileID: 1820213699108333477}
   - component: {fileID: 610419097841170823}
-  - component: {fileID: 4749197017240131877}
   m_Layer: 0
   m_Name: PatrolEnemy
   m_TagString: Untagged
@@ -137,7 +136,7 @@ MonoBehaviour:
   _maxChaseDistance: 10
   _chaseSpeed: 4
   _playerDetectionDistance: 10
-  _attackDistance: 1
+  _attackDistance: 2
   _attackDamage: 25
   _attackSpeed: 1
   _player: {fileID: 0}
@@ -163,30 +162,3 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!54 &4749197017240131877
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4530840236445588690}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
