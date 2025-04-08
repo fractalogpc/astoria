@@ -8,15 +8,21 @@ using UnityEngine;
 [System.Serializable]
 public class ItemData : BaseItemData
 {
+    [Tooltip("The name of the item.")]
     public string ItemName = "New Item";
-    public string ItemDescription = "Item Description";
+    [Tooltip("The description of the item. Use this to add story and tips on it's usage.")]
+    [TextArea(4, 12)] public string ItemDescription = "Item Description";
 
     [Header("Inventory")]
+    [Tooltip("The icon of the item. This will be used in the inventory and crafting UI.")]
     public Sprite ItemIcon;
+    [Tooltip("The color here will be applied as a tint to the background of the item in the inventory.")]
     [ColorUsage(true, false)] public Color ItemBGColor;
+    [Tooltip("The size of the item in the inventory in item slots. This is the size of the item in the inventory grid.")]
     public Vector2Int ItemSize = Vector2Int.one;
     [Tooltip("If 0 or 1, the item will not stack.")]
     public int MaxStackSize = 8;
+    [Tooltip("This prefab will spawn when the item is dropped from an inventory. Make sure the prefab contains the DroppedItem script.")]
     public GameObject DroppedItemPrefab;
     private void OnEnable() {
         if (ItemIcon == null) {
