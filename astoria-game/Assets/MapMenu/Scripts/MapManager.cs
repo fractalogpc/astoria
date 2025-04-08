@@ -10,7 +10,6 @@ public class MapManager : InputHandlerBase
 	[SerializeField] private RectTransform _mapZoomTransform;
 	[SerializeField] private RectTransform _mapPanTransform;
 	[Header("Zoom Settings")]
-	[SerializeField] private AnimationCurve _zoomAmountVsScale;
 	[SerializeField] private float _maxZoom;
 	[SerializeField] private float _minZoom;
 	[SerializeField] private float _zoomSpeedMultiplier;
@@ -18,7 +17,6 @@ public class MapManager : InputHandlerBase
 	private Vector2 _targetScale;
 	private Vector2 _targetPosition;
 	private bool _middleClickDown;
-	
 	
 	protected override void InitializeActionMap() {
 		RegisterAction(_inputActions.GenericUI.ScrollWheel, OnScroll);
@@ -34,7 +32,10 @@ public class MapManager : InputHandlerBase
 		float scrollDelta = ctx.ReadValue<Vector2>().y;
 		if (Mathf.Approximately(scrollDelta, 0f)) return;
 
-		float zoomSpeed = _zoomSpeedMultiplier * _zoomAmountVsScale.Evaluate(_mapZoomTransform.localScale.x / _maxZoom);
+		float currentZoom = _mapZoomTransform.localScale.x;
+		
+		// Logarithmic so it feels linear
+		float zoomSpeed = Mathf.Log(currentZoom/_maxZoom);
 		Vector2 mousePosition = Input.mousePosition;
 
 		// Step 1: Get local point relative to RectTransform
