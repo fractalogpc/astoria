@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30639bdccfc11b14a8e443825ca74f9f, type: 3}
+  m_Name: Slingshot
+  m_EditorClassIdentifier: 
+  ItemName: New Item
+  ItemDescription: Item Description
+  ItemIcon: {fileID: 21300000, guid: 7fd41066a27d3d1488672735d4e47d05, type: 3}
+  ItemBGColor: {r: 0, g: 0, b: 0, a: 0}
+  ItemSize: {x: 1, y: 1}
+  MaxStackSize: 8
+  DroppedItemPrefab: {fileID: 3902591898328376640, guid: 26637b4828cf6e34e9ce870d92f0a46d, type: 3}
+  HeldItemPrefab: {fileID: 0}
+  ViewmodelAnimatorController: {fileID: 0}
+  ItemAnimations: {fileID: 0}
+  VMEquipAnimation: {fileID: 0}
+  VMUnequipAnimation: {fileID: 0}
+  AmmoItem: {fileID: 0}
+  FireAnimation: {fileID: 0}
+  ReloadEmptyAnimation: {fileID: 0}
+  ReloadPartialAnimation: {fileID: 0}
+  CanAimDownSights: 1
+  AdsIkTarget: {x: 0, y: 0, z: 0}
+  AdsIkTargetRot: {x: 0, y: 0, z: 0}
+  AdsIKTransitionTimeIn: 0
+  AdsIKTransitionTimeOut: 0
+  AdsFov: 45
+  AdsZoomSpeed: 10
+  AccuracySetting:
+    EffectiveRange: 0
+    PatternSpread: 0
+  RecoilSettings:
+    RecoilCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MeanUpwardsRecoil: 0
+    MeanHorizontalRecoil: 0
+    MeanBackwardsRecoil: 0
+    UpwardsRecoilVariation: 0
+    HorizontalRecoilVariation: 0
+    BackwardsRecoilVariation: 0
+    MeanRecoilTime: 0
+    RecoilTimeVariation: 0
+    NoiseMagnitude: 0
+    NoiseSpeed: 0
+    MainTransferToViewmodel: 0
+  FireCombination: 0
+  SemiAutoSetting:
+    CycleTime: 0
+  BurstSetting:
+    ShotsPerBurst: 0
+    RoundsPerMinute: 0
+    CycleTime: 0
+  FullAutoSetting:
+    RoundsPerMinute: 0
+  ShotgunSetting:
+    PelletsPerShot: 0
+  ReloadType: 0
+  MagazineSetting:
+    MagazineCapacity: 0
+    ReloadTime: 0
+  InternalSetting:
+    InternalCapacity: 0
+    ReloadTime: 0
+  ChamberSetting:
+    ChamberTime: 0
+  Damage: 30
+  InitialVelocityMS: 400
+  BulletMassKg: 0.007
+  BulletDiameterM: 0.009
+  DragCoefficient: 0.149
