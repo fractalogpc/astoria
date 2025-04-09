@@ -64,6 +64,7 @@ public class ObjectiveSystemModel
 	public void SelectObjective(ObjectiveInstance objective) {
 		if (!ActiveObjectives.Contains(objective)) return;
 		SelectedObjective = objective;
+		objective.OnSelect();
 		OnSelectedObjectiveChanged?.Invoke(SelectedObjective);
 	}
 	

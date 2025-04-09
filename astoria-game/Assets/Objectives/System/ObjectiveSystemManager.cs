@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class ObjectiveSystemManager : MonoBehaviour
 {
+	public List<ObjectiveInstance> ActiveObjectives => _objectiveSystemModel.ActiveObjectives;
+	public PingManager PingManager => _pingManager;
+	
 	[Header("Dependencies")]
 	[SerializeField] private PingManager _pingManager;
 	[Header("View")]
 	[SerializeField] private ObjectiveSystemView _objectiveSystemView;
 	private ObjectiveSystemModel _objectiveSystemModel;
 
-	public void AddObjective(ObjectiveData objectiveData) {
+	public ObjectiveInstance AddObjective(ObjectiveData objectiveData) {
 		ObjectiveInstance objectiveInstance = objectiveData.CreateInstance(this);
 		_objectiveSystemModel.AddObjective(objectiveInstance);
+		return objectiveInstance;
 	}
 
 	public void RemoveObjective(ObjectiveInstance objectiveInstance) {
@@ -25,8 +29,18 @@ public class ObjectiveSystemManager : MonoBehaviour
 			_objectiveSystemModel.RemoveObjective(_objectiveSystemModel.ActiveObjectives[i]);
 		}
 	}
+
+	public void SelectObjective(ObjectiveInstance objective) {
+		_objectiveSystemModel.SelectObjective(objective);
+		_objectiveSystemView.SetGameUITitle(objective.ObjectiveData.Title);
+		_objectiveSystemView.SetGameUIDescription(objective.ObjectiveData.Description);
+	}
+
+	public void CompleteObjective(ObjectiveInstance instance) {
+		instance.Complete();
+	}
 	
-	private void Start() {
+	private void Awake() {
 		_objectiveSystemModel = new ObjectiveSystemModel();
 		_objectiveSystemModel.AttachToEvents(OnObjectiveAdded, OnObjectiveRemoved, OnObjectiveCompleted, OnSelectedObjectiveChanged);
 	}
@@ -43,7 +57,9 @@ public class ObjectiveSystemManager : MonoBehaviour
 	}
 	
 	private void OnObjectiveAdded(ObjectiveInstance objectiveInstance) {
-		
+		if (_objectiveSystemModel.SelectedObjective == null) {
+			SelectObjective(objectiveInstance);
+		}
 	}
 	
 	private void OnObjectiveRemoved(ObjectiveInstance objectiveInstance) {

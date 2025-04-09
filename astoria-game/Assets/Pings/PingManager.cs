@@ -19,12 +19,31 @@ public class PingManager : MonoBehaviour
 		Instance = this;
 	}
 
-	public void AddPingAt(Vector3 position) {
+	public RectAtWorldPosition CreatePingAt(Vector3 position) {
 		RectAtWorldPosition ping = Instantiate(_pingPrefab, _pingContainer).GetComponent<RectAtWorldPosition>();
 		ping.SetWorldPosition(position);
 		_pings.Add(ping);
+		return ping;
 	}
 
+	public bool PingExistsAt(Vector3 position, float tolerance = 1f) {
+		foreach (RectAtWorldPosition ping in _pings) {
+			if (ping.WorldPosition == position) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public bool PingExists(RectAtWorldPosition ping) {
+		foreach (RectAtWorldPosition existingPing in _pings) {
+			if (existingPing == ping) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void ClearPings() {
 		foreach (RectAtWorldPosition ping in _pings) {
 			Destroy(ping.gameObject);
