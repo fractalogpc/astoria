@@ -1,12 +1,23 @@
+using System;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
 public class PingManager : MonoBehaviour
 {
+	public static PingManager Instance { get; private set; }
+	
 	[SerializeField] private RectTransform _pingContainer;
 	[SerializeField] private GameObject _pingPrefab;
 	[ReadOnly] [SerializeField] private List<RectAtWorldPosition> _pings = new();
+
+	private void Awake() {
+		if (Instance != null && Instance != this) {
+			Destroy(gameObject);
+			return;
+		}
+		Instance = this;
+	}
 
 	public void AddPingAt(Vector3 position) {
 		RectAtWorldPosition ping = Instantiate(_pingPrefab, _pingContainer).GetComponent<RectAtWorldPosition>();
