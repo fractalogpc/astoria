@@ -40,6 +40,7 @@ public class AxeInstance : BaseToolInstance
 		_viewmodelManager.SetTrigger("Use");
 		DelayChop(_toolCore, ItemData.UseAnimation.length * ItemData.AnimChopMoment);
 		DelaySound(_toolCore, ItemData.SwingSoundDelay, ItemData.SwingSound);
+
 	}
 	public override void OnAltUseDown() {
 
@@ -57,6 +58,8 @@ public class AxeInstance : BaseToolInstance
 	private IEnumerator DelayChopCoroutine(float delay) {
 		yield return new WaitForSeconds(delay);
 		ChopTree(ItemData.ChopRange);
+		// Deal damage
+
 	}
 	private void DelaySound(MonoBehaviour holdingMonobehaviour, float delay, EventReference sound) {
 		_chopDelayCoroutine = holdingMonobehaviour.StartCoroutine(DelaySoundCoroutine(delay, sound));
@@ -73,6 +76,13 @@ public class AxeInstance : BaseToolInstance
 		// Check for LOS
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
+		if (hit.collider.GetComponentInParent<IDamageable>() != null) {
+			// Debug.Log("Hit damageable object: " + hit.collider.gameObject.name);
+			IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
+			damageable.TakeDamage(1, hit.point);
+			return;
+		}
+
 		GameObject tree;
 		if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tree")) {
 			// Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
