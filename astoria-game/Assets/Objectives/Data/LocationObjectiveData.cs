@@ -8,6 +8,7 @@ public class LocationObjectiveData : ObjectiveData
     public Vector3 Location;
     [Tooltip("The distance from the location the player must be within to complete the objective.")]
     public float CompletionDistance = 1f;
+    public Sprite MapMarkerIcon;
 
     public override ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager) {
         return new LocationObjectiveInstance(this, objectiveSystemManager);

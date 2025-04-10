@@ -6,10 +6,14 @@ public class LocationObjectiveInstance : ObjectiveInstance
 {
 	public LocationObjectiveData ObjectiveData => (LocationObjectiveData)base.ObjectiveData;
 	private PingManager _pingManager;
+	private MapMarkerManager _mapMarkerManager;
 	private RectAtWorldPosition _pingInstance;
+	private MapMarker _associatedMarker;
 	
 	public LocationObjectiveInstance(ObjectiveData objectiveData, ObjectiveSystemManager objectiveSystemManager) : base(objectiveData, objectiveSystemManager) {
 		_pingManager = objectiveSystemManager.PingManager;
+		_mapMarkerManager = objectiveSystemManager.MapMarkerManager;
+		_mapMarkerManager.AddToMap(new MapMarker(ObjectiveData.Title, ObjectiveData.Location, ObjectiveData.MapMarkerIcon), _ => OnSelect());
 	}
 	
 	/// <summary>
@@ -38,6 +42,9 @@ public class LocationObjectiveInstance : ObjectiveInstance
 	public override void Complete() {
 		if (_pingInstance != null) {
 			_pingManager.RemovePing(_pingInstance);
+		}
+		if (_associatedMarker != null) {
+			_mapMarkerManager.RemoveFromMap(_associatedMarker);
 		}
 		base.Complete();
 	}

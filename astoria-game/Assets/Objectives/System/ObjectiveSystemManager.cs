@@ -6,8 +6,10 @@ public class ObjectiveSystemManager : MonoBehaviour
 {
 	public List<ObjectiveInstance> ActiveObjectives => _objectiveSystemModel.ActiveObjectives;
 	public PingManager PingManager => _pingManager;
+	public MapMarkerManager MapMarkerManager => _mapMarkerManager;
 	
 	[Header("Dependencies")]
+	[SerializeField] private MapMarkerManager _mapMarkerManager;
 	[SerializeField] private PingManager _pingManager;
 	[Header("View")]
 	[SerializeField] private ObjectiveSystemView _objectiveSystemView;

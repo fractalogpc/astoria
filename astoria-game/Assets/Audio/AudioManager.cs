@@ -19,6 +19,10 @@ public class AudioManager : MonoBehaviour
 	/// <param name="worldPos">The world position to play at.</param>
 	/// <returns>The EventInstance of the played sound. Useful for controlling the sound (stop, set parameters, etc).</returns>
 	public EventInstance PlayOneShot(EventReference sound, Vector3 worldPos) {
+		if (sound.IsNull) {
+			Debug.LogError("Sound is null. Cannot play sound.");
+			return default;
+		}
 		EventInstance instance = RuntimeManager.CreateInstance(sound);
 		instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPos));
 		instance.start();
@@ -32,6 +36,10 @@ public class AudioManager : MonoBehaviour
 	/// <param name="gameObj">The gameObject to attach to.</param>
 	/// <returns>The EventInstance of the played sound. Useful for controlling the sound (stop, set parameters, etc).</returns>
 	public EventInstance PlayOneShotAttached(EventReference sound, GameObject gameObj) {
+		if (sound.IsNull) {
+			Debug.LogError("Sound is null. Cannot play sound.");
+			return default;
+		}
 		EventInstance instance = RuntimeManager.CreateInstance(sound);
 		RuntimeManager.AttachInstanceToGameObject(instance, gameObj.transform);
 		instance.start();
