@@ -76,13 +76,7 @@ public class AxeInstance : BaseToolInstance
 		// Check for LOS
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
-		if (hit.collider.GetComponentInParent<IDamageable>() != null) {
-			// Debug.Log("Hit damageable object: " + hit.collider.gameObject.name);
-			IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
-			damageable.TakeDamage(1, hit.point);
-			return;
-		}
-
+		
 		GameObject tree;
 		if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tree")) {
 			// Debug.Log("Hit tree layer object: " + hit.collider.gameObject.name);
@@ -92,11 +86,16 @@ public class AxeInstance : BaseToolInstance
 		else {
 			// Debug.Log("Hit non tree layer object: " + hit.collider.gameObject.name);
 			tree = hit.collider.gameObject;
+
+			if (hit.collider.GetComponentInParent<IDamageable>() != null) {
+				// Debug.Log("Hit damageable object: " + hit.collider.gameObject.name);
+				IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
+				float damage = Random.Range(ItemData.ChopDamage.x, ItemData.ChopDamage.y);
+				damageable.TakeDamage(damage, hit.point);
+			}
 		}
 		TreeChoppable treeChoppable = tree.GetComponentInChildren<TreeChoppable>();
 		if (treeChoppable == null) return;
-		float damage = Random.Range(ItemData.ChopDamage.x, ItemData.ChopDamage.y);
-		treeChoppable.Damage(damage, hit.point);
 		GameObject particles = GameObject.Instantiate(ItemData.WoodHitParticles, hit.point, Quaternion.LookRotation(-hit.normal));
 		GameObject decal = GameObject.Instantiate(ItemData.WoodHitDecalPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
 		decal.transform.SetParent(tree.transform);
