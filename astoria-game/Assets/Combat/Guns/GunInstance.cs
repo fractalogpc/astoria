@@ -219,7 +219,7 @@ public class GunInstance : ViewmodelItemInstance
 						SetCurrentAmmoTo(invAmmo);
 					}
 					else {
-						RemoveAmmoFromInventory(ItemData.MagazineSetting.MagazineCapacity);
+						Debug.Log(RemoveAmmoFromInventory(ItemData.MagazineSetting.MagazineCapacity));
 						SetCurrentAmmoTo(ItemData.MagazineSetting.MagazineCapacity);
 					}
 					break;
