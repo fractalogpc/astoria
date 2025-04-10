@@ -64,6 +64,10 @@ public class RectAtWorldPosition : MonoBehaviour
     }
     private void SetRectPosition(RectTransform rect, Vector3 worldPosition) {
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(worldPosition);
+        if (screenPoint.z < 0) {
+            screenPoint.x = -screenPoint.x;
+            screenPoint.y = -screenPoint.y;
+        }
         rect.position = screenPoint;
     }
 }
