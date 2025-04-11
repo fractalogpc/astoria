@@ -24,14 +24,16 @@ public class Viewmodel : MonoBehaviour
 		if (_itemHolder.childCount > 0) {
 			Destroy(_itemHolder.GetChild(0).gameObject);
 		}
-		GameObject itemPrefab = Instantiate(item.ItemData.HeldItemPrefab, _itemHolder);
 		_viewmodelAnimator.runtimeAnimatorController = item.ItemData.ViewmodelAnimatorController;
 		if (ItemAnimationsValid(item)) {
-			_itemAnimator = _itemHolder.GetComponentInChildren<Animator>();
+			GameObject itemPrefab = Instantiate(item.ItemData.HeldItemPrefab, _animatedItemHolder);
+			_itemAnimator = itemPrefab.GetComponentInChildren<Animator>();
 			_itemAnimator.runtimeAnimatorController = item.ItemData.ItemAnimations;
 			itemPrefab.transform.SetParent(_animatedItemHolder);
+			itemPrefab.transform.localPosition = Vector3.zero;
 		}
 		else {
+			Instantiate(item.ItemData.HeldItemPrefab, _itemHolder);
 			_itemAnimator = null;
 		}
 		if (item.ItemData is GunData) {
@@ -55,6 +57,9 @@ public class Viewmodel : MonoBehaviour
 	public void UnsetItem() {
 		if (_itemHolder.childCount > 0) {
 			DestroyAllChildren(_itemHolder);
+		}
+		if (_animatedItemHolder.childCount > 0) {
+			DestroyAllChildren(_animatedItemHolder);
 		}
 	}
 

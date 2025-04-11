@@ -2947,6 +2947,37 @@ MonoBehaviour:
   _clickableEvents: {fileID: 6252239564278155713}
   _draggablePrefab: {fileID: 5725654330234954917, guid: 5fe8f9c411f35474982cb3c334eac697, type: 3}
   _inventorySlotPrefab: {fileID: 5178832468966602990, guid: bfabc93eda17f16429cc4f4944fb4008, type: 3}
+--- !u!1 &741392965273405908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4889850583247664597}
+  m_Layer: 0
+  m_Name: AnimatedItemHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4889850583247664597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 741392965273405908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9219575535380377130}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &817617099976499034
 GameObject:
   m_ObjectHideFlags: 0
@@ -42298,9 +42329,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ViewmodelBlockout_WM
       objectReference: {fileID: 0}
+    - target: {fileID: 4441379849816165161, guid: e0f0986121f08cf4f808c29e04b7d914, type: 3}
+      propertyPath: _animatedItemHolder
+      value: 
+      objectReference: {fileID: 4889850583247664597}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 380030097268436979, guid: e0f0986121f08cf4f808c29e04b7d914, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4889850583247664597}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0f0986121f08cf4f808c29e04b7d914, type: 3}
 --- !u!114 &5122373122359560944 stripped
@@ -42317,5 +42355,10 @@ MonoBehaviour:
 --- !u!4 &7491834578368871423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2111334580055505446, guid: e0f0986121f08cf4f808c29e04b7d914, type: 3}
+  m_PrefabInstance: {fileID: 8841868191909986777}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9219575535380377130 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 380030097268436979, guid: e0f0986121f08cf4f808c29e04b7d914, type: 3}
   m_PrefabInstance: {fileID: 8841868191909986777}
   m_PrefabAsset: {fileID: 0}
