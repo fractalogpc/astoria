@@ -47,8 +47,13 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private AnimationCurve _slamDownCurve; // Animation curve for the slam down
     [SerializeField] private AnimationCurve _slamUpCurve; // Animation curve for the slam up
     [SerializeField] private float _slamWaitTime = 5f; // Time to wait after slamming down
+    
+    [SerializeField] private GameObject _vulnerablePointPrefab;
+    [SerializeField] private Transform[] _placesForVulnerablePoint; // Possible places for the vulnerable point to be placed
 
     [SerializeField] private GameObject _attackParticleEffect; // Particle effect for the attack
+    [SerializeField] private AnimationCurve _deathFallCurve;
+    [SerializeField] private float _deathFallTime = 1f; // Time for the death fall animation
     
     private Vector3[] _footPositions;
     private bool[] _isStepping;
@@ -64,8 +69,12 @@ public class SpiderWalking : MonoBehaviour
 
     private float _health;
 
+    private bool _isDead = false;
+    private bool[] _positionsOccupied; // Track if vulnerable point positions are occupied
+
     private void Awake() {
         _health = _maxHealth; // Initialize health
+
         _footPositions = new Vector3[_footTargets.Length];
         _isStepping = new bool[_footTargets.Length];
         _hasSteppedThisCycle = new bool[_footTargets.Length];
@@ -76,9 +85,17 @@ public class SpiderWalking : MonoBehaviour
             _isStepping[i] = false;
             _hasSteppedThisCycle[i] = false;
         }
+
+        _positionsOccupied = new bool[_placesForVulnerablePoint.Length]; // Initialize positions occupied array
+        for (int i = 0; i < _positionsOccupied.Length; i++)
+        {
+            _positionsOccupied[i] = false; // Mark all positions as unoccupied
+        }
     }
 
     private void Update() {
+        if (_isDead) return;
+
         _attackCooldownTimer -= Time.deltaTime; // Decrease attack cooldown timer
 
         // Move body towards target transform
@@ -207,6 +224,7 @@ public class SpiderWalking : MonoBehaviour
     }
 
     private void AttackTarget() {
+        if (_health <= 0) return; // Spider is dead but maybe still in animation
         if (_isAttacking) return; // Already attacking
         if (_attackCooldownTimer > 0f) return; // Attack cooldown not finished
         // Debug.Log("Attacking target!");
@@ -260,6 +278,44 @@ public class SpiderWalking : MonoBehaviour
             }
         }
 
+        // Spawn vulnerable point at random place
+        int randomIndex = Random.Range(0, _placesForVulnerablePoint.Length);
+        Transform randomPlace = _placesForVulnerablePoint[randomIndex];
+
+        if (_positionsOccupied[randomIndex]) {
+            randomIndex = -1;
+            for (int i = 0; i < _placesForVulnerablePoint.Length; i++)
+            {
+                if (!_positionsOccupied[i])
+                {
+                    randomIndex = i;
+                    break;
+                }
+            }
+        }
+        if (randomIndex != -1) {
+            _positionsOccupied[randomIndex] = true; // Mark the selected place as occupied
+            GameObject vulnerablePoint = Instantiate(_vulnerablePointPrefab, randomPlace.position - randomPlace.up * 5, Quaternion.identity); // Instantiate vulnerable point at random place
+            vulnerablePoint.GetComponent<HealthManager>().OnDamaged.AddListener((pos, damage) => {
+                _health -= damage;
+                Destroy(vulnerablePoint);
+                _isVulnerable = false;
+
+                if (_health <= 0) {
+                    StartCoroutine(DeathCoroutine());
+                }
+            });
+            vulnerablePoint.transform.SetParent(_body);
+            float risingTime = 0;
+            Vector3 targetPosition = randomPlace.localPosition; // Target position for rising
+            Vector3 startingPosition = randomPlace.localPosition - randomPlace.up * 5; // Starting position for rising
+            while (risingTime < 1f) {
+                risingTime += Time.deltaTime;
+                vulnerablePoint.transform.localPosition = Vector3.Lerp(startingPosition, targetPosition, risingTime); // Move vulnerable point to random place
+                yield return null;
+            }
+        }
+
         yield return new WaitForSeconds(_slamWaitTime);
 
         // Move body back to original height
@@ -276,6 +332,19 @@ public class SpiderWalking : MonoBehaviour
 
         _isVulnerable = false;
         _isAttacking = false;
+    }
+
+    private IEnumerator DeathCoroutine() {
+        float elapsedTime = 0f;
+        Vector3 startPosition = _bodyPositionOffset; // Start position for death animation
+        Vector3 endPosition = new Vector3(startPosition.x, 0, startPosition.z);
+        while (elapsedTime < _deathFallTime) {
+            elapsedTime += Time.deltaTime;
+            float t = _deathFallCurve.Evaluate(elapsedTime / _deathFallTime); // Evaluate the death fall curve
+            _bodyPositionOffset = Vector3.Lerp(startPosition, endPosition, t); // Move body down for death animation
+            yield return null;
+        }
+        _isDead = true;
     }
 
     private IEnumerator AttackTargetCoroutine() {

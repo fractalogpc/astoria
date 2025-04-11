@@ -62,7 +62,7 @@ public class PickaxeInstance : BaseToolInstance
 		if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit hit, range)) return;
 		if (hit.collider.gameObject == null) return;
 		GameObject rock = hit.collider.gameObject;
-		HarvestableRock harvestableRock = rock.GetComponentInChildren<HarvestableRock>();
+		HarvestableRock harvestableRock = rock.GetComponentInParent<HarvestableRock>();
 		if (harvestableRock == null) return;
 		float damage = Random.Range(ItemData.SwingDamage.x, ItemData.SwingDamage.y);
 		harvestableRock.Damage(damage, hit.point);
