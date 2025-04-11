@@ -28846,6 +28846,7 @@ GameObject:
   - component: {fileID: 4696511337251370730}
   - component: {fileID: 4519604089262395365}
   - component: {fileID: 181466425479808348}
+  - component: {fileID: 3347168359932056057}
   m_Layer: 5
   m_Name: Map Canvas
   m_TagString: Untagged
@@ -29046,9 +29047,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapZoomTransform: {fileID: 542565591501373619}
   _mapPanTransform: {fileID: 8499403665892957177}
-  _maxZoom: 6
-  _minZoom: 1
-  _zoomSpeedMultiplier: 10
+  _maxZoom: 20
+  _minZoom: 2
+  _zoomSpeedMultiplier: 100
+--- !u!114 &3347168359932056057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5914340406558182400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53d932903b2449f2a14a0b67965755cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTransform: {fileID: 4723388315618955371}
+  _markerManager: {fileID: 4029527001097081542}
+  _markerIcon: {fileID: 21300000, guid: 5c0179aab7fd0da4184005455d0ba4df, type: 3}
 --- !u!1 &5923923379774217969
 GameObject:
   m_ObjectHideFlags: 0
