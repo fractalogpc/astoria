@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7023236717340938182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1619813398360821189}
+  - component: {fileID: 1232751800529514015}
+  m_Layer: 20
+  m_Name: SpiderBossDamagePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1619813398360821189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023236717340938182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7788278489795245748}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1232751800529514015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023236717340938182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8db2d568de6fff4790ce45785fc60a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 1000000
+  _maxHealth: 1000000
+  _stoneItem: {fileID: 11400000, guid: 4838af18813e4d040a31da7b311d46ac, type: 2}
+  _damagePerDrop: 10
+--- !u!1001 &9113383499847284340
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1619813398360821189}
+    m_Modifications:
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2201702845354643858, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_Name
+      value: Tundra Boulder_weiqaahfa Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2201702845354643858, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_Layer
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2597325577019568660, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_Layer
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053160472329773725, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c1fcad743156b0d4fb7a6093c0b1b477, type: 2}
+    - target: {fileID: 4361373594701401327, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c1fcad743156b0d4fb7a6093c0b1b477, type: 2}
+    - target: {fileID: 5749955295375527420, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c1fcad743156b0d4fb7a6093c0b1b477, type: 2}
+    - target: {fileID: 6425791256810193145, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_Layer
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125805672992706977, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+      propertyPath: m_Layer
+      value: 20
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+--- !u!4 &7788278489795245748 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1327638333026861248, guid: 1605c2d7b1693ba4786c68d07f6caf9e, type: 3}
+  m_PrefabInstance: {fileID: 9113383499847284340}
+  m_PrefabAsset: {fileID: 0}

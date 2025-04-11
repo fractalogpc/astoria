@@ -38,8 +38,22 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private float _attackHeight = 1f; // Height of the attack
     [SerializeField] private float _attackNoticeDistance = 5f; // Distance to the target for attack notice
     [SerializeField] private AnimationCurve _attackCurve; // Animation curve for the attack
+    [SerializeField] private float _chanceToSlam = 0.5f; // Chance to instead use body slam/drop attack, allowing player to damage it
+    [SerializeField] private float _maxHealth = 100f; // Maximum health of the spider
+    [SerializeField] private float _bodySlamAttackDamage = 50f; // Damage of the body slam attack
+    [SerializeField] private float _bodySlamAttackRange = 5f; // Range of the body slam attack
+    [SerializeField] private float _slamDownTime = 0.5f; // Time to slam down
+    [SerializeField] private float _slamUpTime = 0.5f; // Time to slam up
+    [SerializeField] private AnimationCurve _slamDownCurve; // Animation curve for the slam down
+    [SerializeField] private AnimationCurve _slamUpCurve; // Animation curve for the slam up
+    [SerializeField] private float _slamWaitTime = 5f; // Time to wait after slamming down
+    
+    [SerializeField] private GameObject _vulnerablePointPrefab;
+    [SerializeField] private Transform[] _placesForVulnerablePoint; // Possible places for the vulnerable point to be placed
 
     [SerializeField] private GameObject _attackParticleEffect; // Particle effect for the attack
+    [SerializeField] private AnimationCurve _deathFallCurve;
+    [SerializeField] private float _deathFallTime = 1f; // Time for the death fall animation
     
     private Vector3[] _footPositions;
     private bool[] _isStepping;
@@ -51,7 +65,16 @@ public class SpiderWalking : MonoBehaviour
     private bool _isAttacking = false; // Track if the spider is currently attacking
     private float _attackCooldownTimer = 0f; // Timer for attack cooldown
 
+    private bool _isVulnerable = false;
+
+    private float _health;
+
+    private bool _isDead = false;
+    private bool[] _positionsOccupied; // Track if vulnerable point positions are occupied
+
     private void Awake() {
+        _health = _maxHealth; // Initialize health
+
         _footPositions = new Vector3[_footTargets.Length];
         _isStepping = new bool[_footTargets.Length];
         _hasSteppedThisCycle = new bool[_footTargets.Length];
@@ -62,9 +85,17 @@ public class SpiderWalking : MonoBehaviour
             _isStepping[i] = false;
             _hasSteppedThisCycle[i] = false;
         }
+
+        _positionsOccupied = new bool[_placesForVulnerablePoint.Length]; // Initialize positions occupied array
+        for (int i = 0; i < _positionsOccupied.Length; i++)
+        {
+            _positionsOccupied[i] = false; // Mark all positions as unoccupied
+        }
     }
 
     private void Update() {
+        if (_isDead) return;
+
         _attackCooldownTimer -= Time.deltaTime; // Decrease attack cooldown timer
 
         // Move body towards target transform
@@ -193,14 +224,127 @@ public class SpiderWalking : MonoBehaviour
     }
 
     private void AttackTarget() {
+        if (_health <= 0) return; // Spider is dead but maybe still in animation
         if (_isAttacking) return; // Already attacking
         if (_attackCooldownTimer > 0f) return; // Attack cooldown not finished
         // Debug.Log("Attacking target!");
         _attackCooldownTimer = _attackCooldown;
         _isAttacking = true; // Set attacking state
+
         _lastAttackedWithRightLeg = !_lastAttackedWithRightLeg; // Toggle leg for next attack
 
-        StartCoroutine(AttackTargetCoroutine());
+        if (Random.value < _chanceToSlam) {
+            StartCoroutine(BodySlamCoroutine()); // Use body slam attack
+        } else {
+            StartCoroutine(AttackTargetCoroutine());
+        }
+    }
+
+    private IEnumerator BodySlamCoroutine() {
+        _isVulnerable = true;
+
+        Vector3 savedBodyOffset = _bodyPositionOffset; // Save original body offset
+        // Move body down to ground height
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _slamDownTime) {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / _slamDownTime);
+            t = _slamDownCurve.Evaluate(t); // Evaluate the slam down curve
+            _bodyPositionOffset = Vector3.Lerp(savedBodyOffset, new Vector3(savedBodyOffset.x, 0, savedBodyOffset.z), t); // Move body down to ground height
+            yield return null;
+        }
+
+        _bodyPositionOffset = new Vector3(savedBodyOffset.x, 0, savedBodyOffset.z); // Set body offset to ground height
+        
+        // Spawn particle effect at body location
+        GameObject particleEffect = Instantiate(_attackParticleEffect, _body.position, Quaternion.identity);
+        // Assign player collider to particle effect callback list
+        ParticleSystem particleEffectScript = particleEffect.GetComponent<ParticleSystem>();
+        if (particleEffectScript != null) {
+            particleEffectScript.trigger.AddCollider(_targetTransform.GetComponent<Collider>()); // Add player collider to particle effect callback list
+            particleEffect.GetComponent<PlayerParticleDamage>().player = _targetTransform.gameObject; // Assign player to particle effect script
+        }
+
+        // Damage player if in range
+        if (_targetTransform != null) {
+            float distanceToTarget = Vector3.Distance(_body.position, _targetTransform.position);
+            if (distanceToTarget <= _bodySlamAttackRange) {
+                // Apply damage to the target
+                if (_targetTransform.GetComponent<HealthManager>() != null) {
+                    _targetTransform.GetComponent<HealthManager>().Damage(_bodySlamAttackDamage, _body.position);
+                }
+            }
+        }
+
+        // Spawn vulnerable point at random place
+        int randomIndex = Random.Range(0, _placesForVulnerablePoint.Length);
+        Transform randomPlace = _placesForVulnerablePoint[randomIndex];
+
+        if (_positionsOccupied[randomIndex]) {
+            randomIndex = -1;
+            for (int i = 0; i < _placesForVulnerablePoint.Length; i++)
+            {
+                if (!_positionsOccupied[i])
+                {
+                    randomIndex = i;
+                    break;
+                }
+            }
+        }
+        if (randomIndex != -1) {
+            _positionsOccupied[randomIndex] = true; // Mark the selected place as occupied
+            GameObject vulnerablePoint = Instantiate(_vulnerablePointPrefab, randomPlace.position - randomPlace.up * 5, Quaternion.identity); // Instantiate vulnerable point at random place
+            vulnerablePoint.GetComponent<HealthManager>().OnDamaged.AddListener((pos, damage) => {
+                _health -= damage;
+                Destroy(vulnerablePoint);
+                _isVulnerable = false;
+
+                if (_health <= 0) {
+                    StartCoroutine(DeathCoroutine());
+                }
+            });
+            vulnerablePoint.transform.SetParent(_body);
+            float risingTime = 0;
+            Vector3 targetPosition = randomPlace.localPosition; // Target position for rising
+            Vector3 startingPosition = randomPlace.localPosition - randomPlace.up * 5; // Starting position for rising
+            while (risingTime < 1f) {
+                risingTime += Time.deltaTime;
+                vulnerablePoint.transform.localPosition = Vector3.Lerp(startingPosition, targetPosition, risingTime); // Move vulnerable point to random place
+                yield return null;
+            }
+        }
+
+        yield return new WaitForSeconds(_slamWaitTime);
+
+        // Move body back to original height
+        elapsedTime = 0f;
+
+        while (elapsedTime < _slamUpTime) {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / _slamUpTime);
+            t = _slamUpCurve.Evaluate(t); // Evaluate the slam up curve
+            _bodyPositionOffset = Vector3.Lerp(new Vector3(savedBodyOffset.x, 0, savedBodyOffset.z), savedBodyOffset, t); // Move body back to original height
+            yield return null;
+        }
+        _bodyPositionOffset = savedBodyOffset; // Reset body offset to original
+
+        _isVulnerable = false;
+        _isAttacking = false;
+    }
+
+    private IEnumerator DeathCoroutine() {
+        float elapsedTime = 0f;
+        Vector3 startPosition = _bodyPositionOffset; // Start position for death animation
+        Vector3 endPosition = new Vector3(startPosition.x, 0, startPosition.z);
+        while (elapsedTime < _deathFallTime) {
+            elapsedTime += Time.deltaTime;
+            float t = _deathFallCurve.Evaluate(elapsedTime / _deathFallTime); // Evaluate the death fall curve
+            _bodyPositionOffset = Vector3.Lerp(startPosition, endPosition, t); // Move body down for death animation
+            yield return null;
+        }
+        _isDead = true;
     }
 
     private IEnumerator AttackTargetCoroutine() {

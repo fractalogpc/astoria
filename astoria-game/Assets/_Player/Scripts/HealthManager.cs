@@ -19,7 +19,7 @@ public class OnHealthChangedEvent : UnityEvent<float, float, float> {}
 /// Fires at the end of the damage calculation. The parameter is the hit position.
 /// </summary>
 [Serializable]
-public class OnDamageEvent : UnityEvent<Vector3> {}
+public class OnDamageEvent : UnityEvent<Vector3, float> {}
 /// <summary>
 /// Fires when the health is healed.
 /// </summary>
@@ -100,7 +100,7 @@ public class HealthManager : PlayerVitalHandler, IDamageable
       _regenTimer = 0;
       NotifyVitalChange(initialHealth, _currentHealth, MaxHealth);
     }
-    OnDamaged?.Invoke(hitPosition);
+    OnDamaged?.Invoke(hitPosition, damagePoints);
   }
   
   protected virtual void OnValidate() {

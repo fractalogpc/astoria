@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30639bdccfc11b14a8e443825ca74f9f, type: 3}
   m_Name: Slingshot
   m_EditorClassIdentifier: 
-  ItemName: New Item
-  ItemDescription: Item Description
+  ItemName: Mysterious Slingshot
+  ItemDescription: A simple toy. Suspiciously effective.
   ItemIcon: {fileID: 21300000, guid: 7fa156c1e1a2ca643a3db4a376653a83, type: 3}
   ItemBGColor: {r: 0, g: 0, b: 0, a: 0}
-  ItemSize: {x: 1, y: 1}
-  MaxStackSize: 8
+  ItemSize: {x: 1, y: 2}
+  MaxStackSize: 1
   DroppedItemPrefab: {fileID: 3902591898328376640, guid: 26637b4828cf6e34e9ce870d92f0a46d, type: 3}
-  HeldItemPrefab: {fileID: 0}
-  ViewmodelAnimatorController: {fileID: 0}
-  ItemAnimations: {fileID: 0}
-  VMEquipAnimation: {fileID: 0}
-  VMUnequipAnimation: {fileID: 0}
-  AmmoItem: {fileID: 0}
-  FireAnimation: {fileID: 0}
-  ReloadEmptyAnimation: {fileID: 0}
-  ReloadPartialAnimation: {fileID: 0}
+  HeldItemPrefab: {fileID: 5505885566138015711, guid: 96397f094ec93b148916edee3b86cefa, type: 3}
+  ViewmodelAnimatorController: {fileID: 9100000, guid: 0d6493d346d1de14093bd7879454ec9e, type: 2}
+  ItemAnimations: {fileID: 22100000, guid: 40d1fbb5757ed8f4a8d12759a2aba686, type: 2}
+  VMEquipAnimation: {fileID: 8093745396801397393, guid: bb449bfe5bba8d94d8b156ba97b34541, type: 3}
+  VMUnequipAnimation: {fileID: 9023040775876481528, guid: bb449bfe5bba8d94d8b156ba97b34541, type: 3}
+  AmmoItem: {fileID: 11400000, guid: fbf8e14cdf4843e43896ba34dbb8583f, type: 2}
+  FireAnimation: {fileID: -6314770266653528146, guid: bb449bfe5bba8d94d8b156ba97b34541, type: 3}
+  ReloadEmptyAnimation: {fileID: 9023040775876481528, guid: bb449bfe5bba8d94d8b156ba97b34541, type: 3}
+  ReloadPartialAnimation: {fileID: 9023040775876481528, guid: bb449bfe5bba8d94d8b156ba97b34541, type: 3}
   CanAimDownSights: 1
   AdsIkTarget: {x: 0, y: 0, z: 0}
   AdsIkTargetRot: {x: 0, y: 0, z: 0}
@@ -36,8 +36,8 @@ MonoBehaviour:
   AdsFov: 45
   AdsZoomSpeed: 10
   AccuracySetting:
-    EffectiveRange: 0
-    PatternSpread: 0
+    EffectiveRange: 20
+    PatternSpread: 0.2
   RecoilSettings:
     RecoilCurve:
       serializedVersion: 2
@@ -58,7 +58,7 @@ MonoBehaviour:
     MainTransferToViewmodel: 0
   FireCombination: 0
   SemiAutoSetting:
-    CycleTime: 0
+    CycleTime: 1
   BurstSetting:
     ShotsPerBurst: 0
     RoundsPerMinute: 0
@@ -67,17 +67,17 @@ MonoBehaviour:
     RoundsPerMinute: 0
   ShotgunSetting:
     PelletsPerShot: 0
-  ReloadType: 0
+  ReloadType: 1
   MagazineSetting:
-    MagazineCapacity: 0
+    MagazineCapacity: 1
     ReloadTime: 0
   InternalSetting:
     InternalCapacity: 0
     ReloadTime: 0
   ChamberSetting:
     ChamberTime: 0
-  Damage: 30
-  InitialVelocityMS: 400
-  BulletMassKg: 0.007
-  BulletDiameterM: 0.009
+  Damage: 40
+  InitialVelocityMS: 200
+  BulletMassKg: 0.01
+  BulletDiameterM: 0.02
   DragCoefficient: 0.149

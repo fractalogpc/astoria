@@ -21,6 +21,7 @@ public class MapManager : InputHandlerBase
 	protected override void InitializeActionMap() {
 		RegisterAction(_inputActions.GenericUI.ScrollWheel, OnScroll);
 		RegisterAction(_inputActions.GenericUI.MiddleClick, MiddleClickDown, MiddleClickUp);
+		RegisterAction(_inputActions.GenericUI.Click, MiddleClickDown, MiddleClickUp);
 	}
 
 	private void Start() {
@@ -29,13 +30,12 @@ public class MapManager : InputHandlerBase
 	}
 
 	private void OnScroll(InputAction.CallbackContext ctx) {
-		float scrollDelta = ctx.ReadValue<Vector2>().y;
+		float scrollDelta = -ctx.ReadValue<Vector2>().y;
 		if (Mathf.Approximately(scrollDelta, 0f)) return;
 
 		float currentZoom = _mapZoomTransform.localScale.x;
 		
-		// Logarithmic so it feels linear
-		float zoomSpeed = Mathf.Log(currentZoom/_maxZoom);
+		float zoomSpeed = 0.1f;
 		Vector2 mousePosition = Input.mousePosition;
 
 		// Step 1: Get local point relative to RectTransform
