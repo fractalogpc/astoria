@@ -2917,7 +2917,7 @@ MonoBehaviour:
   _body: {fileID: 80218673732015290}
   _bodyTargetTracker: {fileID: 7550984267665381968}
   _bodyPositionOffset: {x: 0, y: 40, z: 0}
-  _bodyAdjustSpeed: 0.1
+  _bodyAdjustSpeed: 5
   _maxYawProportionality: 2
   _stepDistance: 20
   _stepHeight: 10
@@ -2989,6 +2989,61 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _chanceToSlam: 0.5
+  _maxHealth: 100
+  _bodySlamAttackDamage: 50
+  _bodySlamAttackRange: 5
+  _slamDownTime: 0.4
+  _slamUpTime: 2
+  _slamDownCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _slamUpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _slamWaitTime: 15
   _attackParticleEffect: {fileID: 9002577123909360007, guid: 2bd38f61c1a9234489d928bd012e8c65, type: 3}
 --- !u!1 &6922411181691953614
 GameObject:
