@@ -156,9 +156,9 @@ MonoBehaviour:
           m_StringArgument: Open
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3419045987512680890}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
+      - m_Target: {fileID: 726070887916174578}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -242,7 +242,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 163127456511704423, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: LootTable.LootPools.Array.data[0].MaxItems
-      value: 3
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 163127456511704423, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: LootTable.LootPools.Array.data[0].MinItems
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 163127456511704423, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: OnOpen.m_PersistentCalls.m_Calls.Array.size
@@ -344,6 +348,22 @@ PrefabInstance:
       propertyPath: OnClose.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 910959319404198359, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: _assignedInventorySize.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 910959319404198359, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: _assignedInventorySize.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1923949140090202737, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 192
+      objectReference: {fileID: 0}
+    - target: {fileID: 1923949140090202737, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 192
+      objectReference: {fileID: 0}
     - target: {fileID: 2625637577603344025, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4133588
@@ -378,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2820073720216535087, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3527529860122176212, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_LocalPosition.x
@@ -420,29 +440,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6732601164846640161, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732601164846640161, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732601164846640161, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Size.x
-      value: 1.055203
+      value: 1.2955354
       objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Size.y
-      value: 3.2735655
+      value: 3.6416845
       objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Size.z
-      value: 2.0849366
+      value: 2.5337589
       objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Center.x
-      value: 0.01050508
+      value: -0.1096611
       objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Center.y
-      value: 0.57788026
+      value: 0.5716738
       objectReference: {fileID: 0}
     - target: {fileID: 8401640662469449350, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
       propertyPath: m_Center.z
-      value: 0.010151625
+      value: -0.02711117
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -450,28 +482,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+--- !u!1 &726070887916174578 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2820073720216535087, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
+  m_PrefabInstance: {fileID: 3256506855690943709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2145158234883708425 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3527529860122176212, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
   m_PrefabInstance: {fileID: 3256506855690943709}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3419045987512680890 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 163127456511704423, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
-  m_PrefabInstance: {fileID: 3256506855690943709}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4863122887aea4880b33d89cd71f2440, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6275391625745431370 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8802220412085815191, guid: 62abcf11dfaf1794984e8ca437fe6132, type: 3}
   m_PrefabInstance: {fileID: 3256506855690943709}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 726070887916174578}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9390e2b31dad0143a21bbce96030a92, type: 3}

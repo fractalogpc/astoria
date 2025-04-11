@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 398, y: 529}
   m_SizeDelta: {x: 576, y: 960}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3693042352867768858
@@ -419,7 +419,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1460, y: 498}
   m_SizeDelta: {x: 384, y: 384}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9186862496365474608
@@ -504,9 +504,7 @@ GameObject:
   - component: {fileID: 7245366972573124162}
   - component: {fileID: 3312492354419452976}
   - component: {fileID: 8927550539218107714}
-  - component: {fileID: 2546745268836044002}
   - component: {fileID: 2424868407154491954}
-  - component: {fileID: 8357960569284802906}
   m_Layer: 0
   m_Name: ContainerCanvas
   m_TagString: Untagged
@@ -598,18 +596,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!225 &2546745268836044002
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7451258466690236002}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &2424868407154491954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,45 +608,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8357960569284802906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7451258466690236002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90ff891348ff0e4428568029a933cf29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 2546745268836044002}
-  _easingCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _inDuration: 0.2
-  _outDuration: 0.2
-  _OnFadeComplete:
-    m_PersistentCalls:
-      m_Calls: []
