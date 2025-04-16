@@ -13,6 +13,8 @@ public class TreeChoppable : HealthManager
 	private bool _chopped;
 	private float _damageAccountedFor = 0f;
 
+	float lifeTime = 30f;
+
 	protected void Awake()
 	{
 		base.Start();
@@ -76,6 +78,9 @@ public class TreeChoppable : HealthManager
 			_chopped = true;
 			_rigidbody.isKinematic = false;
 			PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(_woodItem, _dropAmountOnFell);
+
+			Invoke(nameof(DestroyTree), lifeTime);
+
 			// _rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition + Vector3.up * 100, ForceMode.Impulse);
 			base.SetHealthDirect(_healthOnFell);
 			// This doesn't work because the force is applied on the first frame and the tree is still in the ground, either we need to fix this or animate it.
@@ -83,5 +88,9 @@ public class TreeChoppable : HealthManager
 			// Vector3 torqueDirection = Vector3.Cross(Vector3.up, Camera.main.transform.forward).normalized;
 			// _rigidbody.AddTorque(torqueDirection * _fallingForce, ForceMode.Impulse);
 		}
+	}
+
+	private void DestroyTree() {
+		Destroy(this.gameObject);
 	}
 }
