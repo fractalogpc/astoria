@@ -34,19 +34,18 @@ public class GroundLauncherEnemy : EnemyCore
     }
   }
 
-  public override void Navigate(Transform core, Transform player) {
-    Transform goal = core;
-    target = core;
-
+  public override void Navigate(Transform player) {
     RaycastHit hit;
-    if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, goal.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
+    if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, player.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
       // If there is an obstacle, navigate to it and destroy it
       agent.SetDestination(hit.point);
       target = hit.transform;
       return;
+    } else {
+      target = player;
     }
 
-    agent.SetDestination(goal.position);
+    agent.SetDestination(player.position);
   }
 
   public override void Attack() {

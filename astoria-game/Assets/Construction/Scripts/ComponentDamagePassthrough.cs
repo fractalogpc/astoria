@@ -16,6 +16,7 @@ public class ComponentDamagePassthrough : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage, Vector3 hitPosition)
     {
+        Debug.Log("im takin damage bro help me vro pls");
         component.TakeDamage(damage, hitPosition);
     }
 }

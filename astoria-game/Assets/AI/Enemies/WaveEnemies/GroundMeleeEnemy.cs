@@ -28,28 +28,24 @@ public class GroundMeleeEnemy : EnemyCore
     agent = GetComponent<NavMeshAgent>();
   }
 
-  public override void Navigate(Transform core, Transform player) {
+  public override void Navigate(Transform player) {
     // Pick between player and core based on player proximity
     float playerDistance = Vector3.Distance(player.position, transform.position);
-    Transform goal = core;
-    target = core;
-    if (playerDistance < playerFocusRadius) {
-      goal = player;
-      target = player;
-    }
-
+    target = player;
     NavMeshPath path = new NavMeshPath();
-    if (!agent.CalculatePath(core.position, path)) {
+    if (!agent.CalculatePath(player.position, path)) {
       // Find any obstacles between the enemy and the goal
       RaycastHit hit;
-      if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, goal.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
-        // If there is an obstacle, navigate to it and destroy it
+      if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, player.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
+        // If there is an obstacle, navigate to it and destroy 
+        Debug.Log("yo bro i found an obstickle");
         agent.SetDestination(hit.point);
         target = hit.transform;
         return;
       }
     }
-      agent.SetDestination(goal.position);
+    
+    agent.SetDestination(player.position);
   }
 
   public override void Attack() {
@@ -66,6 +62,7 @@ public class GroundMeleeEnemy : EnemyCore
       attackTimer = 0;
       OnAttack?.Invoke();
       base.DamageTarget(target.gameObject, attackDamage, target.position);
+      Debug.Log("yo bror i attackied it");
       _attacking = false;
     }
   }

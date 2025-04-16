@@ -6,16 +6,11 @@ using Construction;
 public abstract class EnemyCore : MonoBehaviour
 {
 
-  private Transform _core;
   private Transform _player;
 
   private void Update() {
-    Navigate(_core, _player);
+    Navigate(_player);
     Attack();
-  }
-
-  public void SetCore(Transform core) {
-    _core = core;
   }
 
   public void SetPlayer(Transform player) {
@@ -40,7 +35,7 @@ public abstract class EnemyCore : MonoBehaviour
     }
   }
 
-  public abstract void Navigate(Transform core, Transform player);
+  public abstract void Navigate(Transform player);
 
   public abstract void Attack();
   

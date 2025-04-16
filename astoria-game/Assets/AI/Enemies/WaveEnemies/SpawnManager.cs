@@ -23,12 +23,12 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _difficultyCurveBTerm = 10f;
     [SerializeField] private float _maxProportionPerEnemy = 0.4f;
 
-    [SerializeField] private GameObject _core;
+    private GameObject _player;
     private List<GameObject> _monsters;
     private int _nightsSurvived = 0;
 
     void Start() {
-        // _core = GameObject.FindWithTag("Core");
+        _player = GameObject.FindWithTag("Player");
     }
 
     void Update() {
@@ -38,8 +38,7 @@ public class SpawnManager : MonoBehaviour
     public GameObject SpawnWanderer(Vector3 position, GameObject _enemyToSpawn) {
         // Debug.Log("Spawning enemy at " + position);
         GameObject wanderer = Instantiate(_enemyToSpawn, position, Quaternion.identity, _enemyContainer);
-        wanderer.GetComponent<EnemyCore>().SetCore(_core.transform);
-        wanderer.GetComponent<EnemyCore>().SetPlayer(GameObject.FindWithTag("Player").transform);
+        wanderer.GetComponent<EnemyCore>().SetPlayer(_player.transform);
         return wanderer;
     }
 
@@ -80,7 +79,7 @@ public class SpawnManager : MonoBehaviour
                 cumulative += weightedEnemies[i].Item2;
                 if (randomValue <= cumulative) {
                     // Spawn enemy
-                    GameObject enemy = SpawnWanderer(SpawnPosition(_core.transform.position), weightedEnemies[i].Item1.prefab);
+                    GameObject enemy = SpawnWanderer(SpawnPosition(_player.transform.position), weightedEnemies[i].Item1.prefab);
                     difficultyPoints -= weightedEnemies[i].Item1.difficultyPoints;
                     break;
                 }
