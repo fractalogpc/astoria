@@ -39,12 +39,12 @@ namespace Console.Commands
             {
                 if (value == 1)
                 {
-                    PlayerInstance.Instance.transform.GetChild(6).gameObject.SetActive(false);
+                    PlayerInstance.Instance.transform.GetChild(10).GetComponent<Canvas>().enabled = false;
                     _currentSuccessMessage = BuildSuccessMessage("hidden");
                 }
                 else
                 {
-                    PlayerInstance.Instance.transform.GetChild(6).gameObject.SetActive(true);
+                    PlayerInstance.Instance.transform.GetChild(10).GetComponent<Canvas>().enabled = true;
                     _currentSuccessMessage = BuildSuccessMessage("shown");
                 }
 
