@@ -17,6 +17,8 @@ namespace Player
   public class PlayerController : InputHandlerBase, IStartExecution, ICharacterController
   {
 
+    public bool enabled;
+
     public KinematicCharacterMotor Motor;
     public PlayerCamera PlayerCamera;
 
@@ -130,8 +132,22 @@ namespace Player
       Cursor.visible = false;
     }
 
+    public void Disable() {
+      enabled = false;
+      Motor.enabled = false;
+      GetComponent<Collider>().enabled = false;
+    }
+
+    public void Enable() {
+      enabled = true;
+      Motor.enabled = true;
+      GetComponent<Collider>().enabled = true;
+    }
+
     private void Update()
     {
+      if (!enabled) return;
+
       if (Motor.Velocity.y != 0)
         _previousFrameFallSpeed = Motor.Velocity.y;
 
