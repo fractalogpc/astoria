@@ -66,6 +66,6 @@ public class AreaManager : MonoBehaviour
 
         intensity = pixel.a;
 
-        return pixel.a > 0.5f;
+        return pixel.a > 0.0f;
     }
 }
