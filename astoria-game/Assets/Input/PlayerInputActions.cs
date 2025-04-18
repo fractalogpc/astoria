@@ -2827,8 +2827,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             ""name"": ""Cutscene"",
             ""id"": ""e5710bbf-8c48-4a3f-928d-0f2ed89423ae"",
-            ""actions"": [],
-            ""bindings"": []
+            ""actions"": [
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""5f4be90e-af44-49f6-b9c7-c60f52744221"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""ScaleVector2(x=0.1,y=0.1)"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fc2f4ab0-e41d-4f13-8578-233378e79fef"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6c4ba42-624d-4217-9ab2-7dcf59c9f92a"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse;Touch"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8683f8b4-7c33-441b-95b3-8075026103f7"",
+                    ""path"": ""<Joystick>/{Hatswitch}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -2978,6 +3022,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_ConsoleUI_CloseConsole = m_ConsoleUI.FindAction("CloseConsole", throwIfNotFound: true);
         // Cutscene
         m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
+        m_Cutscene_Look = m_Cutscene.FindAction("Look", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -3838,10 +3883,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // Cutscene
     private readonly InputActionMap m_Cutscene;
     private List<ICutsceneActions> m_CutsceneActionsCallbackInterfaces = new List<ICutsceneActions>();
+    private readonly InputAction m_Cutscene_Look;
     public struct CutsceneActions
     {
         private @PlayerInputActions m_Wrapper;
         public CutsceneActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Look => m_Wrapper.m_Cutscene_Look;
         public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -3851,10 +3898,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_CutsceneActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_CutsceneActionsCallbackInterfaces.Add(instance);
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
         }
 
         private void UnregisterCallbacks(ICutsceneActions instance)
         {
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
         }
 
         public void RemoveCallbacks(ICutsceneActions instance)
@@ -4007,5 +4060,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface ICutsceneActions
     {
+        void OnLook(InputAction.CallbackContext context);
     }
 }

@@ -17,14 +17,18 @@ namespace Player
     [SerializeField] private float _viewmodelFollowSpeed = 10;
     [SerializeField] private float _viewmodelMaxXOffset = 15f;
     [SerializeField] private float _viewmodelMaxYOffset = 15f;
+    [SerializeField] private float _minYRotCutscene = -45f;
+    [SerializeField] private float _maxYRotCutscene = 45f;
 
     [HideInInspector] public Quaternion PlayerYLookQuaternion = Quaternion.identity;
 
     [HideInInspector] public float CameraXRotation = 0;
     private Vector2 _mouseInput;
+    private bool _inCutscene = false;
 
     private Vector2 _viewmodelTargetRotation;
     private float _aggregateYRotation = 0;
+    private float _countingYCutsceneRot = 0;
 
     // Maximum vertical look angle (just below 90°)
     private const float MaxVerticalAngle = 89f;
@@ -34,6 +38,7 @@ namespace Player
       _actionMap = new Dictionary<InputAction, Action<InputAction.CallbackContext>>();
 
       RegisterAction(_inputActions.Player.Look, ctx => _mouseInput = ctx.ReadValue<Vector2>(), () => _mouseInput = Vector2.zero);
+      RegisterAction(_inputActions.Cutscene.Look, ctx => _mouseInput = ctx.ReadValue<Vector2>(), () => _mouseInput = Vector2.zero);
     }
 
     private void Update() {
@@ -45,6 +50,16 @@ namespace Player
       }
     }
 
+    public void EnterCutscene()
+    {
+      _inCutscene = true;
+    }
+
+    public void ExitCutscene()
+    {
+      _inCutscene = false;
+    }
+
     // Ok, this is really weird. Basically the PlayerController updates its Y rotation on a FixedUpdate loop, but this script updates the X rotation on a Update Loop.
     // In order to solve this, I store a local quaternion for the Player rotation that I update here, then fetch it when I need to update the PlayerController rotation.
     // This works, however it means that you can't rotate the PlayerController internally, instead you have to rotate it here.
@@ -52,6 +67,8 @@ namespace Player
     {
       PlayerYLookQuaternion *= Quaternion.AngleAxis(_mouseInput.x, Vector3.up);
       _aggregateYRotation += _mouseInput.x;
+      _countingYCutsceneRot += _mouseInput.x;
+      _countingYCutsceneRot = Mathf.Clamp(_countingYCutsceneRot, _minYRotCutscene, _maxYRotCutscene);
     }
 
     private void CameraXLook()
@@ -84,6 +101,12 @@ namespace Player
 
       CameraXLook();
       Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
+
+      if (_inCutscene) {
+        newRotation = Quaternion.Euler(0, _countingYCutsceneRot, 0);
+        CameraTransform.localRotation = newRotation;
+        return;
+      }
 
       UpdateViewmodel();
 
