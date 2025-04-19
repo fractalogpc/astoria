@@ -61,8 +61,8 @@ public class GroundMeleeEnemy : EnemyCore
       _attacking = true;
       attackTimer = 0;
       OnAttack?.Invoke();
-      base.DamageTarget(target.gameObject, attackDamage, target.position);
-      Debug.Log("yo bror i attackied it");
+      target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
+      Debug.Log(target.gameObject.name);
       _attacking = false;
     }
   }

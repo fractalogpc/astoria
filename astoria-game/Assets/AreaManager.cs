@@ -1,9 +1,11 @@
 using System;
 using Player;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AreaManager : MonoBehaviour
 {
+
     [SerializeField] private AreaData _snowArea;
     [SerializeField] private AreaData _desertArea;
 
@@ -14,6 +16,7 @@ public class AreaManager : MonoBehaviour
     {
         public Texture2D Texture;
         public Transform Transform;
+        public Volume volume;
     }
 
     private void Start()
@@ -23,25 +26,33 @@ public class AreaManager : MonoBehaviour
 
     private void Update()
     {
+        UpdateAreaWeights();
+    }
+
+    private void UpdateAreaWeights()
+    {
         Vector3 snowLocalPos = _snowArea.Transform.InverseTransformPoint(_playerTransform.position);
         Vector3 desertLocalPos = _desertArea.Transform.InverseTransformPoint(_playerTransform.position);
 
-        if (IsPlayerInArea(_snowArea, snowLocalPos))
+        float snowIntensity, desertIntensity;
+        if (IsPlayerInArea(_snowArea, snowLocalPos, out snowIntensity))
         {
-            Debug.Log("Player is in the snow area.");
+            _snowArea.volume.weight = snowIntensity;
+        } else {
+            _snowArea.volume.weight = 0f;
         }
-        else if (IsPlayerInArea(_desertArea, desertLocalPos))
+        if (IsPlayerInArea(_desertArea, desertLocalPos, out desertIntensity))
         {
-            Debug.Log("Player is in the desert area.");
-        }
-        else
-        {
-            Debug.Log("Player is not in any defined area.");
+            _desertArea.volume.weight = desertIntensity;
+        } else {
+            _desertArea.volume.weight = 0f;
         }
     }
 
-    private bool IsPlayerInArea(AreaData area, Vector3 localPos)
+    private bool IsPlayerInArea(AreaData area, Vector3 localPos, out float intensity)
     {
+        intensity = 0f;
+
         // Use X and Z if your area lies on the X-Z plane
         Vector2 uv = new Vector2(localPos.x + 0.5f, localPos.z + 0.5f);
 
@@ -52,6 +63,8 @@ public class AreaManager : MonoBehaviour
         int texY = Mathf.FloorToInt(uv.y * area.Texture.height);
 
         Color pixel = area.Texture.GetPixel(texX, texY);
+
+        intensity = pixel.a;
 
         return pixel.a > 0.5f;
     }
