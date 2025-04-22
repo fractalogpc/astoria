@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &432094856109812483
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8743368674086286131}
+  - component: {fileID: 7704835346800252480}
+  m_Layer: 0
+  m_Name: Rainy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8743368674086286131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432094856109812483}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4865391219141531170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7704835346800252480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432094856109812483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 816696c1ead29834ead0a3d99d6f5333, type: 2}
 --- !u!1 &2340537969297574087
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,6 +663,55 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!1 &5081878077860986791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6073005035801865273}
+  - component: {fileID: 1403648497853597072}
+  m_Layer: 0
+  m_Name: Stormy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6073005035801865273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5081878077860986791}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4865391219141531170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1403648497853597072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5081878077860986791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: a3751097eaaa9784cbfd2f81c3179772, type: 2}
 --- !u!1 &5335055859416972957
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +814,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4eabacedc229ba49b86683e72455390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5842004243266050263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8474587250917928082}
+  - component: {fileID: 1400474817655716599}
+  m_Layer: 0
+  m_Name: Windy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8474587250917928082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5842004243266050263}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 840.84, y: 665.65, z: 1633.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4865391219141531170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1400474817655716599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5842004243266050263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: bf9407b66bacfcf47bcf6c6f0a6f7ef0, type: 2}
 --- !u!1 &5931146570953723463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,9 +1434,12 @@ Transform:
   m_Children:
   - {fileID: 4698742586949265630}
   - {fileID: 8484009040548842948}
+  - {fileID: 8743368674086286131}
+  - {fileID: 6073005035801865273}
   - {fileID: 1885318167003812103}
   - {fileID: 504813252765694685}
   - {fileID: 4388955452818245265}
+  - {fileID: 8474587250917928082}
   m_Father: {fileID: 916802654918332166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8816866635159608012
@@ -1299,12 +1449,46 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6181296407976898512}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7438f7d49d4be244dbee4baf86ee5c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeatherTypes: []
+  WeatherTypes:
+  - Name: Sunny
+    Weight: 0
+    Volume: {fileID: 1732287399192083456}
+    Effects: []
+  - Name: Overcast
+    Weight: 1
+    Volume: {fileID: 2598816211438639911}
+    Effects: []
+  - Name: Rainy
+    Weight: 0
+    Volume: {fileID: 7704835346800252480}
+    Effects:
+    - {fileID: 0}
+  - Name: Stormy
+    Weight: 0
+    Volume: {fileID: 1403648497853597072}
+    Effects:
+    - {fileID: 0}
+  - Name: Snowy
+    Weight: 0
+    Volume: {fileID: 1842194996466230861}
+    Effects: []
+  - Name: Ash
+    Weight: 0
+    Volume: {fileID: 5882459957618842523}
+    Effects: []
+  - Name: Dry
+    Weight: 0
+    Volume: {fileID: 4242252307891928557}
+    Effects: []
+  - Name: Windy
+    Weight: 0
+    Volume: {fileID: 1400474817655716599}
+    Effects: []
 --- !u!1 &6423552948482905017
 GameObject:
   m_ObjectHideFlags: 0
@@ -1895,7 +2079,7 @@ GameObject:
   - component: {fileID: 4388955452818245265}
   - component: {fileID: 4242252307891928557}
   m_Layer: 0
-  m_Name: Stormy
+  m_Name: Dry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1932,7 +2116,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 7cbb4ec8d17464e9ba1d41df73e1dbb8, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 78a1ac3b8f777964d8e8376e1937f28f, type: 2}
 --- !u!1 &8209795426072223272
 GameObject:
   m_ObjectHideFlags: 0
