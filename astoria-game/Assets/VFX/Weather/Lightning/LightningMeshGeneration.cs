@@ -4,29 +4,20 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
 public class LightningMeshGeneration : MonoBehaviour {
-    public Transform spawn;
-    public GameObject light;
-    public Transform goal;
+    public Vector3 goalPosition;
+    public Vector3 spawnPosition;
+
+    // public GameObject light;
 
     [SerializeField] public int numSegments = 30;
-    [SerializeField] private float meanSpawnTime = 1f;
-    [SerializeField] private float spawnTimeVariance = .5f;
-    [SerializeField] private float hitMean = 2f;
-    [SerializeField] private float hitTimeVariance = .1f;
-    private float hitTimeMax;
+    public float hitTimeMax;
     [SerializeField] private float spawnHeight = 10f;
-    [SerializeField] private Transform spawnPositionCenter;
-    [SerializeField] private float spawnPositionRadius;
     [SerializeField] private float lightningSize = .1f;
     [SerializeField] private Material lightningMaterial;
     [SerializeField] private AnimationCurve animCurve;
-    private bool firstCall = true;
-    public Vector3 spawnPosition;
-    public Vector3 goalPosition;
     public float downStrength;
     public float brightness = 0;
     public float brightnessMultiplier = 1;
-    public float goalPositionRandomStrength;
 
     public Vector3[] Vertex = new Vector3[30];
 
@@ -39,69 +30,41 @@ public class LightningMeshGeneration : MonoBehaviour {
 
     [Range(0, 1)] public float lerp = .75f;
 
-    private bool canDebug = false;
-
-    private bool spawning = true;
-    [SerializeField] float spawnTimer;
-    [SerializeField] float hitTimer;
-
     public Mesh mesh;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
+    private bool Spawned = false;
+
+    void Awake() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        spawnTimer = meanSpawnTime + Random.Range(spawnTimeVariance, -spawnTimeVariance);
     }
 
-    private bool lightningIsSpawned = false;
-    // Update is called once per frame
+    private float timer = 0;
     void Update() {
-        if (spawning)
+        if (Spawned)
         {
-            if (!lightningIsSpawned)
+            timer += Time.deltaTime;
             {
-                spawnTimer -= Time.deltaTime;
+                brightness = animCurve.Evaluate(timer / hitTimeMax) * brightnessMultiplier;
 
-                if (spawnTimer < 0) // Spawn
-                {
-                    spawnPosition = spawnPositionCenter.position + Random.insideUnitSphere * spawnPositionRadius;
-                    spawnPosition.y = spawnHeight;
-                    spawn.position = spawnPosition;
-
-                    RaycastHit hit;
-                    if (Physics.Raycast(spawnPositionCenter.position + Random.onUnitSphere * goalPositionRandomStrength, Vector3.down, out hit))
-                    {
-                        goal.position = hit.point;
-                        goalPosition = goal.position;
-                    }
-                    else return;
-
-                    SpawnLightning();
-
-                    lightningIsSpawned = true;
-
-                    hitTimer = hitMean + Random.Range(-hitTimeVariance, hitTimeVariance);
-                    hitTimeMax = hitTimer;
-                }
-            }
-            else
-            {
-                hitTimer -= Time.deltaTime;
-                float normHitTime = 1 - (hitTimer / hitTimeMax);
-                brightness = animCurve.Evaluate(normHitTime);
-                brightness *= brightnessMultiplier;
-
-                if (hitTimer < 0)
+                if (timer > hitTimeMax)
                 {
                     ClearLightning();
-                    lightningIsSpawned = false;
-                    spawnTimer = meanSpawnTime + Random.Range(spawnTimeVariance, -spawnTimeVariance);
+                    
+                    Destroy(this.gameObject);
                 }
                 lightningMaterial.SetFloat("_Brightness", brightness);
             }
         }
 
+    }
+
+    public void Initialize(Vector3 start, Vector3 goal) {
+        spawnPosition = start;
+        goalPosition = goal;
+        SpawnLightning();
+
+        Spawned = true;
     }
 
     private void SpawnLightning() {
@@ -119,7 +82,7 @@ public class LightningMeshGeneration : MonoBehaviour {
             FormMesh(SubVertex[i]);
         }
 
-        light.SetActive(true);
+        // light.SetActive(true);
         lightningMaterial.SetFloat("_Brightness", brightness);
 
         // Random duration
@@ -128,7 +91,7 @@ public class LightningMeshGeneration : MonoBehaviour {
     }
 
     private void ClearLightning() {
-        light.SetActive(false);
+        // light.SetActive(false);
         mesh.Clear();
     }
 
@@ -136,12 +99,12 @@ public class LightningMeshGeneration : MonoBehaviour {
         //main path
         for (int i = 0; i < numSegments; i++)
         {
-            Vector3 line = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments), goal.position), .1f, 50);
-            Vertex[i] = Vector3.Lerp(spawn.position, goal.position, (float)i / numSegments) + new Vector3(line.x, Mathf.Abs(line.y), line.z);
+            Vector3 line = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(Vector3.Lerp(spawnPosition, goalPosition, (float)i / numSegments), goalPosition), .1f, 50);
+            Vertex[i] = Vector3.Lerp(spawnPosition, goalPosition, (float)i / numSegments) + new Vector3(line.x, Mathf.Abs(line.y), line.z);
             //create sub-branch
             if (i > 1)
             {
-                Vector3 tangent = goal.position - Vertex[i];
+                Vector3 tangent = goalPosition - Vertex[i];
                 Vector3 biNormal = Vector3.Normalize(Vector3.Cross(Vertex[i] - Vertex[i - 1], tangent + new Vector3(100, -12, 402)));
                 if (Random.Range(0f, 1f) > .5f)
                 {
@@ -159,8 +122,8 @@ public class LightningMeshGeneration : MonoBehaviour {
         {
             Vector3 randomPos = Random.insideUnitSphere;
             randomPos.y = -Mathf.Abs(randomPos.y);
-            randomPos = Vector3.Lerp(randomPos, Vector3.Normalize(goal.position - spawn.position), downStrength);
-            SubVertexGoal.Add(SubVertexStart[i] + randomPos * Vector3.Distance(goal.position, SubVertexStart[i]));
+            randomPos = Vector3.Lerp(randomPos, Vector3.Normalize(goalPosition - spawnPosition), downStrength);
+            SubVertexGoal.Add(SubVertexStart[i] + randomPos * Vector3.Distance(goalPosition, SubVertexStart[i]));
             for (int j = 0; j < 8; j++)
             {
                 if (j == 0)
@@ -169,9 +132,9 @@ public class LightningMeshGeneration : MonoBehaviour {
                 }
                 else
                 {
-                    Vector3 randomDirection = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize) * SubVertexRandomizationStrength;
+                    Vector3 randomDirection = Random.onUnitSphere * Mathf.Clamp(Vector3.Distance(goalPosition, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize) * SubVertexRandomizationStrength;
                     randomDirection.y = -Mathf.Abs(randomDirection.y);
-                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(randomDirection, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goal.position, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize);
+                    Vector3 point = Vector3.Lerp(SubVertexStart[i], SubVertexGoal[i], (float)j / 8) + Vector3.Lerp(randomDirection, Vector3.Normalize(SubVertexGoal[i] - SubVertexStart[i]), lerp) * Mathf.Clamp(Vector3.Distance(goalPosition, SubVertexStart[i]) / 5f, 1f, SubVertexMaxSize);
                     SubVertex[i][j] = point;
                 }
 
@@ -193,23 +156,23 @@ public class LightningMeshGeneration : MonoBehaviour {
 
         for (int i = 0; i < Vectors.Length; i++)
         {
-            Vector3 nextVertex = i < Vectors.Length - 1 ? Vectors[i + 1] : goal.position;
+            Vector3 nextVertex = i < Vectors.Length - 1 ? Vectors[i + 1] : goalPosition;
             Vector3 Tangent = nextVertex - Vectors[i];
             Vector3 BiNormal = Vector3.Normalize(Vector3.Cross(Tangent, Tangent + new Vector3(1231, 12f, -1203f)));
             Vector3 RotNormal = Quaternion.AngleAxis(90, Tangent) * BiNormal;
 
-            vertices.Add((Vectors[i] - spawn.position) + BiNormal * ((Vectors.Length - i) * lightningSize));
-            vertices.Add((Vectors[i] - spawn.position) + RotNormal * ((Vectors.Length - i) * lightningSize));
-            vertices.Add((Vectors[i] - spawn.position) - BiNormal * ((Vectors.Length - i) * lightningSize));
-            vertices.Add((Vectors[i] - spawn.position) - RotNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawnPosition) + BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawnPosition) + RotNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawnPosition) - BiNormal * ((Vectors.Length - i) * lightningSize));
+            vertices.Add((Vectors[i] - spawnPosition) - RotNormal * ((Vectors.Length - i) * lightningSize));
         }
 
         if (offset < 1)
         {
-            vertices.Add((goal.position - spawn.position) + new Vector3(1f, 0, 0));
-            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, 1f));
-            vertices.Add((goal.position - spawn.position) + new Vector3(-1f, 0, 0));
-            vertices.Add((goal.position - spawn.position) + new Vector3(0, 0, -1f));
+            vertices.Add((goalPosition - spawnPosition) + new Vector3(1f, 0, 0));
+            vertices.Add((goalPosition - spawnPosition) + new Vector3(0, 0, 1f));
+            vertices.Add((goalPosition - spawnPosition) + new Vector3(-1f, 0, 0));
+            vertices.Add((goalPosition - spawnPosition) + new Vector3(0, 0, -1f));
         }
 
 

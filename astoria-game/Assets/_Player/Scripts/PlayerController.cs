@@ -625,5 +625,11 @@ namespace Player
           break;
       }
     }
+
+    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+      Motor.SetPositionAndRotation(position, rotation);
+      transform.rotation = rotation;
+    }
   }
 }
