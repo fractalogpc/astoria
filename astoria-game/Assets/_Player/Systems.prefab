@@ -1285,8 +1285,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8484009040548842948}
   - {fileID: 4698742586949265630}
+  - {fileID: 8484009040548842948}
   - {fileID: 1885318167003812103}
   - {fileID: 504813252765694685}
   - {fileID: 4388955452818245265}
@@ -1304,79 +1304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7438f7d49d4be244dbee4baf86ee5c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weatherStates:
-  - name: Overcast
-    volume: {fileID: 2598816211438639911}
-    snowIntensity: 0
-    wetnessIntensity: 0
-    drynessIntensity: 0
-    windSpeed: 0.2
-    weight: 0
-    onEnter:
-      m_PersistentCalls:
-        m_Calls: []
-    onExit:
-      m_PersistentCalls:
-        m_Calls: []
-  - name: Sunny
-    volume: {fileID: 1732287399192083456}
-    snowIntensity: 0
-    wetnessIntensity: 0
-    drynessIntensity: 0
-    windSpeed: 0.2
-    weight: 1
-    onEnter:
-      m_PersistentCalls:
-        m_Calls: []
-    onExit:
-      m_PersistentCalls:
-        m_Calls: []
-  - name: Snowy
-    volume: {fileID: 1842194996466230861}
-    snowIntensity: 1
-    wetnessIntensity: 0
-    drynessIntensity: 0
-    windSpeed: 0.2
-    weight: 0
-    onEnter:
-      m_PersistentCalls:
-        m_Calls: []
-    onExit:
-      m_PersistentCalls:
-        m_Calls: []
-  - name: Ash
-    volume: {fileID: 5882459957618842523}
-    snowIntensity: 0
-    wetnessIntensity: 0
-    drynessIntensity: 1
-    windSpeed: 0.2
-    weight: 0
-    onEnter:
-      m_PersistentCalls:
-        m_Calls: []
-    onExit:
-      m_PersistentCalls:
-        m_Calls: []
-  - name: Stormy
-    volume: {fileID: 4242252307891928557}
-    snowIntensity: 0
-    wetnessIntensity: 0.5
-    drynessIntensity: 0
-    windSpeed: 1
-    weight: 0
-    onEnter:
-      m_PersistentCalls:
-        m_Calls: []
-    onExit:
-      m_PersistentCalls:
-        m_Calls: []
-  _transitionTime: 1
-  _transitionTimeVariance: 0.5
-  _framesPerUpdate: 1
-  _transitionEventThreshold: 0.5
-  _averageTimeBetweenWeatherChanges: 10
-  _timeBetweenWeatherChangesVariance: 5
-  _tveManager: {fileID: 0}
+  WeatherTypes: []
 --- !u!1 &6423552948482905017
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,7 +1360,6 @@ MonoBehaviour:
   _difficultyCurveATerm: 0.05
   _difficultyCurveBTerm: 10
   _maxProportionPerEnemy: 0.4
-  _core: {fileID: 0}
 --- !u!1 &7313327821601961810
 GameObject:
   m_ObjectHideFlags: 0

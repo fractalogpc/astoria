@@ -1,0 +1,206 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6270501337573934276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7382584888544188388}
+  - component: {fileID: 1185072716084108661}
+  - component: {fileID: 337209538263752143}
+  - component: {fileID: 6856344108862314116}
+  m_Layer: 0
+  m_Name: Lightning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7382584888544188388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270501337573934276}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1185072716084108661
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270501337573934276}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: cf00f501b5fa049a5abbbf24f3070b1b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &337209538263752143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270501337573934276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb3ba85ea95ddeb44bbd78620e08024d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalPosition: {x: 2461.4155, y: 441.8717, z: 4956.2666}
+  spawnPosition: {x: 3568.6016, y: 2500, z: 1645.6013}
+  numSegments: 30
+  hitTimeMax: 0.1
+  spawnHeight: 1600
+  lightningSize: 0.1
+  lightningMaterial: {fileID: 2100000, guid: cf00f501b5fa049a5abbbf24f3070b1b, type: 2}
+  animCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.6407448
+      outSlope: -0.6407448
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.29718712
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.8981197
+      outSlope: -3.8981197
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.17692673
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  downStrength: 0.2
+  brightness: 66.235825
+  brightnessMultiplier: 50
+  Vertex:
+  - {x: 3608.0955, y: 2506.684, z: 1615.6755}
+  - {x: 3567.3975, y: 2442.6917, z: 1789.0891}
+  - {x: 3530.5288, y: 2396.7983, z: 1858.1754}
+  - {x: 3451.0745, y: 2298.1965, z: 2026.0396}
+  - {x: 3432.1428, y: 2273.3186, z: 2077.1943}
+  - {x: 3363.04, y: 2172.4536, z: 2154.738}
+  - {x: 3302.4895, y: 2104.4915, z: 2323.3677}
+  - {x: 3304.108, y: 2030.0797, z: 2369.5522}
+  - {x: 3277.7263, y: 2000.9686, z: 2529.1846}
+  - {x: 3249.4895, y: 1924.6604, z: 2662.4133}
+  - {x: 3248.5994, y: 1819.3483, z: 2757.1611}
+  - {x: 3119.955, y: 1754.6469, z: 2883.8472}
+  - {x: 3098.856, y: 1713.7262, z: 2990.1309}
+  - {x: 3040.622, y: 1619.9066, z: 3086.429}
+  - {x: 3038.1333, y: 1548.8746, z: 3143.4304}
+  - {x: 3054.227, y: 1501.9485, z: 3300.5908}
+  - {x: 2986.569, y: 1446.4624, z: 3433.2163}
+  - {x: 2945.0261, y: 1334.5864, z: 3571.4907}
+  - {x: 2911.1548, y: 1289.9597, z: 3674.849}
+  - {x: 2903.1526, y: 1229.9733, z: 3732.2861}
+  - {x: 2827.7195, y: 1172.198, z: 3875.7627}
+  - {x: 2816.896, y: 1099.791, z: 3980.8787}
+  - {x: 2751.2544, y: 1017.37616, z: 4031.477}
+  - {x: 2695.6794, y: 931.232, z: 4140.92}
+  - {x: 2677.776, y: 877.5709, z: 4337.6616}
+  - {x: 2627.2393, y: 830.61316, z: 4412.2163}
+  - {x: 2623.7861, y: 760.11273, z: 4533.8716}
+  - {x: 2533.9175, y: 656.41205, z: 4594.163}
+  - {x: 2541.7566, y: 616.2441, z: 4702.7495}
+  - {x: 2468.289, y: 542.8995, z: 4822.5283}
+  SubVertexDirection:
+  - {x: -1.506918, y: 1.2761818, z: 0.31710932}
+  - {x: -0.664264, y: -1.5728167, z: -1.0416336}
+  - {x: -1.6639327, y: -0.7343694, z: -0.83188343}
+  - {x: 1.9524122, y: -0.35326514, z: 0.25157523}
+  - {x: 0.9688793, y: 1.4683183, z: 0.95148}
+  - {x: 0.4814755, y: 1.6997378, z: 0.9375887}
+  - {x: -1.7451872, y: -0.71126926, z: -0.6696401}
+  - {x: -1.4037279, y: 1.3661165, z: 0.4040712}
+  - {x: 1.9782954, y: -0.2743757, z: 0.10518993}
+  - {x: -1.7851549, y: -0.8800787, z: -0.19668154}
+  - {x: -0.87773013, y: 1.7215027, z: 0.5157696}
+  SubVertexStart:
+  - {x: 3363.04, y: 2172.4536, z: 2154.738}
+  - {x: 3249.4895, y: 1924.6604, z: 2662.4133}
+  - {x: 3248.5994, y: 1819.3483, z: 2757.1611}
+  - {x: 3098.856, y: 1713.7262, z: 2990.1309}
+  - {x: 2911.1548, y: 1289.9597, z: 3674.849}
+  - {x: 2827.7195, y: 1172.198, z: 3875.7627}
+  - {x: 2816.896, y: 1099.791, z: 3980.8787}
+  - {x: 2751.2544, y: 1017.37616, z: 4031.477}
+  - {x: 2677.776, y: 877.5709, z: 4337.6616}
+  - {x: 2541.7566, y: 616.2441, z: 4702.7495}
+  - {x: 2468.289, y: 542.8995, z: 4822.5283}
+  SubVertexGoal:
+  - {x: 1850.7971, y: 656.06067, z: 1275.582}
+  - {x: 1364.5803, y: 1091.4907, z: 3703.5776}
+  - {x: 2160.1877, y: 286.9889, z: 4177.141}
+  - {x: 2889.7607, y: 984.69635, z: 1563.0992}
+  - {x: 2301.3193, y: 361.03656, z: 3615.7227}
+  - {x: 2195.886, y: 816.48645, z: 4698.087}
+  - {x: 2759.3167, y: 932.1448, z: 4906.522}
+  - {x: 2035.4885, y: 335.46582, z: 4223.213}
+  - {x: 2741.457, y: 600.2875, z: 4677.967}
+  - {x: 2645.6157, y: 531.52386, z: 4541.1987}
+  - {x: 2541.6267, y: 496.51416, z: 4813.5137}
+  SubVertexMaxSize: 30
+  SubVertexRandomizationStrength: 0.25
+  lerp: 0.75
+  mesh: {fileID: 0}
+--- !u!33 &6856344108862314116
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270501337573934276}
+  m_Mesh: {fileID: 0}
