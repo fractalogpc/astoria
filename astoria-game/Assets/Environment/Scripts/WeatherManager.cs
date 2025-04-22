@@ -45,13 +45,13 @@ public class WeatherManager : MonoBehaviour
             {
                 if (i != index)
                 {
-                    StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetAtmosphereWeight(value)));
+                    StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].AtmosphereWeight = value));
                 }
             }
         }
 
         // Set the current weather type
-        StartCoroutine(LerpValue(previousAtmosphereWeights[index], value, duration, (value) => WeatherTypes[index].SetAtmosphereWeight(value)));
+        StartCoroutine(LerpValue(previousAtmosphereWeights[index], value, duration, (value) => WeatherTypes[index].AtmosphereWeight = value));
     }
 
     public void LerpToScreen(string weatherType, float duration = 1f)
@@ -63,7 +63,7 @@ public class WeatherManager : MonoBehaviour
         {
             if (i != index)
             {
-                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetScreenWeight(value)));
+                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].ScreenWeight = value));
             }
         }
     }
@@ -74,7 +74,7 @@ public class WeatherManager : MonoBehaviour
         if (index == -1) return;
 
         // Set the current weather type
-        WeatherTypes[index].SetAtmosphereWeight(value);
+        WeatherTypes[index].AtmosphereWeight = value;
     }
 
     public void SetScreen(string weatherType, float value)
@@ -83,7 +83,7 @@ public class WeatherManager : MonoBehaviour
         if (index == -1) return;
 
         // Set the current weather type
-        WeatherTypes[index].SetScreenWeight(value);
+        WeatherTypes[index].ScreenWeight = value;
     }
 
     public void SetEffects(string weatherType, float value)
@@ -92,17 +92,18 @@ public class WeatherManager : MonoBehaviour
         if (index == -1) return;
 
         // Set the current weather type
-        WeatherTypes[index].SetEffectsWeight(value);
+        WeatherTypes[index].EffectsWeight = value;
     }
 
-    public void SetWeight(string weatherType, float value) {
+    public void SetWeight(string weatherType, float value)
+    {
         int index = GetWeatherType(weatherType, out WeatherType weather);
         if (index == -1) return;
 
         // Set the current weather type
-        WeatherTypes[index].SetAtmosphereWeight(value);
-        WeatherTypes[index].SetScreenWeight(value);
-        WeatherTypes[index].SetEffectsWeight(value);
+        WeatherTypes[index].AtmosphereWeight = value;
+        WeatherTypes[index].ScreenWeight = value;
+        WeatherTypes[index].EffectsWeight = value;
     }
 
     IEnumerator LerpValue(float from, float to, float duration, System.Action<float> onUpdate)
@@ -166,28 +167,57 @@ public class WeatherManager : MonoBehaviour
     public struct WeatherType
     {
         public string Name;
-        [Range(0f, 1f)] public float AtmosphereWeight;
-        [Range(0f, 1f)] public float ScreenWeight;
-        [Range(0f, 1f)] public float EffectsWeight;
+        public float AtmosphereWeight { get => atmosphereWeight; set => SetAtmosphereWeight(value); }
+        public float ScreenWeight { get => screenWeight; set => SetScreenWeight(value); }
+        public float EffectsWeight { get => effectsWeight; set => SetEffectsWeight(value); }
+
+        #if UNITY_EDITOR
+            [UnityEditor.CustomEditor(typeof(WeatherManager))]
+            public class WeatherManagerEditor : UnityEditor.Editor
+            {
+                public override void OnInspectorGUI()
+                {
+                base.OnInspectorGUI();
+
+                WeatherManager manager = (WeatherManager)target;
+
+                if (GUILayout.Button("Update Weights"))
+                {
+                    foreach (var weatherType in manager.WeatherTypes)
+                    {
+                    weatherType.SetAtmosphereWeight(weatherType.AtmosphereWeight);
+                    weatherType.SetScreenWeight(weatherType.ScreenWeight);
+                    weatherType.SetEffectsWeight(weatherType.EffectsWeight);
+                    }
+                }
+                }
+            }
+        #endif
+
+        [SerializeField, Range(0f, 1f)] private float atmosphereWeight;
+        [SerializeField, Range(0f, 1f)] private float screenWeight;
+        [SerializeField, Range(0f, 1f)] private float effectsWeight;
         public UnityEngine.Rendering.Volume AtmosphereVolume;
         public UnityEngine.Rendering.Volume ScreenVolume;
         public GameObject[] Effects;
 
         public void SetAtmosphereWeight(float weight)
         {
-            AtmosphereWeight = weight;
-            AtmosphereVolume.weight = weight;
+            atmosphereWeight = weight;
+            if (AtmosphereVolume != null)
+                AtmosphereVolume.weight = weight;
         }
 
         public void SetScreenWeight(float weight)
         {
-            ScreenWeight = weight;
-            ScreenVolume.weight = weight;
+            screenWeight = weight;
+            if (ScreenVolume != null)
+                ScreenVolume.weight = weight;
         }
 
         public void SetEffectsWeight(float weight)
         {
-            EffectsWeight = weight;
+            effectsWeight = weight;
             if (Effects.Length > 0)
             {
                 foreach (GameObject effect in Effects)
