@@ -28,8 +28,9 @@ Material:
   - TVE_PIVOT_OFF
   - TVE_SECOND_MASK_SAMPLE_MAIN_UV
   - TVE_SECOND_SAMPLE_MAIN_UV
+  - TVE_THIRD
   - TVE_THIRD_MASK_SAMPLE_MAIN_UV
-  - TVE_THIRD_SAMPLE_MAIN_UV
+  - TVE_THIRD_SAMPLE_PLANAR_3D
   - TVE_TINTING_ELEMENT
   - TVE_WETNESS
   - TVE_WETNESS_DROPS
@@ -235,7 +236,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdAlbedoTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 07a0c10518a240744b51ef19a82e0515, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdMaskTex:
@@ -243,11 +244,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3d6d9a4a37d1a1d4293df5e59c54ee38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ThirdShaderTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 78a37bd86d26f4947a44b3dbc6609c98, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TransmissionMaskMap:
@@ -642,14 +643,14 @@ Material:
     - _ThirdAlbedoValue: 1
     - _ThirdAlphaClipValue: 0.5
     - _ThirdBakeMode: 1
-    - _ThirdBlendAlbedoValue: 0
+    - _ThirdBlendAlbedoValue: 1
     - _ThirdBlendIntensityValue: 1
-    - _ThirdBlendNormalValue: 0
-    - _ThirdBlendShaderValue: 0
+    - _ThirdBlendNormalValue: 1
+    - _ThirdBlendShaderValue: 1
     - _ThirdColorMode: 0
     - _ThirdCoordMode: 0
     - _ThirdElementMode: 0
-    - _ThirdIntensityValue: 0
+    - _ThirdIntensityValue: 1
     - _ThirdMaskCoordMode: 0
     - _ThirdMaskSampleMode: 0
     - _ThirdMaskValue: 1
@@ -659,7 +660,7 @@ Material:
     - _ThirdNormalValue: 1
     - _ThirdOcclusionValue: 0
     - _ThirdProjValue: 0
-    - _ThirdSampleMode: 0
+    - _ThirdSampleMode: 3
     - _ThirdSmoothnessValue: 0
     - _TintingBakeMode: 0
     - _TintingCategory: 1
