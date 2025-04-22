@@ -11312,6 +11312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34eea317f9325a746b33c1d10bb43de6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enabled: 0
   Motor: {fileID: 3739774951926790246}
   PlayerCamera: {fileID: 4396451452828267896}
   MaxStableCrouchSpeed: 2
@@ -13330,9 +13331,11 @@ MonoBehaviour:
   _snowArea:
     Texture: {fileID: 2800000, guid: 5a48fe1c6a0db614d8f1824bc51404cd, type: 3}
     Transform: {fileID: 0}
+    volume: {fileID: 0}
   _desertArea:
     Texture: {fileID: 2800000, guid: 5a48fe1c6a0db614d8f1824bc51404cd, type: 3}
     Transform: {fileID: 0}
+    volume: {fileID: 0}
 --- !u!1 &2096668428476676103
 GameObject:
   m_ObjectHideFlags: 0
@@ -19394,7 +19397,7 @@ MonoBehaviour:
   taaSharpenMode: 2
   taaRingingReduction: 0
   taaHistorySharpening: 0.35
-  taaAntiFlicker: 1
+  taaAntiFlicker: 0
   taaMotionVectorRejection: 0.5
   taaAntiHistoryRinging: 0
   taaBaseBlendFactor: 0.875
@@ -19526,6 +19529,8 @@ MonoBehaviour:
   _viewmodelFollowSpeed: 10
   _viewmodelMaxXOffset: 30
   _viewmodelMaxYOffset: 30
+  _minYRotCutscene: -45
+  _maxYRotCutscene: 45
   PlayerYLookQuaternion: {x: 0, y: 0, z: 0, w: 1}
   CameraXRotation: 0
 --- !u!114 &7114787213708335111

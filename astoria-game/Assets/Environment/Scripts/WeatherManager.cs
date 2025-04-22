@@ -1,121 +1,237 @@
-using UnityEngine;
+using System;
 using System.Collections;
-using UnityEngine.Rendering;
-using UnityEngine.Events;
-
+using UnityEngine;
 public class WeatherManager : MonoBehaviour
 {
 
-    [System.Serializable]
-    private struct WeatherState
-    {
+    [Header("Weather Settings")]
+    public WeatherType[] WeatherTypes;
+    // Sunny, Overcast, Rainy, Stormy, Snowy, Ash, Dry, Windy
 
-        public string name;
-        public Volume volume;
-        public float snowIntensity;
-        public float wetnessIntensity;
-        public float drynessIntensity;
-        public float windSpeed;
-        public float weight;
-        public UnityEvent onEnter;
-        public UnityEvent onExit;
-
-    }
-
-    [SerializeField] private WeatherState[] _weatherStates;
-
-    [SerializeField] private float _transitionTime = 1.0f;
-    [SerializeField] private float _transitionTimeVariance = 0.5f;
-    [SerializeField] private int _framesPerUpdate = 1;
-    [SerializeField] private float _transitionEventThreshold = 0.5f;
-    [SerializeField] private float _averageTimeBetweenWeatherChanges = 10.0f;
-    [SerializeField] private float _timeBetweenWeatherChangesVariance = 5.0f;
-    [SerializeField] private TheVisualEngine.TVEManager _tveManager;
-
-    private WeatherState _currentWeatherState;
-    private WeatherState _targetWeatherState;
-    private float _timeToNextWeatherChange;
+    private float[] previousAtmosphereWeights;
+    private float[] previousScreenWeights;
+    private float[] previousEffectsWeights;
 
     private void Start()
     {
-        _timeToNextWeatherChange = _averageTimeBetweenWeatherChanges + Random.Range(-_timeBetweenWeatherChangesVariance, _timeBetweenWeatherChangesVariance);
-        _currentWeatherState = GetRandomWeatherState();
-        _currentWeatherState.volume.weight = 1.0f;
-        _currentWeatherState.onEnter.Invoke();
-        _tveManager.globalAtmoData.overlayIntensity = _currentWeatherState.snowIntensity;
-        _tveManager.globalAtmoData.wetnessIntensity = _currentWeatherState.wetnessIntensity;
-        _tveManager.globalAtmoData.drynessIntensity = _currentWeatherState.drynessIntensity;
-        _tveManager.motionControl = _currentWeatherState.windSpeed;
-    }
-
-    private WeatherState GetRandomWeatherState()
-    {
-        float totalWeight = 0.0f;
-        foreach (WeatherState weatherState in _weatherStates)
+        previousAtmosphereWeights = new float[WeatherTypes.Length];
+        for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            totalWeight += weatherState.weight;
+            previousAtmosphereWeights[i] = -1f;
         }
 
-        float randomValue = Random.Range(0.0f, totalWeight);
-        foreach (WeatherState weatherState in _weatherStates)
+        previousScreenWeights = new float[WeatherTypes.Length];
+        for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            randomValue -= weatherState.weight;
-            if (randomValue <= 0.0f)
+            previousScreenWeights[i] = -1f;
+        }
+
+        previousEffectsWeights = new float[WeatherTypes.Length];
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            previousEffectsWeights[i] = -1f;
+        }
+    }
+
+    public void LerpToAtmosphere(string weatherType, float value = 1f, float duration = 1f, bool clear = true)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        if (clear)
+        {
+            // Clear previous weights
+            for (int i = 0; i < WeatherTypes.Length; i++)
             {
-                return weatherState;
+                if (i != index)
+                {
+                    StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].AtmosphereWeight = value));
+                }
             }
         }
-        return _weatherStates[0];
+
+        // Set the current weather type
+        StartCoroutine(LerpValue(previousAtmosphereWeights[index], value, duration, (value) => WeatherTypes[index].AtmosphereWeight = value));
     }
 
-    private void Update()
+    public void LerpToScreen(string weatherType, float duration = 1f)
     {
-        _timeToNextWeatherChange -= Time.deltaTime;
-        if (_timeToNextWeatherChange <= 0.0f)
-        {
-            _targetWeatherState = GetRandomWeatherState();
-            _timeToNextWeatherChange = _averageTimeBetweenWeatherChanges + Random.Range(-_timeBetweenWeatherChangesVariance, _timeBetweenWeatherChangesVariance);
-            StartCoroutine(TransitionWeather());
-        }
-    }
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
 
-    private IEnumerator TransitionWeather()
-    {
-        if (_currentWeatherState.name == _targetWeatherState.name)
+        for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            yield break;
-        }
-        float elapsedTime = 0.0f;
-        float transitionTime = _transitionTime + Random.Range(-_transitionTimeVariance, _transitionTimeVariance);
-        int frameCount = _framesPerUpdate;
-        while (elapsedTime < transitionTime)
-        {
-            elapsedTime += Time.deltaTime;
-            frameCount++;
-            float t = elapsedTime / transitionTime;
-            if (frameCount >= _framesPerUpdate)
+            if (i != index)
             {
-                frameCount = 0;
-                _currentWeatherState.volume.weight = 1.0f - t;
-                _targetWeatherState.volume.weight = t;
-                _tveManager.globalAtmoData.overlayIntensity = Mathf.Lerp(_currentWeatherState.snowIntensity, _targetWeatherState.snowIntensity, t);
-                _tveManager.globalAtmoData.wetnessIntensity = Mathf.Lerp(_currentWeatherState.wetnessIntensity, _targetWeatherState.wetnessIntensity, t);
-                _tveManager.globalAtmoData.drynessIntensity = Mathf.Lerp(_currentWeatherState.drynessIntensity, _targetWeatherState.drynessIntensity, t);
-                _tveManager.motionControl = Mathf.Lerp(_currentWeatherState.windSpeed, _targetWeatherState.windSpeed, t);
+                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].ScreenWeight = value));
             }
-            if (t >= _transitionEventThreshold) {
-                _currentWeatherState.onExit.Invoke();
-                _targetWeatherState.onEnter.Invoke();
-            }
+        }
+    }
+
+    public void SetAtmosphere(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].AtmosphereWeight = value;
+    }
+
+    public void SetScreen(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].ScreenWeight = value;
+    }
+
+    public void SetEffects(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].EffectsWeight = value;
+    }
+
+    public void SetWeight(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].AtmosphereWeight = value;
+        WeatherTypes[index].ScreenWeight = value;
+        WeatherTypes[index].EffectsWeight = value;
+    }
+
+    IEnumerator LerpValue(float from, float to, float duration, System.Action<float> onUpdate)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float value = Mathf.Lerp(from, to, t);
+            onUpdate(value);
             yield return null;
         }
-        _currentWeatherState.volume.weight = 0.0f;
-        _targetWeatherState.volume.weight = 1.0f;
-        _tveManager.globalAtmoData.overlayIntensity = _targetWeatherState.snowIntensity;
-        _tveManager.globalAtmoData.wetnessIntensity = _targetWeatherState.wetnessIntensity;
-        _tveManager.globalAtmoData.drynessIntensity = _targetWeatherState.drynessIntensity;
-        _tveManager.motionControl = _targetWeatherState.windSpeed;
-        _currentWeatherState = _targetWeatherState;
+
+        // Ensure final value is set
+        onUpdate(to);
     }
 
+    private void ClearAtmosphere()
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            WeatherTypes[i].SetAtmosphereWeight(0f);
+        }
+    }
+
+    private void ClearScreen()
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            WeatherTypes[i].SetScreenWeight(0f);
+        }
+    }
+
+    private void ClearEffects()
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            WeatherTypes[i].SetEffectsWeight(0f);
+        }
+    }
+
+    private int GetWeatherType(string name, out WeatherType weatherType)
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            if (WeatherTypes[i].Name == name)
+            {
+                weatherType = WeatherTypes[i];
+                return i;
+            }
+        }
+
+        Debug.LogError("Weather type not found: " + name);
+        weatherType = default(WeatherType);
+        return -1;
+    }
+
+    [Serializable]
+    public struct WeatherType
+    {
+        public string Name;
+        public float AtmosphereWeight { get => atmosphereWeight; set => SetAtmosphereWeight(value); }
+        public float ScreenWeight { get => screenWeight; set => SetScreenWeight(value); }
+        public float EffectsWeight { get => effectsWeight; set => SetEffectsWeight(value); }
+
+        #if UNITY_EDITOR
+            [UnityEditor.CustomEditor(typeof(WeatherManager))]
+            public class WeatherManagerEditor : UnityEditor.Editor
+            {
+                public override void OnInspectorGUI()
+                {
+                base.OnInspectorGUI();
+
+                WeatherManager manager = (WeatherManager)target;
+
+                if (GUILayout.Button("Update Weights"))
+                {
+                    foreach (var weatherType in manager.WeatherTypes)
+                    {
+                    weatherType.SetAtmosphereWeight(weatherType.AtmosphereWeight);
+                    weatherType.SetScreenWeight(weatherType.ScreenWeight);
+                    weatherType.SetEffectsWeight(weatherType.EffectsWeight);
+                    }
+                }
+                }
+            }
+        #endif
+
+        [SerializeField, Range(0f, 1f)] private float atmosphereWeight;
+        [SerializeField, Range(0f, 1f)] private float screenWeight;
+        [SerializeField, Range(0f, 1f)] private float effectsWeight;
+        public UnityEngine.Rendering.Volume AtmosphereVolume;
+        public UnityEngine.Rendering.Volume ScreenVolume;
+        public GameObject[] Effects;
+
+        public void SetAtmosphereWeight(float weight)
+        {
+            atmosphereWeight = weight;
+            if (AtmosphereVolume != null)
+                AtmosphereVolume.weight = weight;
+        }
+
+        public void SetScreenWeight(float weight)
+        {
+            screenWeight = weight;
+            if (ScreenVolume != null)
+                ScreenVolume.weight = weight;
+        }
+
+        public void SetEffectsWeight(float weight)
+        {
+            effectsWeight = weight;
+            if (Effects.Length > 0)
+            {
+                foreach (GameObject effect in Effects)
+                {
+                    effect.SetActive(weight > 0f);
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            SetAtmosphereWeight(0f);
+            SetScreenWeight(0f);
+            SetEffectsWeight(0f);
+        }
+    }
 }
