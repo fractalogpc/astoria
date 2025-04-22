@@ -6,6 +6,7 @@ public class WeatherManager : MonoBehaviour
 
     [Header("Weather Settings")]
     public WeatherType[] WeatherTypes;
+    // Sunny, Overcast, Rainy, Stormy, Snowy, Ash, Dry, Windy
 
     private float[] previousAtmosphereWeights;
     private float[] previousScreenWeights;
@@ -32,20 +33,29 @@ public class WeatherManager : MonoBehaviour
         }
     }
 
-    public void LerpToAtmosphere(string weatherType, float duration = 1f) {
+    public void LerpToAtmosphere(string weatherType, float value = 1f, float duration = 1f, bool clear = true)
+    {
         int index = GetWeatherType(weatherType, out WeatherType weather);
         if (index == -1) return;
 
-        for (int i = 0; i < WeatherTypes.Length; i++)
+        if (clear)
         {
-            if (i != index)
+            // Clear previous weights
+            for (int i = 0; i < WeatherTypes.Length; i++)
             {
-                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetAtmosphereWeight(value)));
+                if (i != index)
+                {
+                    StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetAtmosphereWeight(value)));
+                }
             }
         }
+
+        // Set the current weather type
+        StartCoroutine(LerpValue(previousAtmosphereWeights[index], value, duration, (value) => WeatherTypes[index].SetAtmosphereWeight(value)));
     }
 
-    public void LerpToScreen(string weatherType, float duration = 1f) {
+    public void LerpToScreen(string weatherType, float duration = 1f)
+    {
         int index = GetWeatherType(weatherType, out WeatherType weather);
         if (index == -1) return;
 
@@ -56,6 +66,43 @@ public class WeatherManager : MonoBehaviour
                 StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetScreenWeight(value)));
             }
         }
+    }
+
+    public void SetAtmosphere(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].SetAtmosphereWeight(value);
+    }
+
+    public void SetScreen(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].SetScreenWeight(value);
+    }
+
+    public void SetEffects(string weatherType, float value)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].SetEffectsWeight(value);
+    }
+
+    public void SetWeight(string weatherType, float value) {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        // Set the current weather type
+        WeatherTypes[index].SetAtmosphereWeight(value);
+        WeatherTypes[index].SetScreenWeight(value);
+        WeatherTypes[index].SetEffectsWeight(value);
     }
 
     IEnumerator LerpValue(float from, float to, float duration, System.Action<float> onUpdate)
