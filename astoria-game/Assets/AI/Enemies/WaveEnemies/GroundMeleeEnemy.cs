@@ -61,10 +61,18 @@ public class GroundMeleeEnemy : EnemyCore
       _attacking = true;
       attackTimer = 0;
       OnAttack?.Invoke();
-      target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
       Debug.Log(target.gameObject.name);
+      target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
+      Debug.Log(target.gameObject.GetComponent<ComponentDamagePassthrough>() != null ? "true" : "false");
       _attacking = false;
     }
   }
+
+    void OnCollisionEnter(Collision collision)
+    {
+      if (collision.gameObject.layer == 18) {
+        target = collision.transform;
+      }
+    }
 
 }
