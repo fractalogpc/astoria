@@ -9,6 +9,8 @@ public class AreaManager : MonoBehaviour
     [SerializeField] private AreaData _snowArea;
     [SerializeField] private AreaData _desertArea;
 
+    public WeatherManager weatherManager;
+
     private Transform _playerTransform;
 
     [Serializable]
@@ -16,7 +18,6 @@ public class AreaManager : MonoBehaviour
     {
         public Texture2D Texture;
         public Transform Transform;
-        public Volume volume;
     }
 
     private void Start()
@@ -37,15 +38,15 @@ public class AreaManager : MonoBehaviour
         float snowIntensity, desertIntensity;
         if (IsPlayerInArea(_snowArea, snowLocalPos, out snowIntensity))
         {
-            _snowArea.volume.weight = snowIntensity;
+            weatherManager.SetWeight("Snowy", snowIntensity);
         } else {
-            _snowArea.volume.weight = 0f;
+            weatherManager.SetWeight("Snowy", 0f);
         }
         if (IsPlayerInArea(_desertArea, desertLocalPos, out desertIntensity))
         {
-            _desertArea.volume.weight = desertIntensity;
+            weatherManager.SetWeight("Dry", desertIntensity);
         } else {
-            _desertArea.volume.weight = 0f;
+            weatherManager.SetWeight("Dry", 0f);
         }
     }
 
