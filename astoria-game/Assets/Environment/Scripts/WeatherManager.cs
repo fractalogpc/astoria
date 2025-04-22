@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 public class WeatherManager : MonoBehaviour
 {
@@ -6,53 +7,154 @@ public class WeatherManager : MonoBehaviour
     [Header("Weather Settings")]
     public WeatherType[] WeatherTypes;
 
-    private float[] previousWeights;
+    private float[] previousAtmosphereWeights;
+    private float[] previousScreenWeights;
+    private float[] previousEffectsWeights;
 
     private void Start()
     {
-        previousWeights = new float[WeatherTypes.Length];
+        previousAtmosphereWeights = new float[WeatherTypes.Length];
         for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            previousWeights[i] = -1f;
+            previousAtmosphereWeights[i] = -1f;
         }
-    } 
 
-    private void Update()
+        previousScreenWeights = new float[WeatherTypes.Length];
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            previousScreenWeights[i] = -1f;
+        }
+
+        previousEffectsWeights = new float[WeatherTypes.Length];
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            previousEffectsWeights[i] = -1f;
+        }
+    }
+
+    public void LerpToAtmosphere(string weatherType, float duration = 1f) {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            if (i != index)
+            {
+                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetAtmosphereWeight(value)));
+            }
+        }
+    }
+
+    public void LerpToScreen(string weatherType, float duration = 1f) {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            if (i != index)
+            {
+                StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].SetScreenWeight(value)));
+            }
+        }
+    }
+
+    IEnumerator LerpValue(float from, float to, float duration, System.Action<float> onUpdate)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float value = Mathf.Lerp(from, to, t);
+            onUpdate(value);
+            yield return null;
+        }
+
+        // Ensure final value is set
+        onUpdate(to);
+    }
+
+    private void ClearAtmosphere()
     {
         for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            if (WeatherTypes[i].Weight != previousWeights[i])
-            {
-                UpdateWeather(i);
-                previousWeights[i] = WeatherTypes[i].Weight;
-            }
+            WeatherTypes[i].SetAtmosphereWeight(0f);
         }
     }
 
-    private void UpdateWeather(int index) {
-        WeatherType weather = WeatherTypes[index];
-
-        // Update volume settings
-        if (weather.Volume != null)
+    private void ClearScreen()
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            weather.Volume.weight = weather.Weight;
+            WeatherTypes[i].SetScreenWeight(0f);
         }
+    }
 
-        // Activate or deactivate effects based on weight
-        foreach (GameObject effect in weather.Effects)
+    private void ClearEffects()
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
         {
-            if (effect != null)
+            WeatherTypes[i].SetEffectsWeight(0f);
+        }
+    }
+
+    private int GetWeatherType(string name, out WeatherType weatherType)
+    {
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            if (WeatherTypes[i].Name == name)
             {
-                effect.SetActive(weather.Weight > 0f);
+                weatherType = WeatherTypes[i];
+                return i;
             }
         }
+
+        Debug.LogError("Weather type not found: " + name);
+        weatherType = default(WeatherType);
+        return -1;
     }
 
     [Serializable]
-    public struct WeatherType {
+    public struct WeatherType
+    {
         public string Name;
-        [Range(0f, 1f)] public float Weight;
-        public UnityEngine.Rendering.Volume Volume;
+        [Range(0f, 1f)] public float AtmosphereWeight;
+        [Range(0f, 1f)] public float ScreenWeight;
+        [Range(0f, 1f)] public float EffectsWeight;
+        public UnityEngine.Rendering.Volume AtmosphereVolume;
+        public UnityEngine.Rendering.Volume ScreenVolume;
         public GameObject[] Effects;
+
+        public void SetAtmosphereWeight(float weight)
+        {
+            AtmosphereWeight = weight;
+            AtmosphereVolume.weight = weight;
+        }
+
+        public void SetScreenWeight(float weight)
+        {
+            ScreenWeight = weight;
+            ScreenVolume.weight = weight;
+        }
+
+        public void SetEffectsWeight(float weight)
+        {
+            EffectsWeight = weight;
+            if (Effects.Length > 0)
+            {
+                foreach (GameObject effect in Effects)
+                {
+                    effect.SetActive(weight > 0f);
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            SetAtmosphereWeight(0f);
+            SetScreenWeight(0f);
+            SetEffectsWeight(0f);
+        }
     }
 }
