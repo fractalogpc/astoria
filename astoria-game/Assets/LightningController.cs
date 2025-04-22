@@ -44,7 +44,7 @@ public class LightningController : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 60f) // Adjust the frequency of lightning strikes as needed
+        if (timer > 30f) // Adjust the frequency of lightning strikes as needed
         {
             timer = 0f;
             SpawnWave(goalTransform.position); // Replace with your desired position
