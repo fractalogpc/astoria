@@ -98,6 +98,52 @@ MonoBehaviour:
   blendDistance: 0
   weight: 0
   sharedProfile: {fileID: 11400000, guid: ff42965969e64314f9e2e33a3088f8e7, type: 2}
+--- !u!1 &2931336144361608204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 63974571974035624}
+  - component: {fileID: 2074207821447686439}
+  m_Layer: 0
+  m_Name: Lightning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &63974571974035624
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2931336144361608204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.0033552384, y: -0.9963951, z: -0.036624033, w: -0.07644723}
+  m_LocalPosition: {x: 523.6456, y: 1022.99036, z: 831.6024}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6073005035801865273}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2074207821447686439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2931336144361608204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc618aafcde26d408e3a185e0bb00e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalTransform: {fileID: 0}
+  lightningPrefab: {fileID: 6270501337573934276, guid: 50c63507a5d2cba4a81092b2b61f73f5, type: 3}
 --- !u!1 &3038588117632083682
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,15 +282,60 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _sunIntensityMax: 15000
-  _sunIntensityMin: 5500
-  _fullMoonIntensity: 1
-  _newMoonIntensity: 0.5
+  _sunIntensityMax: 6000
+  _sunIntensityMin: 2000
+  _fullMoonIntensity: 2.5
+  _newMoonIntensity: 2.5
   _moonPhaseOffset: 0.5
   _framesPerUpdate: 7
   _fogDistanceCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3333
+      value: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.45
+      value: 25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75
+      value: 25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -372,8 +463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72398e4b80dbae04cad0291be8498a63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startGameHour: 6
-  _dayCycleInMinutes: 15
+  _startGameHour: 8
+  _dayCycleInMinutes: 10
   _daysStartAtZero: 1
   TimeOfDay:
     _day: 0
@@ -389,7 +480,7 @@ MonoBehaviour:
   OnNight:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3883462078369721993}
         m_TargetAssemblyTypeName: SpawnManager, Assembly-CSharp
         m_MethodName: OnNight
         m_Mode: 1
@@ -403,19 +494,7 @@ MonoBehaviour:
         m_CallState: 2
   OnDay:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SpawnManager, Assembly-CSharp
-        m_MethodName: OnDay
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &3629593839374956622
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +537,8 @@ Transform:
   - {fileID: 4865391219141531170}
   - {fileID: 8390351186170655325}
   - {fileID: 8647777125816213069}
+  - {fileID: 8387558110687574227}
+  - {fileID: 3276446972726616106}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8850651522397073974
@@ -587,6 +668,50 @@ MonoBehaviour:
   BulletPrefab: {fileID: 7008315763908440191, guid: 991aaa35e5c847f4ba3d39e2784124d6, type: 3}
   HitEffectPrefab: {fileID: 1911122512426706904, guid: 9efea251f4adc9043be498e3ff6e8c0d, type: 3}
   BulletStart: {fileID: 0}
+--- !u!1 &4144511018752799616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8387558110687574227}
+  - component: {fileID: 248819269773813715}
+  m_Layer: 0
+  m_Name: SoundSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8387558110687574227
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4144511018752799616}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 916802654918332166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &248819269773813715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4144511018752799616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24f4904078c304d88ebd7381518030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4948529184640967634
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +817,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 63974571974035624}
   m_Father: {fileID: 4865391219141531170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1403648497853597072
@@ -861,7 +987,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 1
+  weight: 0
   sharedProfile: {fileID: 11400000, guid: bf9407b66bacfcf47bcf6c6f0a6f7ef0, type: 2}
 --- !u!1 &5931146570953723463
 GameObject:
@@ -1062,7 +1188,7 @@ MonoBehaviour:
         useOcclusionCulling: 1
         cullingMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 1048447
         sceneCullingMaskOverride: 0
       invertFaceCulling: 0
       flipYMode: 0
@@ -1456,38 +1582,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeatherTypes:
   - Name: Sunny
-    Weight: 0
-    Volume: {fileID: 1732287399192083456}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 1732287399192083456}
+    ScreenVolume: {fileID: 0}
     Effects: []
   - Name: Overcast
-    Weight: 1
-    Volume: {fileID: 2598816211438639911}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 2598816211438639911}
+    ScreenVolume: {fileID: 0}
     Effects: []
   - Name: Rainy
-    Weight: 0
-    Volume: {fileID: 7704835346800252480}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 7704835346800252480}
+    ScreenVolume: {fileID: 0}
     Effects:
     - {fileID: 0}
   - Name: Stormy
-    Weight: 0
-    Volume: {fileID: 1403648497853597072}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 1403648497853597072}
+    ScreenVolume: {fileID: 0}
     Effects:
-    - {fileID: 0}
+    - {fileID: 2931336144361608204}
   - Name: Snowy
-    Weight: 0
-    Volume: {fileID: 1842194996466230861}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 1842194996466230861}
+    ScreenVolume: {fileID: 0}
     Effects: []
   - Name: Ash
-    Weight: 0
-    Volume: {fileID: 5882459957618842523}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 5882459957618842523}
+    ScreenVolume: {fileID: 0}
     Effects: []
   - Name: Dry
-    Weight: 0
-    Volume: {fileID: 4242252307891928557}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 4242252307891928557}
+    ScreenVolume: {fileID: 0}
     Effects: []
   - Name: Windy
-    Weight: 0
-    Volume: {fileID: 1400474817655716599}
+    atmosphereWeight: 0
+    screenWeight: 0
+    effectsWeight: 0
+    AtmosphereVolume: {fileID: 1400474817655716599}
+    ScreenVolume: {fileID: 0}
     Effects: []
 --- !u!1 &6423552948482905017
 GameObject:
@@ -1743,7 +1893,7 @@ MonoBehaviour:
         useOcclusionCulling: 1
         cullingMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 1048447
         sceneCullingMaskOverride: 0
       invertFaceCulling: 0
       flipYMode: 0
@@ -2272,3 +2422,58 @@ MonoBehaviour:
   blendDistance: 0
   weight: 0
   sharedProfile: {fileID: 11400000, guid: c28947ab375c3ca4584e9c061bcf02fd, type: 2}
+--- !u!1 &8987201481963304773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3276446972726616106}
+  - component: {fileID: 3883462078369721993}
+  m_Layer: 0
+  m_Name: SpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3276446972726616106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8987201481963304773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 916802654918332166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3883462078369721993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8987201481963304773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c87371873ee9499b898a6e7ac7c12ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemies:
+  - prefab: {fileID: 6358995176421208112, guid: 377e545b4acaef445a9dc83c8c68d80b, type: 3}
+    difficultyPoints: 1
+  _spawnRadius: 100
+  _enemyContainer: {fileID: 0}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _difficultyCurveATerm: 0.05
+  _difficultyCurveBTerm: 10
+  _maxProportionPerEnemy: 0.4

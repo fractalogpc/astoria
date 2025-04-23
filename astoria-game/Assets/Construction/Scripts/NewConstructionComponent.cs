@@ -70,9 +70,11 @@ namespace Construction
                     // Then add connections from the nearby components to this component
                     foreach (ConstructionComponent component in nearbyComponents)
                     {
-                        Edge otherEdge = component.GetClosestEdge(edge.position);
-                        component.AddConnection(otherEdge, this, data);
+                        Edge otherEdge = component.GetClosestEdge(edge.Position);
+                        component.AddConnection(otherEdge, this, component.data);
                     }
+
+                    // Assign 
 
                     // Debug.Log($"Connected {gameObject.name} to {nearbyComponents.Count} components.");
                 }
@@ -84,12 +86,12 @@ namespace Construction
         {
             if (data.isHorizontal && component.data.isHorizontal)
             {
-                // edge.usedHorizontally = true;
+                edge.usedHorizontally = true;
             }
 
-            if (data.isVertical && component.data.isVertical)
+            if (component.data.isVertical || data.isVertical)
             {
-                // edge.usedVertically = true;
+                edge.usedVertically = true;
             }
 
             if (connections.ContainsKey(edge))
@@ -110,12 +112,12 @@ namespace Construction
             {
                 if (data.isHorizontal && component.data.isHorizontal)
                 {
-                    // edge.usedHorizontally = true;
+                    edge.usedHorizontally = true;
                 }
 
-                if (data.isVertical && component.data.isVertical)
+                if (component.data.isVertical || data.isVertical)
                 {
-                    // edge.usedVertically = true;
+                    edge.usedVertically = true;
                 }
             }
 
@@ -142,6 +144,39 @@ namespace Construction
                 // Debug.Log("Stability too low!");
                 Collapse();
                 return;
+            }
+
+            // Update the availability of the edges
+            foreach (Edge edge in edges)
+            {
+                List<ConstructionComponent> nearbyComponents = edge.GetNearbyComponents(0.1f, new List<Transform> { transform });
+
+                // Cull destroyed components from the list
+                for (int i = nearbyComponents.Count - 1; i >= 0; i--)
+                {
+                    if (nearbyComponents[i].IsDeleted)
+                    {
+                        nearbyComponents.RemoveAt(i);
+                    }
+                }
+
+                if (nearbyComponents.Count == 0) {
+                    edge.usedHorizontally = false;
+                    edge.usedVertically = false;
+                } else {
+                    foreach (ConstructionComponent component in nearbyComponents)
+                    {
+                        if (data.isHorizontal && component.data.isHorizontal)
+                        {
+                            edge.usedHorizontally = true;
+                        }
+
+                        if (component.data.isVertical || data.isVertical)
+                        {
+                            edge.usedVertically = true;
+                        }
+                    }
+                }
             }
 
             if (currentStability != stability)
@@ -220,7 +255,7 @@ namespace Construction
 
             foreach (Edge edge in edges)
             {
-                float distance = Vector3.Distance(edge.position, position);
+                float distance = Vector3.Distance(edge.Position, position);
                 if (distance < closestDistance)
                 {
                     closestEdge = edge;
@@ -260,7 +295,8 @@ namespace Construction
             }
         }
 
-        public void DestroyComponent() {
+        public void DestroyComponent()
+        {
             Collapse();
         }
 

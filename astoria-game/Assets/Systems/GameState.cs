@@ -1,0 +1,98 @@
+using UnityEngine;
+using UnityEngine.Events;
+using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.SceneManagement;
+
+public class GameState : MonoBehaviour
+{
+
+    public UnityEvent onCutsceneStart;
+    public UnityEvent onCutsceneEnd;
+    public UnityEvent onGameStart;
+    public UnityEvent onGameEnd;
+    public UnityEvent onEnterMenu;
+
+    [SerializeField] private string cutsceneSceneName = "IntroPrototype";
+    [SerializeField] private string gameSceneName = "Prototype2";
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string loadingSceneName = "LoadingScene";
+
+    private bool _hasPlayedCutscene = false;
+    private bool _isLoadingScene = false;
+
+    private GameState _instance;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void LoadScene(string sceneName)
+    {
+        if (_isLoadingScene) return; // Prevent loading if already loading a scene
+        if (sceneName == SceneManager.GetActiveScene().name) return; // Prevent loading the same scene
+        _isLoadingScene = true;
+
+        StartCoroutine(LoadSceneCoroutine(sceneName));
+    }
+
+    private IEnumerator LoadSceneCoroutine(string sceneName)
+    {
+        // Load the loading scene first
+        yield return SceneManager.LoadSceneAsync(loadingSceneName, LoadSceneMode.Single);
+
+        // Unload the current scene
+        yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);
+
+        // Load the new scene
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        _isLoadingScene = false;
+    }
+
+    public void EnterCutscene()
+    {
+        LoadScene(cutsceneSceneName);
+        onCutsceneStart.Invoke();
+    }
+
+    public void ExitCutscene()
+    {
+        onCutsceneEnd.Invoke();
+        StartGame();
+    }
+
+    public void StartGame()
+    {
+        if (!_hasPlayedCutscene) {
+            LoadScene(cutsceneSceneName);
+            onCutsceneStart.Invoke();
+            _hasPlayedCutscene = true;
+            return;
+        }
+
+        LoadScene(gameSceneName);
+        onGameStart.Invoke();
+    }
+
+    public void EndGame()
+    {
+        onGameEnd.Invoke();
+        LoadScene(mainMenuSceneName);
+        onEnterMenu.Invoke();
+    }
+
+}

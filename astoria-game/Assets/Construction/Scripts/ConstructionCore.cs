@@ -415,6 +415,8 @@ namespace Construction
                         {
                             if (hit.transform.GetComponentInParent<ConstructionObject>() != null)
                             {
+                                UnhighlightObject(_highlightedForDeletionObject);
+
                                 GameObject highlightedObject = hit.transform.GetComponentInParent<ConstructionObject>().gameObject;
 
                                 if (_highlightedForDeletionObject == highlightedObject) break;
@@ -650,6 +652,8 @@ namespace Construction
 
         public GameObject ReplaceObject(GameObject objectToDestroy, ConstructionComponentData newObject)
         {
+            UnhighlightObject(_highlightedForDeletionObject);
+
             // Create the new object
             GameObject newPlacedObject = Instantiate(newObject.PlacedPrefab, objectToDestroy.transform.position, objectToDestroy.transform.rotation);
             newPlacedObject.transform.SetParent(_structureParent);
@@ -659,6 +663,9 @@ namespace Construction
 
             newPlacedObject.GetComponent<ConstructionComponent>().SetData(newObject);
             newPlacedObject.GetComponent<ConstructionComponent>().CreateInitialConnections();
+
+            // Unhighlight the new object
+            // UnhighlightObject(newPlacedObject);
 
             return newPlacedObject;
         }
@@ -675,11 +682,6 @@ namespace Construction
             return placedObject;
         }
 
-        private ConstructionData TryDeleteObject()
-        {
-            return null;
-        }
-
         public void CleanupPreviewObject()
         {
             if (_previewObject != null)
@@ -692,31 +694,40 @@ namespace Construction
             // _selectedData = null;
         }
 
+        private bool objectIsHighlighted = false;
         private void HighlightObject(GameObject obj, Material mat)
         {
+            if (objectIsHighlighted) Debug.LogError("Object is already highlighted");
             _highlightedRenderers = new List<Renderer>(obj.GetComponentsInChildren<Renderer>());
+
             foreach (Renderer r in _highlightedRenderers)
             {
                 _highlightedMaterials.Add(r.material);
 
                 r.material = mat;
             }
+
+            objectIsHighlighted = true;
         }
 
         private void UnhighlightObject(GameObject obj)
         {
-            if (obj == null) return;
-            if (_highlightedRenderers.Count == 0) return;
+            if (!objectIsHighlighted) return;
 
-            for (int i = 0; i < _highlightedRenderers.Count; i++)
+            if (obj != null)
             {
-                _highlightedRenderers[i].material = _highlightedMaterials[i];
+                for (int i = 0; i < _highlightedRenderers.Count; i++)
+                {
+                    _highlightedRenderers[i].material = _highlightedMaterials[i];
+                }
             }
 
             _highlightedRenderers.Clear();
             _highlightedMaterials.Clear();
 
             _highlightedForDeletionObject = null;
+
+            objectIsHighlighted = false;
         }
 
         public void SetConstructionState(ConstructionState state)
