@@ -19,6 +19,8 @@ namespace Construction
     public bool usedHorizontally; // If another component is connected to this edge horizontally
     public bool usedVertically; // If another component is connected to this edge vertically
 
+    public Vector3 Position => Transform.position + Transform.rotation * position;
+
     public Edge()
     {
     }
@@ -52,14 +54,14 @@ namespace Construction
 
     public bool IsSame(Edge otherEdge, float threshold = 0.1f)
     {
-      Vector3 firstPosition = Transform.position + Transform.rotation * position;
-      Vector3 secondPosition = otherEdge.Transform.position + otherEdge.Transform.rotation * otherEdge.position;
+      Vector3 firstPosition = Position;
+      Vector3 secondPosition = otherEdge.Position;
       return VectorFunctions.Vector3Approximately(firstPosition, secondPosition, threshold);
     }
 
     public bool IsSame(Vector3 tryPosition, float threshold = 0.1f)
     {
-      Vector3 firstPosition = Transform.position + Transform.rotation * position;
+      Vector3 firstPosition = Position;
       return VectorFunctions.Vector3Approximately(firstPosition, tryPosition, threshold);
     }
 
@@ -68,7 +70,7 @@ namespace Construction
       Vector3 edgePosition = position;
 
       // Convert edge position to world space
-      Vector3 worldEdgePosition = Transform.position + Transform.rotation * edgePosition;
+      Vector3 worldEdgePosition = Position;
 
       // Ignore the Y component of the edge position
       // tryPosition.y = worldEdgePosition.y;
@@ -170,7 +172,7 @@ namespace Construction
     {
       List<ConstructionComponent> nearbyComponents = new List<ConstructionComponent>();
 
-      Collider[] hits = Physics.OverlapSphere(Transform.position + Transform.rotation * position, distance);
+      Collider[] hits = Physics.OverlapSphere(Position, distance);
 
       // Debug.Log($"Checking {hits.Length} hits.");
 
