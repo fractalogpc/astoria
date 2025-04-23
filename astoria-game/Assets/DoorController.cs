@@ -31,16 +31,16 @@ public class DoorController : MonoBehaviour
         Vector3 playerPosition = PlayerInstance.Instance.transform.position;
         Vector3 doorPosition = transform.position;
 
-        Vector3 direction = (doorPosition - playerPosition).normalized;
+        Vector3 direction = (playerPosition - doorPosition).normalized;
         float angle = Vector3.SignedAngle(Vector3.forward, direction, Vector3.up);
 
-        if (angle < 0)
+        if (angle >= -90 && angle <= 90)
         {
-            return "OpenForwards";
+            return "OpenBackwards";
         }
         else
         {
-            return "OpenBackwards";
+            return "OpenForwards";
         }
     }
 }
