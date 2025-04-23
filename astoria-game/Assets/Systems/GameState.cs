@@ -18,17 +18,22 @@ public class GameState : MonoBehaviour
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string loadingSceneName = "LoadingScene";
 
-    private bool _hasPlayedCutscene = true;
+    private bool _hasPlayedCutscene = false;
     private bool _isLoadingScene = false;
 
-    void Start()
-    {
-        
-    }
+    private GameState _instance;
 
-    void Update()
+    private void Awake()
     {
-        
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void LoadScene(string sceneName)
