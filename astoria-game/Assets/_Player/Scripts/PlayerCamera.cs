@@ -41,6 +41,12 @@ namespace Player
       RegisterAction(_inputActions.Cutscene.Look, ctx => _mouseInput = ctx.ReadValue<Vector2>(), () => _mouseInput = Vector2.zero);
     }
 
+    private void Awake()
+    {
+      // Fetch correct Y rotation from transform
+      PlayerYLookQuaternion = Quaternion.Euler(0, _playerTransform.rotation.eulerAngles.y, 0);
+    }
+
     private void Update() {
       if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible) {
         canLook = false;
