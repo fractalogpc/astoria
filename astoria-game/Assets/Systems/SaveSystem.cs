@@ -78,7 +78,7 @@ public class SaveSystem : MonoBehaviour
         // Fetch the current game data to save
         SaveGameData saveGameData = new SaveGameData
         {
-            empty = true,
+            empty = false,
             playerPosition = new Vector3(0, 0, 0), // Replace with actual player position
             playerHealth = 100f, // Replace with actual player health
             playerHunger = 100f, // Replace with actual player hunger
