@@ -1,4 +1,5 @@
 using UnityEngine;
+using Construction;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -26,6 +27,15 @@ public class SaveSystem : MonoBehaviour
         public float playerHealth;
         public float playerHunger;
         public float playerThirst;
+        public BuildingComponent[] buildingComponents;
+    }
+
+    [System.Serializable]
+    public struct BuildingComponent {
+        public int componentIndex;
+        public Vector3 position;
+        public Quaternion rotation;
+        public float health;
     }
 
     public static SaveSystem Instance { get; private set; }
@@ -67,14 +77,38 @@ public class SaveSystem : MonoBehaviour
             playerHealth = 100f, // Replace with actual player health
             playerHunger = 100f, // Replace with actual player hunger
             playerThirst = 100f, // Replace with actual player thirst
+
+            buildingComponents = GetConstructionComponents(),
         };
         return saveGameData;
+    }
+
+    private BuildingComponent[] GetConstructionComponents()
+    {
+        ConstructionComponent[] constructionComponents = FindObjectsByType<ConstructionComponent>(FindObjectsSortMode.None);
+        BuildingComponent[] components = new BuildingComponent[constructionComponents.Length];
+
+        for (int i = 0; i < constructionComponents.Length; i++)
+        {
+            ConstructionComponent cc = constructionComponents[i];
+            components[i] = new BuildingComponent
+            {
+            componentIndex = cc.data.ComponentIndex,
+            position = cc.transform.position,
+            rotation = cc.transform.rotation,
+            health = cc.health // Assuming ConstructionComponent has a Health property
+            };
+        }
+
+        return components;
     }
 
     private void LoadGameData(SaveGameData saveGameData)
     {
         Debug.Log("Loading game data: " + JsonUtility.ToJson(saveGameData, true));
         
+        ConstructionBuilder.Instance.BuildConstruction(saveGameData.buildingComponents);
+
         if (saveGameData.empty) Debug.Log("Loaded empty save file, allowing for new game.");
     }
 
@@ -87,6 +121,7 @@ public class SaveSystem : MonoBehaviour
         {
             string json = System.IO.File.ReadAllText(path);
             saveData = JsonUtility.FromJson<SaveSystemData>(json);
+
             Debug.Log("Save data loaded from " + path);
         }
         else
