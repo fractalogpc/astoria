@@ -85,22 +85,26 @@ public class GameState : MonoBehaviour
 
     private IEnumerator EndCutsceneTriggeredCoroutine()
     {
-        // Load the loading scene
-        yield return SceneManager.LoadSceneAsync(loadingSceneName, LoadSceneMode.Additive);
-
-        // Unload the cutscene scene
-        yield return SceneManager.UnloadSceneAsync(cutsceneSceneName);
-
-        // Load game scene
-        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
-
         Time.timeScale = 1; // Reset time scale to normal
 
-        // Load the cutscene end transition scene
+        // I want to do it like this to avoid a loading screen
+        // We have to time the transition scene to not reveal the world until the game scene is loaded
+        // And the lights + other stuff need to be consistent between the transition and the game scene
+        // The proper way to do this is to maintain an "Environment" holder in the transition scene
+        // And to disable the cutscene's environment holder when this starts, simultaneously enabling the transition's environment holder
+        // Then we can just load the game scene additively and disable the transition's environment holder when the game scene is loaded while enabling the game's environment holder
+        
         yield return SceneManager.LoadSceneAsync(cutsceneEndTransitionSceneName, LoadSceneMode.Additive);
+        EnvironmentHolderManager.InstanceIntroCutscene.gameObject.SetActive(false); // Enable the transition environment holder
+        EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(false); // Enable the transition environment holder
+        EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(true); // Enable the transition environment holder
 
-        // Unload the loading scene
-        yield return SceneManager.UnloadScene(loadingSceneName);
+        yield return SceneManager.UnloadSceneAsync(cutsceneSceneName); // Unload the cutscene scene
+
+        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
+        EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(false); // Disable the transition environment holder
+        EnvironmentHolderManager.InstanceGame.gameObject.SetActive(false); // Enable the game environment holder
+        EnvironmentHolderManager.InstanceGame.gameObject.SetActive(true); // Enable the game environment holder
 
         onCutsceneEnd.Invoke();
     }
