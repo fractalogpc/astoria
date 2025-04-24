@@ -17,6 +17,7 @@ public class GameState : MonoBehaviour
     [SerializeField] private string gameSceneName = "Prototype2";
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string loadingSceneName = "LoadingScene";
+    [SerializeField] private string cutsceneEndTransitionSceneName = "CutsceneEndTransition";
 
     private bool _hasPlayedCutscene = false;
     private bool _isLoadingScene = false;
@@ -74,6 +75,32 @@ public class GameState : MonoBehaviour
     {
         onCutsceneEnd.Invoke();
         StartGame();
+    }
+
+    public void EndCutsceneTriggered()
+    {
+        // Addtively load the cutscene end transition scene, additively load the game scene, and then unload the main cutscene scene.
+        StartCoroutine(EndCutsceneTriggeredCoroutine());
+    }
+
+    private IEnumerator EndCutsceneTriggeredCoroutine()
+    {
+        // Load the game scene additively
+        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
+
+        // Load the cutscene end transition scene additively (with camera and stuff)
+        yield return SceneManager.LoadSceneAsync(cutsceneEndTransitionSceneName, LoadSceneMode.Additive);
+
+        // Unload the cutscene scene
+        yield return SceneManager.UnloadSceneAsync(cutsceneSceneName);
+
+        onCutsceneEnd.Invoke();
+    }
+
+    public void UnloadCutsceneEndTransitionScene()
+    {
+        // Unload the cutscene end transition scene
+        SceneManager.UnloadSceneAsync(cutsceneEndTransitionSceneName);
     }
 
     public void StartGame(bool hasPlayedCutscene = false)
