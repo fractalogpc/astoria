@@ -20,14 +20,15 @@ public class GameState : MonoBehaviour
 
     private bool _hasPlayedCutscene = false;
     private bool _isLoadingScene = false;
+    public bool IsLoadingScene => _isLoadingScene;
 
-    private GameState _instance;
+    public static GameState Instance { get; private set; }
 
     private void Awake()
     {
-        if (_instance == null)
+        if (Instance == null)
         {
-            _instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -75,9 +76,9 @@ public class GameState : MonoBehaviour
         StartGame();
     }
 
-    public void StartGame()
+    public void StartGame(bool hasPlayedCutscene = false)
     {
-        if (!_hasPlayedCutscene) {
+        if (!hasPlayedCutscene) {
             LoadScene(cutsceneSceneName);
             onCutsceneStart.Invoke();
             _hasPlayedCutscene = true;
