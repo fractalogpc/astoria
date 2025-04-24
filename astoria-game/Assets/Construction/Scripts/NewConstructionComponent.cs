@@ -21,7 +21,7 @@ namespace Construction
         private Dictionary<Edge, Connection> connections = new Dictionary<Edge, Connection>();
         private float stability = 0f;
         public float Stability => stability;
-        private float health = 0f;
+        public float health = 0f;
 
         [HideInInspector] public bool IsDeleted = false;
 
@@ -42,6 +42,11 @@ namespace Construction
                 edge.Transform = transform;
                 edge.Data = data;
             }
+        }
+
+        public void SetHealth(float health)
+        {
+            this.health = health;
         }
 
         // For each edge in the component, check if it is colliding with any other component's edge then create a connection between them

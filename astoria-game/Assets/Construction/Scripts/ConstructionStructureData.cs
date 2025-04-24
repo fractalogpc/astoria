@@ -17,6 +17,8 @@ public class ConstructionComponentData : ConstructionData
         Floor
     }
 
+    public int ComponentIndex;
+
     [Header("Structure Settings")]
     public StructureType Type;
 
