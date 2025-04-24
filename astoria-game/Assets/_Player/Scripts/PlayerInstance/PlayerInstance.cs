@@ -8,8 +8,8 @@ public class PlayerInstance : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(Instance.gameObject);
+            Debug.LogWarning("Duplicate PlayerInstance destroyed. Only one instance is allowed.");
         }
 
         Instance = this;

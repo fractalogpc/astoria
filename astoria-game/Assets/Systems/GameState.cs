@@ -85,11 +85,11 @@ public class GameState : MonoBehaviour
 
     private IEnumerator EndCutsceneTriggeredCoroutine()
     {
-        // Load the game scene additively
-        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
-
         // Load the cutscene end transition scene additively (with camera and stuff)
         yield return SceneManager.LoadSceneAsync(cutsceneEndTransitionSceneName, LoadSceneMode.Additive);
+
+        // Load the game scene additively
+        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
 
         // Unload the cutscene scene
         yield return SceneManager.UnloadSceneAsync(cutsceneSceneName);
