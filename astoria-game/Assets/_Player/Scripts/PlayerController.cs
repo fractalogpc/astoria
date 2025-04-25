@@ -631,5 +631,11 @@ namespace Player
       Motor.SetPositionAndRotation(position, rotation);
       transform.rotation = rotation;
     }
+
+    public void ResetPositionAndRotation() {
+      Vector3 position = transform.position;
+      Quaternion rotation = transform.rotation;
+      Motor.SetPositionAndRotation(position, rotation);
+    }
   }
 }
