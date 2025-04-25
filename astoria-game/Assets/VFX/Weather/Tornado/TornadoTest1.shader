@@ -3,7 +3,7 @@ Shader "Unlit/TornadoTest1"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _CameraRotation ("Camera Rotation", Vector) = (1., 1., 1., 1.)
+        _CameraRotation ("Camera Rotation", Vector) = (1., 1., 1.)
     }
     SubShader
     {
@@ -22,6 +22,12 @@ Shader "Unlit/TornadoTest1"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
 
+            #define TAU 6.283185307
+
+            #define MAX_DISTANCE 100000.
+            #define MAX_STEPS 500.
+            #define EPSILON .001
+
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -36,10 +42,46 @@ Shader "Unlit/TornadoTest1"
                 float4 vertex : SV_POSITION;
             };
 
+            struct CappedCone {
+                float3 Position;
+                float Radius;
+                float Height;
+                float3 Color;
+            };
+
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            float3 cameraPos;
-            float4 _CameraRotation;
+            float3 _CameraRotation;
+
+            float3x3 GetRotationX(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return float3x3(
+                    1, 0, 0,
+                    0, c, -s,
+                    0, s, c
+                );
+            }
+
+            float3x3 GetRotationY(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return float3x3(
+                     c, 0, s,
+                     0, 1, 0,
+                    -s, 0, c
+                );
+            }
+
+            float3x3 GetRotationZ(float angle) {
+                float c = cos(angle);
+                float s = sin(angle);
+                return float3x3(
+                    c, -s, 0,
+                    s,  c, 0,
+                    0,  0, 1
+                );
+            }
 
             v2f vert(appdata v)
             {
@@ -51,13 +93,70 @@ Shader "Unlit/TornadoTest1"
                 return o;
             }
 
+            float CappedConeSDF(float3 thePoint, float3 theCenter, float radius, float height) {
+                float distance = length(theCenter.xz - thePoint.xz) - ((thePoint.y - theCenter.y) * radius);
+                distance = max(distance, length(thePoint - theCenter) - height);
+                return distance;
+            }
+
+            float Scene(float3 thePoint) {
+                CappedCone cone;
+                cone.Position = float3(0, 0, 0);
+                cone.Radius = .5;
+                cone.Height = 10.;
+
+                float distance = CappedConeSDF(thePoint, cone.Position, cone.Radius, cone.Height);
+
+                return distance;
+            }
+
+            float3 calcNormal(in float3 thePoint) {
+                const float2 h = float2(.00001, 0);
+                return normalize(
+                    float3(
+                        Scene(thePoint + h.xyy) - Scene(thePoint - h.xyy),
+                        Scene(thePoint + h.yxy) - Scene(thePoint - h.yxyx),
+                        Scene(thePoint + h.yyx) - Scene(thePoint - h.yyx)
+                    )
+                );
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
-                cameraPos = _WorldSpaceCameraPos;
-                float4 cameraRotationMatrix = _CameraRotation;
+                float2 uv = 2. * (i.uv - .5);
+                
+                uv *= .7;
+
+                float3 color = float3(0, 0, 0);
+                float distance = 0.;
+                float calcDist = 0.;
+                float3 rayOrigin = _WorldSpaceCameraPos;
+                float3 normalizedCamera = (fmod(_CameraRotation, float3(360, 360, 360)) / float3(360, 360, 360)) * float3(TAU, TAU, TAU);
+                float3x3 rotation = mul(mul(GetRotationX(normalizedCamera.x), GetRotationY(normalizedCamera.y)), GetRotationZ(normalizedCamera.z));
+                float3 rayDirection = normalize(mul(rotation, float3(uv, 1.)));
+
+                for (float i = 0.; i < MAX_STEPS; i++) {
+                    rayDirection = rayOrigin + normalize(mul(rotation, float3(uv, 1.))) * distance;
+                    calcDist = Scene(rayDirection);
+
+                    if (calcDist < EPSILON) {
+                        color = float3(1., 1., 1.);
+                        break;
+                    }
+
+                    if (distance > MAX_DISTANCE) {
+                        break;
+                    }
+
+                    distance += max(calcDist, EPSILON);
+                }
                 // sample the texture
-                fixed4 col = float4(i.worldPos, 1.);
+                fixed4 col = float4(color, length(color));
                 // apply fog
+
+                if (col.a < .1) {
+                    discard;
+                }
                 //UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
