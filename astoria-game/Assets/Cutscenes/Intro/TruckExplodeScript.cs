@@ -16,13 +16,20 @@ public class TruckExplodeScript : MonoBehaviour
 		_explosionEffect.Play();
 		SetKinematicsAllRigidbodies(false);
 		SetMaterialBlackColor(_truckMaterial);
+
+		Invoke(nameof(InvokeKinematic), 2f);
 	}
 	
 	private void SetKinematicsAllRigidbodies(bool isKinematic) {
+		Debug.Log("Set Kinematics: " + isKinematic);
 		Rigidbody[] rigidbodies = GetComponentsInChildren<Rigidbody>();
 		foreach (Rigidbody rb in rigidbodies) {
 			rb.isKinematic = isKinematic;
 		}
+	}
+
+	private void InvokeKinematic() {
+		SetKinematicsAllRigidbodies(true);
 	}
 	
 	private void SetMaterialBlackColor(Material material) {

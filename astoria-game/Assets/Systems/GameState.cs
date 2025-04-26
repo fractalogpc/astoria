@@ -17,17 +17,19 @@ public class GameState : MonoBehaviour
     [SerializeField] private string gameSceneName = "Prototype2";
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string loadingSceneName = "LoadingScene";
+    [SerializeField] private string cutsceneEndTransitionSceneName = "CutsceneEndTransition";
 
     private bool _hasPlayedCutscene = false;
     private bool _isLoadingScene = false;
+    public bool IsLoadingScene => _isLoadingScene;
 
-    private GameState _instance;
+    public static GameState Instance { get; private set; }
 
     private void Awake()
     {
-        if (_instance == null)
+        if (Instance == null)
         {
-            _instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -75,9 +77,45 @@ public class GameState : MonoBehaviour
         StartGame();
     }
 
-    public void StartGame()
+    public void EndCutsceneTriggered()
     {
-        if (!_hasPlayedCutscene) {
+        // Addtively load the cutscene end transition scene, additively load the game scene, and then unload the main cutscene scene.
+        StartCoroutine(EndCutsceneTriggeredCoroutine());
+    }
+
+    private IEnumerator EndCutsceneTriggeredCoroutine()
+    {
+        Time.timeScale = 1; // Reset time scale to normal
+
+        // I want to do it like this to avoid a loading screen
+        // We have to time the transition scene to not reveal the world until the game scene is loaded
+        // And the lights + other stuff need to be consistent between the transition and the game scene
+        // The proper way to do this is to maintain an "Environment" holder in the transition scene
+        // And to disable the cutscene's environment holder when this starts, simultaneously enabling the transition's environment holder
+        // Then we can just load the game scene additively and disable the transition's environment holder when the game scene is loaded while enabling the game's environment holder
+        
+        yield return SceneManager.LoadSceneAsync(cutsceneEndTransitionSceneName, LoadSceneMode.Additive);
+        EnvironmentHolderManager.InstanceIntroCutscene.gameObject.SetActive(false); // Enable the transition environment holder
+
+        // TODO: This doesn't work. The wind is still too windy which means that switching the TVE Manager in the same frame doesn't work. Fix later.
+
+        yield return SceneManager.UnloadSceneAsync(cutsceneSceneName); // Unload the cutscene scene
+
+        yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
+        EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(false); // Disable the transition environment holder
+
+        onCutsceneEnd.Invoke();
+    }
+
+    public void UnloadCutsceneEndTransitionScene()
+    {
+        // Unload the cutscene end transition scene
+        SceneManager.UnloadSceneAsync(cutsceneEndTransitionSceneName);
+    }
+
+    public void StartGame(bool hasPlayedCutscene = false)
+    {
+        if (!hasPlayedCutscene) {
             LoadScene(cutsceneSceneName);
             onCutsceneStart.Invoke();
             _hasPlayedCutscene = true;

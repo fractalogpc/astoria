@@ -1,5 +1,6 @@
 using UnityEngine;
 using Construction;
+using System.Collections;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -54,6 +55,11 @@ public class SaveSystem : MonoBehaviour
         
         LoadSaveInfo();
     }
+    
+    public SaveInfo[] GetSaveInfos()
+    {
+        return saveData.saveInfos;
+    }
 
     private void OnDestroy()
     {
@@ -72,7 +78,7 @@ public class SaveSystem : MonoBehaviour
         // Fetch the current game data to save
         SaveGameData saveGameData = new SaveGameData
         {
-            empty = true,
+            empty = false,
             playerPosition = new Vector3(0, 0, 0), // Replace with actual player position
             playerHealth = 100f, // Replace with actual player health
             playerHunger = 100f, // Replace with actual player hunger
@@ -106,10 +112,12 @@ public class SaveSystem : MonoBehaviour
     private void LoadGameData(SaveGameData saveGameData)
     {
         Debug.Log("Loading game data: " + JsonUtility.ToJson(saveGameData, true));
+        if (saveGameData.empty) {
+            Debug.Log("Loaded empty save file, allowing for new game.");
+            return;
+        }
         
         ConstructionBuilder.Instance.BuildConstruction(saveGameData.buildingComponents);
-
-        if (saveGameData.empty) Debug.Log("Loaded empty save file, allowing for new game.");
     }
 
     public void LoadSaveInfo()
@@ -141,7 +149,7 @@ public class SaveSystem : MonoBehaviour
     {
         SaveInfo newSave = new SaveInfo
         {
-            saveName = "New Save",
+            saveName = "Save #" + (saveData.saveInfos.Length + 1),
             saveDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             saveIndex = saveData.saveInfos.Length
         };
@@ -182,13 +190,24 @@ public class SaveSystem : MonoBehaviour
     {
         currentSaveIndex = saveIndex;
 
-        string savePath = Application.persistentDataPath + "/saves/" + saveIndex + ".json";
+        StartCoroutine(LoadSaveCoroutine());
+    }
+
+    private IEnumerator LoadSaveCoroutine()
+    {
+        
+
+        string savePath = Application.persistentDataPath + "/saves/" + currentSaveIndex + ".json";
         if (System.IO.File.Exists(savePath))
         {
             string json = System.IO.File.ReadAllText(savePath);
             SaveGameData saveGameData = JsonUtility.FromJson<SaveGameData>(json);
 
-            LoadGameData(saveGameData); // Load the game data into the game
+            GameState.Instance.StartGame(saveGameData.empty ? false : true);
+
+            yield return new WaitUntil(() => GameState.Instance.IsLoadingScene == false); // Wait until the loading scene is not loading
+
+            if (!saveGameData.empty) LoadGameData(saveGameData); // Load the game data into the game
 
             Debug.Log("Loaded save game data from " + savePath);
         }
@@ -231,7 +250,7 @@ public class SaveSystem : MonoBehaviour
         // Go through all save files and delete them
         for (int i = 0; i < saveData.saveInfos.Length; i++)
         {
-            string savePath = Application.persistentDataPath + "/save" + saveData.saveInfos[i].saveIndex + ".json";
+            string savePath = Application.persistentDataPath + "/saves/" + saveData.saveInfos[i].saveIndex + ".json";
             if (System.IO.File.Exists(savePath))
             {
                 System.IO.File.Delete(savePath);
@@ -245,6 +264,8 @@ public class SaveSystem : MonoBehaviour
             System.IO.File.Delete(path);
             Debug.Log("Deleted save data info file at " + path);
         }
+
+        saveData.saveInfos = new SaveInfo[0]; // Reset the save data info
 
         Debug.Log("All saves cleared.");
     }
