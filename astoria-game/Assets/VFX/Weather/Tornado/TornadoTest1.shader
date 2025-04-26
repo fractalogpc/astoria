@@ -4,6 +4,9 @@ Shader "Unlit/TornadoTest1"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _CameraRotation ("Camera Rotation", Vector) = (1., 1., 1.)
+        _Resolution ("Screen Resolution", Vector) = (1., 1., 1.)
+        _MainLightDirection ("Light Direction", Vector) = (1., 1., 1.)
+        _MainLightColor ("Light Color", Vector) = (1., 1., 1)
     }
     SubShader
     {
@@ -52,6 +55,9 @@ Shader "Unlit/TornadoTest1"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float3 _CameraRotation;
+            float3 _Resolution;
+            float3 _MainLightDirection;
+            float4 _MainLightColor;
 
             float3x3 GetRotationX(float angle) {
                 float c = cos(angle);
@@ -103,7 +109,7 @@ Shader "Unlit/TornadoTest1"
                 CappedCone cone;
                 cone.Position = float3(0, 0, 0);
                 cone.Radius = .5;
-                cone.Height = 10.;
+                cone.Height = 30.;
 
                 float distance = CappedConeSDF(thePoint, cone.Position, cone.Radius, cone.Height);
 
@@ -123,15 +129,16 @@ Shader "Unlit/TornadoTest1"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 uv = 2. * (i.uv - .5);
+                float2 uv = (2. * i.vertex.xy - _Resolution.xy) / min(_Resolution.x, _Resolution.y);
+
                 
-                uv *= .7;
+                uv *= .6;
 
                 float3 color = float3(0, 0, 0);
                 float distance = 0.;
                 float calcDist = 0.;
                 float3 rayOrigin = _WorldSpaceCameraPos;
-                float3 normalizedCamera = (fmod(_CameraRotation, float3(360, 360, 360)) / float3(360, 360, 360)) * float3(TAU, TAU, TAU);
+                float3 normalizedCamera = _CameraRotation;
                 float3x3 rotation = mul(mul(GetRotationX(normalizedCamera.x), GetRotationY(normalizedCamera.y)), GetRotationZ(normalizedCamera.z));
                 float3 rayDirection = normalize(mul(rotation, float3(uv, 1.)));
 
@@ -140,7 +147,8 @@ Shader "Unlit/TornadoTest1"
                     calcDist = Scene(rayDirection);
 
                     if (calcDist < EPSILON) {
-                        color = float3(1., 1., 1.);
+                        color = float3(.3, .3, .3);
+                        color += max(dot(calcNormal(rayDirection), -_MainLightDirection), 0.) * _MainLightColor.xyz;
                         break;
                     }
 
@@ -153,8 +161,7 @@ Shader "Unlit/TornadoTest1"
                 // sample the texture
                 fixed4 col = float4(color, length(color));
                 // apply fog
-
-                if (col.a < .1) {
+                if (col.a < .2) {
                     discard;
                 }
                 //UNITY_APPLY_FOG(i.fogCoord, col);
