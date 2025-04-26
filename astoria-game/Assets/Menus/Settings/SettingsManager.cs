@@ -17,11 +17,47 @@ public class SettingsManager : MonoBehaviour
 
     public static float RenderResolution { get; private set; } = 100f;
 
-    private void Start()
+    public static SettingsManager Instance { get; private set; }
+
+    private int _framesSinceLastUpdate = 0;
+    private const int _framesToWait = 5;
+    private bool _queuedUpdate = false;
+
+    private void Awake()
     {
-        DynamicResolutionHandler.SetDynamicResScaler(() => 5.0f, DynamicResScalePolicyType.ReturnsPercentage);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        ReloadSettings();
     }
 
+    private void Start()
+    {
+        DynamicResolutionHandler.SetDynamicResScaler(() => RenderResolution, DynamicResScalePolicyType.ReturnsPercentage);
+    }
+
+    private void Update()
+    {
+        _framesSinceLastUpdate++;
+
+        if (_queuedUpdate)
+        {
+            if (_framesSinceLastUpdate >= _framesToWait)
+            {
+                ReloadSettings();
+                _queuedUpdate = false;
+                _framesSinceLastUpdate = 0;
+            }
+        }
+    }
+    
     public void SetRenderResolution(float value)
     {
         SetSettingFloat("RenderResolution", value);
@@ -45,10 +81,18 @@ public class SettingsManager : MonoBehaviour
 
     private void ReloadSettings()
     {
+        // Check if we need to wait for the next frame to apply the settings
+        if (_framesSinceLastUpdate < _framesToWait)
+        {
+            _queuedUpdate = true;
+            return;
+        }
+
         // Apply settings
 
         // Graphics
         float renderResolution = PlayerPrefs.GetFloat("RenderResolution", 100f);
+        RenderResolution = renderResolution;
         Debug.Log("Render Resolution: " + renderResolution);
 
         Debug.Log("Settings reloaded.");
