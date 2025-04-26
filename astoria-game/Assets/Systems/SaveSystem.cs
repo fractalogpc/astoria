@@ -195,7 +195,6 @@ public class SaveSystem : MonoBehaviour
 
     private IEnumerator LoadSaveCoroutine()
     {
-        
 
         string savePath = Application.persistentDataPath + "/saves/" + currentSaveIndex + ".json";
         if (System.IO.File.Exists(savePath))

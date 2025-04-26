@@ -89,6 +89,8 @@ namespace Construction
             SetConstructionState(ConstructionState.None);
 
             PopulateData();
+
+            _cameraTransform = GameState.Instance.transform;
         }
 
         private void PopulateData()
