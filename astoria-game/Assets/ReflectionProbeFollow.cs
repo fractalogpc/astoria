@@ -23,19 +23,21 @@ public class ReflectionProbeFollow : MonoBehaviour
   private int _waitForRenderFrames = 0;
   private int _renderFrameTime = 25;
 
-  private IEnumerator Start() {
+  private void Start() {
     _reflectionProbeComponent.timeSlicingMode = ReflectionProbeTimeSlicingMode.IndividualFaces;
     _secondaryReflectionProbeComponent.timeSlicingMode = ReflectionProbeTimeSlicingMode.IndividualFaces;
 
-    while (true) {
-        if (PlayerInstance.Instance == null) {
-          yield return null;
-          continue;
-        }
-        _localPlayer = PlayerInstance.Instance.transform;
-        _timeSinceLastUpdate = _updateInterval;
-        break;
-    }
+    _localPlayer = transform;
+
+    // while (true) {
+    //     if (PlayerInstance.Instance == null) {
+    //       yield return null;
+    //       continue;
+    //     }
+    //     _localPlayer = PlayerInstance.Instance.transform;
+    //     _timeSinceLastUpdate = _updateInterval;
+    //     break;
+    // }
   }
 
   private void Update() {
