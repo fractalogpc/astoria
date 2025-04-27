@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class TreeChoppable : HealthManager
 {
+	public bool DontTimeout = false;
+
 	[SerializeField] private ItemData _woodItem;
 	[SerializeField] private int _dropAmountOnFell = 10;
 	[SerializeField] private float _healthOnFell = 200f;
@@ -79,7 +81,7 @@ public class TreeChoppable : HealthManager
 			_rigidbody.isKinematic = false;
 			PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(_woodItem, _dropAmountOnFell);
 
-			Invoke(nameof(DestroyTree), lifeTime);
+			if (!DontTimeout) Invoke(nameof(DestroyTree), lifeTime);
 
 			// _rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition + Vector3.up * 100, ForceMode.Impulse);
 			base.SetHealthDirect(_healthOnFell);

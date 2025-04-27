@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnableOnRuntime : MonoBehaviour
 {
 
-    private void Awake()
-    {
-        gameObject.SetActive(true);
-    }
+    public UnityEvent onStart;
 
+    private void Start()
+    {
+        onStart?.Invoke();
+    }
 }
