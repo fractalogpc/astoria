@@ -129,6 +129,8 @@ public class GameState : MonoBehaviour
     public void EndGame()
     {
         onGameEnd.Invoke();
+        Destroy(GameObject.Find("Systems"));
+        Destroy(GameObject.Find("Player"));
         LoadScene(mainMenuSceneName);
         onEnterMenu.Invoke();
     }
