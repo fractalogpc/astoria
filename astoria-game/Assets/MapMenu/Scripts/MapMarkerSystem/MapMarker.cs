@@ -9,17 +9,17 @@ public class MapMarker
 	public bool ShowDirection;
 	public Vector3 DirectionFacing { get; private set; }
 
-	public MapMarker(string name, Vector3 worldPosition, Sprite icon, bool interactable = true) {
+	public MapMarker(string name, Transform attachedTransform, Sprite icon, bool interactable = true) {
 		Name = name;
-		WorldPosition = worldPosition;
+		WorldPosition = attachedTransform.position;
 		Icon = icon;
 		ShowDirection = false;
 		DirectionFacing = Vector2.negativeInfinity;
 	}
 	
-	public MapMarker(string name, Vector3 worldPosition, Sprite icon, Vector3 directionFacing, bool interactable = true) {
+	public MapMarker(string name, Transform attachedTransform, Sprite icon, Vector3 directionFacing, bool interactable = true) {
 		Name = name;
-		WorldPosition = worldPosition;
+		WorldPosition = attachedTransform.position;
 		Icon = icon;
 		ShowDirection = true;
 		DirectionFacing = directionFacing;

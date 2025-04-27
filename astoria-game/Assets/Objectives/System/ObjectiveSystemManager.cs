@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,16 +8,23 @@ public class ObjectiveSystemManager : MonoBehaviour
 	public List<ObjectiveInstance> ActiveObjectives => _objectiveSystemModel.ActiveObjectives;
 	public PingManager PingManager => _pingManager;
 	public MapMarkerManager MapMarkerManager => _mapMarkerManager;
+	public InventoryComponent PlayerInventory => _playerInventory;
 	
 	[Header("Dependencies")]
 	[SerializeField] private MapMarkerManager _mapMarkerManager;
 	[SerializeField] private PingManager _pingManager;
+	[SerializeField] private InventoryComponent _playerInventory;
 	[Header("View")]
 	[SerializeField] private ObjectiveSystemView _objectiveSystemView;
 	private ObjectiveSystemModel _objectiveSystemModel;
 
 	public ObjectiveInstance AddObjective(ObjectiveData objectiveData) {
 		ObjectiveInstance objectiveInstance = objectiveData.CreateInstance(this);
+		_objectiveSystemModel.AddObjective(objectiveInstance);
+		return objectiveInstance;
+	}
+	
+	public ObjectiveInstance AddObjective(ObjectiveInstance objectiveInstance) {
 		_objectiveSystemModel.AddObjective(objectiveInstance);
 		return objectiveInstance;
 	}
@@ -45,6 +53,23 @@ public class ObjectiveSystemManager : MonoBehaviour
 	private void Awake() {
 		_objectiveSystemModel = new ObjectiveSystemModel();
 		_objectiveSystemModel.AttachToEvents(OnObjectiveAdded, OnObjectiveRemoved, OnObjectiveCompleted, OnSelectedObjectiveChanged);
+	}
+
+	private IEnumerator Start() {
+		// Wait for the player inventory to be set up
+		while (_playerInventory == null) {
+			try {
+				_playerInventory = PlayerInstance.Instance.GetComponent<InventoryComponent>();
+				if (_playerInventory != null) {
+					Debug.Log("ObjectiveSystem: PlayerInventory found!");
+					break;
+				}
+			}
+			catch (NullReferenceException e) {
+				Debug.Log("ObjectiveSystem: Searching for PlayerInventory...");
+			}
+			yield return null;
+		}
 	}
 
 	private void Update() {

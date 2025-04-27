@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Objective Data", menuName = "Scriptable Objects/Objectives/Base Objective", order = 0)]
+[CreateAssetMenu(fileName = "Objective Data", menuName = "Scriptable Objects/Objectives/Custom Objective", order = 0)]
 public class ObjectiveData : ScriptableObject
 {
+    [Header("Objective")]
     [Tooltip("The title of the objective, shown across the UI.")]
     public string Title;
     [Tooltip("The description of the objective. Use this to tell the player what/why they are doing this objective.")]
