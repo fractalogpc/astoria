@@ -14,6 +14,7 @@ public class RainUpdater : MonoBehaviour
 
     public void IncreaseRain()
     {
+        rainVFX.SetFloat("Alpha", 0.01f);
         rainVFX.SetFloat("AlphaCameraThreshold", 1f);
     }
 }
