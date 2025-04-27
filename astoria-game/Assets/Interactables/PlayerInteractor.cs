@@ -9,7 +9,8 @@ public class PlayerInteractor : InputHandlerBase
   [SerializeField] private float _interactDistance = 4f;
   [SerializeField] private float _interactRadius = 0.2f;
   [SerializeField] private LayerMask _harvestableMask;
-
+  [SerializeField] private FadeElementInOut _crosshairCanvas;
+  [SerializeField] private ViewmodelManager _viewmodelManager;
   private Camera _camera;
 
   protected override void InitializeActionMap() {    
@@ -20,7 +21,28 @@ public class PlayerInteractor : InputHandlerBase
     _camera = Camera.main;
   }
 
+  bool _showCrosshair = false;
+  private void Update() {
+    if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
+      Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
+      _showCrosshair = interactable != null;
+    }
+    else {
+      _showCrosshair = false;
+    }
+
+    if (_showCrosshair) {
+      if (_crosshairCanvas.FadingIn) return;
+      _crosshairCanvas.FadeIn();
+    }
+    else {
+      if (_crosshairCanvas.FadingOut) return;
+      _crosshairCanvas.FadeOut();
+    }
+  }
+
   private void Interact() {
+    // _viewmodelManager.PlayInteract();
     if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
       if (interactable != null) {
@@ -28,21 +50,6 @@ public class PlayerInteractor : InputHandlerBase
         return;
       }
     }
-
-    // // Try again with harvestables
-    // if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out hit, _interactDistance, _harvestableMask)) {
-    //   GroundHarvestable harvestable = hit.collider.transform.parent.gameObject.GetComponent<GroundHarvestable>();
-    //   if (harvestable != null) {
-    //     // TODO: Trigger collect animation
-    //     (ItemData, int)[] harvestedItems = harvestable.Harvest();
-    //     foreach ((ItemData item, int amount) in harvestedItems) {
-    //       for (int i = 0; i < amount; i++) {
-    //         PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(item);
-    //       }
-    //     }
-    //     return;
-    //   }
-    // }
   }
 
 }

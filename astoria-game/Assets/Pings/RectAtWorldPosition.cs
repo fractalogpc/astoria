@@ -48,7 +48,7 @@ public class RectAtWorldPosition : MonoBehaviour
         }
     }
 
-    private void Update() {
+    private void LateUpdate() {
         float distance = Vector3.Distance(OriginTransform.position, WorldPosition);
         SetRectSize(_rectTransform, distance);
         SetRectPosition(_rectTransform, WorldPosition);

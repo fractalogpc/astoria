@@ -1,16 +1,19 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Location Objective Data", menuName = "Scriptable Objects/Objectives/Location Objective")]
+/// <summary>
+/// An objective data with an associated location. Does not contain any automatic completion logic.
+/// </summary>
+[CreateAssetMenu(fileName = "Custom Location Objective Data", menuName = "Scriptable Objects/Objectives/Custom Location Objective")]
 public class LocationObjectiveData : ObjectiveData
 {
-    [Tooltip("The location the player must reach to complete the objective.")]
-    public Vector3 Location;
-    [Tooltip("The distance from the location the player must be within to complete the objective.")]
-    public float CompletionDistance = 1f;
+    [Tooltip("The icon that will be shown on the map for this objective.")]
     public Sprite MapMarkerIcon;
+    
+    public bool ShowOnMap = true;
+    public bool ShowInWorld = true;
 
-    public override ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager) {
-        return new LocationObjectiveInstance(this, objectiveSystemManager);
+    public ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager, Transform location) {
+        return new LocationObjectiveInstance(this, objectiveSystemManager, location);
     }
 }

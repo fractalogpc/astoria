@@ -9,7 +9,7 @@ public class PlayerMarker : MonoBehaviour
 	private MapMarker _marker;
 	
 	private void Start() {
-		_marker = new MapMarker("Player", _playerTransform.position, _markerIcon, _playerTransform.forward, false);
+		_marker = new MapMarker("Player", _playerTransform, _markerIcon, _playerTransform.forward, false);
 		_markerManager.AddToMap(_marker);
 	}
 	

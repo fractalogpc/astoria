@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
@@ -10,7 +11,9 @@ public class PingManager : MonoBehaviour
 	[SerializeField] private RectTransform _pingContainer;
 	[SerializeField] private GameObject _pingPrefab;
 	[ReadOnly] [SerializeField] private List<RectAtWorldPosition> _pings = new();
-
+	
+	private List<Coroutine> _coroutines = new();
+	
 	private void Awake() {
 		if (Instance != null && Instance != this) {
 			Destroy(gameObject);
@@ -22,6 +25,13 @@ public class PingManager : MonoBehaviour
 	public RectAtWorldPosition CreatePingAt(Vector3 position) {
 		RectAtWorldPosition ping = Instantiate(_pingPrefab, _pingContainer).GetComponent<RectAtWorldPosition>();
 		ping.SetWorldPosition(position);
+		_pings.Add(ping);
+		return ping;
+	}
+	
+	public RectAtWorldPosition CreatePingAttached(Transform transform) {
+		RectAtWorldPosition ping = Instantiate(_pingPrefab, _pingContainer).GetComponent<RectAtWorldPosition>();
+		_coroutines.Add(StartCoroutine(AttachPingToTransform(ping, transform)));
 		_pings.Add(ping);
 		return ping;
 	}
@@ -69,6 +79,26 @@ public class PingManager : MonoBehaviour
 
 		if (pingToRemove != null) {
 			RemovePing(pingToRemove);
+		}
+	}
+
+	private void OnDisable() {
+		foreach (Coroutine coroutine in _coroutines) {	
+			StopCoroutine(coroutine);
+		}
+		_coroutines.Clear();
+	}
+
+	private IEnumerator AttachPingToTransform(RectAtWorldPosition ping, Transform transform) {
+		while (ping != null && transform != null) {
+			ping.SetWorldPosition(transform.position);
+			yield return null;
+		}
+		if (ping != null) {
+			Destroy(ping.gameObject);
+		}
+		if (transform != null) {
+			Destroy(transform.gameObject);
 		}
 	}
 }

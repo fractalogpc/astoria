@@ -52,6 +52,7 @@ namespace Player
     public Vector3 Gravity = new Vector3(0, -30f, 0);
     public Transform MeshRoot;
     public float CrouchedCapsuleHeight = 1f;
+    public Transform ResetPosition;
 
     public AnimationCurve FallDamageCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
     public float _previousFrameFallSpeed = 0f;
@@ -633,8 +634,8 @@ namespace Player
     }
 
     public void ResetPositionAndRotation() {
-      Vector3 position = transform.position;
-      Quaternion rotation = transform.rotation;
+      Vector3 position = ResetPosition.position;
+      Quaternion rotation = ResetPosition.rotation;
       Motor.SetPositionAndRotation(position, rotation);
     }
   }

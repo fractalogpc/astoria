@@ -1,7 +1,10 @@
 ﻿using System;
 using SteamAudio;
-using Vector3 = UnityEngine.Vector3;
+using UnityEngine;
 
+/// <summary>
+/// An objective instance with an associated location. Does not contain any automatic completion logic.
+/// </summary>
 public class LocationObjectiveInstance : ObjectiveInstance
 {
 	public LocationObjectiveData ObjectiveData => (LocationObjectiveData)base.ObjectiveData;
@@ -9,21 +12,20 @@ public class LocationObjectiveInstance : ObjectiveInstance
 	private MapMarkerManager _mapMarkerManager;
 	private RectAtWorldPosition _pingInstance;
 	private MapMarker _associatedMarker;
+	private Transform _location;
 	
-	public LocationObjectiveInstance(ObjectiveData objectiveData, ObjectiveSystemManager objectiveSystemManager) : base(objectiveData, objectiveSystemManager) {
+	public LocationObjectiveInstance(ObjectiveData objectiveData, ObjectiveSystemManager objectiveSystemManager, Transform location) : base(objectiveData, objectiveSystemManager) {
 		_pingManager = objectiveSystemManager.PingManager;
 		_mapMarkerManager = objectiveSystemManager.MapMarkerManager;
-		_mapMarkerManager.AddToMap(new MapMarker(ObjectiveData.Title, ObjectiveData.Location, ObjectiveData.MapMarkerIcon), _ => OnSelect());
+		_location = location;
+		_mapMarkerManager.AddToMap(new MapMarker(ObjectiveData.Title, _location, ObjectiveData.MapMarkerIcon), _ => OnSelect());
 	}
 	
 	/// <summary>
 	/// Called every frame by ObjectiveSystemManager.
 	/// </summary>
 	public override void Tick() {
-		base.Tick();
-		if (Vector3.Distance(ObjectiveData.Location, PlayerInstance.Instance.transform.position) < ObjectiveData.CompletionDistance) {
-			Complete();
-		}
+
 	}
 
 	/// <summary>
@@ -32,7 +34,7 @@ public class LocationObjectiveInstance : ObjectiveInstance
 	public override void OnSelect() {
 		base.OnSelect();
 		if (_pingManager.PingExists(_pingInstance)) return;
-		_pingInstance = _pingManager.CreatePingAt(ObjectiveData.Location);
+		_pingInstance = _pingManager.CreatePingAttached(_location);
 	}
 
 	/// <summary>
