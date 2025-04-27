@@ -43,6 +43,11 @@ public class SettingsManager : MonoBehaviour
         DynamicResolutionHandler.SetDynamicResScaler(() => RenderResolution, DynamicResScalePolicyType.ReturnsPercentage);
     }
 
+    private void OnDestroy()
+    {
+        DynamicResolutionHandler.SetDynamicResScaler(() => 100.0f, DynamicResScalePolicyType.ReturnsPercentage);
+    }
+
     private void Update()
     {
         _framesSinceLastUpdate++;
