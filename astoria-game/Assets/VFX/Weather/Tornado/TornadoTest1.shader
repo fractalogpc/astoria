@@ -1,4 +1,4 @@
-Shader "Unlit/TornadoTest1"
+Shader "VFXHidden/Tornado"
 {
     Properties
     {
@@ -27,8 +27,8 @@ Shader "Unlit/TornadoTest1"
 
             #define TAU 6.283185307
 
-            #define MAX_DISTANCE 500.
-            #define MAX_STEPS 500.
+            #define MAX_DISTANCE 250.
+            #define MAX_STEPS 200.
             #define EPSILON .001
 
             struct appdata

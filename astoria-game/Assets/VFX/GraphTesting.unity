@@ -634,7 +634,7 @@ Transform:
   m_GameObject: {fileID: 314397805}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 50, z: 0}
+  m_LocalPosition: {x: 0, y: 50, z: 21.8}
   m_LocalScale: {x: 40, y: 100, z: 40}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -654,6 +654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tornado: {fileID: 2100000, guid: 490c6e36760ec4e4e95569cc272c1e38, type: 2}
   camera: {fileID: 536999662}
+  sun: {fileID: 0}
 --- !u!1 &349238036
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &349238037
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1578,7 +1579,7 @@ PrefabInstance:
     - target: {fileID: 8530974241645484876, guid: 5ec6d214e09b9e24a96d607e92163f2a, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1697950910}
+      objectReference: {fileID: 1789444289}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2076,7 +2077,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &1697950910
+--- !u!43 &1789444289
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2252,6 +2253,7 @@ GameObject:
   - component: {fileID: 2009664221}
   - component: {fileID: 2009664223}
   - component: {fileID: 2009664222}
+  - component: {fileID: 2009664224}
   m_Layer: 0
   m_Name: Sphere Volume
   m_TagString: Untagged
@@ -2312,6 +2314,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.015
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2009664224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009664220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 0
+  priority: 0
+  blendDistance: 1
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 18e85011db2634fbc9e96a7989998bca, type: 2}
 --- !u!1 &2085974111
 GameObject:
   m_ObjectHideFlags: 0
