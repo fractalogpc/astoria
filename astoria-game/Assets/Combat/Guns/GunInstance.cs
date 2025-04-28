@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using TMPro.EditorUtilities;
-using Unity.Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

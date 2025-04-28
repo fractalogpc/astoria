@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 
+#if UNITY_EDITOR
 public class CreateAnimationClip : MonoBehaviour
 {
 
@@ -63,3 +64,4 @@ public class CreateAnimationClip : MonoBehaviour
         Debug.Log("Animation clip saved at: " + path);
     }
 }
+#endif

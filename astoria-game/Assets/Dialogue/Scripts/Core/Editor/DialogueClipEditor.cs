@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine.Timeline;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(DialogueClip))]
 public class DialogueClipEditor : Editor
 {
@@ -47,3 +48,4 @@ public class DialogueClipEditor : Editor
 		}
 	}
 }
+#endif

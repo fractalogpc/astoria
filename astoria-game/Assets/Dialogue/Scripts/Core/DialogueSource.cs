@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FMOD.Studio;
-using Mono.CompilerServices.SymbolWriter;
 using UnityEngine;
 public class DialogueSource : MonoBehaviour
 {

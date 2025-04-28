@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR
 public class PhysicsPrefabGenerator : MonoBehaviour
 {
     
@@ -85,3 +86,4 @@ public class PhysicsPrefabGenerator : MonoBehaviour
     }
 
 }
+#endif
