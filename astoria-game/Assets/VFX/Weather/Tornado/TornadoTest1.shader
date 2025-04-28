@@ -11,6 +11,9 @@ Shader "VFXHidden/Tornado"
     SubShader
     {
         Tags { "RenderType"="Transparent" }
+        Cull Off
+        ZWrite On
+        Blend SrcAlpha OneMinusSrcAlpha
         LOD 100
 
         Pass
