@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using FMOD.Studio;
+using FMODUnity;
 
 public class LightningOnDemand : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class LightningOnDemand : MonoBehaviour
     [SerializeField] private float SubVertexMaxSize = 1f;
     [SerializeField] private float SubVertexRandomizationStrength = 1f;
     [Range(0, 1)] public float lerp = .75f;
-
+    [SerializeField] private EventReference _thunderEvent;
 
     public List<Vector3> SubVertexDirection;
     public List<Vector3> SubVertexStart;
@@ -48,7 +50,8 @@ public class LightningOnDemand : MonoBehaviour
 
         _lightningIsSpawned = true;
         _hitTimer = _hitTime;
-
+        EventInstance thunderInstance = AudioManager.Instance.PlayOneShot(_thunderEvent, goal.position);
+        thunderInstance.setParameterByName("Power", 1);
     }
 
     private void Update() {
