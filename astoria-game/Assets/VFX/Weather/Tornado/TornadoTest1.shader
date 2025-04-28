@@ -10,7 +10,7 @@ Shader "Unlit/TornadoTest1"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" }
         LOD 100
 
         Pass
@@ -27,7 +27,7 @@ Shader "Unlit/TornadoTest1"
 
             #define TAU 6.283185307
 
-            #define MAX_DISTANCE 100000.
+            #define MAX_DISTANCE 500.
             #define MAX_STEPS 500.
             #define EPSILON .001
 
@@ -143,25 +143,20 @@ Shader "Unlit/TornadoTest1"
                 float3 rayDirection = normalize(mul(rotation, float3(uv, 1.)));
 
                 for (float i = 0.; i < MAX_STEPS; i++) {
-                    float3 Point = rayOrigin + normalize(mul(rotation, float3(uv, 1.))) * distance;
+
+                    float3 Point = rayOrigin + rayDirection * distance;
+
                     calcDist = Scene(Point);
+                    float3 normal = calcNormal(Point);
 
-                    if (calcDist < EPSILON) {
-                        color = float3(.3, .3, .3);
-                        color += max(dot(calcNormal(Point), -_MainLightDirection), 0.) * _MainLightColor.xyz;
-                        break;
-                    }
+                    color += clamp(-calcDist, -.01, 1.) * max(dot(calcNormal(Point), -_MainLightDirection), 0.1) * .01;
 
-                    if (distance > MAX_DISTANCE) {
-                        break;
-                    }
-
-                    distance += max(calcDist, EPSILON);
+                    distance += max(calcDist, EPSILON + .01);
                 }
                 // sample the texture
                 fixed4 col = float4(color, length(color));
-                // apply fog
-                if (col.a < .2) {
+
+                if (col.a < .1) {
                     discard;
                 }
                 UNITY_APPLY_FOG(i.fogCoord, col);
