@@ -73,9 +73,9 @@ Shader "Unlit/TornadoTest1"
                 float c = cos(angle);
                 float s = sin(angle);
                 return float3x3(
-                     c, 0, s,
-                     0, 1, 0,
-                    -s, 0, c
+                    c, 0,  s,
+                    0, 1,  0,
+                   -s, 0,  c
                 );
             }
 
@@ -125,7 +125,7 @@ Shader "Unlit/TornadoTest1"
                         Scene(thePoint + h.yyx) - Scene(thePoint - h.yyx)
                     )
                 );
-            }
+            } 
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -139,16 +139,16 @@ Shader "Unlit/TornadoTest1"
                 float calcDist = 0.;
                 float3 rayOrigin = _WorldSpaceCameraPos;
                 float3 normalizedCamera = _CameraRotation;
-                float3x3 rotation = mul(mul(GetRotationX(normalizedCamera.x), GetRotationY(normalizedCamera.y)), GetRotationZ(normalizedCamera.z));
+                float3x3 rotation = mul(mul(GetRotationY(normalizedCamera.y), GetRotationZ(normalizedCamera.z)), GetRotationX(normalizedCamera.x));
                 float3 rayDirection = normalize(mul(rotation, float3(uv, 1.)));
 
                 for (float i = 0.; i < MAX_STEPS; i++) {
-                    rayDirection = rayOrigin + normalize(mul(rotation, float3(uv, 1.))) * distance;
-                    calcDist = Scene(rayDirection);
+                    float3 Point = rayOrigin + normalize(mul(rotation, float3(uv, 1.))) * distance;
+                    calcDist = Scene(Point);
 
                     if (calcDist < EPSILON) {
                         color = float3(.3, .3, .3);
-                        color += max(dot(calcNormal(rayDirection), -_MainLightDirection), 0.) * _MainLightColor.xyz;
+                        color += max(dot(calcNormal(Point), -_MainLightDirection), 0.) * _MainLightColor.xyz;
                         break;
                     }
 
@@ -164,7 +164,7 @@ Shader "Unlit/TornadoTest1"
                 if (col.a < .2) {
                     discard;
                 }
-                //UNITY_APPLY_FOG(i.fogCoord, col);
+                UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
