@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using FMODUnity;
 
 public class LightningVFXManager : MonoBehaviour
 {
 
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private EventReference thunderEvent;
 
     private VisualEffect lightningVFX;
 

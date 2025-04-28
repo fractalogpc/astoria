@@ -12,6 +12,9 @@ public class ProjectileManager : Singleton<ProjectileManager>
     public GameObject HitEffectPrefab;
     [Tooltip("The transform to use as the start position for the cosmetic bullet. This can be used to make the projectile appear to come from a different position.")]
     public Transform BulletStart;
+
+    public LayerMask ignoreLayers = ~0; // Default to ignore nothing
+    
     private List<Projectile> _projectilesToTick = new List<Projectile>();
     public delegate void ProjectileHitHandler(RaycastHit hit);
 
@@ -56,24 +59,27 @@ public class ProjectileManager : Singleton<ProjectileManager>
         /// </summary>
         public float TimeToLive;
 
+        private LayerMask _ignoreLayers;
+
         public Transform Renderer;
         
         public ProjectileHitHandler Callback;
 	
-        public Projectile(float timeToLive, ProjectileHitHandler callback, float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics) {
+        public Projectile(float timeToLive, ProjectileHitHandler callback, float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics, LayerMask ignoreLayers) {
             Damage = damage;
             Mass = mass;
             Position = startPosition;
             Velocity = startVelocity;
             Aerodynamics = aerodynamics;
             TimeToLive = timeToLive;
-            Callback = callback;    
+            Callback = callback;
+            _ignoreLayers = ignoreLayers;
             Renderer = Instantiate(Instance.BulletPrefab, Instance.BulletStart.position, Quaternion.identity).transform;
         }
         public RaycastHit TickProjectile(float deltaTime) {
             // Handle collision
             Vector3 normVelocity = Vector3.Normalize(Velocity);
-            Physics.Raycast(Position, normVelocity, out RaycastHit hit, Velocity.magnitude * deltaTime);
+            Physics.Raycast(Position, normVelocity, out RaycastHit hit, Velocity.magnitude * deltaTime, _ignoreLayers);
             // Debug.DrawLine(Position, Position + Velocity * deltaTime, Color.red, 0.1f);
             
             // Calculate drag force direction
@@ -101,7 +107,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
     }
 
     public void FireProjectile(float damage, float mass, Vector3 startPosition, Vector3 startVelocity, Aerodynamics aerodynamics, ProjectileHitHandler hitCallback) {
-        _projectilesToTick.Add(new Projectile(ProjectileLifetime, hitCallback, damage, mass, startPosition, startVelocity, aerodynamics));
+        _projectilesToTick.Add(new Projectile(ProjectileLifetime, hitCallback, damage, mass, startPosition, startVelocity, aerodynamics, ignoreLayers));
         if (_projectilesToTick.Count > 800) {
             Debug.Log($"ProjectileManager: Holds {_projectilesToTick.Count} projectiles. This could be a performance issue. Remind matthew to multithread this.");
         }
