@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.PlayerLoop;
 
 /// <summary>
 /// Tightly coupled with CombatViewmodelManager.
@@ -22,7 +16,7 @@ public class CombatCore : InputHandlerBase
 	
 	public InventoryComponent PlayerInventory;
 	public ViewmodelManager ViewmodelManager;
-	public Camera PlayerCamera;
+	public Camera PlayerCamera { get => GameState.Instance.GetComponent<Camera>(); }
 	public FadeElementInOut CrosshairFade;
 	public GunInstance CurrentGunInstance { get; private set; }
 	
