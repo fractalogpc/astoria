@@ -14,10 +14,12 @@ public class LightningController : MonoBehaviour
         lightning.GetComponent<LightningMeshGeneration>().Initialize(start, goal);
     }
 
-    private const float START_RANGE = 500f;
-    private const float GOAL_RANGE = 200f;
-    private const float HEIGHT = 1500f;
-    private const float SPAWN_TIME_RANGE = 5f;
+    [SerializeField] private float START_RANGE = 500f;
+    [SerializeField] private float GOAL_RANGE = 200f;
+    [SerializeField] private float HEIGHT = 1500f;
+    [SerializeField] private float SPAWN_TIME_RANGE = 5f;
+    [SerializeField] private float SPAWN_FREQUENCY = 30f; // Frequency of lightning strikes
+    [SerializeField] private int WAVE_COUNT = 10; // Time between lightning strikes in a wave
     private IEnumerator SpawnLightningWithDelay(Vector3 start, Vector3 goal, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -26,7 +28,7 @@ public class LightningController : MonoBehaviour
 
     private void SpawnWave(Vector3 goal)
     {
-        for (int i = 0; i < 10; i++) // Number of lightning strikes in the wave
+        for (int i = 0; i < WAVE_COUNT; i++) // Number of lightning strikes in the wave
         {
             Vector3 randomDirection = Random.onUnitSphere * GOAL_RANGE;
             randomDirection.y = 0; // Keep the lightning strikes horizontal
@@ -44,7 +46,7 @@ public class LightningController : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 30f) // Adjust the frequency of lightning strikes as needed
+        if (timer > SPAWN_FREQUENCY) // Adjust the frequency of lightning strikes as needed
         {
             timer = 0f;
             SpawnWave(goalTransform.position); // Replace with your desired position
