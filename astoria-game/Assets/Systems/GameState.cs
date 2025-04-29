@@ -95,12 +95,12 @@ public class GameState : MonoBehaviour
         // Then we can just load the game scene additively and disable the transition's environment holder when the game scene is loaded while enabling the game's environment holder
         
         yield return SceneManager.LoadSceneAsync(cutsceneEndTransitionSceneName, LoadSceneMode.Additive);
+        Destroy(GameObject.Find("Systems"));
         EnvironmentHolderManager.InstanceIntroCutscene.gameObject.SetActive(false); // Enable the transition environment holder
 
         // TODO: This doesn't work. The wind is still too windy which means that switching the TVE Manager in the same frame doesn't work. Fix later.
 
         yield return SceneManager.UnloadSceneAsync(cutsceneSceneName); // Unload the cutscene scene
-        Destroy(GameObject.Find("Systems"));
 
         yield return new WaitForSeconds(0.5f);
 

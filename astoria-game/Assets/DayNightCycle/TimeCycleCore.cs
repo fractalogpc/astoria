@@ -127,19 +127,25 @@ public class TimeCycleCore : MonoBehaviour
 	public static TimeCycleCore Instance;
 
 	private float _lastHour;
+	private float _timeOffset = 0f; // Time offset for additively loaded scene transitions
 
 	private void Awake() {
 		Singleton();
 	}
 
+	public void SetTimeOffset(float offset) {
+		_timeOffset = offset;
+	}
+
 	private void Start() {
+		_timeOffset = Time.time;
 		// Multiplayer: Change to network time for multiplayer
-		_networkTime = Time.time;
+		_networkTime = Time.time - _timeOffset;
 		TimeOfDay = new TimeOfDay(_startGameHour * ((_dayCycleInMinutes * 60) / 24), Mathf.FloorToInt(_dayCycleInMinutes * 60), _daysStartAtZero);
 	}
 
 	private void Update() {
-		_networkTime = Time.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24);
+		_networkTime = Time.time + _startGameHour * ((_dayCycleInMinutes * 60) / 24) - _timeOffset;
 		TimeOfDay.SetTime((float)_networkTime);
 		
 		if (TimeOfDay.GameHour != _lastHour) {
