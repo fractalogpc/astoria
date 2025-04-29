@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections;
-using Mirror.BouncyCastle.Asn1;
 using SteamAudio;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-public class GetItemObjectiveInstance : LocationObjectiveInstance
+public class GetItemObjectiveInstance : ObjectiveInstance
 {
 	public GetItemObjectiveData ObjectiveData => (GetItemObjectiveData)base.ObjectiveData;
 	private InventoryComponent _playerInventory;
 	private Coroutine _waitForPlayerInventoryCoroutine;
 	
-	public GetItemObjectiveInstance(ObjectiveData objectiveData, ObjectiveSystemManager objectiveSystemManager, Transform location) : base(objectiveData, objectiveSystemManager, location) {
+	public GetItemObjectiveInstance(ObjectiveData objectiveData, ObjectiveSystemManager objectiveSystemManager) : base(objectiveData, objectiveSystemManager) {
 		_waitForPlayerInventoryCoroutine = objectiveSystemManager.StartCoroutine(WaitForPlayerInventory());
 	}
 	
@@ -23,7 +22,6 @@ public class GetItemObjectiveInstance : LocationObjectiveInstance
 		if (ObjectiveData.RequiredItems.ContainedWithin(_playerInventory.GetItems())) {
 			Complete();
 		}
-		Debug.Log("ObjectiveSystem: GetItemObjectiveInstance ticked.");
 	}
 
 	/// <summary>
@@ -46,7 +44,6 @@ public class GetItemObjectiveInstance : LocationObjectiveInstance
 	/// </summary>
 	public override void Cleanup() {
 		base.Cleanup();
-		if (_waitForPlayerInventoryCoroutine == null) return;
 		ObjectiveSystemManager.StopCoroutine(_waitForPlayerInventoryCoroutine);
 	}
 	

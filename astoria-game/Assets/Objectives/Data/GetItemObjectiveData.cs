@@ -7,7 +7,7 @@ public class GetItemObjectiveData : LocationObjectiveData
     [Header("Get Item")]
     public ItemSetList RequiredItems;
     
-    public override ObjectiveInstance CreateLocationInstance(ObjectiveSystemManager objectiveSystemManager, Transform location) {
-        return new GetItemObjectiveInstance(this, objectiveSystemManager, location);
+    public override ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager) {
+        return new GetItemObjectiveInstance(this, objectiveSystemManager);
     }
 }

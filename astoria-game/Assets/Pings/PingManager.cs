@@ -97,5 +97,8 @@ public class PingManager : MonoBehaviour
 		if (ping != null) {
 			Destroy(ping.gameObject);
 		}
+		if (transform != null) {
+			Destroy(transform.gameObject);
+		}
 	}
 }
