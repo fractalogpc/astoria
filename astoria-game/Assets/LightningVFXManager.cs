@@ -70,7 +70,6 @@ public class LightningVFXManager : MonoBehaviour
 		float distanceToPlayer = Vector3.Distance(_playerTransform.position, position);
 		float power = 1 - distanceToPlayer / lightningRadius.y;
 		if (power < 0) power = 0;
-		print($"Dist: {distanceToPlayer} Power: {power}");
 		thunderInstance.setParameterByName("Power", power);
 		// Set power parameter to 1
 	}

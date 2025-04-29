@@ -13,7 +13,7 @@ public class LocationObjectiveData : ObjectiveData
     public bool ShowOnMap = true;
     public bool ShowInWorld = true;
 
-    public ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager, Transform location) {
+    public virtual ObjectiveInstance CreateLocationInstance(ObjectiveSystemManager objectiveSystemManager, Transform location) {
         return new LocationObjectiveInstance(this, objectiveSystemManager, location);
     }
 }
