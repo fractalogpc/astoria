@@ -18,6 +18,11 @@ public class AnimatedText : MonoBehaviour
     private int currentIndex = 0;
     private float timeSinceLastCharacter = 0f;
 
+    public void SetTimePerCharacter(float time)
+    {
+        timePerCharacter = time;
+    }
+
     private void Update()
     {
         if (_textMeshProUGUI == null) return; // Ensure the TextMeshProUGUI component is assigned
