@@ -30,7 +30,7 @@ public class SceneLoader : MonoBehaviour
         _currentObjectIndex = loadSteps.Length; // Skip to the end
     }
 
-    private void Start()
+    private void Awake()
     {
         // Start the loading process
         StartCoroutine(LoadSceneCoroutine());

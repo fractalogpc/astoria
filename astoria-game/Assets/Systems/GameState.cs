@@ -100,10 +100,12 @@ public class GameState : MonoBehaviour
         // TODO: This doesn't work. The wind is still too windy which means that switching the TVE Manager in the same frame doesn't work. Fix later.
 
         yield return SceneManager.UnloadSceneAsync(cutsceneSceneName); // Unload the cutscene scene
+        Destroy(GameObject.Find("Systems"));
 
         yield return new WaitForSeconds(0.5f);
 
         yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
+        yield return null;
         EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(false); // Disable the transition environment holder
 
         onCutsceneEnd.Invoke();
