@@ -101,6 +101,8 @@ public class GameState : MonoBehaviour
 
         yield return SceneManager.UnloadSceneAsync(cutsceneSceneName); // Unload the cutscene scene
 
+        yield return new WaitForSeconds(0.5f);
+
         yield return SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
         EnvironmentHolderManager.InstanceTransition.gameObject.SetActive(false); // Disable the transition environment holder
 
