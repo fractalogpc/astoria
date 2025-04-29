@@ -1,6 +1,8 @@
 ﻿
 
 using System;
+using Mirror.BouncyCastle.Asn1;
+using UnityEngine;
 
 public class ObjectiveInstance
 {
@@ -37,9 +39,6 @@ public class ObjectiveInstance
 	/// </summary>
 	public virtual void Complete() {
 		OnObjectiveCompleted?.Invoke(this);
-		if (ObjectiveData.NextObjectiveOptional != null) {
-			ObjectiveSystemManager.SelectObjective(ObjectiveSystemManager.AddObjective(ObjectiveData.NextObjectiveOptional));
-		}
 	}
 	
 	/// <summary>
