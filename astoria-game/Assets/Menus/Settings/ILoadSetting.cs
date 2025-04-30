@@ -3,7 +3,7 @@ using UnityEngine;
 public interface ILoadSetting
 {
 
-    private void Start()
+    public void StartMethod()
     {
         ReloadSetting();
 
