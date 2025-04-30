@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Events;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -16,12 +17,15 @@ public class SettingsManager : MonoBehaviour
     */
 
     public static float RenderResolution { get; private set; } = 100f;
+    public static int ShadowQuality { get; private set; } = 2; // 0 = Low, 1 = Medium, 2 = High
 
     public static SettingsManager Instance { get; private set; }
 
     private int _framesSinceLastUpdate = 0;
     private const int _framesToWait = 5;
     private bool _queuedUpdate = false;
+
+    public UnityEvent OnSettingsChanged;
 
     private void Awake()
     {
@@ -68,6 +72,11 @@ public class SettingsManager : MonoBehaviour
         SetSettingFloat("RenderResolution", value);
     }
 
+    public void SetShadowQuality(int value)
+    {
+        SetSettingInt("ShadowQuality", value);
+    }
+
     private void SetSettingFloat(string settingName, float value)
     {
         PlayerPrefs.SetFloat(settingName, value);
@@ -100,6 +109,11 @@ public class SettingsManager : MonoBehaviour
         RenderResolution = renderResolution;
         Debug.Log("Render Resolution: " + renderResolution);
 
+        int shadowQuality = PlayerPrefs.GetInt("ShadowQuality", 2);
+        ShadowQuality = shadowQuality;
+        Debug.Log("Shadow Quality: " + shadowQuality);
+
+        OnSettingsChanged?.Invoke();
         Debug.Log("Settings reloaded.");
     }
 
