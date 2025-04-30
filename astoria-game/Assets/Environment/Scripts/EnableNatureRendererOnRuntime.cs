@@ -10,6 +10,7 @@ public class EnableNatureRendererOnRuntime : MonoBehaviour
         foreach (NatureRenderer natureRenderer in natureRenderers) {
             // Enable the renderer
             natureRenderer.RenderTreesWithNatureRenderer = true;
+            natureRenderer.enabled = true;
         }
     }
 
