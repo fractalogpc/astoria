@@ -137,7 +137,7 @@ Shader "VFXHidden/Tornado"
                 
                 uv *= .6;
 
-                float3 color = float3(0, 0, 0);
+                float4 color = float4(0, 0, 0, 0);
                 float distance = 0.;
                 float calcDist = 0.;
                 float3 rayOrigin = _WorldSpaceCameraPos;
@@ -149,19 +149,25 @@ Shader "VFXHidden/Tornado"
 
                     float3 Point = rayOrigin + rayDirection * distance;
 
+                    if (calcDist < 0) {
+                        color.a += .0052;
+                        color.xyz = float3(.5, .5, .5);
+                        color.xyz *= max(dot(calcNormal(Point), -_MainLightDirection), 0.1);
+                    }
+
                     calcDist = Scene(Point);
                     float3 normal = calcNormal(Point);
-
-                    color += clamp(-calcDist, -.01, 1.) * max(dot(calcNormal(Point), -_MainLightDirection), 0.1) * .01;
 
                     distance += max(calcDist, EPSILON + .01);
                 }
                 // sample the texture
-                fixed4 col = float4(color, length(color));
+                fixed4 col = color;
+                col.a = clamp(col.a, 0., 1.);
 
                 if (col.a < .1) {
                     discard;
                 }
+
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
