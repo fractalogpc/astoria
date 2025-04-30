@@ -42,7 +42,7 @@ public class PlayerInteractor : InputHandlerBase
   }
 
   private void Interact() {
-    // _viewmodelManager.PlayInteract();
+    _viewmodelManager.InteractAnimation();
     if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
       if (interactable != null) {

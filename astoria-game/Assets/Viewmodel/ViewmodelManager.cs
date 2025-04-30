@@ -46,5 +46,7 @@ public class ViewmodelManager : MonoBehaviour {
 		_currentViewmodel.SetTrigger(triggerName);
 	}
 
-
+	public void InteractAnimation() {
+		_currentViewmodel.InteractAnimation();
+	}
 }

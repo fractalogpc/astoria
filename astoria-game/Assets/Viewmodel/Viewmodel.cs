@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Mirror;
 using UnityEditor;
@@ -10,21 +11,40 @@ public class Viewmodel : MonoBehaviour
 	[SerializeField][ReadOnly] protected Animator _itemAnimator;
 	[SerializeField] protected Transform _itemHolder;
 	[SerializeField] protected Transform _animatedItemHolder;
-	
+	[SerializeField] private RuntimeAnimatorController _defaultController;
+	[SerializeField] private AnimationClip _defaultAnimation;
+	[SerializeField] private AnimationClip _interactAnimation;
 	[SerializeField] private Transform _adsIkTarget;
 	[SerializeField] private Rig _adsRig;
+
+	private RuntimeAnimatorController _holdingViewmodelAnimator;
+	private Coroutine _interactAnimCoroutine;
+	private bool _holdingItem;
 	
 	public void SetTrigger(string triggerName) {
+		if (_interactAnimCoroutine != null) {
+			StopCoroutine(_interactAnimCoroutine);
+		}
+		_viewmodelAnimator.runtimeAnimatorController = _holdingViewmodelAnimator;
 		_viewmodelAnimator.SetTrigger(triggerName);
 		if (_itemAnimator == null) return;
 		_itemAnimator.SetTrigger(triggerName);
 	}
+
+	public void InteractAnimation() {
+		if (_interactAnimCoroutine != null) {
+			StopCoroutine(_interactAnimCoroutine);
+		}
+		_interactAnimCoroutine = StartCoroutine(InteractAnimationCoroutine());
+	}
 	
 	public void SetItemTo(ViewmodelItemInstance item) {
+		_holdingItem = true;
 		if (_itemHolder.childCount > 0) {
 			Destroy(_itemHolder.GetChild(0).gameObject);
 		}
-		_viewmodelAnimator.runtimeAnimatorController = item.ItemData.ViewmodelAnimatorController;
+		_holdingViewmodelAnimator = item.ItemData.ViewmodelAnimatorController;
+		_viewmodelAnimator.runtimeAnimatorController = _holdingViewmodelAnimator;
 		if (ItemAnimationsValid(item)) {
 			GameObject itemPrefab = Instantiate(item.ItemData.HeldItemPrefab, _animatedItemHolder);
 			_itemAnimator = itemPrefab.GetComponentInChildren<Animator>();
@@ -55,6 +75,9 @@ public class Viewmodel : MonoBehaviour
 	}
 	
 	public void UnsetItem() {
+		_holdingItem = false;
+		_holdingViewmodelAnimator = null;
+		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
 		if (_itemHolder.childCount > 0) {
 			DestroyAllChildren(_itemHolder);
 		}
@@ -63,6 +86,17 @@ public class Viewmodel : MonoBehaviour
 		}
 	}
 
+	private void Start() {
+		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
+	}
+
+	private IEnumerator InteractAnimationCoroutine() {
+		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
+		_viewmodelAnimator.SetTrigger("Interact");
+		yield return new WaitForSeconds(_interactAnimation.length);
+		_viewmodelAnimator.runtimeAnimatorController = _holdingItem ? _holdingViewmodelAnimator : _defaultController;
+	}
+	
 	private IEnumerator LerpAds(float transitionTime, bool ads) {
 		float elapsedTime = 0;
 		float start = ads ? 0 : 1;
