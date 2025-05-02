@@ -44,9 +44,9 @@ public class AreaManager : MonoBehaviour
         }
         if (IsPlayerInArea(_desertArea, desertLocalPos, out desertIntensity))
         {
-            weatherManager.SetWeight("Dry", desertIntensity);
+            weatherManager.SetWeight("Rainy", desertIntensity);
         } else {
-            weatherManager.SetWeight("Dry", 0f);
+            weatherManager.SetWeight("Rainy", 0f);
         }
     }
 
