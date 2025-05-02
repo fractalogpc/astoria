@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Construction;
 using UnityEngine;
 
 public class ObjectiveSystemManager : MonoBehaviour
@@ -9,20 +10,17 @@ public class ObjectiveSystemManager : MonoBehaviour
 	public PingManager PingManager => _pingManager;
 	public MapMarkerManager MapMarkerManager => _mapMarkerManager;
 	public InventoryComponent PlayerInventory => _playerInventory;
-	
+
+	public ConstructionCore ConstructionCore => _constructionCore;
+
 	[Header("Dependencies")]
 	[SerializeField] private MapMarkerManager _mapMarkerManager;
 	[SerializeField] private PingManager _pingManager;
 	[SerializeField] private InventoryComponent _playerInventory;
+	[SerializeField] private ConstructionCore _constructionCore;
 	[Header("View")]
 	[SerializeField] private ObjectiveSystemView _objectiveSystemView;
 	private ObjectiveSystemModel _objectiveSystemModel;
-
-	public ObjectiveInstance AddObjective(ObjectiveData objectiveData) {
-		ObjectiveInstance objectiveInstance = objectiveData.CreateInstance(this);
-		_objectiveSystemModel.AddObjective(objectiveInstance);
-		return objectiveInstance;
-	}
 	
 	public ObjectiveInstance AddObjective(ObjectiveInstance objectiveInstance) {
 		_objectiveSystemModel.AddObjective(objectiveInstance);
