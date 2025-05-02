@@ -128,7 +128,7 @@ Shader "VFXHidden/Tornado"
                         Scene(thePoint + h.yyx) - Scene(thePoint - h.yyx)
                     )
                 );
-            } 
+            }
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -147,22 +147,25 @@ Shader "VFXHidden/Tornado"
 
                 for (float i = 0.; i < MAX_STEPS; i++) {
 
-                    float3 Point = rayOrigin + rayDirection * distance;
-
-                    if (calcDist < 0) {
-                        color.a += .0052;
-                        color.xyz = float3(.5, .5, .5);
-                        color.xyz *= max(dot(calcNormal(Point), -_MainLightDirection), 0.1);
-                    }
-
+                    float3 ray = rayOrigin + rayDirection;
+                    float3 Point = ray * distance;
                     calcDist = Scene(Point);
-                    float3 normal = calcNormal(Point);
+
+                    if (calcDist < EPSILON) {
+                        for (int i = 0; i < 10; i++) {
+                            Point = ray * (distance + i * .01);
+                            if (Scene(Point) < EPSILON) {
+                                color.xyz += float3(0.89, 0.84, 0.82) * .1;
+                                color.a += .1;
+                            }
+                        }
+                        break;
+                    }
 
                     distance += max(calcDist, EPSILON + .01);
                 }
                 // sample the texture
                 fixed4 col = color;
-                col.a = clamp(col.a, 0., 1.);
 
                 if (col.a < .1) {
                     discard;
