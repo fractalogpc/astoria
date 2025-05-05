@@ -72,7 +72,7 @@ public class ObjectiveSystemManager : MonoBehaviour
 
 	private void Update() {
 		for (int i = _objectiveSystemModel.ActiveObjectives.Count - 1; i >= 0; i--) {
-			print("Ticking objective: " + _objectiveSystemModel.ActiveObjectives[i].ObjectiveData.Title);
+			// print("Ticking objective: " + _objectiveSystemModel.ActiveObjectives[i].ObjectiveData.Title);
 			ObjectiveInstance objective = _objectiveSystemModel.ActiveObjectives[i];
 			objective.Tick();
 		}

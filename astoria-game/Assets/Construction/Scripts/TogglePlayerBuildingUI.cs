@@ -25,7 +25,7 @@ public class TogglePlayerBuildingUI : InputHandlerBase
     SetVisibility(false);
   }
 
-  public void SetVisibility(bool show)
+  public void SetVisibility(bool show, bool force = false)
     {
         IsInventoryOpen = show;
         _inventoryCanvasGroup.alpha = show ? 1 : 0;
@@ -35,7 +35,7 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         if (show)
         {
             RadialMenu.Enabled = true;
-            OnBuildingUIOpen?.Invoke();
+            if (!force) OnBuildingUIOpen?.Invoke();
             Cursor.visible = true;
             InputReader.Instance.InputActions.FindAction("Look").Disable();
             Cursor.lockState = CursorLockMode.Confined;
@@ -44,7 +44,7 @@ public class TogglePlayerBuildingUI : InputHandlerBase
         else
         {
             RadialMenu.Enabled = false;
-            OnBuildingUIClose?.Invoke();
+            if (!force) OnBuildingUIClose?.Invoke();
             Cursor.visible = false;
             InputReader.Instance.InputActions.FindAction("Look").Enable();
             Cursor.lockState = CursorLockMode.Locked;
