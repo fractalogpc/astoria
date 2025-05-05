@@ -39,15 +39,22 @@ public class AreaManager : MonoBehaviour
         if (IsPlayerInArea(_snowArea, snowLocalPos, out snowIntensity))
         {
             weatherManager.SetWeight("Snowy", snowIntensity);
-        } else {
-            weatherManager.SetWeight("Snowy", 0f);
+            weatherManager.SetWeight("Rainy", 1f - snowIntensity);
+
         }
-        if (IsPlayerInArea(_desertArea, desertLocalPos, out desertIntensity))
+        else
         {
-            weatherManager.SetWeight("Rainy", desertIntensity);
-        } else {
-            weatherManager.SetWeight("Rainy", 0f);
+            weatherManager.SetWeight("Snowy", 0f);
+            weatherManager.SetWeight("Rainy", 1f);
         }
+        // if (IsPlayerInArea(_desertArea, desertLocalPos, out desertIntensity))
+        // {
+        //     weatherManager.SetWeight("Rainy", desertIntensity);
+        // }
+        // else
+        // {
+        //     weatherManager.SetWeight("Rainy", 0f);
+        // }
     }
 
     private bool IsPlayerInArea(AreaData area, Vector3 localPos, out float intensity)
