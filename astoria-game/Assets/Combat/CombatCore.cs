@@ -16,6 +16,7 @@ public class CombatCore : InputHandlerBase
 	
 	public InventoryComponent PlayerInventory;
 	public ViewmodelManager ViewmodelManager;
+	public RecoilManager RecoilManager;
 	public Camera PlayerCamera { 
 			get {
 				if (GameState.Instance != null) {

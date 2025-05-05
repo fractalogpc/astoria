@@ -18,6 +18,8 @@ public class FadeElementInOut : MonoBehaviour
   public bool Hidden => Mathf.Approximately(_canvasGroup.alpha, 0f);
   public bool FadingIn { get; private set; }
   public bool FadingOut { get; private set; }
+  public float FadeInTime => _inDuration;
+  public float FadeOutTime => _outDuration;
 
   private Coroutine _fadeCoroutine;
   

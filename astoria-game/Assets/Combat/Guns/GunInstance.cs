@@ -25,6 +25,7 @@ public class GunInstance : ViewmodelItemInstance
 	private CombatCore _combatCore;
 	private InventoryComponent _playerInventory;
 	private ProjectileManager _projectileManager;
+	private RecoilManager _recoilManager;
 	private FireLogic _currentFireLogic;
 	private Coroutine _reloadCoroutine;
 	private bool _isReloading;
@@ -51,6 +52,7 @@ public class GunInstance : ViewmodelItemInstance
 		Initialized = true;
 		_projectileManager = ProjectileManager.Instance;
 		_playerInventory = _combatCore.PlayerInventory;
+		_recoilManager = _combatCore.RecoilManager;
 		_startCameraFov = _combatCore.PlayerCamera.fieldOfView;
 		switch (ItemData.FireCombination) {
 			case FireCombinations.Semi or FireCombinations.ShotgunSemi:
@@ -93,7 +95,7 @@ public class GunInstance : ViewmodelItemInstance
 		else {
 			Debug.LogWarning("GunInstance: SoundManager.Instance not found! Gunshot sound will not alert SoundManager listeners.");
 		}
-		CombatCameraRecoil.Instance.ApplyRecoil(ItemData.RecoilSettings);
+		_recoilManager.ApplyRecoil(ItemData.RecoilSettings);
 		if (IsShotgun(ItemData.FireCombination)) {
 			for (int i = 0; i < ItemData.ShotgunSetting.PelletsPerShot; i++) {
 				ShootProjectile(GetRandomSpreadAngle());
