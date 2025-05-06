@@ -6,7 +6,7 @@ public class PlacePropObjectiveData : ObjectiveData
 {
     public ConstructionData PropConstructionData;
 
-    public virtual ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager) {
+    public override ObjectiveInstance CreateInstance(ObjectiveSystemManager objectiveSystemManager) {
         return new PlacePropObjectiveInstance(this, objectiveSystemManager);
     }
 }
