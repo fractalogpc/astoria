@@ -49,16 +49,18 @@ public class CrafterModel
 		CraftQueue[0].DecrementCraftTime(deltaTime);
 		OnQueueUpdated?.Invoke(CraftQueue);
 	}
-	public void DecrementCraftCountFromFirstInQueue() {
-		if (CraftQueue.Count <= 0) return; // not logic, just avoiding index out of range
-		CraftQueue[0].DecrementCraftCount();
-		OnQueueUpdated?.Invoke(CraftQueue);
-	}
-	public void ResetCraftTimeFromFirstInQueue() {
-		if (CraftQueue.Count <= 0) return; // not logic, just avoiding index out of range
-		CraftQueue[0].ResetCraftTime();
-		OnQueueUpdated?.Invoke(CraftQueue);
-	}
+	// Unused due to direct CraftQueue[0].count access and decrement by CrafterPresenter
+	//
+	// public void DecrementCraftCountFromFirstInQueue() {
+	// 	if (CraftQueue.Count <= 0) return; // not logic, just avoiding index out of range
+	// 	CraftQueue[0].DecrementCraftCount();
+	// 	OnQueueUpdated?.Invoke(CraftQueue);
+	// }
+	// public void ResetCraftTimeFromFirstInQueue() {
+	// 	if (CraftQueue.Count <= 0) return; // not logic, just avoiding index out of range
+	// 	CraftQueue[0].ResetCraftTime();
+	// 	OnQueueUpdated?.Invoke(CraftQueue);
+	// }
 	public void AddToCraftQueue(RecipeData recipe, int count) {
 		CraftQueue.Add(new CraftingSession(recipe, count));
 		OnQueueUpdated?.Invoke(CraftQueue);

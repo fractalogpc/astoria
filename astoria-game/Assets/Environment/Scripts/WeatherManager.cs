@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 public class WeatherManager : MonoBehaviour
 {
 
@@ -171,12 +172,12 @@ public class WeatherManager : MonoBehaviour
         public float ScreenWeight { get => screenWeight; set => SetScreenWeight(value); }
         public float EffectsWeight { get => effectsWeight; set => SetEffectsWeight(value); }
 
-        #if UNITY_EDITOR
-            [UnityEditor.CustomEditor(typeof(WeatherManager))]
-            public class WeatherManagerEditor : UnityEditor.Editor
+#if UNITY_EDITOR
+        [UnityEditor.CustomEditor(typeof(WeatherManager))]
+        public class WeatherManagerEditor : UnityEditor.Editor
+        {
+            public override void OnInspectorGUI()
             {
-                public override void OnInspectorGUI()
-                {
                 base.OnInspectorGUI();
 
                 WeatherManager manager = (WeatherManager)target;
@@ -185,14 +186,14 @@ public class WeatherManager : MonoBehaviour
                 {
                     foreach (var weatherType in manager.WeatherTypes)
                     {
-                    weatherType.SetAtmosphereWeight(weatherType.AtmosphereWeight);
-                    weatherType.SetScreenWeight(weatherType.ScreenWeight);
-                    weatherType.SetEffectsWeight(weatherType.EffectsWeight);
+                        weatherType.SetAtmosphereWeight(weatherType.AtmosphereWeight);
+                        weatherType.SetScreenWeight(weatherType.ScreenWeight);
+                        weatherType.SetEffectsWeight(weatherType.EffectsWeight);
                     }
                 }
-                }
             }
-        #endif
+        }
+#endif
 
         [SerializeField, Range(0f, 1f)] private float atmosphereWeight;
         [SerializeField, Range(0f, 1f)] private float screenWeight;
@@ -223,6 +224,19 @@ public class WeatherManager : MonoBehaviour
                 foreach (GameObject effect in Effects)
                 {
                     effect.SetActive(weight > 0f);
+                    if (effect.TryGetComponent<VisualEffect>(out VisualEffect ve))
+                    {
+                        ve.SetFloat("Intensity", Mathf.Pow(weight, 2f));
+                    }
+                }
+            } else {
+                foreach(GameObject effect in Effects)
+                {
+                    effect.SetActive(false);
+                    if (effect.TryGetComponent<VisualEffect>(out VisualEffect ve))
+                    {
+                        ve.SetFloat("Intensity", 0f);
+                    }
                 }
             }
         }

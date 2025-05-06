@@ -38,7 +38,7 @@ public class BuildingController : MonoBehaviour, IStartExecution
         int index = element.Index;
 
         // Not great to hard code this but it'll do
-        
+
         // These are the components
         if (index < 10)
         {
@@ -83,5 +83,16 @@ public class BuildingController : MonoBehaviour, IStartExecution
         {
             constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
         }
+    }
+
+    public void OnToolUnequiped()
+    {
+        editing = false;
+        deleting = false;
+
+        RadialMenu.ResetLastSelected();
+        _selectedData = null;
+        constructionCore.SetDataToNull();
+        constructionCore.SetConstructionState(ConstructionCore.ConstructionState.None);
     }
 }

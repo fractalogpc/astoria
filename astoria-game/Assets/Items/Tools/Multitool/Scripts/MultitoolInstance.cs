@@ -17,7 +17,8 @@ public class MultitoolInstance : BaseToolInstance
 	{
 		Debug.Log("Unequipping Multitool");
 		PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().SetConstructionState(ConstructionCore.ConstructionState.None);
-		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false);
+		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false, true);
+		PlayerInstance.Instance.GetComponentInChildren<BuildingController>().OnToolUnequiped();
 
 		base.OnUnequip();
 	}

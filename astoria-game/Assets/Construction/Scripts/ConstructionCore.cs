@@ -58,6 +58,8 @@ namespace Construction
         public UnityEvent<ConstructionData> OnObjectPlaced;
         public UnityEvent OnObjectDeleted;
 
+        [SerializeField] private CanvasGroup __buildingUIHelp;
+
         // Placing stuff
         [SerializeField] private ConstructionData _selectedData;
         private GameObject _previewObject;
@@ -732,11 +734,15 @@ namespace Construction
             objectIsHighlighted = false;
         }
 
-        public void SetConstructionState(ConstructionState state)
+        public void SetConstructionState(ConstructionState targetState)
         {
+            if (targetState == ConstructionState.PlacingStructure) {
+                
+            }
+
             ConstructionState stashedPreviousState = State;
 
-            if (state == State) return;
+            if (targetState == State) return;
 
             // If we are placing a structure and the selected data is null, we need to reset the state
             // if (state == ConstructionState.PlacingStructure && _selectedData == null)
@@ -746,7 +752,7 @@ namespace Construction
             // }
 
             // Cleanup previous state
-            switch (State)
+            switch (stashedPreviousState)
             {
                 case ConstructionState.SelectingItem:
                     CleanupPreviewObject();
@@ -755,9 +761,11 @@ namespace Construction
                     CleanupPreviewObject();
                     break;
                 case ConstructionState.PlacingStructure:
-                    if (state != ConstructionState.PlacingStructure)
+                    if (targetState != ConstructionState.PlacingStructure)
                     {
                         CleanupPreviewObject();
+
+                        ShowBuildingHelpUI(false);
                     }
                     break;
                 case ConstructionState.WantingToEdit:
@@ -770,7 +778,7 @@ namespace Construction
                     break;
             }
 
-            State = state;
+            State = targetState;
 
             // Initialize new state
             switch (State)
@@ -779,6 +787,9 @@ namespace Construction
                     CleanupPreviewObject();
                     break;
                 case ConstructionState.PlacingStructure:
+                    ShowBuildingHelpUI(true);
+
+
                     // This handles the case where the player had the radial menu open and is now closing it.
                     // I need to change states to PlacingStructure to allow for placing, however for security I first destroy the preview object
                     // Then I reassign the preview object.
@@ -791,6 +802,10 @@ namespace Construction
                     }
                     break;
             }
+        }
+
+        private void ShowBuildingHelpUI(bool show) {
+            // __buildingUIHelp.alpha = show ? 1f : 0f;
         }
 
         public void SetDataToNull()

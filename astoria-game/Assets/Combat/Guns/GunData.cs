@@ -71,21 +71,11 @@ public class GunData : ViewmodelItemData
 	}
 }
 
-[System.Serializable]
+[Serializable]
 public struct RecoilSettings
 {
-	public AnimationCurve RecoilCurve;
-	public float MeanUpwardsRecoil;
-	public float MeanHorizontalRecoil;
-	public float MeanBackwardsRecoil;
-	public float UpwardsRecoilVariation;
-	public float HorizontalRecoilVariation;
-	public float BackwardsRecoilVariation;
-	public float MeanRecoilTime;
-	public float RecoilTimeVariation;
-	public float NoiseMagnitude;
-	public float NoiseSpeed;
-	public float MainTransferToViewmodel;
+	public float UpwardsKickDeg;
+	public float SidewaysKickRangeDeg;
 }
 
 

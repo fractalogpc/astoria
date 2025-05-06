@@ -16,7 +16,16 @@ public class CombatCore : InputHandlerBase
 	
 	public InventoryComponent PlayerInventory;
 	public ViewmodelManager ViewmodelManager;
-	public Camera PlayerCamera { get => GameState.Instance.GetComponent<Camera>(); }
+	public RecoilManager RecoilManager;
+	public Camera PlayerCamera { 
+			get {
+				if (GameState.Instance != null) {
+					return GameState.Instance.GetComponent<Camera>();
+        }
+				Debug.LogWarning("CombatCore: GameState could not be found! PlayerCamera property will return Camera.main.");
+				return Camera.main;
+			}
+	}
 	public FadeElementInOut CrosshairFade;
 	public GunInstance CurrentGunInstance { get; private set; }
 	
