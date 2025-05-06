@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Construction
@@ -13,6 +12,7 @@ namespace Construction
         public List<Edge> edges; // Public for editor
 
         private PreviewObject previewObject;
+        private ConstructionCore constructionCore;
 
         private void Awake()
         {
@@ -25,6 +25,8 @@ namespace Construction
             }
 
             previewObject = GetComponent<PreviewObject>();
+
+            constructionCore = PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>();
         }
 
         private void Update()
@@ -65,7 +67,9 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
+                            constructionCore.SetErrorMessage("Object is colliding with another object");
                             if (doDebug) Debug.Log("Colliding");
+
                         }
                         else
                         {
@@ -76,6 +80,7 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
+                                    constructionCore.SetErrorMessage("Too far from ground");
                                     if (doDebug) Debug.Log("Too far from ground");
                                 }
                                 else
@@ -89,6 +94,7 @@ namespace Construction
                             {
                                 // No ground found
                                 validPosition = false;
+                                constructionCore.SetErrorMessage("Too far from ground");
                                 if (doDebug) Debug.Log("No ground found");
                             }
                         }
@@ -103,6 +109,7 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, foundationLayerMask, snappedTransforms))
                         {
                             validPosition = false;
+                            constructionCore.SetErrorMessage("Object is colliding with another object");
                             if (doDebug) Debug.Log($"Colliding");
                         }
                         else
@@ -114,6 +121,8 @@ namespace Construction
                                 {
                                     // Too far from ground
                                     validPosition = false;
+                                    constructionCore.SetErrorMessage("Too far from ground");
+
                                     if (doDebug) Debug.Log("Too far from ground");
                                 }
                                 else
@@ -127,6 +136,8 @@ namespace Construction
                             {
                                 // No ground found
                                 validPosition = false;
+                                constructionCore.SetErrorMessage("Too far from ground");
+
                                 if (doDebug) Debug.Log("No ground found");
                             }
                         }
@@ -141,6 +152,8 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask, snappedTransforms))
                         {
                             validPosition = false;
+                            constructionCore.SetErrorMessage("Object is colliding with another object");
+
                             if (doDebug) Debug.Log("Colliding");
                         }
                         else
@@ -152,7 +165,7 @@ namespace Construction
                     }
                     else
                     {
-
+                        constructionCore.SetErrorMessage("Need a foundation to snap to");
                         if (doDebug) Debug.Log("Need a foundation to snap to");
 
                         finalPosition = tryPosition;
@@ -170,6 +183,7 @@ namespace Construction
                         if (previewObject.IsColliding(finalPosition, finalRotation, settings.CollisionLayerMask)) //, snappedTransforms))
                         {
                             validPosition = false;
+                            constructionCore.SetErrorMessage("Object is colliding with another object");
                             if (doDebug) Debug.Log("Colliding");
                         }
                         else
@@ -181,7 +195,7 @@ namespace Construction
                     }
                     else
                     {
-
+                        constructionCore.SetErrorMessage("Need a foundation to snap to");
                         if (doDebug) Debug.Log("Need a foundation to snap to");
 
                         finalPosition = tryPosition;

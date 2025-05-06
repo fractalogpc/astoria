@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 namespace Construction
 {
@@ -171,6 +172,11 @@ namespace Construction
                             else
                             {
                                 _canPlace = data.Cost.ContainedWithin(PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItems());
+
+                                if (!_canPlace)
+                                {
+                                    SetErrorMessage("Not enough materials");
+                                }
                             }
                         }
                         else
@@ -395,6 +401,10 @@ namespace Construction
                             else
                             {
                                 _canPlace = data.Cost.ContainedWithin(PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().GetItems());
+                                if (!_canPlace)
+                                {
+                                    SetErrorMessage("Not enough materials");
+                                }
                             }
                         }
                         else
@@ -552,7 +562,11 @@ namespace Construction
                     return true;
 
                 case ConstructionState.PlacingStructure:
-                    if (!_canPlace) break;
+                    if (!_canPlace) {
+                        CreateErrorMessage(currentErrorMessage);
+                        // currentErrorMessage = String.Empty;
+                        break;
+                    }
                     // Debug.Log("Placing structure");
                     GameObject placedObject = PlaceObject(_previewObjectPosition, _previewObject.transform.rotation);
 
@@ -765,7 +779,7 @@ namespace Construction
                     {
                         CleanupPreviewObject();
 
-                        ShowBuildingHelpUI(false);
+                        // ShowBuildingHelpUI(false);
                     }
                     break;
                 case ConstructionState.WantingToEdit:
@@ -787,7 +801,7 @@ namespace Construction
                     CleanupPreviewObject();
                     break;
                 case ConstructionState.PlacingStructure:
-                    ShowBuildingHelpUI(true);
+                    // ShowBuildingHelpUI(true);
 
 
                     // This handles the case where the player had the radial menu open and is now closing it.
@@ -804,14 +818,33 @@ namespace Construction
             }
         }
 
-        private void ShowBuildingHelpUI(bool show) {
-            // __buildingUIHelp.alpha = show ? 1f : 0f;
+        public void ShowBuildingHelpUI(bool show) {
+            __buildingUIHelp.alpha = show ? 1f : 0f;
         }
 
         public void SetDataToNull()
         {
             _selectedData = null;
         }
+
+        private void CreateErrorMessage(string message) {
+            GameObject error = Instantiate(errorPrefab, errorParent.transform);
+            error.transform.SetAsFirstSibling();
+            error.GetComponent<TextMeshProUGUI>().text = message;
+        }
+
+        public void SetErrorMessage(string message)
+        {
+            // Debug.LogError(message);
+
+            currentErrorMessage = message;
+        }
+
+        public GameObject errorPrefab;
+        public GameObject errorParent;
+
+        private string currentErrorMessage = string.Empty;
+
     }
 }
 

@@ -12,6 +12,7 @@ public class MultitoolInstance : BaseToolInstance
 	public override void OnEquip()
 	{
 		base.OnEquip();
+		PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().ShowBuildingHelpUI(true);
 	}
 	public override void OnUnequip()
 	{
@@ -19,6 +20,8 @@ public class MultitoolInstance : BaseToolInstance
 		PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().SetConstructionState(ConstructionCore.ConstructionState.None);
 		PlayerInstance.Instance.GetComponentInChildren<TogglePlayerBuildingUI>().SetVisibility(false, true);
 		PlayerInstance.Instance.GetComponentInChildren<BuildingController>().OnToolUnequiped();
+
+		PlayerInstance.Instance.GetComponentInChildren<ConstructionCore>().ShowBuildingHelpUI(false);
 
 		base.OnUnequip();
 	}
