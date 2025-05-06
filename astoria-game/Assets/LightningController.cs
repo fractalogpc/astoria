@@ -8,7 +8,12 @@ public class LightningController : MonoBehaviour
 
     public GameObject lightningPrefab;
 
-    private void SpawnLightning(Vector3 start, Vector3 goal)
+  private void Awake()
+  {
+    timer = Random.Range(0f, SPAWN_FREQUENCY); // Randomize the initial timer
+  }
+
+  private void SpawnLightning(Vector3 start, Vector3 goal)
     {
         GameObject lightning = Instantiate(lightningPrefab, start, Quaternion.identity);
         lightning.GetComponent<LightningMeshGeneration>().Initialize(start, goal);
