@@ -28,6 +28,43 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 0
     m_Value: 42
+--- !u!114 &-7517392476899161720
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0443663ba273b467ea70660b80c4c796, type: 3}
+  m_Name: PoisonEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  toggle:
+    m_OverrideState: 0
+    m_Value: 1
+  loops:
+    m_OverrideState: 1
+    m_Value: 5
+  step:
+    m_OverrideState: 1
+    m_Value: 0.015
+  stepAmout:
+    m_OverrideState: 1
+    m_Value: 0.005
+  speed:
+    m_OverrideState: 1
+    m_Value: 1.03
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 0.19624422, g: 0.6603774, b: 0.24269356, a: 1}
+  mixAmount:
+    m_OverrideState: 1
+    m_Value: 0.8
+  ChromAbbOffset:
+    m_OverrideState: 1
+    m_Value: 0.00943
 --- !u!114 &-7226973644212204460
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -390,6 +427,25 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
   m_SelectedCurve: 7
+--- !u!114 &-4198636032084008546
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c54a48bc1096f4b76a1d3bf1004f547d, type: 3}
+  m_Name: PlayerHitEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  hit:
+    m_OverrideState: 1
+    m_Value: 0
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 0.9716981, g: 0.40792987, b: 0.40792987, a: 1}
 --- !u!114 &-3802156015768077676
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -448,7 +504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   intensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 20
 --- !u!114 &-2542280454828330034
 MonoBehaviour:
@@ -1086,6 +1142,49 @@ MonoBehaviour:
   - {fileID: 9181362902112485489}
   - {fileID: -216604344093980902}
   - {fileID: -2808873909487508243}
+  - {fileID: -4198636032084008546}
+  - {fileID: -7517392476899161720}
+  - {fileID: 1691138801210864082}
+--- !u!114 &1691138801210864082
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 0
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  smoothness:
+    m_OverrideState: 0
+    m_Value: 0.2
+  roundness:
+    m_OverrideState: 0
+    m_Value: 1
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
+  mask:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  opacity:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &2456351322925915435
 MonoBehaviour:
   m_ObjectHideFlags: 3

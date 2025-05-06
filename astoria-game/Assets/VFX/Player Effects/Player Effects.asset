@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0443663ba273b467ea70660b80c4c796, type: 3}
   m_Name: PoisonEffect
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   toggle:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   loops:
     m_OverrideState: 1
@@ -37,6 +37,25 @@ MonoBehaviour:
   ChromAbbOffset:
     m_OverrideState: 1
     m_Value: 0.00943
+--- !u!114 &-5761946224910057745
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c54a48bc1096f4b76a1d3bf1004f547d, type: 3}
+  m_Name: PlayerHitEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  hit:
+    m_OverrideState: 0
+    m_Value: 1
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 0.9716981, g: 0.40792987, b: 0.40792987, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,3 +70,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -8740031317826951755}
+  - {fileID: -5761946224910057745}
