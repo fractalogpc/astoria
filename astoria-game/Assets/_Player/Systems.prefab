@@ -144,6 +144,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goalTransform: {fileID: 0}
   lightningPrefab: {fileID: 6270501337573934276, guid: 50c63507a5d2cba4a81092b2b61f73f5, type: 3}
+  START_RANGE: 500
+  GOAL_RANGE: 200
+  HEIGHT: 1500
+  SPAWN_TIME_RANGE: 5
+  SPAWN_FREQUENCY: 30
+  WAVE_COUNT: 10
 --- !u!1 &3038588117632083682
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,6 +674,9 @@ MonoBehaviour:
   BulletPrefab: {fileID: 7008315763908440191, guid: 991aaa35e5c847f4ba3d39e2784124d6, type: 3}
   HitEffectPrefab: {fileID: 1911122512426706904, guid: 9efea251f4adc9043be498e3ff6e8c0d, type: 3}
   BulletStart: {fileID: 0}
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4144511018752799616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,7 +1695,7 @@ MonoBehaviour:
   _enemies:
   - prefab: {fileID: 6358995176421208112, guid: 377e545b4acaef445a9dc83c8c68d80b, type: 3}
     difficultyPoints: 1
-  _spawnRadius: 100
+  _spawnRadius: 60
   _enemyContainer: {fileID: 0}
   _groundLayer:
     serializedVersion: 2
