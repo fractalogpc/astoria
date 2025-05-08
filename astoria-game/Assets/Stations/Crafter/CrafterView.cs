@@ -53,7 +53,6 @@ public class CrafterView : MonoBehaviour
 		}
 		foreach (RecipeData recipe in recipes) {
 			SelectableRecipe recipeSelectable = Instantiate(_recipePrefab, _recipeGridParent).GetComponent<SelectableRecipe>();
-			Debug.Log($"CrafterView: Recipe {recipe.Result.ItemName} added to the grid, SelectableRecipe: {recipeSelectable == null}");
 			recipeSelectable.Initialize(recipe);
 			recipeSelectable.RegisterListener(OnRecipeClicked);
 		}

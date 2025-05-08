@@ -35,6 +35,7 @@ public class CrafterPresenter
 	}
 	
 	public void Update(float deltaTime) {
+		UpdateRecipeCraftability();
 		if (_model.CraftQueue.Count <= 0) return;
 		_model.DecrementCraftTimeFromFirstInQueue(deltaTime);
 		CraftingSession session = _model.CraftQueue[0];

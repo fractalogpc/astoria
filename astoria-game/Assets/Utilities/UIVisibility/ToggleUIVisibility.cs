@@ -19,12 +19,14 @@ public class ToggleUIVisibility : InputHandlerBase
 	}
 
 	public void SetVisibility(bool show) {
+		print("SetVisibility: " + show);
 		_shown = show;
 		if (show) {
 			_fadeElementInOut.FadeIn();
 			Cursor.visible = true;
 			Cursor.lockState = CursorLockMode.None;
 			InputReader.Instance.SwitchInputMap(InputMap.GenericUI);
+			print("Switching Input map to GenericUI");
 		}
 		else {
 			_fadeElementInOut.FadeOut();
@@ -49,7 +51,7 @@ public class ToggleUIVisibility : InputHandlerBase
 	}
 
 	private void Start() {
-		SetVisibility(_shown);
+		// SetVisibility(_shown);
 	}
 
 

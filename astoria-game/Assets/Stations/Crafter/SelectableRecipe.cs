@@ -47,8 +47,4 @@ public class SelectableRecipe : MonoBehaviour
 		_selectRecipeButton.onClick.RemoveListener(OnSelectRecipe);
 		OnRecipeSelected = null;
 	}
-
-	private void OnDestroy() {
-		print("SelectableRecipe: Destroyed");
-	}
 }
