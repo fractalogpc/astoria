@@ -16332,14 +16332,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 898203652}
-  m_LocalRotation: {x: 0.0038534277, y: 0.7987699, z: -0.0050725006, w: 0.601603}
+  m_LocalRotation: {x: -0.024475964, y: 0.7981229, z: 0.03254141, w: 0.60111725}
   m_LocalPosition: {x: 0, y: 0, z: 1295}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 76549233}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0.73, y: 106.029, z: 0.003}
+  m_LocalEulerAnglesHint: {x: -4.667, y: 106.028, z: 0.003}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 517, y: 1075}
@@ -18583,9 +18583,9 @@ MonoBehaviour:
     Units: 1
   UpdateMethod: 0
   AutomaticDolly:
-    Enabled: 1
+    Enabled: 0
     Method:
-      rid: 3541428193776893954
+      rid: -2
   TrackingTarget: {fileID: 0}
   m_LegacyPosition: -1
   m_LegacyUnits: 0
@@ -18593,10 +18593,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 3541428193776893954
-      type: {class: SplineAutoDolly/FixedSpeed, ns: Unity.Cinemachine, asm: Unity.Cinemachine}
-      data:
-        Speed: 0
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &941940507
 Transform:
   m_ObjectHideFlags: 0
@@ -18625,8 +18623,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ddacea3de4c16e45872fb1a17ca7fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splineType: 0
   startOnStart: 1
   maxTime: 18
+  initValue: 0
+  endValue: 1
   curve:
     serializedVersion: 2
     m_Curve:
@@ -23077,6 +23078,7 @@ GameObject:
   - component: {fileID: 1204538121}
   - component: {fileID: 1204538123}
   - component: {fileID: 1204538124}
+  - component: {fileID: 1204538125}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -23135,8 +23137,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204538120}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0007109034, y: 0.5822106, z: 0.000509073, w: 0.8130376}
-  m_LocalPosition: {x: -138.14738, y: 945.51636, z: 1464.57}
+  m_LocalRotation: {x: -0.0003900716, y: 0.5825751, z: 0.00027959218, w: 0.81277674}
+  m_LocalPosition: {x: -138.72852, y: 945.5264, z: 1464.3856}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23156,8 +23158,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SplineSettings:
     Spline: {fileID: 1541123970}
-    Position: 40
-    Units: 0
+    Position: 0.1610046
+    Units: 1
   SplineOffset: {x: 0, y: 0, z: 0}
   CameraRotation: 0
   Damping:
@@ -23165,7 +23167,7 @@ MonoBehaviour:
     Position: {x: 0.1, y: 0.1, z: 0.1}
     Angular: 0
   AutomaticDolly:
-    Enabled: 1
+    Enabled: 0
     Method:
       rid: 6377476965709119631
   m_LegacyPosition: -1
@@ -23191,6 +23193,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LookAtOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1204538125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204538120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ddacea3de4c16e45872fb1a17ca7fa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splineType: 1
+  startOnStart: 1
+  maxTime: 40
+  initValue: 0.1610046
+  endValue: 0.8
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.29698837
+      outSlope: 1
+      tangentMode: 1
+      weightedMode: 1
+      inWeight: 0.2334655
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1205628851
 GameObject:
   m_ObjectHideFlags: 0
@@ -26161,7 +26204,7 @@ MonoBehaviour:
           w: 0.54980916
     - Position:
         x: 103.7
-        y: 33.799988
+        y: 23
         z: -53.900024
       TangentIn:
         x: 0

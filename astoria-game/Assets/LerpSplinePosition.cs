@@ -3,15 +3,32 @@ using Unity.Cinemachine;
 
 public class LerpSplinePosition : MonoBehaviour
 {
+
+    public SplineType splineType;
+    public enum SplineType {
+        CinemachineSplineCart,
+        CinemachineSplineDolly,
+    }
+
     public bool startOnStart = true;
     private bool start;
     public float maxTime;
+    public float initValue;
+    public float endValue;
     public AnimationCurve curve;
     private CinemachineSplineCart cart;
+    private CinemachineSplineDolly dolly;
 
     void Start()
     {
-        cart = GetComponent<CinemachineSplineCart>();
+        switch (splineType) {
+            case SplineType.CinemachineSplineCart:
+                cart = GetComponent<CinemachineSplineCart>();
+                break;
+            case SplineType.CinemachineSplineDolly:
+                dolly = GetComponent<CinemachineSplineDolly>();
+                break;
+        }
 
         if (startOnStart) {
             StartLerp();
@@ -29,15 +46,33 @@ public class LerpSplinePosition : MonoBehaviour
             start = false;
         }
 
-        float t = timer / maxTime;
-        float curveValue = curve.Evaluate(t);
-        cart.SplinePosition = Mathf.Lerp(0f, 1f, curveValue);
+        float t = Mathf.InverseLerp(0f, maxTime, timer);
+        float curveValue = Mathf.Lerp(initValue, endValue, curve.Evaluate(t));
+
+        switch (splineType) {
+            case SplineType.CinemachineSplineCart:
+                cart.SplinePosition = curveValue;
+                break;
+            case SplineType.CinemachineSplineDolly:
+                dolly.SplineSettings.Position = curveValue;
+                break;
+        }
     }
+
+    // 0.1610046
 
     public void StartLerp()
     {
         start = true;
         timer = 0f;
-        cart.SplinePosition = 0f;
+
+        switch (splineType) {
+            case SplineType.CinemachineSplineCart:
+                cart.SplinePosition = initValue;
+                break;
+            case SplineType.CinemachineSplineDolly:
+                dolly.SplineSettings.Position = initValue;
+                break;
+        }
     }
 }

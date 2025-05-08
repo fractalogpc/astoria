@@ -24,7 +24,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
 
   public void SwitchInputMap(InputMap newInputMap)
   {
-    Debug.Log($"InputReader: Switching Input Map! Old: {CurrentMap} New: {newInputMap}");
+    // Debug.Log($"InputReader: Switching Input Map! Old: {CurrentMap} New: {newInputMap}");
     if (newInputMap == CurrentMap)
     {
       Debug.LogWarning($"Trying to change to the same input map: {newInputMap}");
@@ -98,7 +98,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
 
     OnAfterInputMapChange?.Invoke(newInputMap);
 
-    // Debug.Log($"<color=grey>Changed Input Map:</color> {newInputMap}");
+    Debug.Log($"<color=grey>Changed Input Map:</color> {newInputMap}");
   }
 }
 
