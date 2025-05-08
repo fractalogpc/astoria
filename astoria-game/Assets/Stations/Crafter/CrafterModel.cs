@@ -43,6 +43,7 @@ public class CrafterModel
 		PlayerInventory = playerInventory;
 		Recipes = recipeLibrary;
 		CraftQueue = new List<CraftingSession>();
+		Debug.Log("CrafterModel: Crafter Model initialized");
 	}
 	public void DecrementCraftTimeFromFirstInQueue(float deltaTime) {
 		if (CraftQueue.Count <= 0) return; // not logic, just avoiding index out of range

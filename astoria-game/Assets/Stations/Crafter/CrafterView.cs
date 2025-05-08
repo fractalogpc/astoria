@@ -53,6 +53,7 @@ public class CrafterView : MonoBehaviour
 		}
 		foreach (RecipeData recipe in recipes) {
 			SelectableRecipe recipeSelectable = Instantiate(_recipePrefab, _recipeGridParent).GetComponent<SelectableRecipe>();
+			Debug.Log($"CrafterView: Recipe {recipe.Result.ItemName} added to the grid, SelectableRecipe: {recipeSelectable == null}");
 			recipeSelectable.Initialize(recipe);
 			recipeSelectable.RegisterListener(OnRecipeClicked);
 		}
@@ -101,6 +102,8 @@ public class CrafterView : MonoBehaviour
 	
 	public void SetCraftButtonInteractable(bool interactable) {
 		_craftButton.interactable = interactable;
+		_craftButton.GetComponentInChildren<TextMeshProUGUI>().text = interactable ? "Start Craft" : "Can't Craft";
+		_countText.GetComponentInChildren<TextMeshProUGUI>().text = interactable ? _countText.text : "X";
 	}
 
 	private void Start() {

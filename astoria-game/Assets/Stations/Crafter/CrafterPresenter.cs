@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mirror;
+using Mirror.BouncyCastle.Asn1;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -30,6 +31,7 @@ public class CrafterPresenter
 		_view.SetRecipeInfo(null);
 		_view.SetAvailableRecipeList(_model.Recipes.ToList());
 		UpdateRecipeCraftability();
+		Debug.Log("CrafterPresenter: Crafter Presenter initialized");
 	}
 	
 	public void Update(float deltaTime) {
@@ -41,10 +43,11 @@ public class CrafterPresenter
 			session.DecrementCraftCount();
 			session.ResetCraftTime();
 			_view.SetCraftQueue(_model.CraftQueue);
+			_model.PlayerInventory.AddItemByData(session.Recipe.Result);
 			return;
 		} 
 		_model.RemoveFromCraftQueue(session);
-		_model.PlayerInventory.AddItemByData(session.Recipe.Result, session.CraftCount);
+		_model.PlayerInventory.AddItemByData(session.Recipe.Result);
 	}
 
 	public void Dispose() {
@@ -71,6 +74,8 @@ public class CrafterPresenter
 		_selectedRecipe = recipe;
 		_view.SetRecipeInfo(recipe);
 		_view.SetIngredientList(recipe.IngredientSetList);
+		_selectedCraftCount = 1;
+		_view.SetCraftCount(_selectedCraftCount);
 		UpdateRecipeCraftability();
 	}
 	private void OnCraftButtonClicked() {

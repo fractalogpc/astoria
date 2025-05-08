@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 877715280116291226}
   - component: {fileID: 425237375829790686}
-  - component: {fileID: 1582657545833552325}
   - component: {fileID: 2475242349621293079}
+  - component: {fileID: 3317810991395946832}
   - component: {fileID: 618520957339065388}
   - component: {fileID: 6611291674657576835}
   m_Layer: 0
@@ -48,7 +48,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225321691210335524}
   m_CullTransparentMesh: 1
---- !u!114 &1582657545833552325
+--- !u!114 &2475242349621293079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225321691210335524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7e3277cf2a49a7ae4da54bdd142181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _recipeIcon: {fileID: 3317810991395946832}
+  _recipeIconCanvasGroup: {fileID: 618520957339065388}
+  _selectRecipeButton: {fileID: 6611291674657576835}
+  _alphaWhenDisabled: 0.4
+  _disabledColor: {r: 1, g: 0.6, b: 0.6, a: 1}
+--- !u!114 &3317810991395946832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,24 +95,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2475242349621293079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1225321691210335524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db7e3277cf2a49a7ae4da54bdd142181, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _recipe: {fileID: 0}
-  _craftingStation: {fileID: 0}
-  _recipeIcon: {fileID: 1582657545833552325}
-  _recipeIconCanvasGroup: {fileID: 618520957339065388}
-  _selectRecipeButton: {fileID: 6611291674657576835}
-  _alphaWhenDisabled: 0.5
 --- !u!225 &618520957339065388
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -148,7 +147,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1582657545833552325}
+  m_TargetGraphic: {fileID: 3317810991395946832}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []

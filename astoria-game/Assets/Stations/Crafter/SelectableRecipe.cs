@@ -14,6 +14,7 @@ public class SelectableRecipe : MonoBehaviour
 	[SerializeField] private CanvasGroup _recipeIconCanvasGroup;
 	[SerializeField] private Button _selectRecipeButton;
 	[SerializeField][Range(0f, 1f)] private float _alphaWhenDisabled = 0.5f;
+	[SerializeField][ColorUsage(true, false)] private Color _disabledColor;
 
 	public void Initialize(RecipeData recipe) {
 		Recipe = recipe;
@@ -29,6 +30,7 @@ public class SelectableRecipe : MonoBehaviour
 
 	public void SetDisabledLook(bool disabled) {
 		_recipeIconCanvasGroup.alpha = disabled ? _alphaWhenDisabled : 1f;
+		_recipeIcon.color = disabled ? _disabledColor : Color.white;
 	}
 	
 	private void OnSelectRecipe() {
@@ -37,12 +39,16 @@ public class SelectableRecipe : MonoBehaviour
 	
 	private void Start() {
 		_selectRecipeButton.onClick.AddListener(OnSelectRecipe);
-		_recipeIcon.sprite = Recipe.Result.ItemIcon;
+		_recipeIcon.sprite = Recipe.Result.ItemIcon == null ?  Resources.Load<Sprite>("DefaultItemAssets/NullImage") : Recipe.Result.ItemIcon;
 		_recipeIcon.preserveAspect = true;
 	}
 
 	private void OnDisable() {
 		_selectRecipeButton.onClick.RemoveListener(OnSelectRecipe);
 		OnRecipeSelected = null;
+	}
+
+	private void OnDestroy() {
+		print("SelectableRecipe: Destroyed");
 	}
 }

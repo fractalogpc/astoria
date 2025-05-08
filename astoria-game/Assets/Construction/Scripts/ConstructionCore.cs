@@ -93,7 +93,7 @@ namespace Construction
 
             PopulateData();
 
-            _cameraTransform = GameState.Instance.transform;
+            _cameraTransform = GameState.Instance != null ? GameState.Instance.transform : Camera.main.transform;
         }
 
         private void PopulateData()
