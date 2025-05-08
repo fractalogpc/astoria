@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using Mirror.BouncyCastle.Asn1;
 using UnityEngine;
@@ -46,9 +47,12 @@ public class CrafterPresenter
 			_view.SetCraftQueue(_model.CraftQueue);
 			_model.PlayerInventory.AddItemByData(session.Recipe.Result);
 			_model.PlayerInventory.RemoveItemsByData(session.Recipe.IngredientSetList.ToDatasList());
+			Debug.Log($"Removing {session.Recipe.IngredientSetList.ToDatasList().Select(data => data.ItemName).ToArray()} from inventory");
 			return;
 		} 
 		_model.RemoveFromCraftQueue(session);
+		_model.PlayerInventory.RemoveItemsByData(session.Recipe.IngredientSetList.ToDatasList());
+		Debug.Log($"Removing {session.Recipe.IngredientSetList.ToDatasList().Select(data => data.ItemName).ToArray()} from inventory");
 		_model.PlayerInventory.AddItemByData(session.Recipe.Result);
 	}
 
@@ -89,11 +93,13 @@ public class CrafterPresenter
 		_selectedCraftCount++;
 		UpdateRecipeCraftability();
 		_view.SetCraftCount(_selectedCraftCount);
+		_view.SetIngredientList(_selectedRecipe.IngredientSetList, _selectedCraftCount);
 	}
 	private void OnCraftCountDown() {
 		_selectedCraftCount--;
 		UpdateRecipeCraftability();
 		_view.SetCraftCount(_selectedCraftCount);
+		_view.SetIngredientList(_selectedRecipe.IngredientSetList, _selectedCraftCount);
 	}
 	private bool CanCraft(RecipeData recipe, int count) {
 		if (BackgroundInfo._infCraft) return true;
