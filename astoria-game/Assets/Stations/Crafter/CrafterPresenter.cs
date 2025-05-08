@@ -89,11 +89,13 @@ public class CrafterPresenter
 		_selectedCraftCount++;
 		UpdateRecipeCraftability();
 		_view.SetCraftCount(_selectedCraftCount);
+		_view.SetIngredientList(_selectedRecipe.IngredientSetList, _selectedCraftCount);
 	}
 	private void OnCraftCountDown() {
 		_selectedCraftCount--;
 		UpdateRecipeCraftability();
 		_view.SetCraftCount(_selectedCraftCount);
+		_view.SetIngredientList(_selectedRecipe.IngredientSetList, _selectedCraftCount);
 	}
 	private bool CanCraft(RecipeData recipe, int count) {
 		if (BackgroundInfo._infCraft) return true;

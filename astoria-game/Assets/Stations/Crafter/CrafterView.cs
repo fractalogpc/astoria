@@ -67,13 +67,13 @@ public class CrafterView : MonoBehaviour
 		}
 	}
 	
-	public void SetIngredientList(ItemSetList ingredientSetList) {
+	public void SetIngredientList(ItemSetList ingredientSetList, int multiplier = 1) {
 		foreach (Transform child in _ingredientListParent) {
 			Destroy(child.gameObject);
 		}
 		foreach (ItemSet ingredient in ingredientSetList.List) {
 			IconAndCount iconAndCount = Instantiate(_iconAndCountPrefab, _ingredientListParent).GetComponent<IconAndCount>();
-			iconAndCount.SetIconAndCount(ingredient.ItemData, ingredient.ItemCount);
+			iconAndCount.SetIconAndCount(ingredient.ItemData, ingredient.ItemCount * multiplier);
 		}
 	}
 	
