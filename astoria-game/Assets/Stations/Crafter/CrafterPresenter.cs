@@ -45,6 +45,7 @@ public class CrafterPresenter
 			session.ResetCraftTime();
 			_view.SetCraftQueue(_model.CraftQueue);
 			_model.PlayerInventory.AddItemByData(session.Recipe.Result);
+			_model.PlayerInventory.RemoveItemsByData(session.Recipe.IngredientSetList.ToDatasList());
 			return;
 		} 
 		_model.RemoveFromCraftQueue(session);
@@ -61,8 +62,9 @@ public class CrafterPresenter
 
 	private void UpdateRecipeCraftability() {
 		foreach (RecipeData recipe in _model.Recipes.ToList()) {
-			_view.SetRecipeDisabled(recipe, CanCraft(recipe, _selectedCraftCount));
+			_view.SetRecipeDisabled(recipe, !CanCraft(recipe, _selectedCraftCount));
 		}
+		if (_selectedRecipe == null) return;
 		_view.SetCraftButtonInteractable(CanCraft(_selectedRecipe, _selectedCraftCount));
 		_view.SetCraftCountDownInteractable(_selectedCraftCount > 1);
 		_view.SetCraftCountUpInteractable(CanCraft(_selectedRecipe, _selectedCraftCount + 1));

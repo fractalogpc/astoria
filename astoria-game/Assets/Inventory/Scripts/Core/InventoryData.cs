@@ -15,6 +15,9 @@ public class InventoryData
     public List<ItemInstance> Items {
         get => _stacks.ToItemsList();
     }
+    public List<ItemData> Datas {
+        get => _stacks.ToDatasList();
+    }
     public ItemStackList Stacks {
         get => _stacks;
     }
@@ -151,7 +154,26 @@ public class InventoryData
         OnInventoryUpdate?.Invoke(caller);
         return true;
     }
-
+    /// <summary>
+    /// Removes a specified amount of items from the inventory. Calls OnInventoryUpdate if successful.
+    /// </summary>
+    /// <param name="items">The item datas to remove.</param>
+    /// <returns>Whether the amount of items was found and able to be removed.</returns>
+    public bool RemoveItems(InventoryComponent caller, List<ItemData> items) {
+        if (items.Any(data => !Datas.Contains(data))) {
+            return false;
+        }
+        foreach (ItemData itemData in items) {
+            Vector2Int indexBL = SlotIndexOf(itemData);
+            ItemStack holdingStack = Containers[indexBL.x, indexBL.y].HeldStack;
+            // Removed last item
+            if (!holdingStack.Pop(out _)) continue;
+            _stacks.Remove(holdingStack);
+            UpdateHeldStack(indexBL, holdingStack.Size, null);
+        }
+        OnInventoryUpdate?.Invoke(caller);
+        return true;
+    }
     public bool RemoveStack(InventoryComponent caller, ItemStack stack) {
         if (!_stacks.Contains(stack)) return false;
         Vector2Int indexBL = SlotIndexOf(stack);
@@ -211,7 +233,7 @@ public class InventoryData
     /// Gets the first index where this item data is found, going from left to right, bottom to top.
     /// </summary>
     /// <param name="itemData">The item data to search for.</param>
-    /// <returns>Whether the item data was found.</returns>
+    /// <returns>The slot index where the item data is found.</returns>
     public Vector2Int SlotIndexOf(ItemData itemData) {
         for (int y = 0; y < Height; y++) {
             for (int x = 0; x < Width; x++) {

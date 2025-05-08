@@ -91,12 +91,12 @@ public class ItemStack
 	}
 	
 	/// <summary>
-	/// Indicates whether an ItemInstance could be pushed onto the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.
+	/// Indicates whether some ItemInstances could be pushed onto the stack. Fails if: the item is not of the same type as the stack, the stack is full, or the item is not stackable.
 	/// </summary>
-	/// <param name="item">The ItemInstance that would be pushed onto the stack</param>
-	/// <returns>Whether the item could be pushed onto the stack.</returns>
+	/// <param name="items">The ItemInstances that would be pushed onto the stack</param>
+	/// <returns>Whether the items could be pushed onto the stack.</returns>
 	public bool CouldPush(List<ItemInstance> items) {
-		return !items.Any(i => !CouldPush(i));
+		return items.All(CouldPush);
 	}
 	
 	/// <summary>

@@ -23,7 +23,6 @@ public class GetItemObjectiveInstance : LocationObjectiveInstance
 		if (ObjectiveData.RequiredItems.ContainedWithin(_playerInventory.GetItems())) {
 			Complete();
 		}
-		Debug.Log("ObjectiveSystem: GetItemObjectiveInstance ticked.");
 	}
 
 	/// <summary>

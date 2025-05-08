@@ -28,7 +28,6 @@ public class CutsceneEnableDisable : MonoBehaviour
 				cam.enabled = true;
 		}
 		foreach (FadeElementInOut fade in _fadeOutOnCutscene) {
-			print("Called fadeout");
 			fade.FadeOut();
 		}
 	}

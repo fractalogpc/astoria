@@ -281,6 +281,17 @@ public class InventoryComponent : MonoBehaviour
 		if (!ItemCountOrMoreInInventory(itemData, count)) return false;
 		return InventoryData.RemoveItems(this, itemData, count);;
 	}
+	
+	/// <summary>
+	/// Tries to remove count items from the inventory that match the ItemData.
+	/// </summary>
+	/// <param name="itemData">The ItemData to check against.</param>
+	/// <param name="count">The count of items to remove.</param>
+	/// <returns>Whether the count of matching items could be removed.</returns>
+	public bool RemoveItemsByData(List<ItemData> items) {
+		if (!IsInitialized()) return false;
+		return InventoryData.RemoveItems(this, items);
+	}
 
 	public bool PopFrom(ItemStack itemStack, out ItemInstance item, out bool hasItemsLeft) {
 		if (!IsInitialized()) {
