@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
 
     private GameObject _player;
     private List<GameObject> _monsters;
-    private int _nightsSurvived = 0;
+    private int _nightsSurvived = 1;
 
     void Start() {
         _player = GameObject.FindWithTag("Player");
@@ -47,6 +47,9 @@ public class SpawnManager : MonoBehaviour
 
         List<Enemy> enemiesToSpawn = new List<Enemy>();
         foreach (Enemy enemy in _enemies) {
+            Debug.Log(enemy.difficultyPoints);
+            Debug.Log(difficultyPoints);
+            Debug.Log(_difficultyCurveBTerm);
             if (enemy.difficultyPoints <= difficultyPoints * _maxProportionPerEnemy) {
                 enemiesToSpawn.Add(enemy);
             }

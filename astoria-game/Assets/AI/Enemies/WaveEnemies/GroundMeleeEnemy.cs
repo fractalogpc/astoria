@@ -34,11 +34,10 @@ public class GroundMeleeEnemy : EnemyCore
     target = player;
     NavMeshPath path = new NavMeshPath();
     if (!agent.CalculatePath(player.position, path)) {
-      // Find any obstacles between the enemy and the goal
+      Debug.Log("can't find a way there");
       RaycastHit hit;
       if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, player.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
         // If there is an obstacle, navigate to it and destroy 
-        Debug.Log("yo bro i found an obstickle");
         agent.SetDestination(hit.point);
         target = hit.transform;
         return;
