@@ -43,9 +43,9 @@ public class GroundMeleeEnemy : EnemyCore
         target = hit.transform;
         return;
       }
+    } else {
+      agent.SetDestination(player.position);
     }
-    
-    agent.SetDestination(player.position);
   }
 
   public override void Attack() {
@@ -61,9 +61,11 @@ public class GroundMeleeEnemy : EnemyCore
       _attacking = true;
       attackTimer = 0;
       OnAttack?.Invoke();
-      Debug.Log(target.gameObject.name);
-      target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
-      Debug.Log(target.gameObject.GetComponent<ComponentDamagePassthrough>() != null ? "true" : "false");
+      if (target.gameObject.GetComponent<ComponentDamagePassthrough>() != null) {
+        target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
+      } else {
+        target.gameObject.GetComponent<HealthManager>().TakeDamage(attackDamage, target.position);
+      }
       _attacking = false;
     }
   }

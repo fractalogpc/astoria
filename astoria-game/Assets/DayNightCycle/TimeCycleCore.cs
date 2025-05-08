@@ -149,7 +149,7 @@ public class TimeCycleCore : MonoBehaviour
 		TimeOfDay.SetTime((float)_networkTime);
 		
 		if (TimeOfDay.GameHour != _lastHour) {
-			if (TimeOfDay.IsNight) {
+			if (TimeOfDay.IsNight && _lastHour == 17) {
 				OnNight.Invoke();
 			}
 			else {
