@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Mirror;
+using TMPro;
+using UnityEngine.Serialization;
 
 public class PlayerInteractor : InputHandlerBase
 {
   [SerializeField] private float _interactDistance = 4f;
   [SerializeField] private float _interactRadius = 0.2f;
   [SerializeField] private LayerMask _harvestableMask;
-  [SerializeField] private FadeElementInOut _crosshairCanvas;
+  [FormerlySerializedAs("_crosshairCanvas")] [SerializeField] private FadeElementInOut _interactCanvas;
+  [SerializeField] private TextMeshProUGUI _interactText;
   [SerializeField] private ViewmodelManager _viewmodelManager;
   private Camera _camera;
 
@@ -25,31 +28,36 @@ public class PlayerInteractor : InputHandlerBase
   private void Update() {
     if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
-      _showCrosshair = interactable != null;
+      if (interactable != null) {
+        _showCrosshair = true;
+        _interactText.text = interactable.InteractText;
+      } 
+      else {
+        _showCrosshair = false;
+        _interactText.text = "";
+      }
     }
     else {
       _showCrosshair = false;
+      _interactText.text = "";
     }
-
     if (_showCrosshair) {
-      if (_crosshairCanvas.FadingIn) return;
-      _crosshairCanvas.FadeIn();
+      if (_interactCanvas.FadingIn) return;
+      _interactCanvas.FadeIn();
     }
     else {
-      if (_crosshairCanvas.FadingOut) return;
-      _crosshairCanvas.FadeOut();
+      if (_interactCanvas.FadingOut) return;
+      _interactCanvas.FadeOut();
     }
   }
 
   private void Interact() {
+    if (!Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) return;
+    Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
+    if (interactable == null) return;
     _viewmodelManager.InteractAnimation();
-    if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
-      Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
-      if (interactable != null) {
-        interactable.Interact();
-        return;
-      }
-    }
+    interactable.Interact();
+    return;
   }
 
 }

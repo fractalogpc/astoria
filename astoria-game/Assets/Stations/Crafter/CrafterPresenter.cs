@@ -84,7 +84,7 @@ public class CrafterPresenter
 	private void OnCraftButtonClicked() {
 		if (_selectedRecipe == null) return;
 		_model.AddToCraftQueue(_selectedRecipe, _selectedCraftCount);
-		_model.PlayerInventory.RemoveItemsByData(_selectedRecipe.IngredientSetList.ToDatasList());
+		_model.PlayerInventory.RemoveItemsByData(_selectedRecipe.IngredientSetList.ToDatasList(_selectedCraftCount));
 	}
 	private void OnCraftCountUp() {
 		_selectedCraftCount++;

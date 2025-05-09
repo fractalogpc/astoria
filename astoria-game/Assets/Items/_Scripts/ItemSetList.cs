@@ -99,11 +99,17 @@ public class ItemSetList
 	}
 
 	/// <summary>
-	/// Grabs all the ItemDatas, ignoring count, from the sets in this ItemSetList.
-	/// Use this for finding what items are found at least once in ItemSets.
+	/// Grabs all the ItemDatas, with count, from the sets in this ItemSetList.
+	/// Use this for finding what items are in ItemSets without wasting performance by creating ItemInstances.
 	/// </summary>
 	/// <returns>The list of the ItemDatas contained in ItemSets</returns>
-	public List<ItemData> ToDatasList() {
-		return List.Select(set => set.ItemData).ToList();
+	public List<ItemData> ToDatasList(int multiplier = 1) {
+		List<ItemData> datas = new();
+		foreach (ItemSet set in List) {
+			for (int i = 0; i < set.ItemCount * multiplier; i++) {
+				datas.Add(set.ItemData);
+			}
+		}
+		return datas;
 	}
 }
