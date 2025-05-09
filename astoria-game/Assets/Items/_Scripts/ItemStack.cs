@@ -103,7 +103,7 @@ public class ItemStack
 	/// Pops an ItemInstance from the stack. Returns false if the stack is empty.
 	/// </summary>
 	/// <param name="item">The item at the top of the stack.</param>
-	/// <returns>True if the stack has more items left in it. False otherwise.</returns>
+	/// <returns>If the stack has more items left in it.</returns>
 	public bool Pop(out ItemInstance item) {
 		if (StackCount == 0) {
 			item = null;

@@ -46,13 +46,9 @@ public class CrafterPresenter
 			session.ResetCraftTime();
 			_view.SetCraftQueue(_model.CraftQueue);
 			_model.PlayerInventory.AddItemByData(session.Recipe.Result);
-			_model.PlayerInventory.RemoveItemsByData(session.Recipe.IngredientSetList.ToDatasList());
-			Debug.Log($"Removing {session.Recipe.IngredientSetList.ToDatasList().Select(data => data.ItemName).ToArray()} from inventory");
 			return;
 		} 
 		_model.RemoveFromCraftQueue(session);
-		_model.PlayerInventory.RemoveItemsByData(session.Recipe.IngredientSetList.ToDatasList());
-		Debug.Log($"Removing {session.Recipe.IngredientSetList.ToDatasList().Select(data => data.ItemName).ToArray()} from inventory");
 		_model.PlayerInventory.AddItemByData(session.Recipe.Result);
 	}
 
@@ -88,6 +84,7 @@ public class CrafterPresenter
 	private void OnCraftButtonClicked() {
 		if (_selectedRecipe == null) return;
 		_model.AddToCraftQueue(_selectedRecipe, _selectedCraftCount);
+		_model.PlayerInventory.RemoveItemsByData(_selectedRecipe.IngredientSetList.ToDatasList());
 	}
 	private void OnCraftCountUp() {
 		_selectedCraftCount++;

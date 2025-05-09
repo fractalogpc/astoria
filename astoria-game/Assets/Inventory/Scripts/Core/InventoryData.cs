@@ -167,7 +167,7 @@ public class InventoryData
             Vector2Int indexBL = SlotIndexOf(itemData);
             ItemStack holdingStack = Containers[indexBL.x, indexBL.y].HeldStack;
             // Removed last item
-            if (!holdingStack.Pop(out _)) continue;
+            if (holdingStack.Pop(out _)) continue;
             _stacks.Remove(holdingStack);
             UpdateHeldStack(indexBL, holdingStack.Size, null);
         }
