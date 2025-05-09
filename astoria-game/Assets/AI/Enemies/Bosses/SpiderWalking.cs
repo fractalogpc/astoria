@@ -1,6 +1,7 @@
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SpiderWalking : MonoBehaviour
 {
@@ -54,6 +55,9 @@ public class SpiderWalking : MonoBehaviour
     [SerializeField] private GameObject _attackParticleEffect; // Particle effect for the attack
     [SerializeField] private AnimationCurve _deathFallCurve;
     [SerializeField] private float _deathFallTime = 1f; // Time for the death fall animation
+    [SerializeField] private Image _healthBar;
+
+    public UnityEngine.Events.UnityEvent OnDeath; // Event triggered on death
     
     private Vector3[] _footPositions;
     private bool[] _isStepping;
@@ -298,6 +302,7 @@ public class SpiderWalking : MonoBehaviour
             GameObject vulnerablePoint = Instantiate(_vulnerablePointPrefab, randomPlace.position - randomPlace.up * 5, Quaternion.identity); // Instantiate vulnerable point at random place
             vulnerablePoint.GetComponent<HealthManager>().OnDamaged.AddListener((pos, damage) => {
                 _health -= damage;
+                _healthBar.fillAmount = _health / _maxHealth; // Update health bar
                 Destroy(vulnerablePoint);
                 _isVulnerable = false;
 
@@ -334,7 +339,17 @@ public class SpiderWalking : MonoBehaviour
         _isAttacking = false;
     }
 
+    public void Damage(Vector3 pos, float damage) {
+        if (_isDead) return; // Spider is dead
+        _health -= damage; // Decrease health by damage amount
+        _healthBar.fillAmount = _health / _maxHealth; // Update health bar
+        if (_health <= 0) {
+            StartCoroutine(DeathCoroutine()); // Start death coroutine
+        }
+    }
+
     private IEnumerator DeathCoroutine() {
+        OnDeath?.Invoke(); // Invoke death event
         float elapsedTime = 0f;
         Vector3 startPosition = _bodyPositionOffset; // Start position for death animation
         Vector3 endPosition = new Vector3(startPosition.x, 0, startPosition.z);
