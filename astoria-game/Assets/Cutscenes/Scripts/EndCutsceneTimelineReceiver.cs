@@ -23,6 +23,7 @@ public class EndCutsceneTimelineReceiver : MonoBehaviour
         yield return new WaitForSeconds(_delay);
 
         // Load the game scene after the cutscene ends
+        PlayerInstance.Instance.transform.GetChild(10).GetComponent<Canvas>().enabled = true; // Show the player UI
         GameState.Instance.UnloadCutsceneEndTransitionScene();
     }
 
