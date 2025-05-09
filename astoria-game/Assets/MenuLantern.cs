@@ -7,11 +7,15 @@ public class MenuLantern : MonoBehaviour
     public GameObject lanternModel;
     public GameObject wick;
 
+    [SerializeField] private bool _startsOn = false;
+
     private Camera mainCamera;
 
     void Start()
     {
         mainCamera = Camera.main;
+
+        if (_startsOn) ToggleLantern();
     }
 
     void Update()
