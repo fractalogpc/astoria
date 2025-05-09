@@ -18,6 +18,7 @@ public class SettingsManager : MonoBehaviour
 
     public static float RenderResolution { get; private set; } = 100f;
     public static int ShadowQuality { get; private set; } = 2; // 0 = Low, 1 = Medium, 2 = High
+    public static int LightingQuality { get; private set; } = 1; // 0 = Low, 1 = High
 
     public static SettingsManager Instance { get; private set; }
 
@@ -77,6 +78,11 @@ public class SettingsManager : MonoBehaviour
         SetSettingInt("ShadowQuality", value);
     }
 
+    public void SetLightingQuality(int value)
+    {
+        SetSettingInt("LightingQuality", value);
+    }
+
     private void SetSettingFloat(string settingName, float value)
     {
         PlayerPrefs.SetFloat(settingName, value);
@@ -112,6 +118,10 @@ public class SettingsManager : MonoBehaviour
         int shadowQuality = PlayerPrefs.GetInt("ShadowQuality", 2);
         ShadowQuality = shadowQuality;
         Debug.Log("Shadow Quality: " + shadowQuality);
+
+        int lightingQuality = PlayerPrefs.GetInt("LightingQuality", 1);
+        LightingQuality = lightingQuality;
+        Debug.Log("Lighting Quality: " + lightingQuality);
 
         OnSettingsChanged?.Invoke();
         Debug.Log("Settings reloaded.");

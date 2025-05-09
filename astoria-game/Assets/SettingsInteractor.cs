@@ -21,4 +21,9 @@ public class SettingsInteractor : MonoBehaviour
         SettingsManager.Instance.SetShadowQuality(value);
     }
 
+    public void SetLightingQuality(int value)
+    {
+        SettingsManager.Instance.SetLightingQuality(value);
+    }
+
 }
