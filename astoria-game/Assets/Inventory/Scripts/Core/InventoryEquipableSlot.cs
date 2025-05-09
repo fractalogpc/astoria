@@ -60,7 +60,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         HeldItem = null;
     }
     
-    private void GetReferences() {
+    protected void GetReferences() {
         _clickableEvents = GetComponent<ClickableEvents>();
         if (_draggablePrefab == null) {
             Debug.LogError("WeaponEquipSlot: Draggable prefab is null! This should be assigned in the script default references.", gameObject);
@@ -71,7 +71,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         GetReferences();
     }
 
-    private void Start() {
+    protected virtual void Start() {
         GetReferences();
         HeldItem = null;
         _itemImage.sprite = null;
