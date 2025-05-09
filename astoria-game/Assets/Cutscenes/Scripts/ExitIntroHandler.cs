@@ -7,6 +7,7 @@ public class ExitIntroHandler : MonoBehaviour
     [FormerlySerializedAs("destroyOnTriggerEnter")] [SerializeField] private GameObject[] destroyOnExit;
 
     public void ExitIntro() {
+        InputReader.Instance.SwitchInputMap(InputMap.Null);
         GameState.Instance.EndCutsceneTriggered();
         foreach (GameObject obj in destroyOnExit)
         {
@@ -32,6 +33,5 @@ public class ExitIntroHandler : MonoBehaviour
             Debug.Log("Player entered exit cutscene trigger, skipping intro");
             ExitIntro();
         }
-    }
-    
+    }    
 }

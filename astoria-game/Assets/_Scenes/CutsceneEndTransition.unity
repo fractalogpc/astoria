@@ -1771,6 +1771,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _duration: 5
+  outDuration: 1
   _logoImage: {fileID: 76549234}
 --- !u!114 &76549237
 MonoBehaviour:
@@ -23043,6 +23044,18 @@ MonoBehaviour:
         - m_Target: {fileID: 1193099964}
           m_TargetAssemblyTypeName: EndCutsceneTimelineReceiver, Assembly-CSharp
           m_MethodName: OnEndCutscene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 76549236}
+          m_TargetAssemblyTypeName: LogoFadeIn, Assembly-CSharp
+          m_MethodName: StartFadeOut
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

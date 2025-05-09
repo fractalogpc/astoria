@@ -47,11 +47,14 @@ namespace Player
       PlayerYLookQuaternion = Quaternion.Euler(0, _playerTransform.rotation.eulerAngles.y, 0);
     }
 
-    private void Update() {
-      if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible) {
+    private void Update()
+    {
+      if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible)
+      {
         canLook = false;
       }
-      else {
+      else
+      {
         canLook = true;
       }
     }
@@ -108,7 +111,8 @@ namespace Player
       CameraXLook();
       Quaternion newRotation = Quaternion.Euler(CameraXRotation, _playerTransform.rotation.eulerAngles.y, 0);
 
-      if (_inCutscene) {
+      if (_inCutscene)
+      {
         newRotation = Quaternion.Euler(0, _countingYCutsceneRot, 0);
         CameraTransform.localRotation = newRotation;
         return;
@@ -118,6 +122,13 @@ namespace Player
 
       CameraTransform.SetPositionAndRotation(_cameraTarget.position, newRotation);
       CameraTransform.localPosition += _viewBob.CameraOffset;
+    }
+
+    public void ResetRotation(Quaternion rotation)
+    {
+      CameraXRotation = rotation.eulerAngles.x;
+      _aggregateYRotation = rotation.eulerAngles.y;
+      PlayerYLookQuaternion = Quaternion.Euler(0, _aggregateYRotation, 0);
     }
   }
 }
