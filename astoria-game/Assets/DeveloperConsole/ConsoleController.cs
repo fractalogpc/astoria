@@ -82,7 +82,7 @@ namespace Console
         {
             _consoleUI = _console.GetComponentInChildren<ConsoleUI>();
 
-            CloseConsole();
+            // CloseConsole();
 
             ConsoleUI._reloadCommands += SetupConsoleComponents;
 

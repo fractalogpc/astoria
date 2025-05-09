@@ -133,13 +133,15 @@ namespace Player
       Cursor.visible = false;
     }
 
-    public void Disable() {
+    public void Disable()
+    {
       enabled = false;
       Motor.enabled = false;
       GetComponent<Collider>().enabled = false;
     }
 
-    public void Enable() {
+    public void Enable()
+    {
       enabled = true;
       Motor.enabled = true;
       GetComponent<Collider>().enabled = true;
@@ -631,12 +633,17 @@ namespace Player
     {
       Motor.SetPositionAndRotation(position, rotation);
       transform.rotation = rotation;
+
+      GetComponentInChildren<PlayerCamera>().ResetRotation(rotation);
     }
 
-    public void ResetPositionAndRotation() {
+    public void ResetPositionAndRotation()
+    {
       Vector3 position = ResetPosition.position;
       Quaternion rotation = ResetPosition.rotation;
       Motor.SetPositionAndRotation(position, rotation);
+
+      GetComponentInChildren<PlayerCamera>().ResetRotation(rotation);
     }
   }
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputReader : Singleton<InputReader>, IStartExecution
+public class InputReader : Singleton<InputReader>
 {
   public PlayerInputActions InputActions { get; private set; }
 
@@ -20,7 +20,7 @@ public class InputReader : Singleton<InputReader>, IStartExecution
     InputActions.Enable();
   }
 
-  public void InitializeStart() => SwitchInputMap(DEFAULT_MAP);
+  // public void InitializeStart() => SwitchInputMap(DEFAULT_MAP);
 
   public void SwitchInputMap(InputMap newInputMap)
   {

@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 public class TogglePauseMenu : InputHandlerBase
 {
     public UnityEvent OnPauseMenuOpen;
     public UnityEvent OnPauseMenuClose;
+
+    InputMap stashedInputMap = InputMap.Player;
 
     public bool FreezeTimeOnPause = true;
 
@@ -28,6 +27,8 @@ public class TogglePauseMenu : InputHandlerBase
         _pauseMenuCanvasGroup.interactable = show;
         if (show)
         {
+            stashedInputMap = InputReader.Instance.CurrentMap;
+
             OnPauseMenuOpen?.Invoke();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
