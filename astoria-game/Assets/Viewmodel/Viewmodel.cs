@@ -16,6 +16,8 @@ public class Viewmodel : MonoBehaviour
 	[SerializeField] private AnimationClip _interactAnimation;
 	[SerializeField] private Transform _adsIkTarget;
 	[SerializeField] private Rig _adsRig;
+	[SerializeField] private bool _loadCutsceneAnimator = false;
+	[SerializeField] private RuntimeAnimatorController _cutsceneController;
 
 	private RuntimeAnimatorController _holdingViewmodelAnimator;
 	private Coroutine _interactAnimCoroutine;
@@ -87,6 +89,14 @@ public class Viewmodel : MonoBehaviour
 	}
 
 	private void Start() {
+		if (_loadCutsceneAnimator) {
+			_viewmodelAnimator.runtimeAnimatorController = _cutsceneController;
+			return;
+		}
+		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
+	}
+
+	public void LoadDefaultAnimator() {
 		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
 	}
 
