@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 
 public class ContainerManager : Interactable
 {
+	[Header("Container Settings")]
 	public UnityEvent OnOpen;
 	public UnityEvent OnClose;
 	

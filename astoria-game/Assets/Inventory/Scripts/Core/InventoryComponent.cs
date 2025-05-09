@@ -283,11 +283,10 @@ public class InventoryComponent : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Tries to remove count items from the inventory that match the ItemData.
+	/// Tries to remove an item from the inventory for each matching ItemData.
 	/// </summary>
-	/// <param name="itemData">The ItemData to check against.</param>
-	/// <param name="count">The count of items to remove.</param>
-	/// <returns>Whether the count of matching items could be removed.</returns>
+	/// <param name="items">The list of ItemData to check against.</param>
+	/// <returns>Whether the items could be removed.</returns>
 	public bool RemoveItemsByData(List<ItemData> items) {
 		if (!IsInitialized()) return false;
 		return InventoryData.RemoveItems(this, items);
