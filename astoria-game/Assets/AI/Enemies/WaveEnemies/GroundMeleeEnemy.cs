@@ -34,13 +34,14 @@ public class GroundMeleeEnemy : EnemyCore
     target = player;
     NavMeshPath path = new NavMeshPath();
     if (!agent.CalculatePath(player.position, path)) {
-      Debug.Log("can't find a way there");
       RaycastHit hit;
       if (Physics.SphereCast(transform.position, obstacleSphereCastRadius, player.position - transform.position, out hit, obstacleNoticeDistance, obstacleMask)) {
         // If there is an obstacle, navigate to it and destroy 
         agent.SetDestination(hit.point);
         target = hit.transform;
         return;
+      } else {
+        agent.SetDestination(player.position);
       }
     } else {
       agent.SetDestination(player.position);
@@ -57,23 +58,19 @@ public class GroundMeleeEnemy : EnemyCore
     if (Vector3.Distance(transform.position, target.position) <= attackRadius) {
       // Attack the target
       // animator.SetTrigger("Attack"); // Play attack animation
+      Debug.Log("Attacking: " + target.name);
       _attacking = true;
       attackTimer = 0;
       OnAttack?.Invoke();
-      if (target.gameObject.GetComponent<ComponentDamagePassthrough>() != null) {
-        target.gameObject.GetComponent<ComponentDamagePassthrough>().TakeDamage(attackDamage, target.position);
-      } else {
-        target.gameObject.GetComponent<HealthManager>().TakeDamage(attackDamage, target.position);
-      }
+      target.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(attackDamage, target.position);
       _attacking = false;
     }
   }
 
-    void OnCollisionEnter(Collision collision)
-    {
-      if (collision.gameObject.layer == 18) {
-        target = collision.transform;
-      }
+  void OnCollisionEnter(Collision collision) {
+    if (collision.gameObject.layer == 18) {
+      target = collision.transform;
     }
+  }
 
 }
