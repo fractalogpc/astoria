@@ -16,7 +16,6 @@ public class ToolCore : InputHandlerBase
 		CurrentTool.OnEquip();
 	}
 	public void DetachFromInputs() {
-		CurrentTool.OnUnequip();
 		CurrentTool = null;
 	}
 

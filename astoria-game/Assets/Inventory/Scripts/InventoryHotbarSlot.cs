@@ -31,11 +31,6 @@ public class InventoryHotbarSlot : MonoBehaviour
 		_attachedSlot.HeldItem.OnHotbarDeselected();
 	}
 
-	public void RemoveItem() {
-		Deselect();
-		_attachedSlot.RemoveItem();
-	}
-
 	public void AttachSlot(InventoryEquipableSlot slot) {
 		if (_attachedSlot != null) {
 			_attachedSlot.OnItemAdded.RemoveListener(UpdateSlotState);
@@ -51,6 +46,7 @@ public class InventoryHotbarSlot : MonoBehaviour
 	private void RemoveIcon(ItemInstance item = null) {
 		_itemImage.sprite = null;
 		_itemImage.color = Color.clear;
+		Deselect();
 	}
 
 	private void UpdateSlotState(ItemInstance item) {
