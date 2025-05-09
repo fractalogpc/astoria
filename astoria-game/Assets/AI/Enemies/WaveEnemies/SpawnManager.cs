@@ -23,12 +23,18 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _difficultyCurveBTerm = 10f;
     [SerializeField] private float _maxProportionPerEnemy = 0.4f;
 
+    [Header("Patrollster settings")]
+    [SerializeField] private Transform enemyContainer;
+
     private GameObject _player;
     private List<GameObject> _monsters;
     private int _nightsSurvived = 1;
 
     void Start() {
         _player = GameObject.FindWithTag("Player");
+        foreach (Transform patrollster in enemyContainer) {
+            patrollster.gameObject.GetComponent<EnemyCore>().SetPlayer(_player.transform);
+        }
     }
 
     void Update() {
