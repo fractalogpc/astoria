@@ -16,6 +16,7 @@ public class SaveSelectionManager : MonoBehaviour
 
     private void Start()
     {
+        saveSystem = SaveSystem.Instance;
         if (saveSystem == null)
         {
             Debug.LogError("SaveSystem reference is not set.");
