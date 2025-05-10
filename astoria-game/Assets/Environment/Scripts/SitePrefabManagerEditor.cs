@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(SitePrefabManager))]
 public class SitePrefabManagerEditor : Editor
 {
@@ -32,3 +33,4 @@ public class SitePrefabManagerEditor : Editor
         Debug.Log("Snapped all objects to the ground.");
     }
 }
+#endif

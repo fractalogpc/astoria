@@ -143,9 +143,11 @@ public class GroundPatrolEnemy : EnemyCore
     }
   }
 
+  #if UNITY_EDITOR
   void OnDrawGizmos() 
   {
     Handles.Label(transform.position, _isPatrolling ? "patrolling" : "not");
   }
+  #endif
 
 }

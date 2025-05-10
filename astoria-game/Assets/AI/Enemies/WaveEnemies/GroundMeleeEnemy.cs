@@ -79,9 +79,11 @@ public class GroundMeleeEnemy : EnemyCore
     }
   }
 
+  #if UNITY_EDITOR
   void OnDrawGizmos() {
     Handles.Label(transform.position, target.name);
   }
+  #endif
 
   void StopAttacking() {
     _attacking = false;
