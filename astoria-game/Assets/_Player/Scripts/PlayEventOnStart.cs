@@ -1,5 +1,6 @@
 using System.Collections;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 public class PlayEventOnStart : MonoBehaviour
@@ -7,6 +8,8 @@ public class PlayEventOnStart : MonoBehaviour
     [SerializeField] private AudioManager _audioManager;
     [SerializeField] private EventReference _eventToPlay;
     [SerializeField] private bool _attachToPlayer;
+
+    private EventInstance _sound;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     IEnumerator Start()
@@ -20,10 +23,17 @@ public class PlayEventOnStart : MonoBehaviour
             while (PlayerInstance.Instance == null) {
                 yield return null;
             }
-            _audioManager.PlayOneShotAttached(_eventToPlay, PlayerInstance.Instance.gameObject);
+            _sound = _audioManager.PlayOneShotAttached(_eventToPlay, PlayerInstance.Instance.gameObject);
         }
         else {
-            AudioManager.Instance.PlayOneShotAttached(_eventToPlay,  gameObject);
+            _sound = AudioManager.Instance.PlayOneShotAttached(_eventToPlay,  gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_sound.isValid()) {
+            _sound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
 }
