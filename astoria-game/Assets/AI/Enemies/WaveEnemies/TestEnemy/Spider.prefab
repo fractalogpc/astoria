@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de79ce65803e27f48904c88c5b41c3f4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4302450523366195893}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de79ce65803e27f48904c88c5b41c3f4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8173977037408528173}
   m_SourcePrefab: {fileID: 100100000, guid: de79ce65803e27f48904c88c5b41c3f4, type: 3}
 --- !u!1 &5163408235515725664 stripped
 GameObject:
@@ -128,7 +131,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnAttack:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8173977037408528173}
+        m_TargetAssemblyTypeName: WandererAudio, Assembly-CSharp
+        m_MethodName: PlayAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   attackRadius: 2
   attackDamage: 30
   attackSpeed: 2
@@ -216,12 +231,25 @@ MonoBehaviour:
       m_Calls: []
   OnDamaged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8173977037408528173}
+        m_TargetAssemblyTypeName: WandererAudio, Assembly-CSharp
+        m_MethodName: PlayDamaged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnHeal:
     m_PersistentCalls:
       m_Calls: []
   _currentHealth: 25
   _maxHealth: 25
+  _hasArmor: 0
 --- !u!65 &4302450523366195893
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -243,3 +271,40 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.069515, y: 1, z: 15.538339}
   m_Center: {x: 0.11401713, y: 0, z: -7.2691708}
+--- !u!114 &8173977037408528173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5163408235515725664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e99bacfb2e20c49ae2b5ec02cc71b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayIntermittentSounds: 1
+  _audioManager: {fileID: 0}
+  _intermittent:
+    Guid:
+      Data1: 567162044
+      Data2: 1210215816
+      Data3: -1268477264
+      Data4: -1222757853
+    Path: event:/Wanderer/WandererIntermittent
+  _attack:
+    Guid:
+      Data1: -1964755112
+      Data2: 1334064094
+      Data3: 575698350
+      Data4: -1269974001
+    Path: event:/Wanderer/WandererAttack
+  _damaged:
+    Guid:
+      Data1: -1418662230
+      Data2: 1163971216
+      Data3: 526399930
+      Data4: -350889716
+    Path: event:/Wanderer/WandererDamaged
+  _intermittentTimeMin: 0
+  _intermittentTimeMax: 30
