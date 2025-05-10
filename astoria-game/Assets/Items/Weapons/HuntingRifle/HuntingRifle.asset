@@ -13,37 +13,37 @@ MonoBehaviour:
   m_Name: HuntingRifle
   m_EditorClassIdentifier: 
   ItemName: Hunting Rifle
-  ItemDescription: 'A simple '
+  ItemDescription: A well-worn rifle, but suspiciously clean.
   ItemIcon: {fileID: 21300000, guid: ab4e71d89507f493091fb60b23c55a13, type: 3}
   ItemBGColor: {r: 0, g: 0, b: 0, a: 0}
-  ItemSize: {x: 1, y: 1}
-  MaxStackSize: 8
+  ItemSize: {x: 4, y: 1}
+  MaxStackSize: 0
   DroppedItemPrefab: {fileID: 3902591898328376640, guid: 26637b4828cf6e34e9ce870d92f0a46d, type: 3}
-  HeldItemPrefab: {fileID: 0}
-  ViewmodelAnimatorController: {fileID: 0}
-  ItemAnimations: {fileID: 0}
-  VMEquipAnimation: {fileID: 0}
-  VMUnequipAnimation: {fileID: 0}
-  AmmoItem: {fileID: 0}
-  FireAnimation: {fileID: 0}
-  ReloadEmptyAnimation: {fileID: 0}
-  ReloadPartialAnimation: {fileID: 0}
+  HeldItemPrefab: {fileID: 247651130774956907, guid: 80d92fcd18d6af04f8a8428f71bff611, type: 3}
+  ViewmodelAnimatorController: {fileID: 9100000, guid: 60b72c28cb25c4348b79dfcf81ec5571, type: 2}
+  ItemAnimations: {fileID: 22100000, guid: 453c4f505d294a248b1122d2c17367e4, type: 2}
+  VMEquipAnimation: {fileID: 7400000, guid: 279384ba29cda3c4a9b77483279bdfdc, type: 2}
+  VMUnequipAnimation: {fileID: 7400000, guid: f4b6e93c45cf47841bc3b0879f2b7085, type: 2}
+  AmmoItem: {fileID: 11400000, guid: 59571990645bf0f49b240024940b6965, type: 2}
+  FireAnimation: {fileID: 7400000, guid: 34a0fe027112f944da6fe6463e471d36, type: 2}
+  ReloadEmptyAnimation: {fileID: 7400000, guid: 827fbd0f599da4f46865b95e597058c4, type: 2}
+  ReloadPartialAnimation: {fileID: 7400000, guid: 827fbd0f599da4f46865b95e597058c4, type: 2}
   CanAimDownSights: 1
   AdsIkTarget: {x: 0, y: 0, z: 0}
   AdsIkTargetRot: {x: 0, y: 0, z: 0}
-  AdsIKTransitionTimeIn: 0
-  AdsIKTransitionTimeOut: 0
-  AdsFov: 45
+  AdsIKTransitionTimeIn: 0.2
+  AdsIKTransitionTimeOut: 0.1
+  AdsFov: 9.5
   AdsZoomSpeed: 10
   AccuracySetting:
-    EffectiveRange: 0
-    PatternSpread: 0
+    EffectiveRange: 200
+    PatternSpread: 0.5
   RecoilSettings:
-    UpwardsKickDeg: 0
-    SidewaysKickRangeDeg: 0
+    UpwardsKickDeg: 10
+    SidewaysKickRangeDeg: 3
   FireCombination: 0
   SemiAutoSetting:
-    CycleTime: 0
+    CycleTime: 0.3
   BurstSetting:
     ShotsPerBurst: 0
     RoundsPerMinute: 0
@@ -54,15 +54,15 @@ MonoBehaviour:
     PelletsPerShot: 0
   ReloadType: 0
   MagazineSetting:
-    MagazineCapacity: 0
-    ReloadTime: 0
+    MagazineCapacity: 8
+    ReloadTime: 3.2
   InternalSetting:
     InternalCapacity: 0
     ReloadTime: 0
   ChamberSetting:
     ChamberTime: 0
-  Damage: 30
-  InitialVelocityMS: 400
-  BulletMassKg: 0.007
-  BulletDiameterM: 0.009
-  DragCoefficient: 0.149
+  Damage: 70
+  InitialVelocityMS: 700
+  BulletMassKg: 0.006
+  BulletDiameterM: 0.006
+  DragCoefficient: 0.13
