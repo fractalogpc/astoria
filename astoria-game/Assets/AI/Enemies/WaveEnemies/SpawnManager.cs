@@ -116,4 +116,9 @@ public class SpawnManager : MonoBehaviour
         return new Vector3(x, y, z);
     }
     
+    public void OnHourChanged() {
+        if (Random.value < 0.3f) {
+            SpawnWanderer(SpawnPosition(_player.transform.position), _enemies[1].prefab);
+        }
+    }
 }
