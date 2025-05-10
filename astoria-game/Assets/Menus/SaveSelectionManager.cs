@@ -16,6 +16,7 @@ public class SaveSelectionManager : MonoBehaviour
 
     private void Start()
     {
+        saveSystem = SaveSystem.Instance;
         if (saveSystem == null)
         {
             Debug.LogError("SaveSystem reference is not set.");
@@ -66,6 +67,8 @@ public class SaveSelectionManager : MonoBehaviour
             Debug.LogError("No saves available to load.");
             return;
         }
+
+        OGPCController.Instance?.StartTimer();
 
         saveSystem.LoadSave(currentIndex);
     }

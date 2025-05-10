@@ -32,7 +32,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         _itemImage.type = Image.Type.Simple;
         _itemImage.preserveAspect = true;
         _itemImage.color = Color.white;
-        _itemText.text = itemInstance.ItemData.ItemName;
+        if (_itemText != null) _itemText.text = itemInstance.ItemData.ItemName;
         OnItemAdded.Invoke(itemInstance);
         return true;
     }
@@ -42,7 +42,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         InstantiateDraggedItem(HeldItem);
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
-        _itemText.text = "";
+        if (_itemText != null) _itemText.text = "";
         OnItemRemoved.Invoke(HeldItem);
         HeldItem = null;
     }
@@ -54,7 +54,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         if (HeldItem == null) return;
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
-        _itemText.text = "";
+        if (_itemText != null) _itemText.text = "";
         OnItemRemoved.Invoke(HeldItem);
         HeldItem.OnItemDestruction();
         HeldItem = null;
@@ -76,7 +76,7 @@ public class InventoryEquipableSlot : MonoBehaviour
         HeldItem = null;
         _itemImage.sprite = null;
         _itemImage.color = Color.clear;
-        _itemText.text = "";
+        if (_itemText != null) _itemText.text = "";
         _clickableEvents.OnClickDownSelected.AddListener(OnPickup);
         _clickableEvents.OnClickUpAnywhere.AddListener(OnClickUpAnywhere);
     }

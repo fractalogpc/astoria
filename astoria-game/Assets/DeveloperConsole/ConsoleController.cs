@@ -37,11 +37,15 @@ namespace Console
                 new CloseCommand(),
                 new ClearCommand(),
                 new ShowFPSCommand(),
-                new CheatsCommand() // Comment out this script to disable player cheats
+                new CheatsCommand(), // Comment out this script to disable player cheats
                 // Commands here
             };
 
             List<IConsoleCommand> cheatCommands = new List<IConsoleCommand>() {
+                new _StartTimer(),
+                new _StopTimerCommand(),
+                new _SetTimerCommand(),
+                new _ResetTimerCommand(),
                 new _LoadSceneCommand(),
                 new _TimeScaleCommand(),
                 new _HideUICommand(),

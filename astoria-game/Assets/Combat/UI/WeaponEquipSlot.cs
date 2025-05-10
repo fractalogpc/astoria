@@ -20,7 +20,7 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 		_itemImage.type = Image.Type.Simple;
 		_itemImage.preserveAspect = true;
 		_itemImage.color = Color.white;
-		_itemText.text = gunInstance.ItemData.ItemName;
+		if (_itemText != null) _itemText.text = gunInstance.ItemData.ItemName;
 		OnItemAdded.Invoke(gunInstance);
 		return true;
 	}
@@ -30,7 +30,7 @@ public class WeaponEquipSlot : InventoryEquipableSlot
 		InstantiateDraggedItem(HeldItem);
 		_itemImage.sprite = null;
 		_itemImage.color = Color.clear;
-		_itemText.text = "";
+		if (_itemText != null) _itemText.text = "";
 		OnItemRemoved.Invoke(HeldItem);
 		HeldItem = null;
 	}

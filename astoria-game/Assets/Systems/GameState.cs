@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Mirror.Examples.Common.Controllers.Tank;
 
 public class GameState : MonoBehaviour
 {
@@ -21,7 +22,10 @@ public class GameState : MonoBehaviour
 
     private bool _hasPlayedCutscene = false;
     private bool _isLoadingScene = false;
+    public string OGPCSceneName = "OGPCScene";
     public bool IsLoadingScene => _isLoadingScene;
+
+    public bool LoadOGPCStuff = true;
 
     public static GameState Instance { get; private set; }
 
@@ -35,6 +39,11 @@ public class GameState : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        if (LoadOGPCStuff) {
+            // Load the OGPC stuff
+            SceneManager.LoadScene(OGPCSceneName, LoadSceneMode.Additive);
         }
     }
 

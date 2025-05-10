@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class LocationObjectiveSource : MonoBehaviour
 {
+	public bool Completed => _completed;
 	public UnityEvent OnObjectiveCompleted;
 	[SerializeField] private LocationObjectiveData _objectiveData;
 	[SerializeField] private bool _addObjectiveOnStart;

@@ -22,7 +22,7 @@ public class KeyItemSlot : InventoryEquipableSlot
 		_itemImage.type = Image.Type.Simple;
 		_itemImage.preserveAspect = true;
 		_itemImage.color = Color.white;
-		_itemText.text = itemInstance.ItemData.ItemName;
+		if (_itemText != null) _itemText.text = itemInstance.ItemData.ItemName;
 		OnItemAdded.Invoke(itemInstance);
 		_slotBG.sprite = _fulfilledBG;
 		RequirementMet = true;

@@ -930,6 +930,7 @@ GameObject:
   - component: {fileID: 6016763808644076550}
   - component: {fileID: 4441379849816165161}
   - component: {fileID: 3501174141242373701}
+  - component: {fileID: 5220159420006691484}
   m_Layer: 0
   m_Name: ViewmodelBlockout_WM
   m_TagString: Untagged
@@ -999,6 +1000,8 @@ MonoBehaviour:
   _interactAnimation: {fileID: -6291053413920287643, guid: 63217ee86732c41b691ae44f91d3d62e, type: 3}
   _adsIkTarget: {fileID: 6963684483136032108}
   _adsRig: {fileID: 5501075107045611918}
+  _loadCutsceneAnimator: 0
+  _cutsceneController: {fileID: 0}
 --- !u!114 &3501174141242373701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1015,6 +1018,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 5501075107045611918}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &5220159420006691484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3534082861115800380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436c9321f6d004d3a8b3efe783d22256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3569106483092880891
 GameObject:
   m_ObjectHideFlags: 0
