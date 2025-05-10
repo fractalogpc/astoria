@@ -10914,13 +10914,13 @@ MonoBehaviour:
   OnDamaged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3780331250828572862}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 2035159708913202192}
+        m_TargetAssemblyTypeName: HitVisualHandler, Assembly-CSharp
+        m_MethodName: TriggerHitEffect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -11025,8 +11025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _disableOnCutscene: []
   _enableOnCutscene: []
-  _disableOnCutsceneCamera:
-  - {fileID: 0}
+  _disableOnCutsceneCamera: []
   _enableOnCutsceneCamera: []
   _fadeOutOnCutscene:
   - {fileID: 6140888702730717399}
@@ -21677,8 +21676,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _globalVolume: {fileID: 4803338957193070518}
-  _hit: {fileID: 0}
-  _vignette: {fileID: 0}
   _intensityCurve:
     serializedVersion: 2
     m_Curve:
@@ -21712,6 +21709,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _vignetteIntensity: 0.5
   _duration: 0.5
 --- !u!1 &3784259663338776304
 GameObject:
