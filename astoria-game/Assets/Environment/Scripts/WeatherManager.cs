@@ -43,9 +43,27 @@ public class WeatherManager : MonoBehaviour
         if (_randomlyChangeWeather)
         {
             // Randomly change weather every _weatherChangeInterval seconds
-            if (Time.time % _weatherChangeInterval < Time.deltaTime)
+            if (Time.time % _weatherChangeInterval < Time.deltaTime && Time.time >= _weatherChangeInterval)
             {
-                int randomIndex = UnityEngine.Random.Range(0, WeatherTypes.Length);
+                // Pick random weather effect based on weights
+                int totalWeight = 0;
+                for (int i = 0; i < WeatherTypes.Length; i++)
+                {
+                    totalWeight += WeatherTypes[i].WeightInRandomChoice;
+                }
+
+                int randomValue = UnityEngine.Random.Range(0, totalWeight);
+                int randomIndex = 0;
+                for (int i = 0; i < WeatherTypes.Length; i++)
+                {
+                    randomValue -= WeatherTypes[i].WeightInRandomChoice;
+                    if (randomValue < 0)
+                    {
+                        randomIndex = i;
+                        break;
+                    }
+                }
+
                 LerpToAtmosphere(WeatherTypes[randomIndex].Name, 1f, _weatherChangeDuration);
                 LerpToScreen(WeatherTypes[randomIndex].Name, _weatherChangeDuration);
                 LerpToEffects(WeatherTypes[randomIndex].Name, _weatherChangeDuration);
