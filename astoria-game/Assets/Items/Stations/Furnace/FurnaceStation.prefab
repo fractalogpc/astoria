@@ -156,6 +156,9 @@ GameObject:
   - component: {fileID: 8170085118454059182}
   - component: {fileID: 3976741747811075952}
   - component: {fileID: 7722275911332617080}
+  - component: {fileID: 757804248485654628}
+  - component: {fileID: 6137899027243665360}
+  - component: {fileID: 5299606749687330183}
   m_Layer: 0
   m_Name: FurnaceStation
   m_TagString: Untagged
@@ -330,6 +333,86 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parents: []
   children: []
+--- !u!114 &757804248485654628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624800654641284620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6137899027243665360}
+        m_TargetAssemblyTypeName: GivePlayerItemOnDeath, Assembly-CSharp
+        m_MethodName: GiveItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5299606749687330183}
+        m_TargetAssemblyTypeName: DelayDestroy, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 40
+  _maxHealth: 40
+  _hasArmor: 0
+--- !u!114 &6137899027243665360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624800654641284620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74aabbf15d77fdf419bcd92a151e2910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToGive: {fileID: 11400000, guid: e7c621e4883986c49b8e2d310479cdeb, type: 2}
+--- !u!114 &5299606749687330183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624800654641284620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436310675a938ab48acf39712e220922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1804320289424028309
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +509,7 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 4, y: 2}
   _spawnInventoryWith: []
+  _isPlayerInventory: 0
 --- !u!1 &2682778880673622686
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,6 +1012,7 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 4, y: 2}
   _spawnInventoryWith: []
+  _isPlayerInventory: 0
   _filterSetting: 0
   _filter:
   - {fileID: 11400000, guid: a411b3598c02cfe44a312a1c337039d6, type: 2}
@@ -1375,6 +1460,7 @@ MonoBehaviour:
   _useAssignedInventoryData: 0
   _assignedInventorySize: {x: 6, y: 8}
   _spawnInventoryWith: []
+  _isPlayerInventory: 0
 --- !u!114 &7470956330670705677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1484,6 +1570,7 @@ MonoBehaviour:
   _useAssignedInventoryData: 1
   _assignedInventorySize: {x: 2, y: 1}
   _spawnInventoryWith: []
+  _isPlayerInventory: 0
   _filterSetting: 0
   _filter:
   - {fileID: 11400000, guid: a9a4ec901dc521247af34d60fe61d73e, type: 2}

@@ -867,7 +867,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3738729390731967936}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999654
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -905,7 +905,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00022565112}
+  m_AnchoredPosition: {x: 0, y: 0.000044397962}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1131682720813030983
@@ -2795,6 +2795,9 @@ GameObject:
   - component: {fileID: 2699152734065659002}
   - component: {fileID: 4176088959330359805}
   - component: {fileID: 6098821924131334408}
+  - component: {fileID: 3538991902701530103}
+  - component: {fileID: 8486745855926551807}
+  - component: {fileID: 1566832899220134080}
   m_Layer: 6
   m_Name: Toolbox
   m_TagString: Untagged
@@ -2846,6 +2849,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _interactText: Interact
 --- !u!114 &3312363847465813943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2931,6 +2935,86 @@ MonoBehaviour:
   _decreaseButton: {fileID: 1366187210263137736}
   _countText: {fileID: 8901322937306507450}
   _craftButton: {fileID: 7645880897646585771}
+--- !u!114 &3538991902701530103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4175702274184750150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8486745855926551807}
+        m_TargetAssemblyTypeName: GivePlayerItemOnDeath, Assembly-CSharp
+        m_MethodName: GiveItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1566832899220134080}
+        m_TargetAssemblyTypeName: DelayDestroy, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.05
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 40
+  _maxHealth: 40
+  _hasArmor: 0
+--- !u!114 &8486745855926551807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4175702274184750150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74aabbf15d77fdf419bcd92a151e2910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToGive: {fileID: 11400000, guid: 1342372fc4741b3458d4aee6f9bb9b9c, type: 2}
+--- !u!114 &1566832899220134080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4175702274184750150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436310675a938ab48acf39712e220922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4179603251376768324
 GameObject:
   m_ObjectHideFlags: 0
@@ -3476,8 +3560,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6540019148040631465}
   m_HandleRect: {fileID: 2872515622584274588}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4347,7 +4431,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9390e2b31dad0143a21bbce96030a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 2550144216609804598}
   _fadeElementInOut: {fileID: 1784830936241891336}
 --- !u!114 &6923188804137350236
 MonoBehaviour:
@@ -5331,8 +5414,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -5085299975512147110, guid: 6f1fd586535ecfa4c9d9fea7e214607a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1552626027103894276}
   m_SourcePrefab: {fileID: 100100000, guid: 6f1fd586535ecfa4c9d9fea7e214607a, type: 3}
+--- !u!1 &297921833895033297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5085299975512147110, guid: 6f1fd586535ecfa4c9d9fea7e214607a, type: 3}
+  m_PrefabInstance: {fileID: 4417763820650283659}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1552626027103894276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297921833895033297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5197f2ca50243554ebb6c7085b21e9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4234990812025562464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6f1fd586535ecfa4c9d9fea7e214607a, type: 3}
