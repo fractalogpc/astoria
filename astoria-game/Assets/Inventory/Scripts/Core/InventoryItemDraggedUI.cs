@@ -128,7 +128,8 @@ public class InventoryItemDraggedUI : MonoBehaviour
 	{
 		if (!_originInventory.PlaceStack(ItemStack, _originSlotIndex))
 		{
-			Debug.LogError($"Could not put item {ItemStack.StackType.ItemName} back in inventory. Check for unexpected inventory logic.");
+			_originInventory.AddStack(ItemStack);
+			Debug.LogWarning($"Could not put item {ItemStack.StackType.ItemName} back in inventory at origin position. If a new item was added while dragging, this is expected.");
 		}
 		Destroy(gameObject);
 	}

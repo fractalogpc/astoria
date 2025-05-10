@@ -90,14 +90,18 @@ public class Viewmodel : MonoBehaviour
 
 	private void Start() {
 		if (_loadCutsceneAnimator) {
-			_viewmodelAnimator.runtimeAnimatorController = _cutsceneController;
+			LoadCutsceneAnimator();
 			return;
 		}
-		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
+		LoadDefaultAnimator();
 	}
 
 	public void LoadDefaultAnimator() {
 		_viewmodelAnimator.runtimeAnimatorController = _defaultController;
+	}
+	
+	public void LoadCutsceneAnimator() {
+		_viewmodelAnimator.runtimeAnimatorController = _cutsceneController;
 	}
 
 	private IEnumerator InteractAnimationCoroutine() {
