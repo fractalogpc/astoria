@@ -1,6 +1,8 @@
 using UnityEngine;
 using Construction;
 using System.Collections;
+using KinematicCharacterController;
+using Player;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -29,6 +31,7 @@ public class SaveSystem : MonoBehaviour
         public float playerHunger;
         public float playerThirst;
         public BuildingComponent[] buildingComponents;
+        public InventoryData inventoryData;
     }
 
     [System.Serializable]
@@ -79,12 +82,13 @@ public class SaveSystem : MonoBehaviour
         SaveGameData saveGameData = new SaveGameData
         {
             empty = false,
-            playerPosition = new Vector3(0, 0, 0), // Replace with actual player position
+            playerPosition = PlayerInstance.Instance.GetComponent<KinematicCharacterMotor>().InitialSimulationPosition,
             playerHealth = 100f, // Replace with actual player health
             playerHunger = 100f, // Replace with actual player hunger
             playerThirst = 100f, // Replace with actual player thirst
 
             buildingComponents = GetConstructionComponents(),
+            inventoryData = InventoryComponent.Instance.InventoryData,
         };
         return saveGameData;
     }
@@ -116,8 +120,11 @@ public class SaveSystem : MonoBehaviour
             Debug.Log("Loaded empty save file, allowing for new game.");
             return;
         }
+
+        PlayerInstance.Instance.GetComponent<PlayerController>().SetPosition(saveGameData.playerPosition);
         
         ConstructionBuilder.Instance.BuildConstruction(saveGameData.buildingComponents);
+        InventoryComponent.Instance.LoadSavedInventory(saveGameData.inventoryData);
     }
 
     public void LoadSaveInfo()
@@ -204,7 +211,7 @@ public class SaveSystem : MonoBehaviour
 
             GameState.Instance.StartGame(saveGameData.empty ? false : true);
 
-            yield return new WaitUntil(() => GameState.Instance.IsLoadingScene == false); // Wait until the loading scene is not loading
+            yield return new WaitUntil(() => GameState.Instance.IsLoadingMainSceneObjects == false); // Wait until the loading scene is not loading
 
             if (!saveGameData.empty) LoadGameData(saveGameData); // Load the game data into the game
 
