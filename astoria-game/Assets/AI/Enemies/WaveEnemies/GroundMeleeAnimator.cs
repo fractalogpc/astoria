@@ -11,6 +11,6 @@ public class GroundMeleeAnimator : MonoBehaviour
         _animator.SetFloat("MovementSpeed", _agent.velocity.magnitude);
         _animator.SetBool("Running", _agent.velocity.magnitude >= _runThreshold);
         _animator.SetBool("Attack", _core._attacking);
-        Debug.Log("Attacking:" + _core._attacking);
+        // Debug.Log("Attacking:" + _core._attacking);
     }
 }
