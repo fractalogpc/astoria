@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using UnityEngine.VFX;
 using Construction;
+using FMODUnity;
 
 public class Tornado : MonoBehaviour
 {
@@ -14,12 +15,14 @@ public class Tornado : MonoBehaviour
     [SerializeField] private LayerMask destructionLayerMask;
     [SerializeField] private float destructionRadius = 5f;
     [SerializeField] private float destructionDPS = 1f;
+    [SerializeField] private EventReference _tornadoSound;
 
     private float spawnTime;
 
     private void Start()
     {
         spawnTime = Time.time;
+        AudioManager.Instance.PlayOneShotAttached(_tornadoSound, gameObject);
     }
 
     private void Update()
