@@ -24,6 +24,7 @@ public class EndCutsceneTimelineReceiver : MonoBehaviour
 
         // Load the game scene after the cutscene ends
         PlayerInstance.Instance.transform.GetChild(10).GetComponent<Canvas>().enabled = true; // Show the player UI
+        PlayerInstance.Instance.transform.GetChild(10).GetComponent<FadeElementInOut>().FadeIn(); // Fade in the player UI
         // InputReader.Instance.SwitchInputMap(InputMap.Player); // Switch to player input map
         GameState.Instance.UnloadCutsceneEndTransitionScene();
     }
