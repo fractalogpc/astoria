@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEditor;
 
 public class GroundMeleeEnemy : EnemyCore
 {
@@ -15,6 +16,7 @@ public class GroundMeleeEnemy : EnemyCore
   [SerializeField] private float playerFocusRadius;
   [SerializeField] private float obstacleSphereCastRadius;
   [SerializeField] private LayerMask obstacleMask;
+  [SerializeField] private LayerMask attackMask;
   [SerializeField] private float obstacleNoticeDistance;
 
   private NavMeshAgent agent;
@@ -41,10 +43,10 @@ public class GroundMeleeEnemy : EnemyCore
         target = hit.transform;
         return;
       } else {
-        agent.SetDestination(player.position);
+        agent.SetDestination((player.position + transform.position) / 2);
       }
     } else {
-      agent.SetDestination(player.position);
+      agent.SetDestination((player.position + transform.position) / 2);
     }
   }
 
@@ -56,14 +58,18 @@ public class GroundMeleeEnemy : EnemyCore
     }
     // Find if the target is in the attack radius
     if (Vector3.Distance(transform.position, target.position) <= attackRadius) {
-      // Attack the target
-      // animator.SetTrigger("Attack"); // Play attack animation
-      Debug.Log("Attacking: " + target.name);
-      _attacking = true;
-      attackTimer = 0;
-      OnAttack?.Invoke();
-      target.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(attackDamage, target.position);
-      _attacking = false;
+      RaycastHit hit;
+      Physics.SphereCast(transform.position, obstacleSphereCastRadius, target.position - transform.position, out hit, attackRadius, attackMask);
+      if (hit.transform == target.transform) {
+        // Attack the target
+        // animator.SetTrigger("Attack"); // Play attack animation
+        Debug.Log("Attacking: " + target.name);
+        _attacking = true;
+        attackTimer = 0;
+        OnAttack?.Invoke();
+        target.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(attackDamage, target.position);
+        _attacking = false;
+      }
     }
   }
 
@@ -71,6 +77,11 @@ public class GroundMeleeEnemy : EnemyCore
     if (collision.gameObject.layer == 18) {
       target = collision.transform;
     }
+  }
+
+  void OnDrawGizmos() 
+  {
+    Handles.Label(transform.position, target.name);
   }
 
 }
