@@ -68,7 +68,7 @@ public class GroundMeleeEnemy : EnemyCore
         attackTimer = 0;
         OnAttack?.Invoke();
         target.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(attackDamage, target.position);
-        _attacking = false;
+        Invoke("StopAttacking", 0.5f); // Stop attacking after 0.5 seconds
       }
     }
   }
@@ -84,4 +84,7 @@ public class GroundMeleeEnemy : EnemyCore
     Handles.Label(transform.position, target.name);
   }
 
+  void StopAttacking() {
+    _attacking = false;
+  }
 }
