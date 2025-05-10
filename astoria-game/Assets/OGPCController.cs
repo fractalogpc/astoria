@@ -8,7 +8,7 @@ public class OGPCController : MonoBehaviour
 
     public TextMeshProUGUI timerText; // Reference to the UI Text component for displaying the timer
 
-    public float timerDuration = 300f; // Time in seconds
+    public float timerDuration = 480f; // Time in seconds
 
     private bool timerIsRunning = false;
 
@@ -95,6 +95,7 @@ public class OGPCController : MonoBehaviour
     {
         OnReset?.Invoke(); // Invoke the reset event
 
+        timerDuration = 480f;
         timerIsRunning = false; // Stop the timer
         timeSinceStart = 0f; // Reset the timer
         timerText.gameObject.SetActive(false); // Hide the timer UI
