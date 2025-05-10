@@ -55,6 +55,7 @@ public class PlayerInteractor : InputHandlerBase
     if (!Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) return;
     Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
     if (interactable == null) return;
+    if (!interactable.enabled) return;
     _viewmodelManager.InteractAnimation();
     interactable.Interact();
     return;
