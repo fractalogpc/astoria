@@ -174,7 +174,6 @@ GameObject:
   - component: {fileID: 871000951896664012}
   - component: {fileID: 4310003163114330436}
   - component: {fileID: 4252347590729375839}
-  - component: {fileID: 2893514411204642043}
   - component: {fileID: 6367028404221036241}
   m_Layer: 5
   m_Name: HotbarSlot
@@ -242,79 +241,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2893514411204642043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8201633441582420929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9afe3843099d85f44b751db32b8850a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _overlayCanvasGroup: {fileID: 304243636593862418}
-  _clickableEvents: {fileID: 0}
-  _highlightAlpha: 0.5
-  _fadeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _pulseCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.50017244
-      value: 0.25
-      inSlope: 0.00412357
-      outSlope: 0.00412357
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.1826827
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0.0045219655
-      outSlope: 0.0045219655
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.25462505
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _fadeDuration: 0.2
 --- !u!114 &6367028404221036241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,5 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hotbar: {fileID: 0}
+  _slotBGImage: {fileID: 4252347590729375839}
   _itemImage: {fileID: 5969586544307038336}
-  _highlightEffect: {fileID: 2893514411204642043}
+  _unselectedBG: {fileID: 21300000, guid: 931b63aadd57c4ea3bc32f820e4dea65, type: 3}
+  _selectedBG: {fileID: 21300000, guid: 8d53e2f2955914ef0a166329d1ab478d, type: 3}
