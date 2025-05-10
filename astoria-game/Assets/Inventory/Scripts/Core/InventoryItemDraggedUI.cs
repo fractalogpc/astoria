@@ -116,6 +116,7 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		// Over nothing, drop the item
 		_originInventory?.ResetAllContainerHighlights();
 		_originInventory?.SpawnDroppedItem(ItemStack);
+		Debug.Log($"Inventory: Dropping Item {ItemStack.StackType.ItemName}");
 		Destroy(gameObject);
 		return false;
 	}
