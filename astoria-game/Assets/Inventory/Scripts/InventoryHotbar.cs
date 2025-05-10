@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class InventoryHotbar : InputHandlerBase
 {
+	[SerializeField] private GameObject _weaponHotbarSlotPrefab;
 	[SerializeField] [ReadOnly] private GameObject _hotbarSlotPrefab;
 	[SerializeField] private RectTransform _slotParent;
 	[Range(3, 10)][SerializeField] private int _slotCount = 10;
@@ -45,8 +46,15 @@ public class InventoryHotbar : InputHandlerBase
 		_hotbarSlots.Clear();
 		
 		for (int i = 0; i < _slotCount; i++) {
-			GameObject slot = Instantiate(_hotbarSlotPrefab, _slotParent);
-			InventoryHotbarSlot hotbarSlot = slot.GetComponent<InventoryHotbarSlot>();
+			GameObject prefab;
+			if (i < 3) {
+				prefab = _weaponHotbarSlotPrefab;
+			}
+			else {
+				prefab = _hotbarSlotPrefab;
+			}
+			GameObject slot = Instantiate(prefab, _slotParent);
+			InventoryHotbarSlot hotbarSlot = slot.GetComponentInChildren<InventoryHotbarSlot>();
 			if (!hotbarSlot.Initialize(this)) continue;
 			_hotbarSlots.Add(slot);
 		}

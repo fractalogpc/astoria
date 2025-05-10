@@ -181,21 +181,21 @@ public class InventoryItemDraggedUI : MonoBehaviour
 		if (Input.GetMouseButtonUp(0)) OnLetGoOfDraggedItem();
 		if (Input.GetKeyDown(KeyCode.R)) RotateItem();
 
-		// Now set the position because it needs to be scaled by screen size
-		// Yeah it's not great to fetch parent component every frame but someone else (matthew) can fix this if they feel like it.
-		// Convert mouse position to local position relative to the canvas
-		Vector2 localPoint;
-		Canvas canvas = GetComponentInParent<Canvas>();
-		Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform.parent as RectTransform, Input.mousePosition, camera, out localPoint))
-		{
-			// Adjust for the screen center offset
-			Vector2 parentSize = (_rectTransform.parent as RectTransform).sizeDelta;
-			localPoint += parentSize * 0.5f;
-
-			_rectTransform.anchoredPosition = localPoint;
-		}
+		// // Now set the position because it needs to be scaled by screen size
+		// // Yeah it's not great to fetch parent component every frame but someone else (matthew) can fix this if they feel like it.
+		// // Convert mouse position to local position relative to the canvas
+		// Vector2 localPoint;
+		// Canvas canvas = GetComponentInParent<Canvas>();
+		// Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+		//
+		// if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform.parent as RectTransform, Input.mousePosition, camera, out localPoint))
+		// {
+		// 	// Adjust for the screen center offset
+		// 	Vector2 parentSize = (_rectTransform.parent as RectTransform).sizeDelta;
+		// 	localPoint += parentSize * 0.5f;
+		//
+		// 	_rectTransform.anchoredPosition = localPoint;
+		// }
 	}
 
 	private void RotateItem()
