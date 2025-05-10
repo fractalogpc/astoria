@@ -632,5 +632,9 @@ namespace Player
       Motor.SetPositionAndRotation(setTransform.position, setTransform.rotation);
       GetComponentInChildren<PlayerCamera>().ResetRotation(setTransform.rotation);
     }
+
+    public void SetPosition(Vector3 position) {
+      Motor.SetPosition(position);
+    }
   }
 }

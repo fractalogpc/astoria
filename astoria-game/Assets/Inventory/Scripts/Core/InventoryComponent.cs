@@ -40,11 +40,14 @@ public class InventoryComponent : MonoBehaviour
 
 	[SerializeField] private Vector2Int _assignedInventorySize;
 	[SerializeField] private List<ItemData> _spawnInventoryWith;
+	[SerializeField] private bool _isPlayerInventory = false;
 
 	private List<GameObject> _stackPrefabInstances = new();
 	private RectTransform _rect;
 	private Image _colliderImage; // Need a collider image so hovered items can raycast and see the inventory
 	private GameObject[,] _slotPrefabInstances;
+
+	public static InventoryComponent Instance;
 
 	private void OnValidate() {
 		FindReferences();
@@ -52,12 +55,31 @@ public class InventoryComponent : MonoBehaviour
 
 	public void Awake() {
 		FindReferences();
+		if (_isPlayerInventory) {
+			Instance = this;
+		}
+	}
+
+	public void OnDestroy() {
+		if (Instance == this) {
+			Instance = null;
+		}
 	}
 
 	public void Start() {
 		if (!_useAssignedInventoryData) return;
 		InventoryData = null;
 		CreateInvFromItemDatas(_spawnInventoryWith, _assignedInventorySize);
+	}
+
+	public void LoadSavedInventory(InventoryData inventoryData) {
+		if (inventoryData == null) {
+			Debug.LogError("InventoryComponent: InventoryData is null! Cannot load inventory.");
+			return;
+		}
+		
+		// Replace this function with one that loads the inventory from save.
+		// Cannot save a class (InventoryData) to the JSON file, so must create a struct with all the data referencing items, etc.
 	}
 
 	private void AttachToInventoryData(InventoryData inventoryData) {
