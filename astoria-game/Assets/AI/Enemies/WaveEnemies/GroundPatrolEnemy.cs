@@ -77,7 +77,7 @@ public class GroundPatrolEnemy : EnemyCore
     Vector2 _targetPoint = new Vector2(targetPoint.position.x, targetPoint.position.z);
     Vector2 _currentPosition = new Vector2(transform.position.x, transform.position.z);
     float distanceToTarget = Vector2.Distance(_targetPoint, _currentPosition);
-    Debug.Log($"Distance to target: {distanceToTarget}");
+    // Debug.Log($"Distance to target: {distanceToTarget}");
 
     if (distanceToTarget <= _strayDistance) {
       _waitTime -= Time.deltaTime;
