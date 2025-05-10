@@ -1135,7 +1135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9390e2b31dad0143a21bbce96030a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 5050404861777449775}
   _fadeElementInOut: {fileID: 3606568777319275474}
 --- !u!114 &987903803087753800
 MonoBehaviour:
@@ -3040,7 +3039,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00095168554}
+  m_AnchoredPosition: {x: 0, y: 0.001013989}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &3545513290725570836
@@ -3978,6 +3977,9 @@ GameObject:
   - component: {fileID: -4736615238277901570}
   - component: {fileID: 7427352743573300740}
   - component: {fileID: 3214199653977529783}
+  - component: {fileID: 6872273249113426605}
+  - component: {fileID: 7731646273863630107}
+  - component: {fileID: 1813127747237982318}
   m_Layer: 6
   m_Name: Crafting Station
   m_TagString: Untagged
@@ -4082,6 +4084,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _interactText: Interact
 --- !u!114 &2643599505271922994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4167,6 +4170,86 @@ MonoBehaviour:
   _decreaseButton: {fileID: 7398435775191021158}
   _countText: {fileID: 5401659154051798196}
   _craftButton: {fileID: 6664946969758318980}
+--- !u!114 &6872273249113426605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5197208939192662860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e9c5a72272c4bf79d6e5a9357dbb36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  OnHealthInitialize:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthZero:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7731646273863630107}
+        m_TargetAssemblyTypeName: GivePlayerItemOnDeath, Assembly-CSharp
+        m_MethodName: GiveItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1813127747237982318}
+        m_TargetAssemblyTypeName: DelayDestroy, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentHealth: 40
+  _maxHealth: 40
+  _hasArmor: 0
+--- !u!114 &7731646273863630107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5197208939192662860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74aabbf15d77fdf419bcd92a151e2910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToGive: {fileID: 11400000, guid: 9a5e256aa923e3549b5a6a1b80354f3f, type: 2}
+--- !u!114 &1813127747237982318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5197208939192662860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436310675a938ab48acf39712e220922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5419759961897763897
 GameObject:
   m_ObjectHideFlags: 0
@@ -5227,7 +5310,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1708397826248324121}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.999998
+  m_Size: 0.9999983
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

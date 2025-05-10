@@ -4,9 +4,11 @@ using UnityEngine;
 public class ComponentDamagePassthrough : MonoBehaviour, IDamageable
 {
     private ConstructionComponent component;
+    private HealthManager healthManager;
 
     private void Start() {
         component = GetComponentInParent<ConstructionComponent>();
+        healthManager = GetComponentInParent<HealthManager>();
         
         if (component == null)
         {
@@ -17,6 +19,7 @@ public class ComponentDamagePassthrough : MonoBehaviour, IDamageable
     public void TakeDamage(float damage, Vector3 hitPosition)
     {
         Debug.Log("im takin damage bro help me vro pls");
-        component.TakeDamage(damage, hitPosition);
+        if (component != null) component.TakeDamage(damage, hitPosition);
+        if (healthManager != null) healthManager.TakeDamage(damage, hitPosition);
     }
 }

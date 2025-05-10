@@ -82,7 +82,7 @@ public class SaveSelectionManager : MonoBehaviour
         {
             DisplayCurrentSave();
         } else {
-            saveNameText.text = "No saves available.";
+            saveNameText.text = "No saves";
             thumbnailImage.sprite = defaultThumbnail;
         }
     }
