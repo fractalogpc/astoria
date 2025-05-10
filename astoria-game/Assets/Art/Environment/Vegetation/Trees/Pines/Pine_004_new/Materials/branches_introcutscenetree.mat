@@ -37,6 +37,7 @@ Material:
   - TVE_FILTER_DEFAULT
   - TVE_MAIN_SAMPLE_MAIN_UV
   - TVE_MOTION_BASE_BENDING
+  - TVE_MOTION_PUSH_BENDING
   - TVE_MOTION_SMALL_SQUASH
   - TVE_MOTION_TINY_FLUTTER
   - TVE_MOTION_WIND_ADVANCED
@@ -682,10 +683,10 @@ Material:
     - _MotionInteractionCategory: 1
     - _MotionInteractionEnd: 1
     - _MotionPushElementMode: 1
-    - _MotionPushIntensityValue: 0
+    - _MotionPushIntensityValue: 0.5
     - _MotionPushMaskMode: 3
     - _MotionPushPhaseValue: 0
-    - _MotionPushPivotValue: 1
+    - _MotionPushPivotValue: 0
     - _MotionSmallDelayValue: 0.8
     - _MotionSmallIntensityValue: 2
     - _MotionSmallMaskMode: 1
@@ -1099,7 +1100,7 @@ Material:
     - _motion_base_proc_mode: {r: 1, g: 0, b: 0, a: 0}
     - _motion_base_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _motion_highlight_color: {r: 1, g: 1, b: 1, a: 1}
-    - _motion_push_proc_mode: {r: 0, g: 0, b: 0, a: 0}
+    - _motion_push_proc_mode: {r: 0, g: 1, b: 0, a: 0}
     - _motion_push_vert_mode: {r: 0, g: 0, b: 0, a: 1}
     - _motion_small_proc_mode: {r: 0, g: 0, b: 0, a: 0}
     - _motion_small_vert_mode: {r: 0, g: 1, b: 0, a: 0}
