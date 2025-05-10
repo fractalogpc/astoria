@@ -5,10 +5,12 @@ public class SettingsInteractor : MonoBehaviour
 {
 
     [SerializeField] private Slider renderResolutionSlider;
+    [SerializeField] private Slider volumeSlider;
 
     private void Start()
     {
         renderResolutionSlider.value = SettingsManager.RenderResolution;
+        volumeSlider.value = SettingsManager.Volume;
     }
     
     public void SetRenderResolution(float value)
@@ -24,6 +26,11 @@ public class SettingsInteractor : MonoBehaviour
     public void SetLightingQuality(int value)
     {
         SettingsManager.Instance.SetLightingQuality(value);
+    }
+
+    public void SetVolume(float value)
+    {
+        SettingsManager.Instance.SetVolume(value);
     }
 
 }

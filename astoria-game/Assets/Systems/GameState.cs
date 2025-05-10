@@ -24,10 +24,17 @@ public class GameState : MonoBehaviour
     private bool _isLoadingScene = false;
     public string OGPCSceneName = "OGPCScene";
     public bool IsLoadingScene => _isLoadingScene;
+    private bool _isLoadingMainSceneObjects = true;
+    public bool IsLoadingMainSceneObjects => _isLoadingMainSceneObjects;
 
     public bool LoadOGPCStuff = true;
 
     public static GameState Instance { get; private set; }
+
+    public void StopLoadingGameScene()
+    {
+        _isLoadingMainSceneObjects = false;
+    }
 
     private void Awake()
     {
@@ -65,13 +72,30 @@ public class GameState : MonoBehaviour
         yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);
 
         // Load the new scene
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
 
+        // Unload the loading scene unless the new scene is the game scene
+        if (sceneName != gameSceneName)
+        {
+            yield return SceneManager.UnloadSceneAsync(loadingSceneName);
+            // Set the active scene to the new scene
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        }
+
         _isLoadingScene = false;
+
+        if (sceneName == gameSceneName)
+        {
+            yield return new WaitUntil(() => _isLoadingMainSceneObjects == false); // Wait until the loading scene is not loading
+            // Unload loading scene
+            yield return SceneManager.UnloadSceneAsync(loadingSceneName);
+            // Set the active scene to the new scene
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        }
     }
 
     public void EnterCutscene()
@@ -135,6 +159,7 @@ public class GameState : MonoBehaviour
             return;
         }
 
+        _isLoadingMainSceneObjects = true; // Set the loading main scene objects to true
         LoadScene(gameSceneName);
         onGameStart.Invoke();
     }

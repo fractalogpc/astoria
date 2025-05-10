@@ -51,6 +51,8 @@ public class SceneLoader : MonoBehaviour
             }
             yield return new WaitForSeconds(framesPerStep * Time.deltaTime);
         }
+
+        GameState.Instance.StopLoadingGameScene();
     }
 
 }
