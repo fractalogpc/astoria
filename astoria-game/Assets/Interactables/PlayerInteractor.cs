@@ -28,7 +28,7 @@ public class PlayerInteractor : InputHandlerBase
   private void Update() {
     if (Physics.SphereCast(_camera.transform.position, _interactRadius, _camera.transform.forward, out RaycastHit hit, _interactDistance)) {
       Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
-      if (interactable != null) {
+      if (interactable != null  && interactable.enabled) {
         _showCrosshair = true;
         _interactText.text = interactable.InteractText;
       } 

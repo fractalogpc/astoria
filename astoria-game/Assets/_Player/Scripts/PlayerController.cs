@@ -52,7 +52,6 @@ namespace Player
     public Vector3 Gravity = new Vector3(0, -30f, 0);
     public Transform MeshRoot;
     public float CrouchedCapsuleHeight = 1f;
-    public Transform ResetPosition;
 
     public AnimationCurve FallDamageCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
     public float _previousFrameFallSpeed = 0f;
@@ -629,21 +628,9 @@ namespace Player
       }
     }
 
-    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
-    {
-      Motor.SetPositionAndRotation(position, rotation);
-      transform.rotation = rotation;
-
-      GetComponentInChildren<PlayerCamera>().ResetRotation(rotation);
-    }
-
-    public void ResetPositionAndRotation()
-    {
-      Vector3 position = ResetPosition.position;
-      Quaternion rotation = ResetPosition.rotation;
-      Motor.SetPositionAndRotation(position, rotation);
-
-      GetComponentInChildren<PlayerCamera>().ResetRotation(rotation);
+    public void SetPositionAndRotation(Transform setTransform) {
+      Motor.SetPositionAndRotation(setTransform.position, setTransform.rotation);
+      GetComponentInChildren<PlayerCamera>().ResetRotation(setTransform.rotation);
     }
   }
 }
