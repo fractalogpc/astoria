@@ -1034,6 +1034,8 @@ GameObject:
   - component: {fileID: 1659386730060024600}
   - component: {fileID: 2972510730473601047}
   - component: {fileID: 7405493581316184868}
+  - component: {fileID: 7228572818053739975}
+  - component: {fileID: 7550976505103550811}
   m_Layer: 0
   m_Name: GameState
   m_TagString: MainCamera
@@ -1091,6 +1093,8 @@ MonoBehaviour:
   mainMenuSceneName: MainMenu
   loadingSceneName: LoadingScene
   cutsceneEndTransitionSceneName: CutsceneEndTransition
+  OGPCSceneName: OGPCScene
+  LoadOGPCStuff: 1
 --- !u!114 &1770929490579529854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1337,6 +1341,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5dc4ecb9fa12344b8e23fe681e3f0d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnSettingsChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7405493581316184868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1356,3 +1363,27 @@ MonoBehaviour:
   _reflectionProbeData: {fileID: 8695486765771994882}
   _secondaryReflectionProbeData: {fileID: 199607546981929359}
   _updateInterval: 2
+--- !u!114 &7228572818053739975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5028368891704597181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24ddf9c6d47ff445b92f381020f2776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7550976505103550811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5028368891704597181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467caa74ad9a981438079a90abfdef36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
