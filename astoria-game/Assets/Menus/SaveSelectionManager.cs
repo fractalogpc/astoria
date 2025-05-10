@@ -67,6 +67,8 @@ public class SaveSelectionManager : MonoBehaviour
             return;
         }
 
+        OGPCController.Instance?.StartTimer();
+
         saveSystem.LoadSave(currentIndex);
     }
 
