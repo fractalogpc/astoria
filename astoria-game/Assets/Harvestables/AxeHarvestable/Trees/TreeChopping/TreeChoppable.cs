@@ -7,6 +7,7 @@ public class TreeChoppable : HealthManager
 	public bool DontTimeout = false;
 
 	[SerializeField] private ItemData _woodItem;
+	[SerializeField] private bool _instantChop = false;
 	[SerializeField] private int _dropAmountOnFell = 10;
 	[SerializeField] private float _healthOnFell = 200f;
 	[SerializeField] private float _damagePerDrop = 20f;
@@ -33,7 +34,6 @@ public class TreeChoppable : HealthManager
 	{
 		base.Damage(damagePoints, hitPosition);
 		if (_chopped) {
-			
 			float damageUnaccountedFor = _healthOnFell - CurrentHealth - _damageAccountedFor;
 			for (int i = 0; i < damageUnaccountedFor / _damagePerDrop; i++) {
 				_damageAccountedFor += _damagePerDrop;
@@ -81,6 +81,7 @@ public class TreeChoppable : HealthManager
 			_rigidbody.isKinematic = false;
 			PlayerInstance.Instance.GetComponentInChildren<InventoryComponent>().AddItemByData(_woodItem, _dropAmountOnFell);
 
+			if (_instantChop) DestroyTree();
 			if (!DontTimeout) Invoke(nameof(DestroyTree), lifeTime);
 
 			// _rigidbody.AddForceAtPosition(Camera.main.transform.forward * _fallingForce, hitPosition + Vector3.up * 100, ForceMode.Impulse);
