@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 398, y: 529}
-  m_SizeDelta: {x: 576, y: 960}
+  m_SizeDelta: {x: 450, y: 750}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3693042352867768858
 MonoBehaviour:
@@ -196,6 +196,7 @@ MonoBehaviour:
   OnInteract:
     m_PersistentCalls:
       m_Calls: []
+  _interactText: Interact
   OnOpen:
     m_PersistentCalls:
       m_Calls: []
@@ -234,8 +235,11 @@ MonoBehaviour:
       - Item: {fileID: 11400000, guid: 3c3a3d278ba81b64f8d3e49c26784258, type: 2}
         Weight: 1
         SingleDrawPickLimit: 1
+      - Item: {fileID: 11400000, guid: 54383770298ba214f85e076cec96a5af, type: 2}
+        Weight: 2
+        SingleDrawPickLimit: 3
       MinItems: 1
-      MaxItems: 3
+      MaxItems: 4
       OnlyOnFirstGeneration: 0
       _drawnBefore: 0
     - ItemWeights:
@@ -315,7 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9390e2b31dad0143a21bbce96030a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 6732601164846640161}
   _fadeElementInOut: {fileID: 5627854631850995237}
 --- !u!1 &4891761339584778036
 GameObject:
@@ -354,7 +357,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 1460, y: 498}
-  m_SizeDelta: {x: 384, y: 384}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9186862496365474608
 MonoBehaviour:

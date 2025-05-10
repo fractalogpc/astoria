@@ -50,6 +50,10 @@ public class HealthManager : PlayerVitalHandler, IDamageable
   [SerializeField] private float _currentHealth;
   [SerializeField] private float _maxHealth;
 
+  [SerializeField] private bool _hasArmor;
+
+  private float _armorValue = 0;
+
   private float _regenTimer = 0;
   
   public override float GetCurrentValue() {
@@ -57,6 +61,10 @@ public class HealthManager : PlayerVitalHandler, IDamageable
   }
   public override float GetMaxValue() {
     return _maxHealth;
+  }
+
+  public void SetArmorValue(float armorValue) {
+    _armorValue = armorValue;
   }
   
   public virtual void Initialize(float maxHealth) {
@@ -90,17 +98,22 @@ public class HealthManager : PlayerVitalHandler, IDamageable
   public virtual void Damage(float damagePoints, Vector3 hitPosition) {
     if (Invulnerable) return;
 
-    if (_currentHealth - damagePoints <= 0) {
+    float trueDamage = damagePoints;
+    if (_hasArmor) {
+      trueDamage = damagePoints * (1 - _armorValue * 0.1f);
+    }
+
+    if (_currentHealth - trueDamage <= 0) {
       _currentHealth = 0;
       OnHealthZero?.Invoke();
     }
     else {
       float initialHealth = _currentHealth;
-      _currentHealth -= damagePoints;
+      _currentHealth -= trueDamage;
       _regenTimer = 0;
       NotifyVitalChange(initialHealth, _currentHealth, MaxHealth);
     }
-    OnDamaged?.Invoke(hitPosition, damagePoints);
+    OnDamaged?.Invoke(hitPosition, trueDamage);
   }
   
   protected virtual void OnValidate() {
