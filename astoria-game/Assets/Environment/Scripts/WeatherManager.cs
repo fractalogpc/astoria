@@ -6,6 +6,10 @@ public class WeatherManager : MonoBehaviour
 {
 
     [Header("Weather Settings")]
+    [SerializeField] private bool _randomlyChangeWeather = false;
+    [SerializeField] private float _weatherChangeInterval = 5f;
+    [SerializeField] private float _weatherChangeDuration = 1f;
+
     public WeatherType[] WeatherTypes;
     // Sunny, Overcast, Rainy, Stormy, Snowy, Ash, Dry, Windy
 
@@ -31,6 +35,21 @@ public class WeatherManager : MonoBehaviour
         for (int i = 0; i < WeatherTypes.Length; i++)
         {
             previousEffectsWeights[i] = -1f;
+        }
+    }
+
+    private void Update()
+    {
+        if (_randomlyChangeWeather)
+        {
+            // Randomly change weather every _weatherChangeInterval seconds
+            if (Time.time % _weatherChangeInterval < Time.deltaTime)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, WeatherTypes.Length);
+                LerpToAtmosphere(WeatherTypes[randomIndex].Name, 1f, _weatherChangeDuration);
+                LerpToScreen(WeatherTypes[randomIndex].Name, _weatherChangeDuration);
+                LerpToEffects(WeatherTypes[randomIndex].Name, _weatherChangeDuration);
+            }
         }
     }
 
@@ -67,6 +86,26 @@ public class WeatherManager : MonoBehaviour
                 StartCoroutine(LerpValue(previousScreenWeights[i], 0f, duration, (value) => WeatherTypes[i].ScreenWeight = value));
             }
         }
+
+        // Set the current weather type
+        StartCoroutine(LerpValue(previousScreenWeights[index], 1f, duration, (value) => WeatherTypes[index].ScreenWeight = value));
+    }
+
+    public void LerpToEffects(string weatherType, float duration = 1f)
+    {
+        int index = GetWeatherType(weatherType, out WeatherType weather);
+        if (index == -1) return;
+
+        for (int i = 0; i < WeatherTypes.Length; i++)
+        {
+            if (i != index)
+            {
+                StartCoroutine(LerpValue(previousEffectsWeights[i], 0f, duration, (value) => WeatherTypes[i].EffectsWeight = value));
+            }
+        }
+
+        // Set the current weather type
+        StartCoroutine(LerpValue(previousEffectsWeights[index], 1f, duration, (value) => WeatherTypes[index].EffectsWeight = value));
     }
 
     public void SetAtmosphere(string weatherType, float value)
@@ -168,6 +207,7 @@ public class WeatherManager : MonoBehaviour
     public struct WeatherType
     {
         public string Name;
+        public int WeightInRandomChoice;
         public float AtmosphereWeight { get => atmosphereWeight; set => SetAtmosphereWeight(value); }
         public float ScreenWeight { get => screenWeight; set => SetScreenWeight(value); }
         public float EffectsWeight { get => effectsWeight; set => SetEffectsWeight(value); }
