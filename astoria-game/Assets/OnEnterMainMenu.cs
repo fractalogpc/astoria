@@ -7,6 +7,7 @@ public class OnEnterMainMenu : MonoBehaviour
         // Reset the OGPC timer
         if (OGPCController.Instance != null) {
             OGPCController.Instance.ResetTimer();
+            OGPCController.Instance.StopTimer();
         }
         
         InputReader.Instance.SwitchInputMap(InputMap.Null);

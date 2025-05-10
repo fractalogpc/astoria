@@ -88,7 +88,7 @@ public class SaveSystem : MonoBehaviour
             playerThirst = 100f, // Replace with actual player thirst
 
             buildingComponents = GetConstructionComponents(),
-            inventoryData = InventoryComponent.Instance.InventoryData,
+            inventoryData = null, //InventoryComponent.Instance.InventoryData,
         };
         return saveGameData;
     }

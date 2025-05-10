@@ -96,7 +96,7 @@ public class OGPCController : MonoBehaviour
         OnReset?.Invoke(); // Invoke the reset event
 
         timerDuration = 480f;
-        timerIsRunning = false; // Stop the timer
+        StopTimer();
         timeSinceStart = 0f; // Reset the timer
         timerText.gameObject.SetActive(false); // Hide the timer UI
         Time.timeScale = 1f; // Reset time scale to normal
