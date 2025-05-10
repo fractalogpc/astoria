@@ -249,6 +249,10 @@ Shader "BOXOPHOBIC/The Visual Engine/Impostors/Octa Subsurface Lit"
 		#pragma multi_compile _ DOTS_INSTANCING_ON
 		#pragma multi_compile _ LOD_FADE_CROSSFADE
 		#define AI_RENDERPIPELINE
+		#define SHADOWS_SHADOWMASK
+#define SHADOW_LOW
+#define SHADOW_MEDIUM
+#define SHADOW_HIGH 
 
 		struct GlobalSurfaceDescription
 		{
