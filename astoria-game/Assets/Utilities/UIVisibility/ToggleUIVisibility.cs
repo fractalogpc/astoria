@@ -9,7 +9,6 @@ using UnityEngine;
 [RequireComponent(typeof(CanvasGroup))]
 public class ToggleUIVisibility : InputHandlerBase
 {
-	[SerializeField] private CanvasGroup _canvasGroup;
 	[SerializeField] private FadeElementInOut _fadeElementInOut;
 	
 	private bool _shown;
@@ -19,7 +18,6 @@ public class ToggleUIVisibility : InputHandlerBase
 	}
 
 	public void SetVisibility(bool show) {
-		print("SetVisibility: " + show);
 		_shown = show;
 		if (show) {
 			_fadeElementInOut.FadeIn();
@@ -46,7 +44,6 @@ public class ToggleUIVisibility : InputHandlerBase
 	}
 	
 	private void OnValidate() {
-		_canvasGroup = GetComponent<CanvasGroup>();
 		_fadeElementInOut = GetComponent<FadeElementInOut>();
 	}
 
