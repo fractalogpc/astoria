@@ -7,26 +7,30 @@ public class InventoryHotbarSlot : MonoBehaviour
 	public InventoryEquipableSlot AttachedSlot => _attachedSlot;
 	public bool Selected { get; private set; }
 	[SerializeField] [ReadOnly] private InventoryHotbar _hotbar;
+	[SerializeField] private Image _slotBGImage;
 	[SerializeField] private Image _itemImage;
-	[SerializeField] private HighlightEffect _highlightEffect;
+	[SerializeField] private Sprite _unselectedBG;
+	[SerializeField] private Sprite _selectedBG;
 
 	private InventoryEquipableSlot _attachedSlot;
 
 	public bool Initialize(InventoryHotbar hotbar) {
 		if (_hotbar != null) return false;
 		_hotbar = hotbar;
+		_slotBGImage.sprite = _unselectedBG;
 		return true;
 	}
 
 	public void Select() {
 		Selected = true;
-		_highlightEffect.Pulse();
+		_slotBGImage.sprite = _selectedBG;
 		if (_attachedSlot.HeldItem == null) return;
 		_attachedSlot.HeldItem.OnHotbarSelected();
 	}
 
 	public void Deselect() {
 		Selected = false;
+		_slotBGImage.sprite = _unselectedBG;
 		if (_attachedSlot.HeldItem == null) return;
 		_attachedSlot.HeldItem.OnHotbarDeselected();
 	}
