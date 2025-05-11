@@ -4,6 +4,8 @@ using TMPro;
 
 public class OGPCController : MonoBehaviour
 {
+    public static bool DISABLED = true;
+
     public static OGPCController Instance { get; private set; }
 
     public TextMeshProUGUI timerText; // Reference to the UI Text component for displaying the timer
@@ -27,22 +29,31 @@ public class OGPCController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        timerText.gameObject.SetActive(false); // Hide the timer UI at the start
+        timeSinceStart = 0f; // Initialize time since start
+    }
+
     public UnityEvent OnTimerEnd;
     public UnityEvent OnReset;
 
     public void StartTimer()
     {
+        if (DISABLED) return;
         timerText.gameObject.SetActive(true); // Show the timer UI
         timerIsRunning = true;
     }
 
     public void StopTimer()
     {
+        if (DISABLED) return;
         timerIsRunning = false;
     }
 
     public void SetTimer(float timeInSeconds)
     {
+        if (DISABLED) return;
         timerDuration = timeInSeconds; // Set the timer duration
         timeSinceStart = 0f; // Reset the timer
         // timerIsRunning = false; // Stop the timer
@@ -50,11 +61,13 @@ public class OGPCController : MonoBehaviour
 
     public void ResetTimer()
     {
+        if (DISABLED) return;
         timeSinceStart = 0f; // Reset the timer
     }
 
     void Update()
     {
+        if (DISABLED) return;
         if (timerIsRunning)
         {
             timeSinceStart += Time.unscaledDeltaTime; // Use unscaled time to avoid pausing the timer when the game is paused
@@ -74,6 +87,7 @@ public class OGPCController : MonoBehaviour
 
     private void UpdateTimerUI()
     {
+        if (DISABLED) return;
         if (timerText != null)
         {
             float remainingTime = timerDuration - timeSinceStart; // Calculate remaining time
@@ -93,6 +107,7 @@ public class OGPCController : MonoBehaviour
 
     public void ResetEverything()
     {
+        if (DISABLED) return;
         OnReset?.Invoke(); // Invoke the reset event
 
         timerDuration = 480f;
